@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarService</string>
+    <string name="auto_update_mcu">MCU tamir ediliyor!</string>
+    <string name="auto_update_mcu_success">MCU başarısını tamir etti!</string>
+    <string name="bootanimation_success">Önyükleme Animasyonu değiştirildi!</string>
+    <string name="copy_file">Güncellemeye Hazır</string>
+    <string name="disable_open">Engelli!</string>
+    <string name="import_config_success">Yapılandırma başarısı alın!</string>
+    <string name="no_update">HAYIR</string>
+    <string name="ota_update">OTA UPDATE</string>
+    <string name="ota_update_message">Yükseltme dosyası algılandı.\10Şimdi yükseltmek ister misiniz?</string>
+    <string name="update_success">Başarıyı Güncelle!</string>
+    <string name="yes_update">EVET</string>
+</resources>

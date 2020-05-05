@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarService</string>
+    <string name="auto_update_mcu">MCU đang được sửa chữa!</string>
+    <string name="auto_update_mcu_success">MCU đã sửa chữa thành công!</string>
+    <string name="bootanimation_success">Boot Animation đã sửa đổi</string>
+    <string name="copy_file">Sẵn sàng cập nhật</string>
+    <string name="disable_open">Cấm!</string>
+    <string name="import_config_success">Nhập cấu hình thành công!</string>
+    <string name="no_update">KHÔNG</string>
+    <string name="ota_update">CẬP NHẬT OTA</string>
+    <string name="ota_update_message">Đã phát hiện tệp nâng cấp.\10Bạn có muốn nâng cấp ngay bây giờ không?</string>
+    <string name="update_success">Cập nhật thành công!</string>
+    <string name="yes_update">CÓ</string>
+</resources>

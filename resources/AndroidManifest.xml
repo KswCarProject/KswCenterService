@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="1" android:versionName="1.0" coreApp="true" package="com.wits.pms">
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.RECOVERY"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER"/>
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-permission android:name="android.permission.STATUS_BAR"/>
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
+    <permission android:name="com.txz.service.CENTER_CONTROL" android:protectionLevel="signature"/>
+    <application android:theme="@style/AppTheme" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:persistent="true" android:debuggable="true" android:allowBackup="true" android:supportsRtl="true" android:directBootAware="true" android:roundIcon="@mipmap/ic_launcher_round" android:appComponentFactory="android.support.v4.app.CoreComponentFactory">
+        <receiver android:name="com.wits.pms.receiver.EcarReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.ecar.send"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.wits.pms.receiver.ZlinkReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="com.zjinnova.zlink"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.wits.pms.receiver.BootReceiver" android:directBootAware="true">
+            <intent-filter>
+                <action android:name="android.intent.action.LOCALE_CHANGED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="com.wits.boot.Start"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.wits.pms.mcu.McuService" android:exported="true"/>
+        <activity android:name="com.wits.pms.TestActivity" android:excludeFromRecents="true"/>
+        <receiver android:name="com.wits.pms.receiver.TxzReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.txznet.adapter.send"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.wits.pms.core.PowerManagerAppService" android:exported="true"/>
+        <activity android:theme="@style/FullScreenTheme" android:name="com.wits.pms.ClockActivity" android:exported="true" android:excludeFromRecents="true"/>
+    </application>
+</manifest>
