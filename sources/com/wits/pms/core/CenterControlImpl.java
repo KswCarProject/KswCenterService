@@ -1582,7 +1582,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                 openVideo();
                 return;
             case 3:
-                WitsCommand.sendCommand(3, 107, "true");
+                openBluetooth(true);
                 return;
             case 5:
                 openCarDvr();

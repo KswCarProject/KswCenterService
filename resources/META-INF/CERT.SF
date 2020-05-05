@@ -1,6 +1,6 @@
 Signature-Version: 1.0
 Created-By: 1.0 (Android SignApk)
-SHA-256-Digest-Manifest: MVBW1aNEP/4/fCwKd+HRK6HLHMcD84zG7Uad4Hc8VQ0=
+SHA-256-Digest-Manifest: 2rXNUm2gHIsKtV3l8gHy1eBKmAPXs2PHIHwiDgHs0vI=
 X-Android-APK-Signed: 2, 3
 
 Name: AndroidManifest.xml
@@ -91,7 +91,7 @@ Name: META-INF/proguard/androidx-annotations.pro
 SHA-256-Digest: lldcaaqogvA7Ju6/QkFsqFhP+GXZ8rdmuo52gOZZNVQ=
 
 Name: classes.dex
-SHA-256-Digest: BN7Sno2bQBOBd1JEkFXHKWnMrX1LNUS7IMwzAUOUJUc=
+SHA-256-Digest: WwXjiY6MMSb1SK0Bm2cNc2NhHS7bSyp0CxrgM/qedyI=
 
 Name: lib/arm64-v8a/libserial_port.so
 SHA-256-Digest: LnJ/vX2Dg5fu/0MbRtui9od+EIYgFTr1u2wu6cUtkP0=

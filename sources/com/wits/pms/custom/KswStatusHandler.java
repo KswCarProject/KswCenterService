@@ -1,8 +1,11 @@
 package com.wits.pms.custom;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.os.UserHandle;
+import android.util.Log;
 import com.wits.pms.IContentObserver;
 import com.wits.pms.bean.AutoKitMessage;
 import com.wits.pms.bean.ZlinkMessage;
@@ -25,7 +28,8 @@ public class KswStatusHandler extends LogicSystem {
     private final int POWER = WitsCommand.SystemCommand.OUT_MODE;
     private final int RLIGHT = WitsCommand.SystemCommand.CAR_MODE;
     private final int TRIPE = WitsCommand.SystemCommand.ANDROID_MODE;
-    private final Context mContext = PowerManagerAppService.serviceContext;
+    /* access modifiers changed from: private */
+    public final Context mContext = PowerManagerAppService.serviceContext;
     /* access modifiers changed from: private */
     public final Handler mHandler = new Handler();
     private boolean statusChange;
@@ -88,6 +92,21 @@ public class KswStatusHandler extends LogicSystem {
                     if (oldStatus != 0 && !BtPhoneStatus.isCalling(PowerManagerApp.getStatusInt("callStatus")) && !zlink.equals("1") && !autoKit.equals("1")) {
                         CenterControlImpl.getImpl().setTxzSleep(false);
                     }
+                }
+            }
+        });
+        PowerManagerApp.registerIContentObserver("acc", new IContentObserver.Stub() {
+            public void onChange() throws RemoteException {
+                int acc = PowerManagerApp.getStatusInt("acc");
+                Log.d(KswStatusHandler.TAG, "onChange   acc = " + acc);
+                if (acc == 1) {
+                    Intent accIntent = new Intent("com.wits.ksw.ACC_ON");
+                    accIntent.addFlags(16777216);
+                    KswStatusHandler.this.mContext.sendBroadcastAsUser(accIntent, UserHandle.getUserHandleForUid(KswStatusHandler.this.mContext.getApplicationInfo().uid));
+                } else if (acc == 0) {
+                    Intent accIntent2 = new Intent("com.wits.ksw.ACC_OFF");
+                    accIntent2.addFlags(16777216);
+                    KswStatusHandler.this.mContext.sendBroadcastAsUser(accIntent2, UserHandle.getUserHandleForUid(KswStatusHandler.this.mContext.getApplicationInfo().uid));
                 }
             }
         });

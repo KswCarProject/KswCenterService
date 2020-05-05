@@ -90,7 +90,7 @@ Name: META-INF/proguard/androidx-annotations.pro
 SHA-256-Digest: jwlksyF/nd1D8WLP//uDEYbfGodEKlJ93FKlRXNNrQ4=
 
 Name: classes.dex
-SHA-256-Digest: +Q0HdqT7igzBbsh6YoBH3KDEGiSgHlll9IHizcyoOeY=
+SHA-256-Digest: Ssk+SIf/lmgcXTOLJsTHSeSp93RJw5p662C50d9GX5E=
 
 Name: lib/arm64-v8a/libserial_port.so
 SHA-256-Digest: fyTW1RZ0hVVrXSF+GEDK7T5Hm9+SEzzqOFKuUfJOYZs=

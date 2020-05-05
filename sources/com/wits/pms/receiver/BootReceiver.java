@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.util.Log;
 import com.wits.pms.statuscontrol.PowerManagerApp;
 import com.wits.pms.utils.AmsUtil;
@@ -21,6 +22,9 @@ public class BootReceiver extends BroadcastReceiver {
                     e.printStackTrace();
                 }
             }
+            Intent accIntent = new Intent("com.wits.ksw.ACC_ON");
+            accIntent.addFlags(16777216);
+            context.sendBroadcastAsUser(accIntent, UserHandle.getUserHandleForUid(context.getApplicationInfo().uid));
         }
         "com.wits.boot.Start".equals(intent.getAction());
         if (intent.getAction().equals("android.intent.action.LOCALE_CHANGED")) {
