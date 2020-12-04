@@ -11,12 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.StyleRes;
-import android.support.v4.view.PointerIconCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.menu.ShowableListMenu;
-import android.support.v7.widget.ActivityChooserView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -114,12 +112,12 @@ public class ListPopupWindow implements ShowableListMenu {
     public ListPopupWindow(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         this.mDropDownHeight = -2;
         this.mDropDownWidth = -2;
-        this.mDropDownWindowLayoutType = PointerIconCompat.TYPE_HAND;
+        this.mDropDownWindowLayoutType = 1002;
         this.mIsAnimatedFromAnchor = true;
         this.mDropDownGravity = 0;
         this.mDropDownAlwaysVisible = false;
         this.mForceIgnoreOutsideTouch = false;
-        this.mListItemExpandMaximum = ActivityChooserView.ActivityChooserViewAdapter.MAX_ACTIVITY_COUNT_UNLIMITED;
+        this.mListItemExpandMaximum = Integer.MAX_VALUE;
         this.mPromptPosition = 0;
         this.mResizePopupRunnable = new ResizePopupRunnable();
         this.mTouchInterceptor = new PopupTouchInterceptor();
@@ -146,7 +144,7 @@ public class ListPopupWindow implements ShowableListMenu {
             this.mAdapter.unregisterDataSetObserver(this.mObserver);
         }
         this.mAdapter = adapter;
-        if (adapter != null) {
+        if (this.mAdapter != null) {
             adapter.registerDataSetObserver(this.mObserver);
         }
         if (this.mDropDownList != null) {
@@ -511,7 +509,7 @@ public class ListPopupWindow implements ShowableListMenu {
             int curIndex = this.mDropDownList.getSelectedItemPosition();
             boolean below = !this.mPopup.isAboveAnchor();
             ListAdapter adapter = this.mAdapter;
-            int firstItem = ActivityChooserView.ActivityChooserViewAdapter.MAX_ACTIVITY_COUNT_UNLIMITED;
+            int firstItem = Integer.MAX_VALUE;
             int lastItem = Integer.MIN_VALUE;
             if (adapter != null) {
                 boolean allEnabled = adapter.areAllItemsEnabled();
@@ -631,12 +629,12 @@ public class ListPopupWindow implements ShowableListMenu {
         L_0x0025:
             android.support.v7.widget.DropDownListView r5 = r15.mDropDownList
             android.widget.ListAdapter r6 = r15.mAdapter
-            r5.setAdapter(r6)
+            r5.setAdapter((android.widget.ListAdapter) r6)
             android.support.v7.widget.DropDownListView r5 = r15.mDropDownList
             android.widget.AdapterView$OnItemClickListener r6 = r15.mItemClickListener
             r5.setOnItemClickListener(r6)
             android.support.v7.widget.DropDownListView r5 = r15.mDropDownList
-            r5.setFocusable(r4)
+            r5.setFocusable((boolean) r4)
             android.support.v7.widget.DropDownListView r5 = r15.mDropDownList
             r5.setFocusableInTouchMode(r4)
             android.support.v7.widget.DropDownListView r5 = r15.mDropDownList
@@ -679,12 +677,12 @@ public class ListPopupWindow implements ShowableListMenu {
             android.util.Log.e(r9, r10)
             goto L_0x009a
         L_0x008c:
-            r7.addView(r5, r8)
+            r7.addView((android.view.View) r5, (android.view.ViewGroup.LayoutParams) r8)
             r7.addView(r6)
             goto L_0x009a
         L_0x0093:
             r7.addView(r6)
-            r7.addView(r5, r8)
+            r7.addView((android.view.View) r5, (android.view.ViewGroup.LayoutParams) r8)
         L_0x009a:
             int r9 = r15.mDropDownWidth
             if (r9 < 0) goto L_0x00a3
@@ -693,7 +691,7 @@ public class ListPopupWindow implements ShowableListMenu {
             goto L_0x00a5
         L_0x00a3:
             r9 = 0
-            r10 = 0
+            r10 = r3
         L_0x00a5:
             int r11 = android.view.View.MeasureSpec.makeMeasureSpec(r10, r9)
             r12 = 0
@@ -747,13 +745,13 @@ public class ListPopupWindow implements ShowableListMenu {
         L_0x0107:
             android.graphics.Rect r6 = r15.mTempRect
             r6.setEmpty()
-            r6 = 0
+            r6 = r3
         L_0x010d:
             android.widget.PopupWindow r7 = r15.mPopup
             int r7 = r7.getInputMethodMode()
             r8 = 2
             if (r7 != r8) goto L_0x0118
-            r3 = 1
+            r3 = r4
         L_0x0118:
             android.view.View r4 = r15.getAnchorView()
             int r7 = r15.mDropDownVerticalOffset

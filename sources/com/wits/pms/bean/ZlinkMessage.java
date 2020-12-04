@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.UserHandle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import com.android.internal.content.NativeLibraryHelper;
 
 public class ZlinkMessage {
     public static final String DEVICE_ZLINK_MODE_SPEC = "com.zjinnova.zlink.mode.spec";
@@ -49,7 +49,7 @@ public class ZlinkMessage {
     }
 
     public ZlinkMessage(Intent intent) {
-        this.status = intent.getStringExtra(NotificationCompat.CATEGORY_STATUS);
+        this.status = intent.getStringExtra("status");
         this.command = intent.getStringExtra("command");
         this.bundle = intent.getExtras();
     }
@@ -65,6 +65,6 @@ public class ZlinkMessage {
     }
 
     public String toString() {
-        return "status:" + this.status + " - command:" + this.command + "-" + this.bundle.toString();
+        return "status:" + this.status + " - command:" + this.command + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + this.bundle.toString();
     }
 }

@@ -39,7 +39,7 @@ public interface IResultReceiver extends IInterface {
                 data.enforceInterface(DESCRIPTOR);
                 int _arg0 = data.readInt();
                 if (data.readInt() != 0) {
-                    _arg1 = (Bundle) Bundle.CREATOR.createFromParcel(data);
+                    _arg1 = Bundle.CREATOR.createFromParcel(data);
                 } else {
                     _arg1 = null;
                 }

@@ -1,6 +1,6 @@
 package com.wits.pms.mcu;
 
-import com.wits.pms.BuildConfig;
+import com.android.internal.content.NativeLibraryHelper;
 
 public class McuMessage {
     public byte[] data;
@@ -77,9 +77,9 @@ public class McuMessage {
                 hex = '0' + hex;
             }
             sb.append(hex.toUpperCase());
-            sb.append("-");
+            sb.append(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
         }
-        sb.replace(sb.length() - 1, sb.length(), BuildConfig.FLAVOR);
+        sb.replace(sb.length() - 1, sb.length(), "");
         sb.append(" ]\n");
         return sb.toString();
     }

@@ -147,7 +147,7 @@ public class ActionBarContextView extends AbsActionBarView {
 
     private void initTitle() {
         if (this.mTitleLayout == null) {
-            LayoutInflater.from(getContext()).inflate(R.layout.abc_action_bar_title_item, this);
+            LayoutInflater.from(getContext()).inflate(R.layout.abc_action_bar_title_item, (ViewGroup) this);
             this.mTitleLayout = (LinearLayout) getChildAt(getChildCount() - 1);
             this.mTitleView = (TextView) this.mTitleLayout.findViewById(R.id.action_bar_title);
             this.mSubtitleView = (TextView) this.mTitleLayout.findViewById(R.id.action_bar_subtitle);
@@ -176,7 +176,7 @@ public class ActionBarContextView extends AbsActionBarView {
 
     public void initForMode(final ActionMode mode) {
         if (this.mClose == null) {
-            this.mClose = LayoutInflater.from(getContext()).inflate(this.mCloseItemLayout, this, false);
+            this.mClose = LayoutInflater.from(getContext()).inflate(this.mCloseItemLayout, (ViewGroup) this, false);
             addView(this.mClose);
         } else if (this.mClose.getParent() == null) {
             addView(this.mClose);
@@ -196,7 +196,7 @@ public class ActionBarContextView extends AbsActionBarView {
         menu.addMenuPresenter(this.mActionMenuPresenter, this.mPopupContext);
         this.mMenuView = (ActionMenuView) this.mActionMenuPresenter.getMenuView(this);
         ViewCompat.setBackground(this.mMenuView, (Drawable) null);
-        addView(this.mMenuView, layoutParams);
+        addView((View) this.mMenuView, layoutParams);
     }
 
     public void closeMode() {
@@ -247,9 +247,7 @@ public class ActionBarContextView extends AbsActionBarView {
         int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
         if (widthMode != 1073741824) {
             throw new IllegalStateException(getClass().getSimpleName() + " can only be used " + "with android:layout_width=\"match_parent\" (or fill_parent)");
-        } else if (View.MeasureSpec.getMode(heightMeasureSpec) == 0) {
-            throw new IllegalStateException(getClass().getSimpleName() + " can only be used " + "with android:layout_height=\"wrap_content\"");
-        } else {
+        } else if (View.MeasureSpec.getMode(heightMeasureSpec) != 0) {
             int contentWidth = View.MeasureSpec.getSize(widthMeasureSpec);
             if (this.mContentHeight > 0) {
                 maxHeight = this.mContentHeight;
@@ -307,6 +305,8 @@ public class ActionBarContextView extends AbsActionBarView {
             } else {
                 setMeasuredDimension(contentWidth, maxHeight);
             }
+        } else {
+            throw new IllegalStateException(getClass().getSimpleName() + " can only be used " + "with android:layout_height=\"wrap_content\"");
         }
     }
 

@@ -14,7 +14,7 @@ import android.support.annotation.RestrictTo;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.internal.view.SupportMenu;
 import android.support.v4.view.ActionProvider;
-import android.support.v4.view.ViewConfigurationCompat;
+import android.support.v7.appcompat.R;
 import android.util.SparseArray;
 import android.view.ContextMenu;
 import android.view.KeyCharacterMap;
@@ -22,7 +22,6 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.ViewConfiguration;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,7 +42,6 @@ public class MenuBuilder implements SupportMenu {
     private int mDefaultShowAsAction = 0;
     private MenuItemImpl mExpandedItem;
     private SparseArray<Parcelable> mFrozenViewStates;
-    private boolean mGroupDividerEnabled = false;
     Drawable mHeaderIcon;
     CharSequence mHeaderTitle;
     View mHeaderView;
@@ -307,18 +305,9 @@ public class MenuBuilder implements SupportMenu {
         return addSubMenu(group, id, categoryOrder, (CharSequence) this.mResources.getString(title));
     }
 
-    public void setGroupDividerEnabled(boolean enabled) {
-        this.mGroupDividerEnabled = enabled;
-    }
-
-    public boolean isGroupDividerEnabled() {
-        return this.mGroupDividerEnabled;
-    }
-
     public int addIntentOptions(int group, int id, int categoryOrder, ComponentName caller, Intent[] specifics, Intent intent, int flags, MenuItem[] outSpecificItems) {
-        MenuBuilder menuBuilder = this;
         Intent[] intentArr = specifics;
-        PackageManager pm = menuBuilder.mContext.getPackageManager();
+        PackageManager pm = this.mContext.getPackageManager();
         int i = 0;
         Intent intent2 = intent;
         List<ResolveInfo> lri = pm.queryIntentActivityOptions(caller, intentArr, intent2, 0);
@@ -330,16 +319,16 @@ public class MenuBuilder implements SupportMenu {
             ResolveInfo ri = lri.get(i);
             Intent rintent = new Intent(ri.specificIndex < 0 ? intent2 : intentArr[ri.specificIndex]);
             rintent.setComponent(new ComponentName(ri.activityInfo.applicationInfo.packageName, ri.activityInfo.name));
-            MenuItem item = menuBuilder.add(group, id, categoryOrder, ri.loadLabel(pm)).setIcon(ri.loadIcon(pm)).setIntent(rintent);
+            int i2 = group;
+            MenuItem item = add(group, id, categoryOrder, ri.loadLabel(pm)).setIcon(ri.loadIcon(pm)).setIntent(rintent);
             if (outSpecificItems != null && ri.specificIndex >= 0) {
                 outSpecificItems[ri.specificIndex] = item;
             }
             i++;
-            menuBuilder = this;
         }
-        int i2 = group;
-        int i3 = id;
-        int i4 = categoryOrder;
+        int i3 = group;
+        int i4 = id;
+        int i5 = categoryOrder;
         return N;
     }
 
@@ -382,7 +371,6 @@ public class MenuBuilder implements SupportMenu {
         this.mPreventDispatchingItemsChanged = true;
         clear();
         clearHeader();
-        this.mPresenters.clear();
         this.mPreventDispatchingItemsChanged = false;
         this.mItemsChangedWhileDispatchPrevented = false;
         this.mStructureChangedWhileDispatchPrevented = false;
@@ -540,7 +528,7 @@ public class MenuBuilder implements SupportMenu {
 
     private void setShortcutsVisibleInner(boolean shortcutsVisible) {
         boolean z = true;
-        if (!shortcutsVisible || this.mResources.getConfiguration().keyboard == 1 || !ViewConfigurationCompat.shouldShowMenuShortcutsWhenKeyboardPresent(ViewConfiguration.get(this.mContext), this.mContext)) {
+        if (!shortcutsVisible || this.mResources.getConfiguration().keyboard == 1 || !this.mResources.getBoolean(R.bool.abc_config_showMenuShortcutsWhenKeyboardPresent)) {
             z = false;
         }
         this.mShortcutsVisible = z;
@@ -593,6 +581,7 @@ public class MenuBuilder implements SupportMenu {
 
     /* access modifiers changed from: package-private */
     public void findItemsWithShortcutForKey(List<MenuItemImpl> items, int keyCode, KeyEvent event) {
+        char c;
         List<MenuItemImpl> list = items;
         int i = keyCode;
         KeyEvent keyEvent = event;
@@ -601,23 +590,32 @@ public class MenuBuilder implements SupportMenu {
         KeyCharacterMap.KeyData possibleChars = new KeyCharacterMap.KeyData();
         if (keyEvent.getKeyData(possibleChars) || i == 67) {
             int N = this.mItems.size();
-            for (int i2 = 0; i2 < N; i2++) {
+            int i2 = 0;
+            while (i2 < N) {
                 MenuItemImpl item = this.mItems.get(i2);
                 if (item.hasSubMenu()) {
                     ((MenuBuilder) item.getSubMenu()).findItemsWithShortcutForKey(list, i, keyEvent);
                 }
                 char shortcutChar = qwerty ? item.getAlphabeticShortcut() : item.getNumericShortcut();
-                if (((modifierState & SupportMenu.SUPPORTED_MODIFIERS_MASK) == (69647 & (qwerty ? item.getAlphabeticModifiers() : item.getNumericModifiers()))) && shortcutChar != 0) {
-                    if (shortcutChar != possibleChars.meta[0] && shortcutChar != possibleChars.meta[2]) {
-                        if (qwerty && shortcutChar == 8) {
-                            if (i != 67) {
-                            }
+                if (((modifierState & 69647) == (69647 & (qwerty ? item.getAlphabeticModifiers() : item.getNumericModifiers()))) && shortcutChar != 0) {
+                    if (shortcutChar == possibleChars.meta[0] || shortcutChar == possibleChars.meta[2]) {
+                        c = 'C';
+                    } else if (qwerty && shortcutChar == 8) {
+                        c = 'C';
+                        if (i != 67) {
+                            i2++;
+                            char c2 = c;
                         }
                     }
                     if (item.isEnabled()) {
                         list.add(item);
                     }
+                    i2++;
+                    char c22 = c;
                 }
+                c = 'C';
+                i2++;
+                char c222 = c;
             }
         }
     }

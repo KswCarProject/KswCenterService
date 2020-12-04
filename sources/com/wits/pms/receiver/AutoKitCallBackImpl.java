@@ -38,15 +38,15 @@ public class AutoKitCallBackImpl {
     private static Context mContext;
 
     public static void init(Context context) {
-        if (context == null) {
-            try {
-                throw new Exception();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
+        if (context != null) {
             mContext = context.getApplicationContext();
             autoKitCallBack = new AutoKitCallBackImpl();
+            return;
+        }
+        try {
+            throw new Exception();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

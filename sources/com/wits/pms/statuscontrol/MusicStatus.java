@@ -1,5 +1,6 @@
 package com.wits.pms.statuscontrol;
 
+import android.provider.BrowserContract;
 import android.text.TextUtils;
 import com.google.gson.Gson;
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class MusicStatus {
             keys.add("play");
         }
         if (this.position != musicStatus.position) {
-            keys.add("position");
+            keys.add(BrowserContract.Bookmarks.POSITION);
         }
         return keys;
     }

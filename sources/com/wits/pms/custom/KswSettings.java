@@ -1,17 +1,15 @@
 package com.wits.pms.custom;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.wits.pms.BuildConfig;
-import com.wits.pms.R;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.mcu.custom.KswMcuSender;
@@ -19,7 +17,9 @@ import com.wits.pms.mcu.custom.utils.BrightnessUtils;
 import com.wits.pms.utils.SysConfigUtil;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class KswSettings {
     private static final String CAN_ID = "CANBusProtocolID";
@@ -37,7 +37,7 @@ public class KswSettings {
     /* access modifiers changed from: private */
     public File directUpdateFile;
     private long initTime;
-    private String intKeys = BuildConfig.FLAVOR;
+    private Set<String> intKeys = null;
     private boolean isSyncStatus;
     /* access modifiers changed from: private */
     public final Context mContext;
@@ -48,7 +48,7 @@ public class KswSettings {
     private final InitConfigRunnable mInitConfigRunnable;
     /* access modifiers changed from: private */
     public boolean onlyLanguageId;
-    private String stringKeys = BuildConfig.FLAVOR;
+    private Set<String> stringKeys = null;
 
     public static KswSettings init(Context context) {
         if (settings == null) {
@@ -70,15 +70,21 @@ public class KswSettings {
         this.mContext = context;
         this.mHandler = new Handler(this.mContext.getMainLooper());
         this.initTime = System.currentTimeMillis();
-        this.stringKeys = getSettingsString(STRING_KEY_MAP);
-        this.intKeys = getIntKeysFromSp();
+        this.mInitConfigRunnable = new InitConfigRunnable();
+        buildKswSettings();
+    }
+
+    private void buildKswSettings() {
+        this.stringKeys = new HashSet(getStringKeysFromSp());
+        this.intKeys = new HashSet(getIntKeysFromSp());
+        Log.i(TAG, "stringKeys size:" + this.stringKeys.size());
+        Log.i(TAG, "intKeys size:" + this.intKeys.size());
         if (this.stringKeys == null) {
-            this.stringKeys = BuildConfig.FLAVOR;
+            this.stringKeys = new HashSet();
         }
         if (this.intKeys == null) {
-            this.intKeys = BuildConfig.FLAVOR;
+            this.intKeys = new HashSet();
         }
-        this.mInitConfigRunnable = new InitConfigRunnable();
         boolean initKswConfig = true;
         try {
             if (getSettingsInt("initKswConfig") != 0) {
@@ -92,16 +98,26 @@ public class KswSettings {
         clearNoSaveData();
     }
 
-    private String getIntKeysFromSp() {
-        String keys1 = getSettingsString("ksw_settings_int_key1");
-        String keys2 = getSettingsString("ksw_settings_int_key2");
-        return keys1 + keys2;
+    public SharedPreferences getSettingsSp() {
+        return this.mContext.createDeviceProtectedStorageContext().getSharedPreferences("kswSettings", 0);
+    }
+
+    public Set<String> getStringKeysFromSp() {
+        return getSettingsSp().getStringSet(STRING_KEY_MAP, new HashSet());
+    }
+
+    public Set<String> getIntKeysFromSp() {
+        return getSettingsSp().getStringSet(INT_KEY_MAP, new HashSet());
+    }
+
+    public void clearKeys() {
+        getSettingsSp().edit().clear().apply();
     }
 
     /* access modifiers changed from: private */
     public void saveIntKeyToSp(String keyMap) {
         String keys1 = keyMap;
-        String keys2 = BuildConfig.FLAVOR;
+        String keys2 = "";
         if (keyMap.length() >= 1000) {
             keys1 = keyMap.substring(1000);
             keys2 = keyMap.substring(0, 1000);
@@ -121,25 +137,29 @@ public class KswSettings {
     }
 
     private void obsSystemSettings() {
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("screen_brightness"), true, new ContentObserver(this.mHandler) {
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.SCREEN_BRIGHTNESS), true, new ContentObserver(this.mHandler) {
             public void onChange(boolean selfChange) {
                 try {
-                    int progress = (int) Math.round(100.0d * BrightnessUtils.getPercentage((double) BrightnessUtils.convertLinearToGamma(Settings.System.getInt(KswSettings.this.mContext.getContentResolver(), "screen_brightness"), 10, 255), 0, BrightnessUtils.GAMMA_SPACE_MAX));
+                    int progress = (int) Math.round(100.0d * BrightnessUtils.getPercentage((double) BrightnessUtils.convertLinearToGamma(Settings.System.getInt(KswSettings.this.mContext.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS), 10, 255), 0, 1023));
                     Settings.System.putInt(KswSettings.this.mContext.getContentResolver(), "Brightness", progress);
                     CenterControlImpl.getImpl().setBrightness(progress);
                 } catch (Settings.SettingNotFoundException e) {
                 }
             }
         });
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("time_12_24"), true, new ContentObserver(this.mHandler) {
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.TIME_12_24), true, new ContentObserver(this.mHandler) {
             public void onChange(boolean selfChange) {
-                KswSettings.this.setInt("TimeFormat", "12".equals(KswSettings.this.getSettingsString("time_12_24")) ? 1 : 0);
+                KswSettings.this.setInt("TimeFormat", "12".equals(KswSettings.this.getSettingsString(Settings.System.TIME_12_24)) ? 1 : 0);
             }
         });
     }
 
     public int getSettingsInt(String key) throws Settings.SettingNotFoundException {
         return Settings.System.getInt(this.mContext.getContentResolver(), key);
+    }
+
+    public int getSettingsInt(String key, int defaultInt) {
+        return Settings.System.getInt(this.mContext.getContentResolver(), key, defaultInt);
     }
 
     public String getSettingsString(String key) {
@@ -167,27 +187,19 @@ public class KswSettings {
     }
 
     private void saveIntKey(String key) {
-        String str;
         Log.i(TAG, "saveIntKey key:" + key);
-        if (this.intKeys.contains(key)) {
-            str = this.intKeys;
-        } else {
-            str = this.intKeys + key + ",";
-        }
-        this.intKeys = str;
-        saveIntKeyToSp(this.intKeys + key + ",");
+        this.intKeys.add(key);
+        HashSet<String> intSetSave = new HashSet<>(getIntKeysFromSp());
+        intSetSave.add(key);
+        getSettingsSp().edit().putStringSet(INT_KEY_MAP, intSetSave).apply();
     }
 
     private void saveStringKey(String key) {
-        String str;
         Log.i(TAG, "saveStringKey key:" + key);
-        if (this.stringKeys.contains(key)) {
-            str = this.stringKeys;
-        } else {
-            str = this.stringKeys + key + ",";
-        }
-        this.stringKeys = str;
-        Settings.System.putString(this.mContext.getContentResolver(), STRING_KEY_MAP, this.stringKeys);
+        this.stringKeys.add(key);
+        HashSet<String> stringSetSave = new HashSet<>(getStringKeysFromSp());
+        stringSetSave.add(key);
+        getSettingsSp().edit().putStringSet(STRING_KEY_MAP, stringSetSave).apply();
     }
 
     public void saveJson(String key, String json) {
@@ -216,9 +228,9 @@ public class KswSettings {
 
     public void saveAndReboot() {
         this.mFactorySettings.saveToFile();
-        PowerManager pm = (PowerManager) this.mContext.getSystemService("power");
+        PowerManager pm = (PowerManager) this.mContext.getSystemService(Context.POWER_SERVICE);
         if (pm != null) {
-            pm.reboot(BuildConfig.FLAVOR);
+            pm.reboot("");
         }
     }
 
@@ -228,6 +240,11 @@ public class KswSettings {
             this.onlyLanguageId = true;
             initConfig(true);
         }
+        if (this.intKeys.size() == 0) {
+            Settings.System.putInt(this.mContext.getContentResolver(), "initKswConfig", 0);
+            FactorySettings.clearFactorySettings();
+            buildKswSettings();
+        }
         try {
             if (this.mFactorySettings.getDashboard_Select() != getSettingsInt("Dashboard_Select")) {
                 this.mFactorySettings.saveIntValue("Dashboard_Select", getSettingsInt("Dashboard_Select"));
@@ -236,7 +253,7 @@ public class KswSettings {
         }
     }
 
-    private void syncStatus() {
+    public void syncStatus() {
         Log.i(TAG, "syncStatus to Mcu");
         this.isSyncStatus = true;
         this.mFactorySettings = FactorySettings.getFactorySettings();
@@ -246,12 +263,10 @@ public class KswSettings {
             fixLocalFactory = true;
             this.mFactorySettings = new FactorySettings();
         }
-        String intKeys2 = getIntKeysFromSp();
-        String stringKeys2 = Settings.System.getString(this.mContext.getContentResolver(), STRING_KEY_MAP);
-        if (!TextUtils.isEmpty(intKeys2) && !TextUtils.isEmpty(stringKeys2)) {
-            String[] handleIntKeys = intKeys2.split(",");
-            String[] handleStringKeys = stringKeys2.split(",");
-            for (String key : handleIntKeys) {
+        Set<String> intKeys2 = getIntKeysFromSp();
+        Set<String> stringKeys2 = getStringKeysFromSp();
+        if (intKeys2.size() != 0 && stringKeys2.size() != 0) {
+            for (String key : intKeys2) {
                 if (!key.equals("USB_HOST") && !key.equals("Language") && !key.equals("Support_TXZ") && !key.equals("BenzPanelEnable") && !key.equals("benz_aux_switch")) {
                     try {
                         int value = getSettingsInt(key);
@@ -264,7 +279,7 @@ public class KswSettings {
                     }
                 }
             }
-            for (String key2 : handleStringKeys) {
+            for (String key2 : stringKeys2) {
                 if (!key2.contains("UI")) {
                     String value2 = getSettingsString(key2);
                     handleConfig(key2, value2);
@@ -274,6 +289,7 @@ public class KswSettings {
                     }
                 }
             }
+            handleConfig("Brightness", getSettingsInt("Brightness", 60));
             this.isSyncStatus = false;
         }
     }
@@ -313,19 +329,19 @@ public class KswSettings {
             java.lang.String r0 = "UI"
             boolean r0 = r7.equals(r0)
             if (r0 == 0) goto L_0x0043
-            r0 = 2
+            r0 = r2
             goto L_0x0044
         L_0x002f:
             java.lang.String r0 = "TXZ_Wakeup"
             boolean r0 = r7.equals(r0)
             if (r0 == 0) goto L_0x0043
-            r0 = 0
+            r0 = r4
             goto L_0x0044
         L_0x0039:
             java.lang.String r0 = "Language"
             boolean r0 = r7.equals(r0)
             if (r0 == 0) goto L_0x0043
-            r0 = 1
+            r0 = r3
             goto L_0x0044
         L_0x0043:
             r0 = -1
@@ -355,7 +371,7 @@ public class KswSettings {
             if (r0 != 0) goto L_0x006b
             goto L_0x006c
         L_0x006b:
-            r3 = 0
+            r3 = r4
         L_0x006c:
             goto L_0x006f
         L_0x006d:
@@ -424,884 +440,914 @@ public class KswSettings {
 
     /* JADX WARNING: Can't fix incorrect switch cases order */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private int handleConfig(java.lang.String r19, int r20) {
+    private int handleConfig(java.lang.String r17, int r18) {
         /*
-            r18 = this;
-            r1 = r18
-            r2 = r19
-            r3 = r20
+            r16 = this;
+            r1 = r16
+            r2 = r17
+            r3 = r18
             byte r4 = (byte) r3
-            int r5 = r19.hashCode()
-            r6 = 13
-            r7 = 19
-            r10 = 17
-            r11 = 5
-            r12 = 16
-            r13 = 4
-            r14 = 3
-            r15 = 2
-            r16 = 0
-            r9 = 1
-            switch(r5) {
-                case -2113780075: goto L_0x021f;
-                case -1997186328: goto L_0x0214;
-                case -1885010620: goto L_0x0209;
-                case -1793262372: goto L_0x01fe;
-                case -1653340047: goto L_0x01f4;
-                case -1548945544: goto L_0x01e9;
-                case -1528907729: goto L_0x01de;
-                case -1528907728: goto L_0x01d3;
-                case -1181891355: goto L_0x01c8;
-                case -1103831850: goto L_0x01bc;
-                case -952414302: goto L_0x01b0;
-                case -924519752: goto L_0x01a4;
-                case -899948362: goto L_0x0198;
-                case -801026034: goto L_0x018c;
-                case -776702634: goto L_0x0180;
-                case -738352606: goto L_0x0174;
-                case -682449643: goto L_0x0168;
-                case -677297959: goto L_0x015c;
-                case -660995341: goto L_0x0150;
-                case -602992886: goto L_0x0145;
-                case -554769949: goto L_0x0139;
-                case -519600940: goto L_0x012e;
-                case -294129095: goto L_0x0122;
-                case -220630678: goto L_0x0117;
-                case -183099962: goto L_0x010b;
-                case -114997240: goto L_0x00ff;
-                case 88063465: goto L_0x00f4;
-                case 90414126: goto L_0x00e9;
-                case 106858821: goto L_0x00de;
-                case 214368532: goto L_0x00d2;
-                case 241352631: goto L_0x00c6;
-                case 252039837: goto L_0x00ba;
-                case 340057703: goto L_0x00ae;
-                case 442866595: goto L_0x00a2;
-                case 642405998: goto L_0x0096;
-                case 940906279: goto L_0x008a;
-                case 985261490: goto L_0x007e;
-                case 1010516114: goto L_0x0072;
-                case 1060762673: goto L_0x0066;
-                case 1071490530: goto L_0x005a;
-                case 1374371814: goto L_0x004e;
-                case 1533443583: goto L_0x0042;
-                case 1598142665: goto L_0x0037;
-                case 1857618170: goto L_0x002b;
-                case 2103778808: goto L_0x001f;
-                default: goto L_0x001d;
-            }
-        L_0x001d:
-            goto L_0x022a
-        L_0x001f:
-            java.lang.String r5 = "DashBoardUnit"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 22
-            goto L_0x022b
-        L_0x002b:
-            java.lang.String r5 = "cam360_video"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 35
-            goto L_0x022b
-        L_0x0037:
-            java.lang.String r5 = "Front_view_camera"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 5
-            goto L_0x022b
-        L_0x0042:
-            java.lang.String r5 = "benz_aux_switch"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 44
-            goto L_0x022b
-        L_0x004e:
-            java.lang.String r5 = "Treble_value"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 18
-            goto L_0x022b
-        L_0x005a:
-            java.lang.String r5 = "TimeSyncSoucrce"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 12
-            goto L_0x022b
-        L_0x0066:
-            java.lang.String r5 = "Bass_value"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 16
-            goto L_0x022b
-        L_0x0072:
-            java.lang.String r5 = "Android_phone_vol"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 9
-            goto L_0x022b
-        L_0x007e:
-            java.lang.String r5 = "Voice_key"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 32
-            goto L_0x022b
-        L_0x008a:
-            java.lang.String r5 = "BT_Type"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 25
-            goto L_0x022b
-        L_0x0096:
-            java.lang.String r5 = "CarDisplay"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 29
-            goto L_0x022b
-        L_0x00a2:
-            java.lang.String r5 = "USB_HOST"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 42
-            goto L_0x022b
-        L_0x00ae:
-            java.lang.String r5 = "Middle_value"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 17
-            goto L_0x022b
-        L_0x00ba:
-            java.lang.String r5 = "CCC_IDrive"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 30
-            goto L_0x022b
-        L_0x00c6:
-            java.lang.String r5 = "Car_phone_vol"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 10
-            goto L_0x022b
-        L_0x00d2:
-            java.lang.String r5 = "HandsetAutomaticSelect"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 31
-            goto L_0x022b
-        L_0x00de:
-            java.lang.String r5 = "RearCamType"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 6
-            goto L_0x022b
-        L_0x00e9:
-            java.lang.String r5 = "ShowTrack"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 1
-            goto L_0x022b
-        L_0x00f4:
-            java.lang.String r5 = "ShowRadar"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 2
-            goto L_0x022b
-        L_0x00ff:
-            java.lang.String r5 = "Android_media_vol"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 8
-            goto L_0x022b
-        L_0x010b:
-            java.lang.String r5 = "Support_TXZ"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 43
-            goto L_0x022b
-        L_0x0117:
-            java.lang.String r5 = "DoNotPlayVideosWhileDriving"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 3
-            goto L_0x022b
-        L_0x0122:
-            java.lang.String r5 = "DVR_Type"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 26
-            goto L_0x022b
-        L_0x012e:
-            java.lang.String r5 = "ReversingMuteSelect"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 4
-            goto L_0x022b
-        L_0x0139:
-            java.lang.String r5 = "Mode_key"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 34
-            goto L_0x022b
-        L_0x0145:
-            java.lang.String r5 = "RearCamMirror"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 0
-            goto L_0x022b
-        L_0x0150:
-            java.lang.String r5 = "OLDBMWX"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 41
-            goto L_0x022b
-        L_0x015c:
-            java.lang.String r5 = "Default_PowerBoot"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 39
-            goto L_0x022b
-        L_0x0168:
-            java.lang.String r5 = "AMP_Type"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 27
-            goto L_0x022b
-        L_0x0174:
-            java.lang.String r5 = "CarAux_auto_method"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 23
-            goto L_0x022b
-        L_0x0180:
-            java.lang.String r5 = "EQ_mode"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 15
-            goto L_0x022b
-        L_0x018c:
-            java.lang.String r5 = "AHD_cam_Select"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 40
-            goto L_0x022b
-        L_0x0198:
-            java.lang.String r5 = "NaviMix"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 14
-            goto L_0x022b
-        L_0x01a4:
-            java.lang.String r5 = "Protocol"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 20
-            goto L_0x022b
-        L_0x01b0:
-            java.lang.String r5 = "Backlight_auto_set"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 36
-            goto L_0x022b
-        L_0x01bc:
-            java.lang.String r5 = "CarVideoDisplayStyle"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 21
-            goto L_0x022b
-        L_0x01c8:
-            java.lang.String r5 = "Car_navi_vol"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 11
-            goto L_0x022b
-        L_0x01d3:
-            java.lang.String r5 = "CarAuxIndex2"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 38
-            goto L_0x022b
-        L_0x01de:
-            java.lang.String r5 = "CarAuxIndex1"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 37
-            goto L_0x022b
-        L_0x01e9:
-            java.lang.String r5 = "Language"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
+            int r0 = r17.hashCode()
             r5 = 19
-            goto L_0x022b
-        L_0x01f4:
-            java.lang.String r5 = "Brightness"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 7
-            goto L_0x022b
-        L_0x01fe:
-            java.lang.String r5 = "Map_key"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 33
-            goto L_0x022b
-        L_0x0209:
-            java.lang.String r5 = "TimeFormat"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 13
-            goto L_0x022b
-        L_0x0214:
-            java.lang.String r5 = "Front_view_camer1a"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 28
-            goto L_0x022b
-        L_0x021f:
-            java.lang.String r5 = "CarAux_Operate"
-            boolean r5 = r2.equals(r5)
-            if (r5 == 0) goto L_0x022a
-            r5 = 24
-            goto L_0x022b
-        L_0x022a:
-            r5 = -1
-        L_0x022b:
-            r8 = 112(0x70, float:1.57E-43)
-            switch(r5) {
-                case 0: goto L_0x059f;
-                case 1: goto L_0x0591;
-                case 2: goto L_0x0583;
-                case 3: goto L_0x0575;
-                case 4: goto L_0x0569;
-                case 5: goto L_0x055b;
-                case 6: goto L_0x054d;
-                case 7: goto L_0x052a;
-                case 8: goto L_0x0514;
-                case 9: goto L_0x04fe;
-                case 10: goto L_0x04e8;
-                case 11: goto L_0x04d2;
-                case 12: goto L_0x04b6;
-                case 13: goto L_0x0471;
-                case 14: goto L_0x045e;
-                case 15: goto L_0x03d8;
-                case 16: goto L_0x03d8;
-                case 17: goto L_0x03d8;
-                case 18: goto L_0x03d8;
-                case 19: goto L_0x038c;
-                case 20: goto L_0x0367;
-                case 21: goto L_0x0347;
-                case 22: goto L_0x033a;
-                case 23: goto L_0x032d;
-                case 24: goto L_0x0322;
-                case 25: goto L_0x0317;
-                case 26: goto L_0x030c;
-                case 27: goto L_0x0301;
-                case 28: goto L_0x02f6;
-                case 29: goto L_0x02e9;
-                case 30: goto L_0x02dd;
-                case 31: goto L_0x02d0;
-                case 32: goto L_0x02c5;
-                case 33: goto L_0x02b8;
-                case 34: goto L_0x02ab;
-                case 35: goto L_0x029e;
-                case 36: goto L_0x0293;
-                case 37: goto L_0x0286;
-                case 38: goto L_0x0279;
-                case 39: goto L_0x026c;
-                case 40: goto L_0x025f;
-                case 41: goto L_0x0254;
-                case 42: goto L_0x024f;
-                case 43: goto L_0x0242;
-                case 44: goto L_0x0232;
-                default: goto L_0x0230;
+            r6 = 17
+            r7 = 13
+            r9 = 5
+            r10 = 16
+            r11 = 4
+            r12 = 3
+            r13 = 2
+            r14 = 0
+            r15 = 1
+            switch(r0) {
+                case -2113780075: goto L_0x0232;
+                case -1997186328: goto L_0x0227;
+                case -1885010620: goto L_0x021d;
+                case -1793262372: goto L_0x0212;
+                case -1653340047: goto L_0x0208;
+                case -1548945544: goto L_0x01fe;
+                case -1528907729: goto L_0x01f3;
+                case -1528907728: goto L_0x01e8;
+                case -1181891355: goto L_0x01dd;
+                case -1103831850: goto L_0x01d1;
+                case -952414302: goto L_0x01c5;
+                case -924519752: goto L_0x01b9;
+                case -899948362: goto L_0x01ad;
+                case -801026034: goto L_0x01a1;
+                case -776702634: goto L_0x0195;
+                case -738352606: goto L_0x0189;
+                case -682449643: goto L_0x017d;
+                case -677297959: goto L_0x0171;
+                case -660995341: goto L_0x0165;
+                case -602992886: goto L_0x015a;
+                case -554769949: goto L_0x014e;
+                case -519600940: goto L_0x0143;
+                case -294129095: goto L_0x0137;
+                case -220630678: goto L_0x012c;
+                case -183099962: goto L_0x0120;
+                case -114997240: goto L_0x0114;
+                case 88063465: goto L_0x0109;
+                case 90414126: goto L_0x00fe;
+                case 106858821: goto L_0x00f3;
+                case 214368532: goto L_0x00e7;
+                case 241352631: goto L_0x00db;
+                case 252039837: goto L_0x00cf;
+                case 340057703: goto L_0x00c4;
+                case 400825784: goto L_0x00b8;
+                case 442866595: goto L_0x00ac;
+                case 642405998: goto L_0x00a0;
+                case 940906279: goto L_0x0094;
+                case 985261490: goto L_0x0088;
+                case 1010516114: goto L_0x007c;
+                case 1031815915: goto L_0x0070;
+                case 1060762673: goto L_0x0065;
+                case 1071490530: goto L_0x0059;
+                case 1374371814: goto L_0x004d;
+                case 1533443583: goto L_0x0041;
+                case 1598142665: goto L_0x0036;
+                case 1857618170: goto L_0x002a;
+                case 2103778808: goto L_0x001e;
+                default: goto L_0x001c;
             }
-        L_0x0230:
-            goto L_0x05ab
+        L_0x001c:
+            goto L_0x023d
+        L_0x001e:
+            java.lang.String r0 = "DashBoardUnit"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 23
+            goto L_0x023e
+        L_0x002a:
+            java.lang.String r0 = "cam360_video"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 36
+            goto L_0x023e
+        L_0x0036:
+            java.lang.String r0 = "Front_view_camera"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r9
+            goto L_0x023e
+        L_0x0041:
+            java.lang.String r0 = "benz_aux_switch"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 45
+            goto L_0x023e
+        L_0x004d:
+            java.lang.String r0 = "Treble_value"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 18
+            goto L_0x023e
+        L_0x0059:
+            java.lang.String r0 = "TimeSyncSoucrce"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 12
+            goto L_0x023e
+        L_0x0065:
+            java.lang.String r0 = "Bass_value"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r10
+            goto L_0x023e
+        L_0x0070:
+            java.lang.String r0 = "DirtTravelSelection"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 21
+            goto L_0x023e
+        L_0x007c:
+            java.lang.String r0 = "Android_phone_vol"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 9
+            goto L_0x023e
+        L_0x0088:
+            java.lang.String r0 = "Voice_key"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 33
+            goto L_0x023e
+        L_0x0094:
+            java.lang.String r0 = "BT_Type"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 26
+            goto L_0x023e
+        L_0x00a0:
+            java.lang.String r0 = "CarDisplay"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 30
+            goto L_0x023e
+        L_0x00ac:
+            java.lang.String r0 = "USB_HOST"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 43
+            goto L_0x023e
+        L_0x00b8:
+            java.lang.String r0 = "touch_continuous_send"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 46
+            goto L_0x023e
+        L_0x00c4:
+            java.lang.String r0 = "Middle_value"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r6
+            goto L_0x023e
+        L_0x00cf:
+            java.lang.String r0 = "CCC_IDrive"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 31
+            goto L_0x023e
+        L_0x00db:
+            java.lang.String r0 = "Car_phone_vol"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 10
+            goto L_0x023e
+        L_0x00e7:
+            java.lang.String r0 = "HandsetAutomaticSelect"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 32
+            goto L_0x023e
+        L_0x00f3:
+            java.lang.String r0 = "RearCamType"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 6
+            goto L_0x023e
+        L_0x00fe:
+            java.lang.String r0 = "ShowTrack"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r15
+            goto L_0x023e
+        L_0x0109:
+            java.lang.String r0 = "ShowRadar"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r13
+            goto L_0x023e
+        L_0x0114:
+            java.lang.String r0 = "Android_media_vol"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 8
+            goto L_0x023e
+        L_0x0120:
+            java.lang.String r0 = "Support_TXZ"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 44
+            goto L_0x023e
+        L_0x012c:
+            java.lang.String r0 = "DoNotPlayVideosWhileDriving"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r12
+            goto L_0x023e
+        L_0x0137:
+            java.lang.String r0 = "DVR_Type"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 27
+            goto L_0x023e
+        L_0x0143:
+            java.lang.String r0 = "ReversingMuteSelect"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r11
+            goto L_0x023e
+        L_0x014e:
+            java.lang.String r0 = "Mode_key"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 35
+            goto L_0x023e
+        L_0x015a:
+            java.lang.String r0 = "RearCamMirror"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r14
+            goto L_0x023e
+        L_0x0165:
+            java.lang.String r0 = "OLDBMWX"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 42
+            goto L_0x023e
+        L_0x0171:
+            java.lang.String r0 = "Default_PowerBoot"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 40
+            goto L_0x023e
+        L_0x017d:
+            java.lang.String r0 = "AMP_Type"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 28
+            goto L_0x023e
+        L_0x0189:
+            java.lang.String r0 = "CarAux_auto_method"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 24
+            goto L_0x023e
+        L_0x0195:
+            java.lang.String r0 = "EQ_mode"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 15
+            goto L_0x023e
+        L_0x01a1:
+            java.lang.String r0 = "AHD_cam_Select"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 41
+            goto L_0x023e
+        L_0x01ad:
+            java.lang.String r0 = "NaviMix"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 14
+            goto L_0x023e
+        L_0x01b9:
+            java.lang.String r0 = "Protocol"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 20
+            goto L_0x023e
+        L_0x01c5:
+            java.lang.String r0 = "Backlight_auto_set"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 37
+            goto L_0x023e
+        L_0x01d1:
+            java.lang.String r0 = "CarVideoDisplayStyle"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 22
+            goto L_0x023e
+        L_0x01dd:
+            java.lang.String r0 = "Car_navi_vol"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 11
+            goto L_0x023e
+        L_0x01e8:
+            java.lang.String r0 = "CarAuxIndex2"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 39
+            goto L_0x023e
+        L_0x01f3:
+            java.lang.String r0 = "CarAuxIndex1"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 38
+            goto L_0x023e
+        L_0x01fe:
+            java.lang.String r0 = "Language"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r5
+            goto L_0x023e
+        L_0x0208:
+            java.lang.String r0 = "Brightness"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 7
+            goto L_0x023e
+        L_0x0212:
+            java.lang.String r0 = "Map_key"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 34
+            goto L_0x023e
+        L_0x021d:
+            java.lang.String r0 = "TimeFormat"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = r7
+            goto L_0x023e
+        L_0x0227:
+            java.lang.String r0 = "Front_view_camer1a"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 29
+            goto L_0x023e
         L_0x0232:
-            java.lang.String r5 = "LKT"
-            com.wits.pms.utils.TestUtil.printStack(r5)
-            byte[] r5 = new byte[r15]
-            r5[r16] = r12
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0242:
-            com.wits.pms.core.CenterControlImpl r5 = com.wits.pms.core.CenterControlImpl.getImpl()
-            if (r4 != r9) goto L_0x0249
-            goto L_0x024a
-        L_0x0249:
-            r9 = 0
-        L_0x024a:
-            r5.setTxzSwitch(r9)
-            goto L_0x05ab
-        L_0x024f:
+            java.lang.String r0 = "CarAux_Operate"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x023d
+            r0 = 25
+            goto L_0x023e
+        L_0x023d:
+            r0 = -1
+        L_0x023e:
+            r8 = 112(0x70, float:1.57E-43)
+            switch(r0) {
+                case 0: goto L_0x05c7;
+                case 1: goto L_0x05b9;
+                case 2: goto L_0x05ab;
+                case 3: goto L_0x059d;
+                case 4: goto L_0x0591;
+                case 5: goto L_0x0583;
+                case 6: goto L_0x0575;
+                case 7: goto L_0x0552;
+                case 8: goto L_0x053c;
+                case 9: goto L_0x0526;
+                case 10: goto L_0x0510;
+                case 11: goto L_0x04fa;
+                case 12: goto L_0x04de;
+                case 13: goto L_0x0499;
+                case 14: goto L_0x0486;
+                case 15: goto L_0x0400;
+                case 16: goto L_0x0400;
+                case 17: goto L_0x0400;
+                case 18: goto L_0x0400;
+                case 19: goto L_0x03b4;
+                case 20: goto L_0x038f;
+                case 21: goto L_0x0382;
+                case 22: goto L_0x0362;
+                case 23: goto L_0x0355;
+                case 24: goto L_0x0348;
+                case 25: goto L_0x033d;
+                case 26: goto L_0x0332;
+                case 27: goto L_0x0327;
+                case 28: goto L_0x031c;
+                case 29: goto L_0x0311;
+                case 30: goto L_0x0304;
+                case 31: goto L_0x02f8;
+                case 32: goto L_0x02eb;
+                case 33: goto L_0x02e0;
+                case 34: goto L_0x02d3;
+                case 35: goto L_0x02c6;
+                case 36: goto L_0x02b9;
+                case 37: goto L_0x02ae;
+                case 38: goto L_0x02a1;
+                case 39: goto L_0x0294;
+                case 40: goto L_0x0287;
+                case 41: goto L_0x027a;
+                case 42: goto L_0x026f;
+                case 43: goto L_0x026a;
+                case 44: goto L_0x025d;
+                case 45: goto L_0x0252;
+                case 46: goto L_0x0245;
+                default: goto L_0x0243;
+            }
+        L_0x0243:
+            goto L_0x05d3
+        L_0x0245:
+            byte[] r0 = new byte[r13]
+            r5 = 28
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0252:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r10
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x025d:
+            com.wits.pms.core.CenterControlImpl r0 = com.wits.pms.core.CenterControlImpl.getImpl()
+            if (r4 != r15) goto L_0x0265
+            r14 = r15
+        L_0x0265:
+            r0.setTxzSwitch(r14)
+            goto L_0x05d3
+        L_0x026a:
             com.wits.pms.utils.UsbUtil.updateUsbMode((int) r4)
-            goto L_0x05ab
-        L_0x0254:
-            java.lang.String r5 = "CarDisplay"
-            if (r4 != r9) goto L_0x025a
-            r9 = 0
-        L_0x025a:
-            r1.handleConfig((java.lang.String) r5, (int) r9)
-            goto L_0x05ab
-        L_0x025f:
-            byte[] r5 = new byte[r15]
-            r6 = 20
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x026c:
-            byte[] r5 = new byte[r15]
-            r6 = 25
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0279:
-            byte[] r5 = new byte[r15]
-            r6 = 24
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0286:
-            byte[] r5 = new byte[r15]
-            r6 = 23
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0293:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r7
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x029e:
-            byte[] r5 = new byte[r15]
-            r6 = 18
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x02ab:
-            byte[] r5 = new byte[r15]
-            r6 = 22
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x02b8:
-            byte[] r5 = new byte[r15]
-            r6 = 21
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x02c5:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r10
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x02d0:
-            byte[] r5 = new byte[r15]
-            r6 = 9
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x02dd:
-            byte[] r5 = new byte[r15]
-            r6 = 6
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x02e9:
-            byte[] r5 = new byte[r15]
-            r6 = 14
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x02f6:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0301:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r15
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x030c:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r13
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0317:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r11
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0322:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r14
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x032d:
-            byte[] r5 = new byte[r15]
-            r6 = 12
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x033a:
-            byte[] r5 = new byte[r15]
-            r6 = 26
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
-        L_0x0347:
-            java.lang.String r5 = "CarDisplayParamID"
-            java.util.List r5 = r1.getDataListFromJsonKey(r5)     // Catch:{ Exception -> 0x0364 }
-            if (r5 == 0) goto L_0x0362
-            java.lang.Object r6 = r5.get(r4)     // Catch:{ Exception -> 0x0364 }
-            java.lang.String r6 = (java.lang.String) r6     // Catch:{ Exception -> 0x0364 }
-            byte r7 = java.lang.Byte.parseByte(r6)     // Catch:{ Exception -> 0x0364 }
-            byte[] r10 = new byte[r15]     // Catch:{ Exception -> 0x0364 }
-            r10[r16] = r9     // Catch:{ Exception -> 0x0364 }
-            r10[r9] = r7     // Catch:{ Exception -> 0x0364 }
-            r1.sendMcu(r8, r10)     // Catch:{ Exception -> 0x0364 }
+            goto L_0x05d3
+        L_0x026f:
+            java.lang.String r0 = "CarDisplay"
+            if (r4 != r15) goto L_0x0274
+            goto L_0x0275
+        L_0x0274:
+            r14 = r15
+        L_0x0275:
+            r1.handleConfig((java.lang.String) r0, (int) r14)
+            goto L_0x05d3
+        L_0x027a:
+            byte[] r0 = new byte[r13]
+            r5 = 20
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0287:
+            byte[] r0 = new byte[r13]
+            r5 = 25
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0294:
+            byte[] r0 = new byte[r13]
+            r5 = 24
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02a1:
+            byte[] r0 = new byte[r13]
+            r5 = 23
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02ae:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02b9:
+            byte[] r0 = new byte[r13]
+            r5 = 18
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02c6:
+            byte[] r0 = new byte[r13]
+            r5 = 22
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02d3:
+            byte[] r0 = new byte[r13]
+            r5 = 21
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02e0:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r6
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02eb:
+            byte[] r0 = new byte[r13]
+            r5 = 9
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x02f8:
+            byte[] r0 = new byte[r13]
+            r5 = 6
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0304:
+            byte[] r0 = new byte[r13]
+            r5 = 14
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0311:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r7
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x031c:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r13
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0327:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r11
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0332:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r9
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x033d:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r12
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0348:
+            byte[] r0 = new byte[r13]
+            r5 = 12
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x0355:
+            byte[] r0 = new byte[r13]
+            r5 = 26
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
         L_0x0362:
-            goto L_0x05ab
-        L_0x0364:
+            java.lang.String r0 = "CarDisplayParamID"
+            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x037f }
+            if (r0 == 0) goto L_0x037d
+            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x037f }
+            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x037f }
+            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x037f }
+            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x037f }
+            r7[r14] = r15     // Catch:{ Exception -> 0x037f }
+            r7[r15] = r6     // Catch:{ Exception -> 0x037f }
+            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x037f }
+        L_0x037d:
+            goto L_0x05d3
+        L_0x037f:
             r0 = move-exception
-            goto L_0x05ab
-        L_0x0367:
-            r5 = -1
-            if (r4 != r5) goto L_0x036b
+            goto L_0x05d3
+        L_0x0382:
+            byte[] r0 = new byte[r13]
+            r5 = 27
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x038f:
+            r0 = -1
+            if (r4 != r0) goto L_0x0393
             r4 = 0
-        L_0x036b:
-            java.lang.String r5 = "CANBusProtocolID"
-            java.util.List r5 = r1.getDataListFromJsonKey(r5)     // Catch:{ Exception -> 0x0389 }
-            if (r5 == 0) goto L_0x0387
-            java.lang.Object r6 = r5.get(r4)     // Catch:{ Exception -> 0x0389 }
-            java.lang.String r6 = (java.lang.String) r6     // Catch:{ Exception -> 0x0389 }
-            byte r7 = java.lang.Byte.parseByte(r6)     // Catch:{ Exception -> 0x0389 }
-            byte[] r10 = new byte[r15]     // Catch:{ Exception -> 0x0389 }
-            r11 = 7
-            r10[r16] = r11     // Catch:{ Exception -> 0x0389 }
-            r10[r9] = r7     // Catch:{ Exception -> 0x0389 }
-            r1.sendMcu(r8, r10)     // Catch:{ Exception -> 0x0389 }
-        L_0x0387:
-            goto L_0x05ab
-        L_0x0389:
+        L_0x0393:
+            java.lang.String r0 = "CANBusProtocolID"
+            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x03b1 }
+            if (r0 == 0) goto L_0x03af
+            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x03b1 }
+            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x03b1 }
+            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x03b1 }
+            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x03b1 }
+            r9 = 7
+            r7[r14] = r9     // Catch:{ Exception -> 0x03b1 }
+            r7[r15] = r6     // Catch:{ Exception -> 0x03b1 }
+            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x03b1 }
+        L_0x03af:
+            goto L_0x05d3
+        L_0x03b1:
             r0 = move-exception
-            goto L_0x05ab
-        L_0x038c:
-            java.lang.String r5 = "languageID"
-            java.util.List r5 = r1.getDataListFromJsonKey(r5)
-            java.lang.Object r5 = r5.get(r3)
-            java.lang.String r5 = (java.lang.String) r5
-            int r5 = java.lang.Integer.parseInt(r5)
-            if (r5 >= 0) goto L_0x03a0
-            r6 = -1
-            return r6
-        L_0x03a0:
-            com.wits.pms.custom.KswSettings$3 r6 = new com.wits.pms.custom.KswSettings$3
-            r6.<init>()
-            java.lang.String r7 = "KswSettings"
-            java.lang.StringBuilder r8 = new java.lang.StringBuilder
-            r8.<init>()
-            java.lang.String r9 = "Change Language@"
-            r8.append(r9)
-            java.lang.Object r9 = r6.get(r5)
-            java.util.Locale r9 = (java.util.Locale) r9
-            java.lang.String r9 = r9.getLanguage()
-            r8.append(r9)
-            java.lang.String r9 = " @index="
-            r8.append(r9)
-            r8.append(r5)
-            java.lang.String r8 = r8.toString()
-            android.util.Log.i(r7, r8)
-            java.lang.Object r7 = r6.get(r5)
-            java.util.Locale r7 = (java.util.Locale) r7
-            com.wits.pms.utils.LanguageUtil.changeSystemLanguage(r7)
-            goto L_0x05ab
-        L_0x03d8:
-            java.lang.String r5 = "EQ_mode"
-            int r5 = r1.getSettingsInt(r5)     // Catch:{ SettingNotFoundException -> 0x045b }
-            byte r5 = (byte) r5     // Catch:{ SettingNotFoundException -> 0x045b }
+            goto L_0x05d3
+        L_0x03b4:
+            java.lang.String r0 = "languageID"
+            java.util.List r0 = r1.getDataListFromJsonKey(r0)
+            java.lang.Object r0 = r0.get(r3)
+            java.lang.String r0 = (java.lang.String) r0
+            int r0 = java.lang.Integer.parseInt(r0)
+            if (r0 >= 0) goto L_0x03c8
+            r5 = -1
+            return r5
+        L_0x03c8:
+            com.wits.pms.custom.KswSettings$3 r5 = new com.wits.pms.custom.KswSettings$3
+            r5.<init>()
+            java.lang.String r6 = "KswSettings"
+            java.lang.StringBuilder r7 = new java.lang.StringBuilder
+            r7.<init>()
+            java.lang.String r8 = "Change Language@"
+            r7.append(r8)
+            java.lang.Object r8 = r5.get(r0)
+            java.util.Locale r8 = (java.util.Locale) r8
+            java.lang.String r8 = r8.getLanguage()
+            r7.append(r8)
+            java.lang.String r8 = " @index="
+            r7.append(r8)
+            r7.append(r0)
+            java.lang.String r7 = r7.toString()
+            android.util.Log.i(r6, r7)
+            java.lang.Object r6 = r5.get(r0)
+            java.util.Locale r6 = (java.util.Locale) r6
+            com.wits.pms.utils.LanguageUtil.changeSystemLanguage(r6)
+            goto L_0x05d3
+        L_0x0400:
+            java.lang.String r0 = "EQ_mode"
+            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            byte r0 = (byte) r0     // Catch:{ SettingNotFoundException -> 0x0483 }
             r8 = 115(0x73, float:1.61E-43)
-            switch(r5) {
-                case 0: goto L_0x0436;
-                case 1: goto L_0x0426;
-                case 2: goto L_0x0416;
-                case 3: goto L_0x0404;
-                case 4: goto L_0x03f6;
-                case 5: goto L_0x03e6;
-                default: goto L_0x03e4;
-            }     // Catch:{ SettingNotFoundException -> 0x045b }
-        L_0x03e4:
-            goto L_0x0459
-        L_0x03e6:
-            byte[] r6 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r16] = r10     // Catch:{ SettingNotFoundException -> 0x045b }
-            r10 = 11
-            r6[r9] = r10     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r15] = r7     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r14] = r5     // Catch:{ SettingNotFoundException -> 0x045b }
-            r1.sendMcu(r8, r6)     // Catch:{ SettingNotFoundException -> 0x045b }
-            goto L_0x0459
-        L_0x03f6:
-            byte[] r7 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x045b }
-            r7[r16] = r6     // Catch:{ SettingNotFoundException -> 0x045b }
-            r7[r9] = r12     // Catch:{ SettingNotFoundException -> 0x045b }
-            r7[r15] = r12     // Catch:{ SettingNotFoundException -> 0x045b }
-            r7[r14] = r5     // Catch:{ SettingNotFoundException -> 0x045b }
-            r1.sendMcu(r8, r7)     // Catch:{ SettingNotFoundException -> 0x045b }
-            goto L_0x0459
-        L_0x0404:
-            byte[] r6 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x045b }
+            switch(r0) {
+                case 0: goto L_0x045e;
+                case 1: goto L_0x044e;
+                case 2: goto L_0x043e;
+                case 3: goto L_0x042c;
+                case 4: goto L_0x041e;
+                case 5: goto L_0x040e;
+                default: goto L_0x040c;
+            }     // Catch:{ SettingNotFoundException -> 0x0483 }
+        L_0x040c:
+            goto L_0x0481
+        L_0x040e:
+            byte[] r7 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r7[r14] = r6     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r6 = 11
+            r7[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r7[r13] = r5     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r7[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r1.sendMcu(r8, r7)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            goto L_0x0481
+        L_0x041e:
+            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r15] = r10     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            goto L_0x0481
+        L_0x042c:
+            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0483 }
             r7 = 15
-            r6[r16] = r7     // Catch:{ SettingNotFoundException -> 0x045b }
+            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x0483 }
             r7 = 11
-            r6[r9] = r7     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r15] = r10     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r14] = r5     // Catch:{ SettingNotFoundException -> 0x045b }
-            r1.sendMcu(r8, r6)     // Catch:{ SettingNotFoundException -> 0x045b }
-            goto L_0x0459
-        L_0x0416:
-            byte[] r10 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x045b }
-            r10[r16] = r7     // Catch:{ SettingNotFoundException -> 0x045b }
-            r10[r9] = r6     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6 = 15
-            r10[r15] = r6     // Catch:{ SettingNotFoundException -> 0x045b }
-            r10[r14] = r5     // Catch:{ SettingNotFoundException -> 0x045b }
-            r1.sendMcu(r8, r10)     // Catch:{ SettingNotFoundException -> 0x045b }
-            goto L_0x0459
-        L_0x0426:
-            byte[] r6 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r16] = r12     // Catch:{ SettingNotFoundException -> 0x045b }
-            r7 = 9
-            r6[r9] = r7     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r15] = r12     // Catch:{ SettingNotFoundException -> 0x045b }
-            r6[r14] = r5     // Catch:{ SettingNotFoundException -> 0x045b }
-            r1.sendMcu(r8, r6)     // Catch:{ SettingNotFoundException -> 0x045b }
-            goto L_0x0459
-        L_0x0436:
-            java.lang.String r6 = "Bass_value"
-            int r6 = r1.getSettingsInt(r6)     // Catch:{ SettingNotFoundException -> 0x045b }
-            byte r6 = (byte) r6     // Catch:{ SettingNotFoundException -> 0x045b }
-            java.lang.String r7 = "Middle_value"
-            int r7 = r1.getSettingsInt(r7)     // Catch:{ SettingNotFoundException -> 0x045b }
-            byte r7 = (byte) r7     // Catch:{ SettingNotFoundException -> 0x045b }
-            java.lang.String r10 = "Treble_value"
-            int r10 = r1.getSettingsInt(r10)     // Catch:{ SettingNotFoundException -> 0x045b }
-            byte r10 = (byte) r10     // Catch:{ SettingNotFoundException -> 0x045b }
-            byte[] r11 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x045b }
-            r11[r16] = r6     // Catch:{ SettingNotFoundException -> 0x045b }
-            r11[r9] = r7     // Catch:{ SettingNotFoundException -> 0x045b }
-            r11[r15] = r10     // Catch:{ SettingNotFoundException -> 0x045b }
-            r11[r14] = r5     // Catch:{ SettingNotFoundException -> 0x045b }
-            r1.sendMcu(r8, r11)     // Catch:{ SettingNotFoundException -> 0x045b }
-        L_0x0459:
-            goto L_0x05ab
-        L_0x045b:
-            r0 = move-exception
-            goto L_0x05ab
+            r5[r15] = r7     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r13] = r6     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            goto L_0x0481
+        L_0x043e:
+            byte[] r6 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r6[r14] = r5     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r6[r15] = r7     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5 = 15
+            r6[r13] = r5     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r6[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r1.sendMcu(r8, r6)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            goto L_0x0481
+        L_0x044e:
+            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r14] = r10     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r6 = 9
+            r5[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            goto L_0x0481
         L_0x045e:
-            int r5 = r3 + 1
-            float r5 = (float) r5
-            r6 = 1092616192(0x41200000, float:10.0)
-            float r5 = r5 / r6
-            android.content.Context r6 = r1.mContext
-            android.content.ContentResolver r6 = r6.getContentResolver()
-            java.lang.String r7 = "NaviMix"
-            android.provider.Settings.System.putFloat(r6, r7, r5)
-            goto L_0x05ab
-        L_0x0471:
-            java.lang.String r5 = "TimeSyncSoucrce"
-            int r5 = r1.getSettingsInt(r5)     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            if (r5 != 0) goto L_0x04a4
-            android.content.Context r5 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            android.content.ContentResolver r5 = r5.getContentResolver()     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            java.lang.String r6 = "time_12_24"
-            if (r3 != r9) goto L_0x0486
-            java.lang.String r7 = "12"
-            goto L_0x0488
-        L_0x0486:
-            java.lang.String r7 = "24"
-        L_0x0488:
-            android.provider.Settings.System.putString(r5, r6, r7)     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            android.content.Intent r5 = new android.content.Intent     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            java.lang.String r6 = "android.intent.action.TIME_SET"
-            r5.<init>(r6)     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            android.content.Context r6 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            android.content.Context r7 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            android.content.pm.ApplicationInfo r7 = r7.getApplicationInfo()     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            int r7 = r7.uid     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            android.os.UserHandle r7 = android.os.UserHandle.getUserHandleForUid(r7)     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            r6.sendBroadcastAsUser(r5, r7)     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            goto L_0x04b1
-        L_0x04a4:
-            byte[] r5 = new byte[r15]     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            r6 = 15
-            r5[r16] = r6     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            r5[r9] = r4     // Catch:{ SettingNotFoundException -> 0x04b3 }
-            r6 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r6, r5)     // Catch:{ SettingNotFoundException -> 0x04b3 }
-        L_0x04b1:
-            goto L_0x05ab
-        L_0x04b3:
+            java.lang.String r5 = "Bass_value"
+            int r5 = r1.getSettingsInt(r5)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            byte r5 = (byte) r5     // Catch:{ SettingNotFoundException -> 0x0483 }
+            java.lang.String r6 = "Middle_value"
+            int r6 = r1.getSettingsInt(r6)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            byte r6 = (byte) r6     // Catch:{ SettingNotFoundException -> 0x0483 }
+            java.lang.String r7 = "Treble_value"
+            int r7 = r1.getSettingsInt(r7)     // Catch:{ SettingNotFoundException -> 0x0483 }
+            byte r7 = (byte) r7     // Catch:{ SettingNotFoundException -> 0x0483 }
+            byte[] r9 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r9[r14] = r5     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r9[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r9[r13] = r7     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r9[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0483 }
+            r1.sendMcu(r8, r9)     // Catch:{ SettingNotFoundException -> 0x0483 }
+        L_0x0481:
+            goto L_0x05d3
+        L_0x0483:
             r0 = move-exception
-            goto L_0x05ab
-        L_0x04b6:
-            byte[] r5 = new byte[r15]
-            r5[r16] = r12
-            r5[r9] = r4
-            r6 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r6, r5)
+            goto L_0x05d3
+        L_0x0486:
+            int r0 = r3 + 1
+            float r0 = (float) r0
+            r5 = 1092616192(0x41200000, float:10.0)
+            float r0 = r0 / r5
             android.content.Context r5 = r1.mContext
             android.content.ContentResolver r5 = r5.getContentResolver()
-            java.lang.String r6 = "auto_time"
-            if (r4 != r9) goto L_0x04cd
-            r9 = 0
-        L_0x04cd:
-            android.provider.Settings.Global.putInt(r5, r6, r9)
-            goto L_0x05ab
-        L_0x04d2:
+            java.lang.String r6 = "NaviMix"
+            android.provider.Settings.System.putFloat(r5, r6, r0)
+            goto L_0x05d3
+        L_0x0499:
+            java.lang.String r0 = "TimeSyncSoucrce"
+            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x04db }
+            if (r0 != 0) goto L_0x04cc
+            android.content.Context r0 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04db }
+            android.content.ContentResolver r0 = r0.getContentResolver()     // Catch:{ SettingNotFoundException -> 0x04db }
+            java.lang.String r5 = "time_12_24"
+            if (r3 != r15) goto L_0x04ae
+            java.lang.String r6 = "12"
+            goto L_0x04b0
+        L_0x04ae:
+            java.lang.String r6 = "24"
+        L_0x04b0:
+            android.provider.Settings.System.putString(r0, r5, r6)     // Catch:{ SettingNotFoundException -> 0x04db }
+            android.content.Intent r0 = new android.content.Intent     // Catch:{ SettingNotFoundException -> 0x04db }
+            java.lang.String r5 = "android.intent.action.TIME_SET"
+            r0.<init>((java.lang.String) r5)     // Catch:{ SettingNotFoundException -> 0x04db }
+            android.content.Context r5 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04db }
+            android.content.Context r6 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04db }
+            android.content.pm.ApplicationInfo r6 = r6.getApplicationInfo()     // Catch:{ SettingNotFoundException -> 0x04db }
+            int r6 = r6.uid     // Catch:{ SettingNotFoundException -> 0x04db }
+            android.os.UserHandle r6 = android.os.UserHandle.getUserHandleForUid(r6)     // Catch:{ SettingNotFoundException -> 0x04db }
+            r5.sendBroadcastAsUser(r0, r6)     // Catch:{ SettingNotFoundException -> 0x04db }
+            goto L_0x04d9
+        L_0x04cc:
+            byte[] r0 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x04db }
+            r5 = 15
+            r0[r14] = r5     // Catch:{ SettingNotFoundException -> 0x04db }
+            r0[r15] = r4     // Catch:{ SettingNotFoundException -> 0x04db }
+            r5 = 106(0x6a, float:1.49E-43)
+            r1.sendMcu(r5, r0)     // Catch:{ SettingNotFoundException -> 0x04db }
+        L_0x04d9:
+            goto L_0x05d3
+        L_0x04db:
+            r0 = move-exception
+            goto L_0x05d3
+        L_0x04de:
+            byte[] r0 = new byte[r13]
+            r0[r14] = r10
+            r0[r15] = r4
+            r5 = 106(0x6a, float:1.49E-43)
+            r1.sendMcu(r5, r0)
+            android.content.Context r0 = r1.mContext
+            android.content.ContentResolver r0 = r0.getContentResolver()
+            java.lang.String r5 = "auto_time"
+            if (r4 != r15) goto L_0x04f4
+            goto L_0x04f5
+        L_0x04f4:
+            r14 = r15
+        L_0x04f5:
+            android.provider.Settings.Global.putInt(r0, r5, r14)
+            goto L_0x05d3
+        L_0x04fa:
+            byte[] r0 = new byte[r9]
+            r0[r14] = r14
+            r0[r15] = r13
+            r0[r13] = r12
+            r0[r12] = r4
+            boolean r5 = r1.isSyncStatus
+            byte r5 = (byte) r5
+            r0[r11] = r5
             r5 = 98
-            byte[] r6 = new byte[r11]
-            r6[r16] = r16
-            r6[r9] = r15
-            r6[r15] = r14
-            r6[r14] = r4
-            boolean r7 = r1.isSyncStatus
-            byte r7 = (byte) r7
-            r6[r13] = r7
-            r1.sendMcu(r5, r6)
-            goto L_0x05ab
-        L_0x04e8:
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
+        L_0x0510:
+            byte[] r0 = new byte[r9]
+            r0[r14] = r14
+            r0[r15] = r13
+            r0[r13] = r13
+            r0[r12] = r4
+            boolean r5 = r1.isSyncStatus
+            byte r5 = (byte) r5
+            r0[r11] = r5
             r5 = 98
-            byte[] r6 = new byte[r11]
-            r6[r16] = r16
-            r6[r9] = r15
-            r6[r15] = r15
-            r6[r14] = r4
-            boolean r7 = r1.isSyncStatus
-            byte r7 = (byte) r7
-            r6[r13] = r7
-            r1.sendMcu(r5, r6)
-            goto L_0x05ab
-        L_0x04fe:
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
+        L_0x0526:
+            byte[] r0 = new byte[r9]
+            r0[r14] = r14
+            r0[r15] = r15
+            r0[r13] = r13
+            r0[r12] = r4
+            boolean r5 = r1.isSyncStatus
+            byte r5 = (byte) r5
+            r0[r11] = r5
             r5 = 98
-            byte[] r6 = new byte[r11]
-            r6[r16] = r16
-            r6[r9] = r9
-            r6[r15] = r15
-            r6[r14] = r4
-            boolean r7 = r1.isSyncStatus
-            byte r7 = (byte) r7
-            r6[r13] = r7
-            r1.sendMcu(r5, r6)
-            goto L_0x05ab
-        L_0x0514:
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
+        L_0x053c:
+            byte[] r0 = new byte[r9]
+            r0[r14] = r14
+            r0[r15] = r15
+            r0[r13] = r15
+            r0[r12] = r4
+            boolean r5 = r1.isSyncStatus
+            byte r5 = (byte) r5
+            r0[r11] = r5
             r5 = 98
-            byte[] r6 = new byte[r11]
-            r6[r16] = r16
-            r6[r9] = r9
-            r6[r15] = r9
-            r6[r14] = r4
-            boolean r7 = r1.isSyncStatus
-            byte r7 = (byte) r7
-            r6[r13] = r7
-            r1.sendMcu(r5, r6)
-            goto L_0x05ab
-        L_0x052a:
-            int r5 = r3 * 1023
-            int r5 = r5 / 100
-            r6 = 10
-            r7 = 255(0xff, float:3.57E-43)
-            int r5 = com.wits.pms.mcu.custom.utils.BrightnessUtils.convertGammaToLinear(r5, r6, r7)
-            android.content.Context r6 = r1.mContext
-            android.content.ContentResolver r6 = r6.getContentResolver()
-            java.lang.String r7 = "screen_brightness"
-            android.provider.Settings.System.putInt(r6, r7, r5)
-            boolean r6 = r1.isSyncStatus
-            if (r6 == 0) goto L_0x05ab
-            com.wits.pms.core.CenterControlImpl r6 = com.wits.pms.core.CenterControlImpl.getImpl()
-            r6.setBrightness(r3)
-            goto L_0x05ab
-        L_0x054d:
-            byte[] r5 = new byte[r15]
-            r6 = 11
-            r5[r16] = r6
-            r5[r9] = r4
-            r6 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r6, r5)
-            goto L_0x05ab
-        L_0x055b:
-            r6 = 106(0x6a, float:1.49E-43)
-            byte[] r5 = new byte[r15]
-            r7 = 20
-            r5[r16] = r7
-            r5[r9] = r4
-            r1.sendMcu(r6, r5)
-            goto L_0x05ab
-        L_0x0569:
-            byte[] r5 = new byte[r15]
-            r6 = 8
-            r5[r16] = r6
-            r5[r9] = r4
-            r1.sendMcu(r8, r5)
-            goto L_0x05ab
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
+        L_0x0552:
+            int r0 = r3 * 1023
+            int r0 = r0 / 100
+            r5 = 10
+            r6 = 255(0xff, float:3.57E-43)
+            int r0 = com.wits.pms.mcu.custom.utils.BrightnessUtils.convertGammaToLinear(r0, r5, r6)
+            android.content.Context r5 = r1.mContext
+            android.content.ContentResolver r5 = r5.getContentResolver()
+            java.lang.String r6 = "screen_brightness"
+            android.provider.Settings.System.putInt(r5, r6, r0)
+            boolean r5 = r1.isSyncStatus
+            if (r5 == 0) goto L_0x05d3
+            com.wits.pms.core.CenterControlImpl r5 = com.wits.pms.core.CenterControlImpl.getImpl()
+            r5.setBrightness(r3)
+            goto L_0x05d3
         L_0x0575:
-            byte[] r5 = new byte[r15]
-            r6 = 14
-            r5[r16] = r6
-            r5[r9] = r4
-            r6 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r6, r5)
-            goto L_0x05ab
+            byte[] r0 = new byte[r13]
+            r5 = 11
+            r0[r14] = r5
+            r0[r15] = r4
+            r5 = 106(0x6a, float:1.49E-43)
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
         L_0x0583:
-            r6 = 106(0x6a, float:1.49E-43)
-            byte[] r5 = new byte[r15]
-            r7 = 23
-            r5[r16] = r7
-            r5[r9] = r4
-            r1.sendMcu(r6, r5)
-            goto L_0x05ab
+            r5 = 106(0x6a, float:1.49E-43)
+            byte[] r0 = new byte[r13]
+            r6 = 20
+            r0[r14] = r6
+            r0[r15] = r4
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
         L_0x0591:
-            r6 = 106(0x6a, float:1.49E-43)
-            byte[] r5 = new byte[r15]
-            r7 = 22
-            r5[r16] = r7
-            r5[r9] = r4
-            r1.sendMcu(r6, r5)
-            goto L_0x05ab
-        L_0x059f:
-            r6 = 106(0x6a, float:1.49E-43)
-            byte[] r5 = new byte[r15]
-            r5[r16] = r9
-            r5[r9] = r4
-            r1.sendMcu(r6, r5)
+            byte[] r0 = new byte[r13]
+            r5 = 8
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x05d3
+        L_0x059d:
+            byte[] r0 = new byte[r13]
+            r5 = 14
+            r0[r14] = r5
+            r0[r15] = r4
+            r5 = 106(0x6a, float:1.49E-43)
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
         L_0x05ab:
+            r5 = 106(0x6a, float:1.49E-43)
+            byte[] r0 = new byte[r13]
+            r6 = 23
+            r0[r14] = r6
+            r0[r15] = r4
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
+        L_0x05b9:
+            r5 = 106(0x6a, float:1.49E-43)
+            byte[] r0 = new byte[r13]
+            r6 = 22
+            r0[r14] = r6
+            r0[r15] = r4
+            r1.sendMcu(r5, r0)
+            goto L_0x05d3
+        L_0x05c7:
+            r5 = 106(0x6a, float:1.49E-43)
+            byte[] r0 = new byte[r13]
+            r0[r14] = r15
+            r0[r15] = r4
+            r1.sendMcu(r5, r0)
+        L_0x05d3:
             return r3
         */
         throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.custom.KswSettings.handleConfig(java.lang.String, int):int");
     }
 
     private void reboot() {
-        this.mHandler.postDelayed(KswSettings$$Lambda$0.$instance, 500);
+        this.mHandler.postDelayed($$Lambda$KswSettings$5nUKr8yRkQeboAsX8u8qFJsh60E.INSTANCE, 500);
     }
 
     private boolean checkUi() {
@@ -1354,12 +1400,12 @@ public class KswSettings {
         }
 
         private void clearData() {
-            KswSettings.this.saveIntKeyToSp(BuildConfig.FLAVOR);
-            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.STRING_KEY_MAP, BuildConfig.FLAVOR);
-            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.CAN_ID, BuildConfig.FLAVOR);
-            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.CAR_DISPLAY_ID, BuildConfig.FLAVOR);
-            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.LANGUAGE_ID, BuildConfig.FLAVOR);
-            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.CODE_LIST, BuildConfig.FLAVOR);
+            KswSettings.this.saveIntKeyToSp("");
+            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.STRING_KEY_MAP, "");
+            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.CAN_ID, "");
+            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.CAR_DISPLAY_ID, "");
+            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.LANGUAGE_ID, "");
+            Settings.System.putString(KswSettings.this.mContext.getContentResolver(), KswSettings.CODE_LIST, "");
             this.addFactorySettingsLocal = FactorySettings.getFactorySettings() == null;
             Log.i("FactorySettings", "local factory data - " + this.addFactorySettingsLocal);
             if (this.addFactorySettingsLocal) {
@@ -1369,405 +1415,452 @@ public class KswSettings {
             }
         }
 
-        /* JADX WARNING: Removed duplicated region for block: B:88:0x02c1 A[Catch:{ Exception -> 0x0372 }] */
-        /* JADX WARNING: Removed duplicated region for block: B:89:0x02c5 A[Catch:{ Exception -> 0x0372 }] */
+        /* JADX WARNING: Removed duplicated region for block: B:92:0x0343 A[Catch:{ Exception -> 0x03f4 }] */
+        /* JADX WARNING: Removed duplicated region for block: B:93:0x0347 A[Catch:{ Exception -> 0x03f4 }] */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void run() {
             /*
                 r11 = this;
                 r11.clearData()
-                java.io.File r0 = r11.mConfig     // Catch:{ Exception -> 0x0372 }
-                boolean r0 = r0.exists()     // Catch:{ Exception -> 0x0372 }
+                java.io.File r0 = r11.mConfig     // Catch:{ Exception -> 0x03f4 }
+                boolean r0 = r0.exists()     // Catch:{ Exception -> 0x03f4 }
                 if (r0 != 0) goto L_0x000c
                 return
             L_0x000c:
-                java.io.FileReader r0 = new java.io.FileReader     // Catch:{ Exception -> 0x0372 }
-                java.io.File r1 = r11.mConfig     // Catch:{ Exception -> 0x0372 }
-                r0.<init>(r1)     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r1 = r0.getEncoding()     // Catch:{ Exception -> 0x0372 }
-                org.xmlpull.v1.XmlPullParserFactory r2 = org.xmlpull.v1.XmlPullParserFactory.newInstance()     // Catch:{ Exception -> 0x0372 }
-                org.xmlpull.v1.XmlPullParser r2 = r2.newPullParser()     // Catch:{ Exception -> 0x0372 }
-                java.io.FileInputStream r3 = new java.io.FileInputStream     // Catch:{ Exception -> 0x0372 }
-                java.io.File r4 = r11.mConfig     // Catch:{ Exception -> 0x0372 }
-                r3.<init>(r4)     // Catch:{ Exception -> 0x0372 }
-                r2.setInput(r3, r1)     // Catch:{ Exception -> 0x0372 }
-                int r3 = r2.getEventType()     // Catch:{ Exception -> 0x0372 }
-                com.google.gson.Gson r4 = new com.google.gson.Gson     // Catch:{ Exception -> 0x0372 }
-                r4.<init>()     // Catch:{ Exception -> 0x0372 }
+                java.io.FileReader r0 = new java.io.FileReader     // Catch:{ Exception -> 0x03f4 }
+                java.io.File r1 = r11.mConfig     // Catch:{ Exception -> 0x03f4 }
+                r0.<init>(r1)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r1 = r0.getEncoding()     // Catch:{ Exception -> 0x03f4 }
+                org.xmlpull.v1.XmlPullParserFactory r2 = org.xmlpull.v1.XmlPullParserFactory.newInstance()     // Catch:{ Exception -> 0x03f4 }
+                org.xmlpull.v1.XmlPullParser r2 = r2.newPullParser()     // Catch:{ Exception -> 0x03f4 }
+                java.io.FileInputStream r3 = new java.io.FileInputStream     // Catch:{ Exception -> 0x03f4 }
+                java.io.File r4 = r11.mConfig     // Catch:{ Exception -> 0x03f4 }
+                r3.<init>(r4)     // Catch:{ Exception -> 0x03f4 }
+                r2.setInput(r3, r1)     // Catch:{ Exception -> 0x03f4 }
+                int r3 = r2.getEventType()     // Catch:{ Exception -> 0x03f4 }
+                com.google.gson.Gson r4 = new com.google.gson.Gson     // Catch:{ Exception -> 0x03f4 }
+                r4.<init>()     // Catch:{ Exception -> 0x03f4 }
             L_0x0032:
                 r5 = 0
                 r6 = 1
-                if (r3 == r6) goto L_0x0336
-                if (r3 == 0) goto L_0x032e
+                if (r3 == r6) goto L_0x03b8
+                if (r3 == 0) goto L_0x03b0
                 switch(r3) {
-                    case 2: goto L_0x0178;
+                    case 2: goto L_0x01fa;
                     case 3: goto L_0x003d;
                     default: goto L_0x003b;
-                }     // Catch:{ Exception -> 0x0372 }
+                }     // Catch:{ Exception -> 0x03f4 }
             L_0x003b:
-                goto L_0x032f
+                goto L_0x03b1
             L_0x003d:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "setings"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
                 if (r6 == 0) goto L_0x004d
-                r11.setting = r5     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
+                r11.setting = r5     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
             L_0x004d:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "factory"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
                 if (r6 == 0) goto L_0x005d
-                r11.factory = r5     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
+                r11.factory = r5     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
             L_0x005d:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportNaviAppList"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
                 if (r6 == 0) goto L_0x007f
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportNaviAppList"
-                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                r11.naviList = r5     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                r11.naviList = r5     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
             L_0x007f:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CarDisplayParam"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
                 if (r6 == 0) goto L_0x00b3
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CarDisplayParam"
-                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CarDisplayParamID"
-                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                r11.carType = r5     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
+                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                r11.carType = r5     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
             L_0x00b3:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CANBusProtocol"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
                 if (r6 == 0) goto L_0x00ee
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CANBusProtocol"
-                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CANBusProtocolID"
-                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r7 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                r6.setUpProtocolForInit(r7)     // Catch:{ Exception -> 0x0372 }
-                r11.canType = r5     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
+                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r7 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                r6.setUpProtocolForInit(r7)     // Catch:{ Exception -> 0x03f4 }
+                r11.canType = r5     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
             L_0x00ee:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportLanguageList"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r6 == 0) goto L_0x0134
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r6 == 0) goto L_0x01b6
+                java.lang.String r6 = "KswSettings"
+                java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x03f4 }
+                r7.<init>()     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = "dataList = "
+                r7.append(r8)     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r7.append(r8)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = " codeList = "
+                r7.append(r8)     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r8 = r11.codeList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r7.append(r8)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = "   idList = "
+                r7.append(r8)     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r7.append(r8)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = r7.toString()     // Catch:{ Exception -> 0x03f4 }
+                android.util.Log.d(r6, r7)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r6 = android.os.Build.DISPLAY     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = "8937"
+                boolean r6 = r6.contains(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r6 == 0) goto L_0x017c
+                java.util.ArrayList<java.lang.String> r6 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                r6.clear()     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r6 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                r6.clear()     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r6 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = "简体中文"
+                r6.add(r7)     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r6 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = "0"
+                r6.add(r7)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportLanguageList"
-                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "codeList"
-                java.util.ArrayList<java.lang.String> r8 = r11.codeList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                java.util.ArrayList<java.lang.String> r8 = r11.codeList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "languageID"
-                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                r11.language = r5     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.codeList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x0134:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x01a3
+            L_0x017c:
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = "SupportLanguageList"
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = "codeList"
+                java.util.ArrayList<java.lang.String> r8 = r11.codeList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = "languageID"
+                java.util.ArrayList<java.lang.String> r8 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+            L_0x01a3:
+                r11.language = r5     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.codeList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x01b6:
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportUIList"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r6 == 0) goto L_0x0156
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r6 == 0) goto L_0x01d8
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportUIList"
-                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                r11.uiType = r5     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                r5.clear()     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x0156:
-                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                r11.uiType = r5     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                r5.clear()     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x01d8:
+                java.lang.String r6 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportDvrAppList"
-                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r6 == 0) goto L_0x032f
-                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+                boolean r6 = r6.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r6 == 0) goto L_0x03b1
+                com.wits.pms.custom.KswSettings r6 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportDvrAppList"
-                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x0372 }
-                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                java.util.ArrayList<java.lang.String> r6 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                r6.clear()     // Catch:{ Exception -> 0x0372 }
-                r11.dvrList = r5     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x0178:
-                boolean r7 = r11.setting     // Catch:{ Exception -> 0x0372 }
-                if (r7 != 0) goto L_0x0213
-                boolean r7 = r11.factory     // Catch:{ Exception -> 0x0372 }
-                if (r7 == 0) goto L_0x0182
-                goto L_0x0213
-            L_0x0182:
-                boolean r7 = r11.naviList     // Catch:{ Exception -> 0x0372 }
-                if (r7 != 0) goto L_0x0202
-                boolean r7 = r11.dvrList     // Catch:{ Exception -> 0x0372 }
-                if (r7 == 0) goto L_0x018c
-                goto L_0x0202
-            L_0x018c:
-                boolean r7 = r11.canType     // Catch:{ Exception -> 0x0372 }
-                if (r7 != 0) goto L_0x01e8
-                boolean r7 = r11.carType     // Catch:{ Exception -> 0x0372 }
-                if (r7 == 0) goto L_0x0195
-                goto L_0x01e8
-            L_0x0195:
-                boolean r5 = r11.language     // Catch:{ Exception -> 0x0372 }
-                if (r5 != 0) goto L_0x019d
-                boolean r5 = r11.uiType     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02b5
-            L_0x019d:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x01ac
-                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r7 = r2.getAttributeValue(r6)     // Catch:{ Exception -> 0x0372 }
-                r5.add(r7)     // Catch:{ Exception -> 0x0372 }
-            L_0x01ac:
+                java.util.ArrayList<java.lang.String> r8 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r4.toJson((java.lang.Object) r8)     // Catch:{ Exception -> 0x03f4 }
+                r6.saveJson(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                java.util.ArrayList<java.lang.String> r6 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                r6.clear()     // Catch:{ Exception -> 0x03f4 }
+                r11.dvrList = r5     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x01fa:
+                boolean r7 = r11.setting     // Catch:{ Exception -> 0x03f4 }
+                if (r7 != 0) goto L_0x0295
+                boolean r7 = r11.factory     // Catch:{ Exception -> 0x03f4 }
+                if (r7 == 0) goto L_0x0204
+                goto L_0x0295
+            L_0x0204:
+                boolean r7 = r11.naviList     // Catch:{ Exception -> 0x03f4 }
+                if (r7 != 0) goto L_0x0284
+                boolean r7 = r11.dvrList     // Catch:{ Exception -> 0x03f4 }
+                if (r7 == 0) goto L_0x020e
+                goto L_0x0284
+            L_0x020e:
+                boolean r7 = r11.canType     // Catch:{ Exception -> 0x03f4 }
+                if (r7 != 0) goto L_0x026a
+                boolean r7 = r11.carType     // Catch:{ Exception -> 0x03f4 }
+                if (r7 == 0) goto L_0x0217
+                goto L_0x026a
+            L_0x0217:
+                boolean r5 = r11.language     // Catch:{ Exception -> 0x03f4 }
+                if (r5 != 0) goto L_0x021f
+                boolean r5 = r11.uiType     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0337
+            L_0x021f:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x022e
+                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = r2.getAttributeValue(r6)     // Catch:{ Exception -> 0x03f4 }
+                r5.add(r7)     // Catch:{ Exception -> 0x03f4 }
+            L_0x022e:
                 java.lang.String r5 = ""
                 java.lang.String r7 = "code"
-                java.lang.String r5 = r2.getAttributeValue(r5, r7)     // Catch:{ Exception -> 0x0372 }
-                boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x0372 }
-                if (r5 != 0) goto L_0x01c7
-                java.util.ArrayList<java.lang.String> r5 = r11.codeList     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r5 = r2.getAttributeValue(r5, r7)     // Catch:{ Exception -> 0x03f4 }
+                boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 != 0) goto L_0x0249
+                java.util.ArrayList<java.lang.String> r5 = r11.codeList     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = ""
                 java.lang.String r8 = "code"
-                java.lang.String r7 = r2.getAttributeValue(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                r5.add(r7)     // Catch:{ Exception -> 0x0372 }
-            L_0x01c7:
-                boolean r5 = r11.language     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02b5
+                java.lang.String r7 = r2.getAttributeValue(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                r5.add(r7)     // Catch:{ Exception -> 0x03f4 }
+            L_0x0249:
+                boolean r5 = r11.language     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0337
                 java.lang.String r5 = ""
                 java.lang.String r7 = "id"
-                java.lang.String r5 = r2.getAttributeValue(r5, r7)     // Catch:{ Exception -> 0x0372 }
-                boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x0372 }
-                if (r5 != 0) goto L_0x02b5
-                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x0372 }
+                java.lang.String r5 = r2.getAttributeValue(r5, r7)     // Catch:{ Exception -> 0x03f4 }
+                boolean r5 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 != 0) goto L_0x0337
+                java.util.ArrayList<java.lang.String> r5 = r11.idList     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = ""
                 java.lang.String r8 = "id"
-                java.lang.String r7 = r2.getAttributeValue(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                r5.add(r7)     // Catch:{ Exception -> 0x0372 }
-                goto L_0x02b5
-            L_0x01e8:
-                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                if (r7 == 0) goto L_0x01f7
-                java.util.ArrayList<java.lang.String> r7 = r11.idList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r5 = r2.getAttributeValue(r5)     // Catch:{ Exception -> 0x0372 }
-                r7.add(r5)     // Catch:{ Exception -> 0x0372 }
-            L_0x01f7:
-                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r7 = r2.nextText()     // Catch:{ Exception -> 0x0372 }
-                r5.add(r7)     // Catch:{ Exception -> 0x0372 }
-                goto L_0x02b5
-            L_0x0202:
-                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                if (r7 == 0) goto L_0x02b5
-                java.util.ArrayList<java.lang.String> r7 = r11.dataList     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r5 = r2.getAttributeValue(r5)     // Catch:{ Exception -> 0x0372 }
-                r7.add(r5)     // Catch:{ Exception -> 0x0372 }
-                goto L_0x02b5
-            L_0x0213:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02b5
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r7 = "Language"
-                boolean r5 = r5.equals(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x0250
-                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                java.lang.StringBuilder r8 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x0372 }
-                r8.<init>()     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r9 = ""
-                r8.append(r9)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r10 = "languageID"
-                java.util.List r9 = r9.getDataListFromJsonKey(r10)     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r10 = r2.nextText()     // Catch:{ Exception -> 0x0372 }
-                int r9 = r9.indexOf(r10)     // Catch:{ Exception -> 0x0372 }
-                r8.append(r9)     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r8.toString()     // Catch:{ Exception -> 0x0372 }
-                r5.saveConfig(r7, r8)     // Catch:{ Exception -> 0x0372 }
-                goto L_0x02b5
-            L_0x0250:
-                boolean r5 = r11.factory     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02a8
-                boolean r5 = r11.addFactorySettingsLocal     // Catch:{ Exception -> 0x0372 }
-                if (r5 != 0) goto L_0x02a8
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.FactorySettings r7 = r7.mFactorySettings     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r7 = r7.getStringValue(r5)     // Catch:{ Exception -> 0x0372 }
-                if (r7 != 0) goto L_0x0284
-                java.lang.StringBuilder r8 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x0372 }
-                r8.<init>()     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.FactorySettings r9 = r9.mFactorySettings     // Catch:{ Exception -> 0x0372 }
-                int r9 = r9.getIntValue(r5)     // Catch:{ Exception -> 0x0372 }
-                r8.append(r9)     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r9 = ""
-                r8.append(r9)     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r8.toString()     // Catch:{ Exception -> 0x0372 }
-                r7 = r8
+                java.lang.String r7 = r2.getAttributeValue(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                r5.add(r7)     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x0337
+            L_0x026a:
+                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                if (r7 == 0) goto L_0x0279
+                java.util.ArrayList<java.lang.String> r7 = r11.idList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r5 = r2.getAttributeValue(r5)     // Catch:{ Exception -> 0x03f4 }
+                r7.add(r5)     // Catch:{ Exception -> 0x03f4 }
+            L_0x0279:
+                java.util.ArrayList<java.lang.String> r5 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = r2.nextText()     // Catch:{ Exception -> 0x03f4 }
+                r5.add(r7)     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x0337
             L_0x0284:
+                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                if (r7 == 0) goto L_0x0337
+                java.util.ArrayList<java.lang.String> r7 = r11.dataList     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r5 = r2.getAttributeValue(r5)     // Catch:{ Exception -> 0x03f4 }
+                r7.add(r5)     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x0337
+            L_0x0295:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0337
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = "Language"
+                boolean r5 = r5.equals(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x02d2
+                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                java.lang.StringBuilder r8 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x03f4 }
+                r8.<init>()     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r9 = ""
+                r8.append(r9)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r10 = "languageID"
+                java.util.List r9 = r9.getDataListFromJsonKey(r10)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r10 = r2.nextText()     // Catch:{ Exception -> 0x03f4 }
+                int r9 = r9.indexOf(r10)     // Catch:{ Exception -> 0x03f4 }
+                r8.append(r9)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r8.toString()     // Catch:{ Exception -> 0x03f4 }
+                r5.saveConfig(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x0337
+            L_0x02d2:
+                boolean r5 = r11.factory     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x032a
+                boolean r5 = r11.addFactorySettingsLocal     // Catch:{ Exception -> 0x03f4 }
+                if (r5 != 0) goto L_0x032a
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.FactorySettings r7 = r7.mFactorySettings     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = r7.getStringValue(r5)     // Catch:{ Exception -> 0x03f4 }
+                if (r7 != 0) goto L_0x0306
+                java.lang.StringBuilder r8 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x03f4 }
+                r8.<init>()     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r9 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.FactorySettings r9 = r9.mFactorySettings     // Catch:{ Exception -> 0x03f4 }
+                int r9 = r9.getIntValue(r5)     // Catch:{ Exception -> 0x03f4 }
+                r8.append(r9)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r9 = ""
+                r8.append(r9)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r8.toString()     // Catch:{ Exception -> 0x03f4 }
+                r7 = r8
+            L_0x0306:
                 java.lang.String r8 = "FactorySettings"
-                java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x0372 }
-                r9.<init>()     // Catch:{ Exception -> 0x0372 }
+                java.lang.StringBuilder r9 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x03f4 }
+                r9.<init>()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r10 = "FactorySettings data key:"
-                r9.append(r10)     // Catch:{ Exception -> 0x0372 }
-                r9.append(r5)     // Catch:{ Exception -> 0x0372 }
+                r9.append(r10)     // Catch:{ Exception -> 0x03f4 }
+                r9.append(r5)     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r10 = " - value:"
-                r9.append(r10)     // Catch:{ Exception -> 0x0372 }
-                r9.append(r7)     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r9 = r9.toString()     // Catch:{ Exception -> 0x0372 }
-                android.util.Log.i(r8, r9)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r8 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                r8.saveConfig(r5, r7)     // Catch:{ Exception -> 0x0372 }
-                goto L_0x02b5
-            L_0x02a8:
-                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r8 = r2.nextText()     // Catch:{ Exception -> 0x0372 }
-                r5.saveConfig(r7, r8)     // Catch:{ Exception -> 0x0372 }
-            L_0x02b5:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                r9.append(r10)     // Catch:{ Exception -> 0x03f4 }
+                r9.append(r7)     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r9 = r9.toString()     // Catch:{ Exception -> 0x03f4 }
+                android.util.Log.i(r8, r9)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r8 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                r8.saveConfig(r5, r7)     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x0337
+            L_0x032a:
+                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r8 = r2.nextText()     // Catch:{ Exception -> 0x03f4 }
+                r5.saveConfig(r7, r8)     // Catch:{ Exception -> 0x03f4 }
+            L_0x0337:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "setings"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02c5
-                r11.setting = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x02c5:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0347
+                r11.setting = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x0347:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "factory"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02d4
-                r11.factory = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x02d4:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0356
+                r11.factory = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x0356:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportNaviAppList"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02e3
-                r11.naviList = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x02e3:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0365
+                r11.naviList = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x0365:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CarDisplayParam"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x02f2
-                r11.carType = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x02f2:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0374
+                r11.carType = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x0374:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "CANBusProtocol"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x0301
-                r11.canType = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x0301:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0383
+                r11.canType = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x0383:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportLanguageList"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x0310
-                r11.language = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x0310:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x0392
+                r11.language = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x0392:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportUIList"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x031f
-                r11.uiType = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x031f:
-                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x03a1
+                r11.uiType = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x03a1:
+                java.lang.String r5 = r2.getName()     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "SupportDvrAppList"
-                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 == 0) goto L_0x032f
-                r11.dvrList = r6     // Catch:{ Exception -> 0x0372 }
-                goto L_0x032f
-            L_0x032e:
-            L_0x032f:
-                int r5 = r2.next()     // Catch:{ Exception -> 0x0372 }
+                boolean r5 = r5.equalsIgnoreCase(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 == 0) goto L_0x03b1
+                r11.dvrList = r6     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03b1
+            L_0x03b0:
+            L_0x03b1:
+                int r5 = r2.next()     // Catch:{ Exception -> 0x03f4 }
                 r3 = r5
                 goto L_0x0032
-            L_0x0336:
-                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                boolean unused = r7.onlyLanguageId = r5     // Catch:{ Exception -> 0x0372 }
-                java.io.File r5 = r11.mConfig     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r5 = r5.getAbsolutePath()     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                java.io.File r7 = r7.defaultConfig     // Catch:{ Exception -> 0x0372 }
-                java.lang.String r7 = r7.getAbsolutePath()     // Catch:{ Exception -> 0x0372 }
-                boolean r5 = r5.equals(r7)     // Catch:{ Exception -> 0x0372 }
-                if (r5 != 0) goto L_0x036a
-                java.io.File r5 = r11.mConfig     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                java.io.File r7 = r7.defaultConfig     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.utils.CopyFile.copyTo(r5, r7)     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
-                android.os.Handler r5 = r5.mHandler     // Catch:{ Exception -> 0x0372 }
-                com.wits.pms.custom.KswSettings$InitConfigRunnable$$Lambda$0 r7 = new com.wits.pms.custom.KswSettings$InitConfigRunnable$$Lambda$0     // Catch:{ Exception -> 0x0372 }
-                r7.<init>(r11)     // Catch:{ Exception -> 0x0372 }
-                r5.post(r7)     // Catch:{ Exception -> 0x0372 }
-            L_0x036a:
-                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x0372 }
+            L_0x03b8:
+                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                boolean unused = r7.onlyLanguageId = r5     // Catch:{ Exception -> 0x03f4 }
+                java.io.File r5 = r11.mConfig     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r5 = r5.getAbsolutePath()     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.io.File r7 = r7.defaultConfig     // Catch:{ Exception -> 0x03f4 }
+                java.lang.String r7 = r7.getAbsolutePath()     // Catch:{ Exception -> 0x03f4 }
+                boolean r5 = r5.equals(r7)     // Catch:{ Exception -> 0x03f4 }
+                if (r5 != 0) goto L_0x03ec
+                java.io.File r5 = r11.mConfig     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r7 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                java.io.File r7 = r7.defaultConfig     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.utils.CopyFile.copyTo(r5, r7)     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
+                android.os.Handler r5 = r5.mHandler     // Catch:{ Exception -> 0x03f4 }
+                com.wits.pms.custom.-$$Lambda$KswSettings$InitConfigRunnable$_9H3V7Punr9ZRjsLwtgyMAkCm50 r7 = new com.wits.pms.custom.-$$Lambda$KswSettings$InitConfigRunnable$_9H3V7Punr9ZRjsLwtgyMAkCm50     // Catch:{ Exception -> 0x03f4 }
+                r7.<init>()     // Catch:{ Exception -> 0x03f4 }
+                r5.post(r7)     // Catch:{ Exception -> 0x03f4 }
+            L_0x03ec:
+                com.wits.pms.custom.KswSettings r5 = com.wits.pms.custom.KswSettings.this     // Catch:{ Exception -> 0x03f4 }
                 java.lang.String r7 = "initKswConfig"
-                r5.setInt(r7, r6)     // Catch:{ Exception -> 0x0372 }
-                goto L_0x037a
-            L_0x0372:
+                r5.setInt(r7, r6)     // Catch:{ Exception -> 0x03f4 }
+                goto L_0x03fc
+            L_0x03f4:
                 r0 = move-exception
                 java.lang.String r1 = "KswSettings"
                 java.lang.String r2 = "error"
                 android.util.Log.e(r1, r2, r0)
-            L_0x037a:
+            L_0x03fc:
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.custom.KswSettings.InitConfigRunnable.run():void");
-        }
-
-        /* access modifiers changed from: package-private */
-        public final /* synthetic */ void lambda$run$0$KswSettings$InitConfigRunnable() {
-            Toast.makeText(KswSettings.this.mContext, R.string.import_config_success, 1).show();
         }
     }
 
@@ -1800,10 +1893,10 @@ public class KswSettings {
     }
 
     public void setUpProtocolForMcuListen(int id) {
-        setString("ProtocolData", id + BuildConfig.FLAVOR);
+        setString("ProtocolData", id + "");
         List<String> protocolID = getDataListFromJsonKey(CAN_ID);
         if (protocolID != null) {
-            setInt(PROTOCOL_KEY, protocolID.indexOf(id + BuildConfig.FLAVOR));
+            setInt(PROTOCOL_KEY, protocolID.indexOf(id + ""));
         }
     }
 

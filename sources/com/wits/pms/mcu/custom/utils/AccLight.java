@@ -1,7 +1,6 @@
 package com.wits.pms.mcu.custom.utils;
 
 import android.util.Log;
-import com.wits.pms.BuildConfig;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,7 +21,7 @@ public class AccLight {
                 int unused = AccLight.last = i;
                 try {
                     FileWriter fr = new FileWriter(new File(AccLight.ACC_CHANGE_PATH));
-                    fr.write(AccLight.last + BuildConfig.FLAVOR);
+                    fr.write(AccLight.last + "");
                     fr.close();
                 } catch (IOException e2) {
                     Log.e("AccLight", "write failed. cause:", e2);

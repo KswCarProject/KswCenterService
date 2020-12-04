@@ -11,6 +11,4 @@ public interface SupportMenu extends Menu {
     public static final int SUPPORTED_MODIFIERS_MASK = 69647;
     public static final int USER_MASK = 65535;
     public static final int USER_SHIFT = 0;
-
-    void setGroupDividerEnabled(boolean z);
 }

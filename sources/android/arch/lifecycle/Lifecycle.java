@@ -1,7 +1,6 @@
 package android.arch.lifecycle;
 
 import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
 
 public abstract class Lifecycle {
 
@@ -16,14 +15,13 @@ public abstract class Lifecycle {
     }
 
     @MainThread
-    public abstract void addObserver(@NonNull LifecycleObserver lifecycleObserver);
+    public abstract void addObserver(LifecycleObserver lifecycleObserver);
 
     @MainThread
-    @NonNull
     public abstract State getCurrentState();
 
     @MainThread
-    public abstract void removeObserver(@NonNull LifecycleObserver lifecycleObserver);
+    public abstract void removeObserver(LifecycleObserver lifecycleObserver);
 
     public enum State {
         DESTROYED,
@@ -32,7 +30,7 @@ public abstract class Lifecycle {
         STARTED,
         RESUMED;
 
-        public boolean isAtLeast(@NonNull State state) {
+        public boolean isAtLeast(State state) {
             return compareTo(state) >= 0;
         }
     }

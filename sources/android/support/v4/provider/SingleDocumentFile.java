@@ -2,8 +2,6 @@ package android.support.v4.provider;
 
 import android.content.Context;
 import android.net.Uri;
-import android.provider.DocumentsContract;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 @RequiresApi(19)
@@ -11,7 +9,7 @@ class SingleDocumentFile extends DocumentFile {
     private Context mContext;
     private Uri mUri;
 
-    SingleDocumentFile(@Nullable DocumentFile parent, Context context, Uri uri) {
+    SingleDocumentFile(DocumentFile parent, Context context, Uri uri) {
         super(parent);
         this.mContext = context;
         this.mUri = uri;
@@ -29,12 +27,10 @@ class SingleDocumentFile extends DocumentFile {
         return this.mUri;
     }
 
-    @Nullable
     public String getName() {
         return DocumentsContractApi19.getName(this.mContext, this.mUri);
     }
 
-    @Nullable
     public String getType() {
         return DocumentsContractApi19.getType(this.mContext, this.mUri);
     }
@@ -68,11 +64,7 @@ class SingleDocumentFile extends DocumentFile {
     }
 
     public boolean delete() {
-        try {
-            return DocumentsContract.deleteDocument(this.mContext.getContentResolver(), this.mUri);
-        } catch (Exception e) {
-            return false;
-        }
+        return DocumentsContractApi19.delete(this.mContext, this.mUri);
     }
 
     public boolean exists() {

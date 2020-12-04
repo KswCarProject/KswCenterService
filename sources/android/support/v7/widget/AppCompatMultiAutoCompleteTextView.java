@@ -11,8 +11,6 @@ import android.support.v4.view.TintableBackgroundView;
 import android.support.v7.appcompat.R;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 import android.widget.MultiAutoCompleteTextView;
 
 public class AppCompatMultiAutoCompleteTextView extends MultiAutoCompleteTextView implements TintableBackgroundView {
@@ -37,7 +35,7 @@ public class AppCompatMultiAutoCompleteTextView extends MultiAutoCompleteTextVie
         a.recycle();
         this.mBackgroundTintHelper = new AppCompatBackgroundHelper(this);
         this.mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
-        this.mTextHelper = new AppCompatTextHelper(this);
+        this.mTextHelper = AppCompatTextHelper.create(this);
         this.mTextHelper.loadFromAttributes(attrs, defStyleAttr);
         this.mTextHelper.applyCompoundDrawablesTints();
     }
@@ -108,9 +106,5 @@ public class AppCompatMultiAutoCompleteTextView extends MultiAutoCompleteTextVie
         if (this.mTextHelper != null) {
             this.mTextHelper.onSetTextAppearance(context, resId);
         }
-    }
-
-    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return AppCompatHintHelper.onCreateInputConnection(super.onCreateInputConnection(outAttrs), outAttrs, this);
     }
 }

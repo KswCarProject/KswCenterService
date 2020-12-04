@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.AttributeSet;
@@ -88,13 +87,13 @@ public class ActionBarDrawerToggle implements DrawerLayout.DrawerListener {
     }
 
     public void syncState() {
-        if (this.mDrawerLayout.isDrawerOpen((int) GravityCompat.START)) {
+        if (this.mDrawerLayout.isDrawerOpen(8388611)) {
             this.mSlider.setPosition(1.0f);
         } else {
             this.mSlider.setPosition(0.0f);
         }
         if (this.mDrawerIndicatorEnabled) {
-            setActionBarUpIndicator(this.mSlider, this.mDrawerLayout.isDrawerOpen((int) GravityCompat.START) ? this.mCloseDrawerContentDescRes : this.mOpenDrawerContentDescRes);
+            setActionBarUpIndicator(this.mSlider, this.mDrawerLayout.isDrawerOpen(8388611) ? this.mCloseDrawerContentDescRes : this.mOpenDrawerContentDescRes);
         }
     }
 
@@ -122,7 +121,7 @@ public class ActionBarDrawerToggle implements DrawerLayout.DrawerListener {
     public void setDrawerIndicatorEnabled(boolean enable) {
         if (enable != this.mDrawerIndicatorEnabled) {
             if (enable) {
-                setActionBarUpIndicator(this.mSlider, this.mDrawerLayout.isDrawerOpen((int) GravityCompat.START) ? this.mCloseDrawerContentDescRes : this.mOpenDrawerContentDescRes);
+                setActionBarUpIndicator(this.mSlider, this.mDrawerLayout.isDrawerOpen(8388611) ? this.mCloseDrawerContentDescRes : this.mOpenDrawerContentDescRes);
             } else {
                 setActionBarUpIndicator(this.mHomeAsUpIndicator, 0);
             }
@@ -143,14 +142,14 @@ public class ActionBarDrawerToggle implements DrawerLayout.DrawerListener {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item == null || item.getItemId() != ID_HOME || !this.mDrawerIndicatorEnabled) {
+        if (item == null || item.getItemId() != 16908332 || !this.mDrawerIndicatorEnabled) {
             return false;
         }
-        if (this.mDrawerLayout.isDrawerVisible((int) GravityCompat.START)) {
-            this.mDrawerLayout.closeDrawer((int) GravityCompat.START);
+        if (this.mDrawerLayout.isDrawerVisible(8388611)) {
+            this.mDrawerLayout.closeDrawer(8388611);
             return true;
         }
-        this.mDrawerLayout.openDrawer((int) GravityCompat.START);
+        this.mDrawerLayout.openDrawer(8388611);
         return true;
     }
 
@@ -268,12 +267,12 @@ public class ActionBarDrawerToggle implements DrawerLayout.DrawerListener {
                 this.mSetHomeAsUpIndicator = ActionBar.class.getDeclaredMethod("setHomeAsUpIndicator", new Class[]{Drawable.class});
                 this.mSetHomeActionContentDescription = ActionBar.class.getDeclaredMethod("setHomeActionContentDescription", new Class[]{Integer.TYPE});
             } catch (NoSuchMethodException e) {
-                View home = activity.findViewById(ActionBarDrawerToggle.ID_HOME);
+                View home = activity.findViewById(16908332);
                 if (home != null) {
                     ViewGroup parent = (ViewGroup) home.getParent();
                     if (parent.getChildCount() == 2) {
                         View first = parent.getChildAt(0);
-                        View up = first.getId() == ActionBarDrawerToggle.ID_HOME ? parent.getChildAt(1) : first;
+                        View up = first.getId() == 16908332 ? parent.getChildAt(1) : first;
                         if (up instanceof ImageView) {
                             this.mUpIndicatorView = (ImageView) up;
                         }

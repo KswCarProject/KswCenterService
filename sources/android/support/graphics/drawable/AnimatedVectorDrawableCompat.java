@@ -28,6 +28,7 @@ import android.support.v4.util.ArrayMap;
 import android.util.AttributeSet;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -38,7 +39,8 @@ public class AnimatedVectorDrawableCompat extends VectorDrawableCommon implement
     private static final String LOGTAG = "AnimatedVDCompat";
     private static final String TARGET = "target";
     private AnimatedVectorDrawableCompatState mAnimatedVectorState;
-    ArrayList<Animatable2Compat.AnimationCallback> mAnimationCallbacks;
+    /* access modifiers changed from: private */
+    public ArrayList<Animatable2Compat.AnimationCallback> mAnimationCallbacks;
     private Animator.AnimatorListener mAnimatorListener;
     private ArgbEvaluator mArgbEvaluator;
     AnimatedVectorDrawableDelegateState mCachedConstantStateDelegate;
@@ -145,8 +147,8 @@ public class AnimatedVectorDrawableCompat extends VectorDrawableCommon implement
         return this;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0048 A[Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }] */
-    /* JADX WARNING: Removed duplicated region for block: B:15:0x0050 A[Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }] */
+    /* JADX WARNING: Removed duplicated region for block: B:13:0x0048 A[Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }] */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x0055 A[Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }] */
     @android.support.annotation.Nullable
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public static android.support.graphics.drawable.AnimatedVectorDrawableCompat create(@android.support.annotation.NonNull android.content.Context r6, @android.support.annotation.DrawableRes int r7) {
@@ -171,10 +173,10 @@ public class AnimatedVectorDrawableCompat extends VectorDrawableCommon implement
             return r0
         L_0x002e:
             android.content.res.Resources r0 = r6.getResources()
-            android.content.res.XmlResourceParser r1 = r0.getXml(r7)     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
-            android.util.AttributeSet r2 = android.util.Xml.asAttributeSet(r1)     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
+            android.content.res.XmlResourceParser r1 = r0.getXml(r7)     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
+            android.util.AttributeSet r2 = android.util.Xml.asAttributeSet(r1)     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
         L_0x003a:
-            int r3 = r1.next()     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
+            int r3 = r1.next()     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
             r4 = r3
             r5 = 2
             if (r3 == r5) goto L_0x0046
@@ -182,28 +184,28 @@ public class AnimatedVectorDrawableCompat extends VectorDrawableCommon implement
             if (r4 == r3) goto L_0x0046
             goto L_0x003a
         L_0x0046:
-            if (r4 == r5) goto L_0x0050
-            org.xmlpull.v1.XmlPullParserException r3 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
-            java.lang.String r5 = "No start tag found"
-            r3.<init>(r5)     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
-            throw r3     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
-        L_0x0050:
-            android.content.res.Resources r3 = r6.getResources()     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
-            android.content.res.Resources$Theme r5 = r6.getTheme()     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
-            android.support.graphics.drawable.AnimatedVectorDrawableCompat r3 = createFromXmlInner(r6, r3, r1, r2, r5)     // Catch:{ XmlPullParserException -> 0x0066, IOException -> 0x005d }
+            if (r4 != r5) goto L_0x0055
+            android.content.res.Resources r3 = r6.getResources()     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
+            android.content.res.Resources$Theme r5 = r6.getTheme()     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
+            android.support.graphics.drawable.AnimatedVectorDrawableCompat r3 = createFromXmlInner(r6, r3, r1, r2, r5)     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
             return r3
+        L_0x0055:
+            org.xmlpull.v1.XmlPullParserException r3 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
+            java.lang.String r5 = "No start tag found"
+            r3.<init>(r5)     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
+            throw r3     // Catch:{ XmlPullParserException -> 0x0067, IOException -> 0x005d }
         L_0x005d:
             r1 = move-exception
             java.lang.String r2 = "AnimatedVDCompat"
             java.lang.String r3 = "parser error"
             android.util.Log.e(r2, r3, r1)
-            goto L_0x006f
-        L_0x0066:
+            goto L_0x0071
+        L_0x0067:
             r1 = move-exception
             java.lang.String r2 = "AnimatedVDCompat"
             java.lang.String r3 = "parser error"
             android.util.Log.e(r2, r3, r1)
-        L_0x006f:
+        L_0x0071:
             r1 = 0
             return r1
         */
@@ -466,7 +468,8 @@ public class AnimatedVectorDrawableCompat extends VectorDrawableCommon implement
 
     private static class AnimatedVectorDrawableCompatState extends Drawable.ConstantState {
         AnimatorSet mAnimatorSet;
-        ArrayList<Animator> mAnimators;
+        /* access modifiers changed from: private */
+        public ArrayList<Animator> mAnimators;
         int mChangingConfigurations;
         ArrayMap<Animator, String> mTargetNameMap;
         VectorDrawableCompat mVectorDrawable;
@@ -519,7 +522,7 @@ public class AnimatedVectorDrawableCompat extends VectorDrawableCommon implement
             if (this.mAnimatorSet == null) {
                 this.mAnimatorSet = new AnimatorSet();
             }
-            this.mAnimatorSet.playTogether(this.mAnimators);
+            this.mAnimatorSet.playTogether((Collection<Animator>) this.mAnimators);
         }
     }
 
@@ -548,7 +551,7 @@ public class AnimatedVectorDrawableCompat extends VectorDrawableCommon implement
             setupColorAnimator(animator);
         }
         if (this.mAnimatedVectorState.mAnimators == null) {
-            this.mAnimatedVectorState.mAnimators = new ArrayList<>();
+            ArrayList unused = this.mAnimatedVectorState.mAnimators = new ArrayList();
             this.mAnimatedVectorState.mTargetNameMap = new ArrayMap<>();
         }
         this.mAnimatedVectorState.mAnimators.add(animator);

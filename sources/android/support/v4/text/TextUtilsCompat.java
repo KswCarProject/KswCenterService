@@ -4,13 +4,13 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import com.wits.pms.BuildConfig;
 import java.util.Locale;
 
 public final class TextUtilsCompat {
     private static final String ARAB_SCRIPT_SUBTAG = "Arab";
     private static final String HEBR_SCRIPT_SUBTAG = "Hebr";
-    private static final Locale ROOT = new Locale(BuildConfig.FLAVOR, BuildConfig.FLAVOR);
+    @Deprecated
+    public static final Locale ROOT = new Locale("", "");
 
     @NonNull
     public static String htmlEncode(@NonNull String s) {

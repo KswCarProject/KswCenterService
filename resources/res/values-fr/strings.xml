@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="abc_action_bar_home_description">Revenir à l\'accueil</string>
+    <string name="abc_action_bar_home_description_format">%1$s, %2$s</string>
+    <string name="abc_action_bar_home_subtitle_description_format">%1$s, %2$s, %3$s</string>
     <string name="abc_action_bar_up_description">Revenir en haut de la page</string>
     <string name="abc_action_menu_overflow_description">Plus d\'options</string>
     <string name="abc_action_mode_done">OK</string>
@@ -8,16 +10,6 @@
     <string name="abc_activitychooserview_choose_application">Sélectionner une application</string>
     <string name="abc_capital_off">DÉSACTIVÉ</string>
     <string name="abc_capital_on">ACTIVÉ</string>
-    <string name="abc_menu_alt_shortcut_label">Alt+</string>
-    <string name="abc_menu_ctrl_shortcut_label">Ctrl+</string>
-    <string name="abc_menu_delete_shortcut_label">supprimer</string>
-    <string name="abc_menu_enter_shortcut_label">entrée</string>
-    <string name="abc_menu_function_shortcut_label">Fonction+</string>
-    <string name="abc_menu_meta_shortcut_label">Méta+</string>
-    <string name="abc_menu_shift_shortcut_label">Maj+</string>
-    <string name="abc_menu_space_shortcut_label">espace</string>
-    <string name="abc_menu_sym_shortcut_label">Sym+</string>
-    <string name="abc_prepend_shortcut_label">Menu+</string>
     <string name="abc_search_hint">Rechercher…</string>
     <string name="abc_searchview_description_clear">Effacer la requête</string>
     <string name="abc_searchview_description_query">Requête de recherche</string>
@@ -30,7 +22,7 @@
     <string name="app_name">CarService</string>
     <string name="auto_update_mcu">En cours de restauration de MCU!</string>
     <string name="auto_update_mcu_success">Restauration de MCU réussie!</string>
-    <string name="bootanimation_success">L</string>
+    <string name="bootanimation_success">L\'animation de démarrage a déjà été modifiée!</string>
     <string name="copy_file">Prêt à la mise à jour</string>
     <string name="disable_open">Fonction interdite!</string>
     <string name="import_config_success">Importation réussie!</string>
@@ -38,7 +30,7 @@
     <string name="ota_update">Mise à jour OTA</string>
     <string name="ota_update_message">Un fichier de mise à jour a été détecté.\10 Mise à jour maintenant ou pas?</string>
     <string name="search_menu_title">Rechercher</string>
-    <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="status_bar_notification_info_overflow">&gt;999</string>
     <string name="update_success">Mise à jour réussie!</string>
     <string name="yes_update">Oui</string>
 </resources>

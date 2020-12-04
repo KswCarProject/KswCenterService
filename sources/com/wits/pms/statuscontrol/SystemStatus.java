@@ -2,7 +2,6 @@ package com.wits.pms.statuscontrol;
 
 import android.view.KeyEvent;
 import com.google.gson.Gson;
-import com.wits.pms.BuildConfig;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,10 +59,10 @@ public class SystemStatus {
     }
 
     public SystemStatus() {
-        this.topApp = BuildConfig.FLAVOR;
+        this.topApp = "";
         this.acc = 2;
         this.screenSwitch = 2;
-        this.topApp = BuildConfig.FLAVOR;
+        this.topApp = "";
     }
 
     public List<String> compare(SystemStatus systemStatus) {

@@ -11,11 +11,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
-import com.wits.pms.mcu.custom.KswMessage;
 
+@RequiresApi(9)
 public abstract class RoundedBitmapDrawable extends Drawable {
     private static final int DEFAULT_PAINT_FLAGS = 3;
     private boolean mApplyGravity = true;
@@ -30,14 +29,12 @@ public abstract class RoundedBitmapDrawable extends Drawable {
     private boolean mIsCircular;
     private final Paint mPaint = new Paint(3);
     private final Matrix mShaderMatrix = new Matrix();
-    private int mTargetDensity = KswMessage.UPDATE_DATATYPE;
+    private int mTargetDensity = 160;
 
-    @NonNull
     public final Paint getPaint() {
         return this.mPaint;
     }
 
-    @Nullable
     public final Bitmap getBitmap() {
         return this.mBitmap;
     }
@@ -47,17 +44,17 @@ public abstract class RoundedBitmapDrawable extends Drawable {
         this.mBitmapHeight = this.mBitmap.getScaledHeight(this.mTargetDensity);
     }
 
-    public void setTargetDensity(@NonNull Canvas canvas) {
+    public void setTargetDensity(Canvas canvas) {
         setTargetDensity(canvas.getDensity());
     }
 
-    public void setTargetDensity(@NonNull DisplayMetrics metrics) {
+    public void setTargetDensity(DisplayMetrics metrics) {
         setTargetDensity(metrics.densityDpi);
     }
 
     public void setTargetDensity(int density) {
         if (this.mTargetDensity != density) {
-            this.mTargetDensity = density == 0 ? KswMessage.UPDATE_DATATYPE : density;
+            this.mTargetDensity = density == 0 ? 160 : density;
             if (this.mBitmap != null) {
                 computeBitmapSize();
             }
@@ -132,7 +129,7 @@ public abstract class RoundedBitmapDrawable extends Drawable {
         }
     }
 
-    public void draw(@NonNull Canvas canvas) {
+    public void draw(Canvas canvas) {
         Bitmap bitmap = this.mBitmap;
         if (bitmap != null) {
             updateDstRect();

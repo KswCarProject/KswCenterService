@@ -2,6 +2,7 @@ package android.support.v7.view.menu;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.provider.SettingsStringUtil;
 import android.support.annotation.RestrictTo;
 import android.support.v7.view.menu.MenuBuilder;
 import android.view.Menu;
@@ -100,14 +101,6 @@ public class SubMenuBuilder extends MenuBuilder implements SubMenu {
         if (itemId == 0) {
             return null;
         }
-        return super.getActionViewStatesKey() + ":" + itemId;
-    }
-
-    public void setGroupDividerEnabled(boolean groupDividerEnabled) {
-        this.mParentMenu.setGroupDividerEnabled(groupDividerEnabled);
-    }
-
-    public boolean isGroupDividerEnabled() {
-        return this.mParentMenu.isGroupDividerEnabled();
+        return super.getActionViewStatesKey() + SettingsStringUtil.DELIMITER + itemId;
     }
 }

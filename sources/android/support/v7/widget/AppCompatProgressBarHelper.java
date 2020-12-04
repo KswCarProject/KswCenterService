@@ -12,7 +12,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.graphics.drawable.shapes.Shape;
-import android.support.v4.graphics.drawable.WrappedDrawable;
+import android.support.v4.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
 
@@ -40,10 +40,10 @@ class AppCompatProgressBarHelper {
     }
 
     private Drawable tileify(Drawable drawable, boolean clip) {
-        if (drawable instanceof WrappedDrawable) {
-            Drawable inner = ((WrappedDrawable) drawable).getWrappedDrawable();
+        if (drawable instanceof DrawableWrapper) {
+            Drawable inner = ((DrawableWrapper) drawable).getWrappedDrawable();
             if (inner != null) {
-                ((WrappedDrawable) drawable).setWrappedDrawable(tileify(inner, clip));
+                ((DrawableWrapper) drawable).setWrappedDrawable(tileify(inner, clip));
             }
         } else if (drawable instanceof LayerDrawable) {
             LayerDrawable background = (LayerDrawable) drawable;
@@ -67,7 +67,7 @@ class AppCompatProgressBarHelper {
             ShapeDrawable shapeDrawable = new ShapeDrawable(getDrawableShape());
             shapeDrawable.getPaint().setShader(new BitmapShader(tileBitmap, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP));
             shapeDrawable.getPaint().setColorFilter(bitmapDrawable.getPaint().getColorFilter());
-            return clip ? new ClipDrawable(shapeDrawable, 3, 1) : shapeDrawable;
+            return clip ? new ClipDrawable((Drawable) shapeDrawable, 3, 1) : shapeDrawable;
         }
         return drawable;
     }

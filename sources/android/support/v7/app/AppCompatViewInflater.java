@@ -28,13 +28,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.View;
-import com.wits.pms.BuildConfig;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class AppCompatViewInflater {
+class AppCompatViewInflater {
     private static final String LOG_TAG = "AppCompatViewInflater";
     private static final String[] sClassPrefixList = {"android.widget.", "android.view.", "android.webkit."};
     private static final Map<String, Constructor<? extends View>> sConstructorMap = new ArrayMap();
@@ -42,9 +41,10 @@ public class AppCompatViewInflater {
     private static final int[] sOnClickAttrs = {16843375};
     private final Object[] mConstructorArgs = new Object[2];
 
-    /* access modifiers changed from: package-private */
+    AppCompatViewInflater() {
+    }
+
     public final View createView(View parent, String name, @NonNull Context context, @NonNull AttributeSet attrs, boolean inheritContext, boolean readAndroidTheme, boolean readAppTheme, boolean wrapContext) {
-        View view;
         Context originalContext = context;
         if (inheritContext && parent != null) {
             context = parent.getContext();
@@ -55,6 +55,7 @@ public class AppCompatViewInflater {
         if (wrapContext) {
             context = TintContextWrapper.wrap(context);
         }
+        View view = null;
         char c = 65535;
         switch (name.hashCode()) {
             case -1946472170:
@@ -138,59 +139,43 @@ public class AppCompatViewInflater {
         }
         switch (c) {
             case 0:
-                view = createTextView(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatTextView(context, attrs);
                 break;
             case 1:
-                view = createImageView(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatImageView(context, attrs);
                 break;
             case 2:
-                view = createButton(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatButton(context, attrs);
                 break;
             case 3:
-                view = createEditText(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatEditText(context, attrs);
                 break;
             case 4:
-                view = createSpinner(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatSpinner(context, attrs);
                 break;
             case 5:
-                view = createImageButton(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatImageButton(context, attrs);
                 break;
             case 6:
-                view = createCheckBox(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatCheckBox(context, attrs);
                 break;
             case 7:
-                view = createRadioButton(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatRadioButton(context, attrs);
                 break;
             case 8:
-                view = createCheckedTextView(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatCheckedTextView(context, attrs);
                 break;
             case 9:
-                view = createAutoCompleteTextView(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatAutoCompleteTextView(context, attrs);
                 break;
             case 10:
-                view = createMultiAutoCompleteTextView(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatMultiAutoCompleteTextView(context, attrs);
                 break;
             case 11:
-                view = createRatingBar(context, attrs);
-                verifyNotNull(view, name);
+                view = new AppCompatRatingBar(context, attrs);
                 break;
             case 12:
-                view = createSeekBar(context, attrs);
-                verifyNotNull(view, name);
-                break;
-            default:
-                view = createView(context, name, attrs);
+                view = new AppCompatSeekBar(context, attrs);
                 break;
         }
         if (view == null && originalContext != context) {
@@ -202,96 +187,6 @@ public class AppCompatViewInflater {
         return view;
     }
 
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatTextView createTextView(Context context, AttributeSet attrs) {
-        return new AppCompatTextView(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatImageView createImageView(Context context, AttributeSet attrs) {
-        return new AppCompatImageView(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatButton createButton(Context context, AttributeSet attrs) {
-        return new AppCompatButton(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatEditText createEditText(Context context, AttributeSet attrs) {
-        return new AppCompatEditText(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatSpinner createSpinner(Context context, AttributeSet attrs) {
-        return new AppCompatSpinner(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatImageButton createImageButton(Context context, AttributeSet attrs) {
-        return new AppCompatImageButton(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatCheckBox createCheckBox(Context context, AttributeSet attrs) {
-        return new AppCompatCheckBox(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatRadioButton createRadioButton(Context context, AttributeSet attrs) {
-        return new AppCompatRadioButton(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatCheckedTextView createCheckedTextView(Context context, AttributeSet attrs) {
-        return new AppCompatCheckedTextView(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatAutoCompleteTextView createAutoCompleteTextView(Context context, AttributeSet attrs) {
-        return new AppCompatAutoCompleteTextView(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatMultiAutoCompleteTextView createMultiAutoCompleteTextView(Context context, AttributeSet attrs) {
-        return new AppCompatMultiAutoCompleteTextView(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatRatingBar createRatingBar(Context context, AttributeSet attrs) {
-        return new AppCompatRatingBar(context, attrs);
-    }
-
-    /* access modifiers changed from: protected */
-    @NonNull
-    public AppCompatSeekBar createSeekBar(Context context, AttributeSet attrs) {
-        return new AppCompatSeekBar(context, attrs);
-    }
-
-    private void verifyNotNull(View view, String name) {
-        if (view == null) {
-            throw new IllegalStateException(getClass().getName() + " asked to inflate view for <" + name + ">, but returned null");
-        }
-    }
-
-    /* access modifiers changed from: protected */
-    @Nullable
-    public View createView(Context context, String name, AttributeSet attrs) {
-        return null;
-    }
-
     private View createViewFromTag(Context context, String name, AttributeSet attrs) {
         if (name.equals("view")) {
             name = attrs.getAttributeValue((String) null, "class");
@@ -300,8 +195,8 @@ public class AppCompatViewInflater {
             this.mConstructorArgs[0] = context;
             this.mConstructorArgs[1] = attrs;
             if (-1 == name.indexOf(46)) {
-                for (String createViewByPrefix : sClassPrefixList) {
-                    View view = createViewByPrefix(context, name, createViewByPrefix);
+                for (String createView : sClassPrefixList) {
+                    View view = createView(context, name, createView);
                     if (view != null) {
                         return view;
                     }
@@ -310,10 +205,10 @@ public class AppCompatViewInflater {
                 this.mConstructorArgs[1] = null;
                 return null;
             }
-            View createViewByPrefix2 = createViewByPrefix(context, name, (String) null);
+            View createView2 = createView(context, name, (String) null);
             this.mConstructorArgs[0] = null;
             this.mConstructorArgs[1] = null;
-            return createViewByPrefix2;
+            return createView2;
         } catch (Exception e) {
             return null;
         } finally {
@@ -337,7 +232,7 @@ public class AppCompatViewInflater {
         }
     }
 
-    private View createViewByPrefix(Context context, String name, String prefix) throws ClassNotFoundException, InflateException {
+    private View createView(Context context, String name, String prefix) throws ClassNotFoundException, InflateException {
         String str;
         Constructor<? extends U> constructor = sConstructorMap.get(name);
         if (constructor == null) {
@@ -422,7 +317,7 @@ public class AppCompatViewInflater {
             }
             int id = this.mHostView.getId();
             if (id == -1) {
-                idText = BuildConfig.FLAVOR;
+                idText = "";
             } else {
                 idText = " with id '" + this.mHostView.getContext().getResources().getResourceEntryName(id) + "'";
             }

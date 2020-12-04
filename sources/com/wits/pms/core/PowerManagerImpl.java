@@ -6,12 +6,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
+import android.os.ResultReceiver;
+import android.os.ShellCallback;
+import android.provider.BrowserContract;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.ICmdListener;
 import com.wits.pms.IContentObserver;
 import com.wits.pms.IPowerManagerAppService;
+import com.wits.pms.core.PowerManagerImpl;
 import com.wits.pms.custom.KswSettings;
 import com.wits.pms.statuscontrol.BtPhoneStatus;
 import com.wits.pms.statuscontrol.McuStatus;
@@ -20,6 +24,9 @@ import com.wits.pms.statuscontrol.SystemStatus;
 import com.wits.pms.statuscontrol.VideoStatus;
 import com.wits.pms.statuscontrol.WitsCommand;
 import com.wits.pms.statuscontrol.WitsStatus;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,15 +41,18 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
     private static final int UPDATESTATUS = 3;
     /* access modifiers changed from: private */
     public final RemoteCallbackList<ICmdListener> cmdListeners = new RemoteCallbackList<>();
-    private BtPhoneStatus mBtPhoneStatus = new BtPhoneStatus(false, false, BuildConfig.FLAVOR, 0, 0, true);
+    private BtPhoneStatus mBtPhoneStatus = new BtPhoneStatus(false, false, "", 0, 0, true);
     private HashMap<String, Object> mFieldMap = new HashMap<>();
+    private final Object mFiledLock = new Object();
     /* access modifiers changed from: private */
     public Handler mHandler;
     private McuStatus mMcuStatus = new McuStatus(1, "-1");
-    private MusicStatus mMusicStatus = new MusicStatus(BuildConfig.FLAVOR, BuildConfig.FLAVOR, false, 0);
-    private HashMap<String, List<IContentObserver>> mObserverMap = new HashMap<>();
+    private MusicStatus mMusicStatus = new MusicStatus("", "", false, 0);
+    /* access modifiers changed from: private */
+    public HashMap<String, List<IContentObserver>> mObserverMap = new HashMap<>();
     private SystemStatus mSystemStatus = new SystemStatus();
-    private final Object obsLock = new Object();
+    /* access modifiers changed from: private */
+    public final Object obsLock = new Object();
     private final Object sendCmdLock = new Object();
     /* access modifiers changed from: private */
     public final Object updateInfoLock = new Object();
@@ -69,7 +79,17 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
                             for (int i = 0; i < length; i++) {
                                 ICmdListener listener = (ICmdListener) PowerManagerImpl.this.cmdListeners.getBroadcastItem(i);
                                 if (listener != null) {
-                                    PowerManagerImpl.this.mHandler.post(new PowerManagerImpl$1$$Lambda$0(listener, jsonMsg));
+                                    PowerManagerImpl.this.mHandler.post(new Runnable(jsonMsg) {
+                                        private final /* synthetic */ String f$1;
+
+                                        {
+                                            this.f$1 = r2;
+                                        }
+
+                                        public final void run() {
+                                            PowerManagerImpl.AnonymousClass1.lambda$handleMessage$0(ICmdListener.this, this.f$1);
+                                        }
+                                    });
                                 }
                             }
                             Log.i(PowerManagerImpl.TAG, "sendStatus Msg: " + jsonMsg);
@@ -81,7 +101,7 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
                 }
             }
 
-            static final /* synthetic */ void lambda$handleMessage$0$PowerManagerImpl$1(ICmdListener listener, String jsonMsg) {
+            static /* synthetic */ void lambda$handleMessage$0(ICmdListener listener, String jsonMsg) {
                 try {
                     listener.updateStatusInfo(jsonMsg);
                 } catch (Exception e) {
@@ -261,6 +281,10 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
         this.mFieldMap.put("benzData", mcuStatus.benzData.getJson());
         this.mFieldMap.put("acData", mcuStatus.acData.getJson());
         this.mFieldMap.put("carData", mcuStatus.carData.getJson());
+        this.mFieldMap.put("carGear", Integer.valueOf(mcuStatus.carData.carGear));
+        this.mFieldMap.put("signalLeft", Integer.valueOf(mcuStatus.carData.signalLeft));
+        this.mFieldMap.put("signalDouble", Integer.valueOf(mcuStatus.carData.signalDouble));
+        this.mFieldMap.put("signalRight", Integer.valueOf(mcuStatus.carData.signalRight));
         this.mFieldMap.put("carDoor", Integer.valueOf(mcuStatus.carData.carDoor));
         this.mFieldMap.put("mcuVerison", mcuStatus.mcuVerison);
         this.mFieldMap.put("systemMode", Integer.valueOf(mcuStatus.systemMode));
@@ -285,13 +309,14 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
         this.mFieldMap.put("devAddr", btPhoneStatus.devAddr);
         this.mFieldMap.put("isConnected", Boolean.valueOf(btPhoneStatus.isConnected));
         this.mFieldMap.put("isPlayingMusic", Boolean.valueOf(btPhoneStatus.isPlayingMusic));
+        this.mFieldMap.put("connectedAddr", btPhoneStatus.connectedAddr);
     }
 
     private void saveMusic(MusicStatus musicStatus) {
         this.mFieldMap.put("mode", musicStatus.mode);
         this.mFieldMap.put("path", musicStatus.path);
         this.mFieldMap.put("play", Boolean.valueOf(musicStatus.play));
-        this.mFieldMap.put("position", Integer.valueOf(musicStatus.position));
+        this.mFieldMap.put(BrowserContract.Bookmarks.POSITION, Integer.valueOf(musicStatus.position));
     }
 
     private void saveVideo(VideoStatus musicStatus) {
@@ -338,19 +363,28 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
             this.mMusicStatus = musicStatus;
         }
         save(witsStatus);
-        this.mHandler.post(new PowerManagerImpl$$Lambda$0(this, compares));
+        this.mHandler.post(new Runnable(compares) {
+            private final /* synthetic */ List f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                PowerManagerImpl.lambda$handlerStatus$0(PowerManagerImpl.this, this.f$1);
+            }
+        });
         return compares.size();
     }
 
-    /* access modifiers changed from: package-private */
-    public final /* synthetic */ void lambda$handlerStatus$0$PowerManagerImpl(List compares) {
-        synchronized (this.obsLock) {
+    public static /* synthetic */ void lambda$handlerStatus$0(PowerManagerImpl powerManagerImpl, List compares) {
+        synchronized (powerManagerImpl.obsLock) {
             Iterator it = compares.iterator();
             while (it.hasNext()) {
                 String key = (String) it.next();
-                if (this.mObserverMap.get(key) != null) {
+                if (powerManagerImpl.mObserverMap.get(key) != null) {
                     List<IContentObserver> deadObs = new ArrayList<>();
-                    for (IContentObserver observer : this.mObserverMap.get(key)) {
+                    for (IContentObserver observer : powerManagerImpl.mObserverMap.get(key)) {
                         Log.i(TAG, "IContentObserver - Key:" + key + " - " + observer);
                         if (observer != null) {
                             try {
@@ -364,7 +398,7 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
                     }
                     for (IContentObserver observer2 : deadObs) {
                         try {
-                            this.mObserverMap.get(key).remove(observer2);
+                            powerManagerImpl.mObserverMap.get(key).remove(observer2);
                             Log.e(TAG, "error onChange key:" + key);
                         } catch (Exception e2) {
                         }
@@ -372,6 +406,144 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
                 }
             }
         }
+    }
+
+    public void onShellCommand(FileDescriptor in, FileDescriptor out, FileDescriptor err, String[] args, ShellCallback callback, ResultReceiver resultReceiver) throws RemoteException {
+        new PowerManagerAppCommand(this).exec(this, in, out, err, args, callback, resultReceiver);
+    }
+
+    public void dump(FileDescriptor fd, PrintWriter fout, String[] args) {
+    }
+
+    public void updateMcuJsonStatus(final String key, String value) {
+        this.mFieldMap.put(key, value);
+        new Thread() {
+            public void run() {
+                synchronized (PowerManagerImpl.this.obsLock) {
+                    if (PowerManagerImpl.this.mObserverMap.get(key) != null) {
+                        List<IContentObserver> deadObs = new ArrayList<>();
+                        for (IContentObserver observer : (List) PowerManagerImpl.this.mObserverMap.get(key)) {
+                            Log.i(PowerManagerImpl.TAG, "IContentObserver - Key:" + key + " - " + observer);
+                            if (observer != null) {
+                                try {
+                                    observer.onChange();
+                                } catch (Exception e) {
+                                    if (e instanceof DeadObjectException) {
+                                        deadObs.add(observer);
+                                    }
+                                }
+                            }
+                        }
+                        for (IContentObserver observer2 : deadObs) {
+                            try {
+                                ((List) PowerManagerImpl.this.mObserverMap.get(key)).remove(observer2);
+                                Log.e(PowerManagerImpl.TAG, "error onChange key:" + key);
+                            } catch (Exception e2) {
+                            }
+                        }
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private Object getField(String key) {
+        Object obj;
+        if (TextUtils.isEmpty(key)) {
+            return null;
+        }
+        synchronized (this.mFiledLock) {
+            obj = this.mFieldMap.get(key);
+        }
+        return obj;
+    }
+
+    private void broadcastField(String key) {
+        synchronized (this.obsLock) {
+            if (this.mObserverMap.get(key) != null) {
+                for (IContentObserver innerObs : this.mObserverMap.get(key)) {
+                    if (innerObs != null) {
+                        onChange(innerObs);
+                        Log.i(TAG, "IContentObserver - Key:" + key + " - " + innerObs);
+                    }
+                }
+            }
+        }
+    }
+
+    private void onChange(final IContentObserver observer) {
+        new Thread() {
+            public void run() {
+                try {
+                    observer.onChange();
+                } catch (Exception e) {
+                    if (e instanceof DeadObjectException) {
+                        Log.i(PowerManagerImpl.TAG, "DeadObjectException - obs:" + observer);
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private void saveField(String key, Object value) {
+        if (value != null && !value.equals(getField(key))) {
+            synchronized (this.mFiledLock) {
+                Log.i(TAG, "addStatus:  key:" + key + "- value:" + value + " - pid:" + getCallingPid());
+                this.mFieldMap.put(key, value);
+                broadcastField(key);
+            }
+        }
+    }
+
+    private void saveField(String key, Object value, boolean broadcast) {
+        if (value != null && !value.equals(getField(key))) {
+            synchronized (this.mFiledLock) {
+                this.mFieldMap.put(key, value);
+                if (broadcast) {
+                    broadcastField(key);
+                }
+            }
+        }
+    }
+
+    public void addIntStatus(String key, int value) throws RemoteException {
+        saveField(key, Integer.valueOf(value));
+    }
+
+    public void addBooleanStatus(String key, boolean value) throws RemoteException {
+        saveField(key, Boolean.valueOf(value));
+    }
+
+    public void addStringStatus(String key, String value) throws RemoteException {
+        saveField(key, value);
+    }
+
+    private void showLog(String msg, boolean open) {
+    }
+
+    public void addStatusFromObject(Object o) {
+        for (Field field : o.getClass().getFields()) {
+            try {
+                Object obj = field.get(o);
+                if (obj instanceof Boolean) {
+                    saveField(field.getName(), Boolean.valueOf(((Boolean) obj).booleanValue()), false);
+                } else if (obj instanceof Integer) {
+                    saveField(field.getName(), Integer.valueOf(((Integer) obj).intValue()), false);
+                } else if (obj instanceof String) {
+                    saveField(field.getName(), (String) obj, false);
+                } else if (obj instanceof List) {
+                    saveField(field.getName(), obj.toString(), false);
+                }
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public String getJsonConfig(String pkgName) throws RemoteException {
+        return null;
+    }
+
+    public void saveJsonConfig(String pkgName, String json) throws RemoteException {
     }
 
     public SystemStatus getmSystemStatus() {

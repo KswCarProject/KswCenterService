@@ -1,8 +1,6 @@
 package android.support.v7.view.menu;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.view.ViewCompat;
@@ -13,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -22,14 +19,11 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-public class ListMenuItemView extends LinearLayout implements MenuView.ItemView, AbsListView.SelectionBoundsAdjuster {
+public class ListMenuItemView extends LinearLayout implements MenuView.ItemView {
     private static final String TAG = "ListMenuItemView";
     private Drawable mBackground;
     private CheckBox mCheckBox;
-    private LinearLayout mContent;
     private boolean mForceShowIcon;
-    private ImageView mGroupDivider;
-    private boolean mHasListDivider;
     private ImageView mIconView;
     private LayoutInflater mInflater;
     private MenuItemImpl mItemData;
@@ -55,10 +49,7 @@ public class ListMenuItemView extends LinearLayout implements MenuView.ItemView,
         this.mPreserveIconSpacing = a.getBoolean(R.styleable.MenuView_preserveIconSpacing, false);
         this.mTextAppearanceContext = context;
         this.mSubMenuArrow = a.getDrawable(R.styleable.MenuView_subMenuArrow);
-        TypedArray b = context.getTheme().obtainStyledAttributes((AttributeSet) null, new int[]{16843049}, R.attr.dropDownListViewStyle, 0);
-        this.mHasListDivider = b.hasValue(0);
         a.recycle();
-        b.recycle();
     }
 
     /* access modifiers changed from: protected */
@@ -74,8 +65,6 @@ public class ListMenuItemView extends LinearLayout implements MenuView.ItemView,
         if (this.mSubMenuArrowView != null) {
             this.mSubMenuArrowView.setImageDrawable(this.mSubMenuArrow);
         }
-        this.mGroupDivider = (ImageView) findViewById(R.id.group_divider);
-        this.mContent = (LinearLayout) findViewById(R.id.content);
     }
 
     public void initialize(MenuItemImpl itemData, int menuType) {
@@ -89,18 +78,6 @@ public class ListMenuItemView extends LinearLayout implements MenuView.ItemView,
         setEnabled(itemData.isEnabled());
         setSubMenuArrowVisible(itemData.hasSubMenu());
         setContentDescription(itemData.getContentDescription());
-    }
-
-    private void addContentView(View v) {
-        addContentView(v, -1);
-    }
-
-    private void addContentView(View v, int index) {
-        if (this.mContent != null) {
-            this.mContent.addView(v, index);
-        } else {
-            addView(v, index);
-        }
     }
 
     public void setForceShowIcon(boolean forceShow) {
@@ -142,8 +119,9 @@ public class ListMenuItemView extends LinearLayout implements MenuView.ItemView,
             }
             if (checkable) {
                 compoundButton.setChecked(this.mItemData.isChecked());
-                if (compoundButton.getVisibility() != 0) {
-                    compoundButton.setVisibility(0);
+                int newVisibility = checkable ? 0 : 8;
+                if (compoundButton.getVisibility() != newVisibility) {
+                    compoundButton.setVisibility(newVisibility);
                 }
                 if (otherCompoundButton != null && otherCompoundButton.getVisibility() != 8) {
                     otherCompoundButton.setVisibility(8);
@@ -185,7 +163,7 @@ public class ListMenuItemView extends LinearLayout implements MenuView.ItemView,
     public void setShortcut(boolean showShortcut, char shortcutKey) {
         int newVisibility = (!showShortcut || !this.mItemData.shouldShowShortcut()) ? 8 : 0;
         if (newVisibility == 0) {
-            this.mShortcutView.setText(this.mItemData.getShortcutLabel());
+            this.mShortcutView.setText((CharSequence) this.mItemData.getShortcutLabel());
         }
         if (this.mShortcutView.getVisibility() != newVisibility) {
             this.mShortcutView.setVisibility(newVisibility);
@@ -226,18 +204,18 @@ public class ListMenuItemView extends LinearLayout implements MenuView.ItemView,
     }
 
     private void insertIconView() {
-        this.mIconView = (ImageView) getInflater().inflate(R.layout.abc_list_menu_item_icon, this, false);
-        addContentView(this.mIconView, 0);
+        this.mIconView = (ImageView) getInflater().inflate(R.layout.abc_list_menu_item_icon, (ViewGroup) this, false);
+        addView((View) this.mIconView, 0);
     }
 
     private void insertRadioButton() {
-        this.mRadioButton = (RadioButton) getInflater().inflate(R.layout.abc_list_menu_item_radio, this, false);
-        addContentView(this.mRadioButton);
+        this.mRadioButton = (RadioButton) getInflater().inflate(R.layout.abc_list_menu_item_radio, (ViewGroup) this, false);
+        addView(this.mRadioButton);
     }
 
     private void insertCheckBox() {
-        this.mCheckBox = (CheckBox) getInflater().inflate(R.layout.abc_list_menu_item_checkbox, this, false);
-        addContentView(this.mCheckBox);
+        this.mCheckBox = (CheckBox) getInflater().inflate(R.layout.abc_list_menu_item_checkbox, (ViewGroup) this, false);
+        addView(this.mCheckBox);
     }
 
     public boolean prefersCondensedTitle() {
@@ -253,18 +231,5 @@ public class ListMenuItemView extends LinearLayout implements MenuView.ItemView,
             this.mInflater = LayoutInflater.from(getContext());
         }
         return this.mInflater;
-    }
-
-    public void setGroupDividerEnabled(boolean groupDividerEnabled) {
-        if (this.mGroupDivider != null) {
-            this.mGroupDivider.setVisibility((this.mHasListDivider || !groupDividerEnabled) ? 8 : 0);
-        }
-    }
-
-    public void adjustListItemSelectionBounds(Rect rect) {
-        if (this.mGroupDivider != null && this.mGroupDivider.getVisibility() == 0) {
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) this.mGroupDivider.getLayoutParams();
-            rect.top += this.mGroupDivider.getHeight() + lp.topMargin + lp.bottomMargin;
-        }
     }
 }

@@ -20,10 +20,11 @@ public class WindowCallbackWrapper implements Window.Callback {
     final Window.Callback mWrapped;
 
     public WindowCallbackWrapper(Window.Callback wrapped) {
-        if (wrapped == null) {
-            throw new IllegalArgumentException("Window callback may not be null");
+        if (wrapped != null) {
+            this.mWrapped = wrapped;
+            return;
         }
-        this.mWrapped = wrapped;
+        throw new IllegalArgumentException("Window callback may not be null");
     }
 
     public boolean dispatchKeyEvent(KeyEvent event) {

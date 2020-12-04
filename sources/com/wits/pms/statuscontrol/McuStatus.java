@@ -1,8 +1,8 @@
 package com.wits.pms.statuscontrol;
 
+import android.telephony.SmsManager;
 import com.google.gson.Gson;
 import com.wits.pms.mcu.custom.KswMessage;
-import com.wits.pms.statuscontrol.WitsCommand;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +56,20 @@ public class McuStatus {
         if (this.carData.handbrake != mcuStatus.carData.handbrake) {
             keys.add("handbrake");
         }
+        if (this.carData.carGear != mcuStatus.carData.carGear) {
+            keys.add("carGear");
+        }
+        if (this.carData.signalRight != mcuStatus.carData.signalRight) {
+            keys.add("signalRight");
+        }
+        if (this.carData.signalLeft != mcuStatus.carData.signalLeft) {
+            keys.add("signalLeft");
+        }
+        if (this.carData.signalDouble != mcuStatus.carData.signalDouble) {
+            keys.add("signalDouble");
+        }
         if (this.carData.oilUnitType != mcuStatus.carData.oilUnitType) {
             keys.add("oilUnitType");
-        }
-        if (this.carData.temperatureUnitType != mcuStatus.carData.temperatureUnitType) {
-            keys.add("temperatureUnitType");
         }
         if (this.carData.distanceUnitType != mcuStatus.carData.distanceUnitType) {
             keys.add("distanceUnitType");
@@ -111,6 +120,7 @@ public class McuStatus {
         public boolean AC_Switch;
         public boolean autoSwitch;
         public boolean backMistSwitch;
+        public boolean eco;
         public boolean frontMistSwitch;
         public boolean isOpen;
         public float leftTmp;
@@ -139,13 +149,109 @@ public class McuStatus {
             return (this.mode & type) != 0;
         }
 
+        public boolean isEco() {
+            return this.eco;
+        }
+
+        public void setEco(boolean eco2) {
+            this.eco = eco2;
+        }
+
+        public boolean isOpen() {
+            return this.isOpen;
+        }
+
+        public void setOpen(boolean open) {
+            this.isOpen = open;
+        }
+
+        public boolean isAC_Switch() {
+            return this.AC_Switch;
+        }
+
+        public void setAC_Switch(boolean AC_Switch2) {
+            this.AC_Switch = AC_Switch2;
+        }
+
+        public int getLoop() {
+            return this.loop;
+        }
+
+        public void setLoop(int loop2) {
+            this.loop = loop2;
+        }
+
+        public boolean isFrontMistSwitch() {
+            return this.frontMistSwitch;
+        }
+
+        public void setFrontMistSwitch(boolean frontMistSwitch2) {
+            this.frontMistSwitch = frontMistSwitch2;
+        }
+
+        public boolean isBackMistSwitch() {
+            return this.backMistSwitch;
+        }
+
+        public void setBackMistSwitch(boolean backMistSwitch2) {
+            this.backMistSwitch = backMistSwitch2;
+        }
+
+        public boolean isSync() {
+            return this.sync;
+        }
+
+        public void setSync(boolean sync2) {
+            this.sync = sync2;
+        }
+
+        public int getMode() {
+            return this.mode;
+        }
+
+        public void setMode(int mode2) {
+            this.mode = mode2;
+        }
+
+        public float getLeftTmp() {
+            return this.leftTmp;
+        }
+
+        public void setLeftTmp(float leftTmp2) {
+            this.leftTmp = leftTmp2;
+        }
+
+        public float getRightTmp() {
+            return this.rightTmp;
+        }
+
+        public void setRightTmp(float rightTmp2) {
+            this.rightTmp = rightTmp2;
+        }
+
+        public boolean isAutoSwitch() {
+            return this.autoSwitch;
+        }
+
+        public void setAutoSwitch(boolean autoSwitch2) {
+            this.autoSwitch = autoSwitch2;
+        }
+
+        public float getSpeed() {
+            return this.speed;
+        }
+
+        public void setSpeed(float speed2) {
+            this.speed = speed2;
+        }
+
         public static KswMessage getTestMsg() {
             i = i == 0 ? 1 : 0;
             return KswMessage.obtain(161, new byte[]{28, (byte) (i * 255), (byte) ((255 - (i << 4)) - i), (byte) (28 - (i * 5)), (byte) (6 - (i * 5)), (byte) ((i * 12) + (i << 4))});
         }
 
         public static KswMessage getTestMsg2() {
-            i = i == 0 ? 1 : 0;
+            i = i == 0 ? 1 : 2;
             byte b = (byte) (i * 255);
             byte b2 = (byte) ((255 - (i << 4)) - i);
             byte b3 = (byte) (28 - (i * 5));
@@ -160,6 +266,95 @@ public class McuStatus {
 
         public String getJson() {
             return new Gson().toJson((Object) this);
+        }
+    }
+
+    public static class AirControl {
+
+        public enum AcKeyType {
+            dual,
+            backMistSwitch,
+            frontMistSwitch,
+            loop,
+            AC_Switch,
+            isOpen,
+            NULL2,
+            NULL1,
+            speedAdd,
+            speedReduce,
+            windDirect,
+            leftTmpAdd,
+            leftTmpReduce,
+            rightTmpAdd,
+            rightTmpReduce,
+            autoSwitch
+        }
+
+        public static void pressKey(AcKeyType type) {
+            byte data1 = 0;
+            byte data2 = 0;
+            int index = type.ordinal();
+            if (index >= 8) {
+                data2 = (byte) ((1 << (index - 8)) + 0);
+            } else {
+                data1 = (byte) ((1 << index) + 0);
+            }
+            WitsCommand.sendCommand(1, 612, data1 + SmsManager.REGEX_PREFIX_DELIMITER + data2);
+        }
+    }
+
+    public static class MediaData {
+        public static final int TYPE_AUX = 48;
+        public static final int TYPE_DISC = 16;
+        public static final int TYPE_DVD = 33;
+        public static final int TYPE_FM = 1;
+        public static final int TYPE_MODE = 64;
+        public static final int TYPE_USB = 17;
+        public Disc disc;
+        public DVD dvd;
+        public Fm fm;
+        public MODE mode;
+        public int type;
+        public Usb usb;
+
+        public static class DVD {
+            public int chapterNumber;
+            public int min;
+            public int sec;
+            public int totalChapter;
+        }
+
+        public static class Disc {
+            public int min;
+            public int number;
+            public int sec;
+            public int track;
+        }
+
+        public static class Fm {
+            public String freq;
+            public String name;
+            public int preFreq;
+        }
+
+        public static class MODE {
+            public boolean ASL;
+            public boolean PAUSE;
+            public boolean RAND;
+            public boolean RPT;
+            public boolean SCAN;
+            public boolean ST;
+        }
+
+        public static class Usb {
+            public int fileNumber;
+            public int folderNumber;
+            public int min;
+            public int sec;
+        }
+
+        public static MediaData parseDataFromJson(String json) {
+            return (MediaData) new Gson().fromJson(json, MediaData.class);
         }
     }
 
@@ -178,7 +373,7 @@ public class McuStatus {
 
         public void pressButton(int which) {
             this.pressButton = which;
-            WitsCommand.sendCommand(1, WitsCommand.SystemCommand.BENZ_CONTROL, getJson());
+            WitsCommand.sendCommand(1, 801, getJson());
             this.pressButton = 0;
         }
 
@@ -201,6 +396,7 @@ public class McuStatus {
         public float airTemperature;
         public float averSpeed;
         public int carDoor;
+        public int carGear;
         public int distanceUnitType;
         public int engineTurnS;
         public boolean handbrake;
@@ -209,11 +405,46 @@ public class McuStatus {
         public int oilUnitType;
         public float oilWear;
         public boolean safetyBelt;
+        public int signalDouble;
+        public int signalLeft;
+        public int signalRight;
         public int speed;
         public int temperatureUnitType;
 
         public boolean isOpen(int type) {
             return (this.carDoor & type) != 0;
+        }
+
+        public int getSignalLeft() {
+            return this.signalLeft;
+        }
+
+        public void setSignalLeft(int signalLeft2) {
+            this.signalLeft = signalLeft2;
+        }
+
+        public int getSignalDouble() {
+            return this.signalDouble;
+        }
+
+        public void setSignalDouble(int signalDouble2) {
+            this.signalDouble = signalDouble2;
+        }
+
+        public int getSignalRight() {
+            return this.signalRight;
+        }
+
+        public void setSignalRight(int signalRight2) {
+            this.signalRight = signalRight2;
+        }
+
+        public int getCarGear() {
+            return this.carGear;
+        }
+
+        public void setCarGear(int carGear2) {
+            this.carGear = carGear2;
         }
 
         public int getCarDoor() {

@@ -1,6 +1,6 @@
 package com.wits.pms.mcu.custom;
 
-import com.wits.pms.BuildConfig;
+import com.android.internal.content.NativeLibraryHelper;
 import com.wits.pms.mcu.McuMessage;
 
 public class KswMessage extends McuMessage {
@@ -18,8 +18,8 @@ public class KswMessage extends McuMessage {
         this.data = data;
         byte[] bytes = new byte[(data.length + 2)];
         System.arraycopy(data, 0, bytes, 2, data.length);
-        this.frameHead = FRAMEHEAD;
-        this.dataType = update ? UPDATE_DATATYPE : 0;
+        this.frameHead = 242;
+        this.dataType = update ? 160 : 0;
         bytes[0] = (byte) cmdType2;
         bytes[1] = (byte) data.length;
         obtain(bytes);
@@ -53,9 +53,9 @@ public class KswMessage extends McuMessage {
                 hex = '0' + hex;
             }
             sb.append(hex.toUpperCase());
-            sb.append("-");
+            sb.append(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
         }
-        sb.replace(sb.length() - 1, sb.length(), BuildConfig.FLAVOR);
+        sb.replace(sb.length() - 1, sb.length(), "");
         sb.append(" ]\n");
         return sb.toString();
     }

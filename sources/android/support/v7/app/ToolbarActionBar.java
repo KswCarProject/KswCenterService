@@ -1,6 +1,5 @@
 package android.support.v7.app;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -8,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.view.WindowCallbackWrapper;
+import android.support.v7.view.menu.ListMenuPresenter;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPresenter;
 import android.support.v7.widget.DecorToolbar;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 class ToolbarActionBar extends ActionBar {
     DecorToolbar mDecorToolbar;
     private boolean mLastMenuVisibility;
+    private ListMenuPresenter mListMenuPresenter;
     private boolean mMenuCallbackSet;
     private final Toolbar.OnMenuItemClickListener mMenuClicker = new Toolbar.OnMenuItemClickListener() {
         public boolean onMenuItemClick(MenuItem item) {
@@ -141,10 +142,11 @@ class ToolbarActionBar extends ActionBar {
     }
 
     public void setSelectedNavigationItem(int position) {
-        if (this.mDecorToolbar.getNavigationMode() != 1) {
-            throw new IllegalStateException("setSelectedNavigationIndex not valid for current navigation mode");
+        if (this.mDecorToolbar.getNavigationMode() == 1) {
+            this.mDecorToolbar.setDropdownSelectedPosition(position);
+            return;
         }
-        this.mDecorToolbar.setDropdownSelectedPosition(position);
+        throw new IllegalStateException("setSelectedNavigationIndex not valid for current navigation mode");
     }
 
     public int getSelectedNavigationIndex() {
@@ -184,7 +186,6 @@ class ToolbarActionBar extends ActionBar {
         this.mDecorToolbar.setSubtitle(resId != 0 ? this.mDecorToolbar.getContext().getText(resId) : null);
     }
 
-    @SuppressLint({"WrongConstant"})
     public void setDisplayOptions(int options) {
         setDisplayOptions(options, -1);
     }
@@ -234,10 +235,11 @@ class ToolbarActionBar extends ActionBar {
     }
 
     public void setNavigationMode(int mode) {
-        if (mode == 2) {
-            throw new IllegalArgumentException("Tabs not supported in this configuration");
+        if (mode != 2) {
+            this.mDecorToolbar.setNavigationMode(mode);
+            return;
         }
-        this.mDecorToolbar.setNavigationMode(mode);
+        throw new IllegalArgumentException("Tabs not supported in this configuration");
     }
 
     public int getDisplayOptions() {

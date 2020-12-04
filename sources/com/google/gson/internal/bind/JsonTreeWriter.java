@@ -159,9 +159,10 @@ public final class JsonTreeWriter extends JsonWriter {
     }
 
     public void close() throws IOException {
-        if (!this.stack.isEmpty()) {
-            throw new IOException("Incomplete document");
+        if (this.stack.isEmpty()) {
+            this.stack.add(SENTINEL_CLOSED);
+            return;
         }
-        this.stack.add(SENTINEL_CLOSED);
+        throw new IOException("Incomplete document");
     }
 }

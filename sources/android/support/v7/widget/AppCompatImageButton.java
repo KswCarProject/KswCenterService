@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -48,6 +49,13 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
 
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
+        if (this.mImageHelper != null) {
+            this.mImageHelper.applySupportImageTint();
+        }
+    }
+
+    public void setImageIcon(@Nullable Icon icon) {
+        super.setImageIcon(icon);
         if (this.mImageHelper != null) {
             this.mImageHelper.applySupportImageTint();
         }

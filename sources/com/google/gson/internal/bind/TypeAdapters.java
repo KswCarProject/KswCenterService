@@ -1,5 +1,6 @@
 package com.google.gson.internal.bind;
 
+import android.telecom.Logging.Session;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -205,7 +206,7 @@ public final class TypeAdapters {
             while (in.peek() != JsonToken.END_OBJECT) {
                 String name = in.nextName();
                 int value = in.nextInt();
-                if (YEAR.equals(name)) {
+                if ("year".equals(name)) {
                     year = value;
                 } else if (MONTH.equals(name)) {
                     month = value;
@@ -229,7 +230,7 @@ public final class TypeAdapters {
                 return;
             }
             out.beginObject();
-            out.name(YEAR);
+            out.name("year");
             out.value((long) value.get(1));
             out.name(MONTH);
             out.value((long) value.get(2));
@@ -411,7 +412,7 @@ public final class TypeAdapters {
                 in.nextNull();
                 return null;
             }
-            StringTokenizer tokenizer = new StringTokenizer(in.nextString(), "_");
+            StringTokenizer tokenizer = new StringTokenizer(in.nextString(), Session.SESSION_SEPARATION_CHAR_CHILD);
             String language = null;
             String country = null;
             String variant = null;
@@ -462,11 +463,11 @@ public final class TypeAdapters {
             if (i == 1) {
                 return new LazilyParsedNumber(in.nextString());
             }
-            if (i != 4) {
-                throw new JsonSyntaxException("Expecting number, got: " + jsonToken);
+            if (i == 4) {
+                in.nextNull();
+                return null;
             }
-            in.nextNull();
-            return null;
+            throw new JsonSyntaxException("Expecting number, got: " + jsonToken);
         }
 
         public void write(JsonWriter out, Number value) throws IOException {

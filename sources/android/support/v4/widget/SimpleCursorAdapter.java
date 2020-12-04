@@ -7,7 +7,6 @@ import android.support.annotation.RestrictTo;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.wits.pms.BuildConfig;
 
 public class SimpleCursorAdapter extends ResourceCursorAdapter {
     private CursorToStringConverter mCursorToStringConverter;
@@ -59,7 +58,7 @@ public class SimpleCursorAdapter extends ResourceCursorAdapter {
                 } else {
                     String text = cursor.getString(from[i]);
                     if (text == null) {
-                        text = BuildConfig.FLAVOR;
+                        text = "";
                     }
                     if (v instanceof TextView) {
                         setViewText((TextView) v, text);
@@ -90,7 +89,7 @@ public class SimpleCursorAdapter extends ResourceCursorAdapter {
     }
 
     public void setViewText(TextView v, String text) {
-        v.setText(text);
+        v.setText((CharSequence) text);
     }
 
     public int getStringConversionColumn() {

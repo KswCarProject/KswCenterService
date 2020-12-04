@@ -1,7 +1,5 @@
 package com.wits.pms.utils;
 
-import com.wits.pms.BuildConfig;
-
 public class SystemProperties {
     public static void set(String key, String val) {
         try {
@@ -18,7 +16,7 @@ public class SystemProperties {
             return (String) systemProperties.getMethod("get", new Class[]{String.class}).invoke(systemProperties, new Object[]{key});
         } catch (Exception e) {
             e.printStackTrace();
-            return BuildConfig.FLAVOR;
+            return "";
         }
     }
 }

@@ -1,7 +1,11 @@
 package com.wits.pms.mcu.custom.utils;
 
 import android.annotation.SuppressLint;
+import android.net.wifi.WifiEnterpriseConfig;
+import android.provider.Settings;
 import android.util.Log;
+import com.android.internal.midi.MidiConstants;
+import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.mcu.custom.KswMcuSender;
 import com.wits.pms.mcu.custom.KswMessage;
 import java.io.FileWriter;
@@ -9,7 +13,7 @@ import java.io.IOException;
 
 public class CanLogUtils {
     @SuppressLint({"SdCardPath"})
-    private static final String CAN_LOG_PATH = "/sdcard/CANBus_Log.txt";
+    private static final String CAN_LOG_PATH = "/sdcard/CANBus_Log";
     private static FileWriter fileWriter;
     private static boolean pullingCanLog;
 
@@ -27,15 +31,16 @@ public class CanLogUtils {
     }
 
     private static void startCatCanLog() {
-        KswMcuSender.getSender().sendMessage(112, new byte[]{15, 1});
+        int type = Settings.System.getInt(PowerManagerAppService.serviceContext.getContentResolver(), "canBusType", 0);
+        KswMcuSender.getSender().sendMessage(112, new byte[]{MidiConstants.STATUS_CHANNEL_MASK, 1, (byte) type});
         try {
-            fileWriter = new FileWriter(CAN_LOG_PATH);
+            fileWriter = new FileWriter("/sdcard/CANBus_Log_CAN" + type + ".txt");
         } catch (IOException e) {
         }
     }
 
     private static void saveCanLog() {
-        KswMcuSender.getSender().sendMessage(112, new byte[]{15, 0});
+        KswMcuSender.getSender().sendMessage(112, new byte[]{MidiConstants.STATUS_CHANNEL_MASK, 0});
         try {
             fileWriter.flush();
             fileWriter.close();
@@ -73,14 +78,14 @@ public class CanLogUtils {
             }
             dataString.append("0x");
             dataString.append(hex2);
-            dataString.append(" ");
+            dataString.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         }
         line.append(head.toString());
-        line.append(" ");
+        line.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         line.append(data[4] == 0 ? "数据帧" : "远程帧");
-        line.append(" ");
+        line.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         line.append(data[5] == 0 ? "标准帧" : "扩展帧");
-        line.append(" ");
+        line.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         line.append(dataString.toString());
         fileWriter.write(line.toString());
         fileWriter.write("\n");

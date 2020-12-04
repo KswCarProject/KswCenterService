@@ -32,6 +32,8 @@ public class KswMcuLogic {
     private static final String TAG = "KswMcuLogic";
     /* access modifiers changed from: private */
     public static boolean callingStopHeartBeat;
+    /* access modifiers changed from: private */
+    public static boolean isNewPro;
     private static KswMcuLogic kswMcuLogic;
     /* access modifiers changed from: private */
     public static boolean stopHeartBeat;
@@ -44,12 +46,16 @@ public class KswMcuLogic {
     private boolean mCloseScreen;
     /* access modifiers changed from: private */
     public Context mContext = null;
-    private byte mCurrentStatus = DV_TYPE_MODE;
+    private byte mCurrentStatus = 0;
     private int mCurrentTouchX;
     private int mCurrentTouchY;
     private Handler mHandler;
     private View mInterceptView;
+    private long mLastEventTime;
+    private int mLastTouchX;
+    private int mLastTouchY;
     private final KswMcuListener mListener;
+    private long mLongPressDownTime;
     private final WindowManager mWindowManager;
     private boolean wasAdded;
 
@@ -71,7 +77,7 @@ public class KswMcuLogic {
     public KswMcuLogic(Context context) {
         this.mContext = context;
         this.mHandler = new Handler(context.getMainLooper());
-        this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
+        this.mWindowManager = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
         this.mCarCanMsgHandle = new CarCanMsgHandle(context);
         this.mListener = new KswMcuListener();
         McuService.setListener(this.mListener);
@@ -84,6 +90,15 @@ public class KswMcuLogic {
                 boolean unused = KswMcuLogic.callingStopHeartBeat = z;
             }
         });
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("touch_continuous_send"), true, new ContentObserver(this.mHandler) {
+            public void onChange(boolean selfChange) {
+                boolean z = true;
+                if (Settings.System.getInt(KswMcuLogic.this.mContext.getContentResolver(), "touch_continuous_send", 0) != 1) {
+                    z = false;
+                }
+                boolean unused = KswMcuLogic.isNewPro = z;
+            }
+        });
         heartBeatData();
     }
 
@@ -93,7 +108,7 @@ public class KswMcuLogic {
                 while (true) {
                     try {
                         if (!KswMcuLogic.stopHeartBeat && !KswMcuLogic.callingStopHeartBeat) {
-                            KswMcuLogic.this.send(KswMessage.obtain(104, new byte[]{KswMcuLogic.DVD, KswMcuLogic.DV_TYPE_MODE}));
+                            KswMcuLogic.this.send(KswMessage.obtain(104, new byte[]{8, 0}));
                         }
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -114,7 +129,7 @@ public class KswMcuLogic {
     private void setScreenLightOn(boolean on) {
         try {
             this.mCloseScreen = false;
-            KswMcuSender.getSender().sendMessage(108, new byte[]{CAR_MODE, on ? (byte) 1 : 0});
+            KswMcuSender.getSender().sendMessage(108, new byte[]{2, on ? (byte) 1 : 0});
         } catch (Exception e) {
         }
     }
@@ -123,9 +138,9 @@ public class KswMcuLogic {
     }
 
     public void updateVideoStatus(byte status) {
-        byte b = ANDROID_MODE;
+        byte b = 1;
         if (status != 1) {
-            b = CAR_MODE;
+            b = 2;
         }
         this.mCurrentStatus = b;
         updateInterceptView();
@@ -160,23 +175,34 @@ public class KswMcuLogic {
     private synchronized void opInterceptView(boolean intercept, boolean closeScreen) {
         if (!this.mCloseScreen) {
             this.mCloseScreen = closeScreen;
-            this.mHandler.post(new KswMcuLogic$$Lambda$0(this, intercept));
+            this.mHandler.post(new Runnable(intercept) {
+                private final /* synthetic */ boolean f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                public final void run() {
+                    KswMcuLogic.lambda$opInterceptView$1(KswMcuLogic.this, this.f$1);
+                }
+            });
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final /* synthetic */ void lambda$opInterceptView$3$KswMcuLogic(boolean intercept) {
+    public static /* synthetic */ void lambda$opInterceptView$1(KswMcuLogic kswMcuLogic2, boolean intercept) {
+        boolean z = false;
         if (!intercept) {
-            if (this.mInterceptView != null && this.wasAdded) {
+            if (kswMcuLogic2.mInterceptView != null && kswMcuLogic2.wasAdded) {
                 try {
-                    this.mWindowManager.removeViewImmediate(this.mInterceptView);
-                    this.wasAdded = false;
+                    kswMcuLogic2.mWindowManager.removeViewImmediate(kswMcuLogic2.mInterceptView);
+                    kswMcuLogic2.wasAdded = false;
+                    kswMcuLogic2.mLongPressDownTime = 0;
                 } catch (Exception e) {
                     Log.w(TAG, "remove interceptView failed.");
                 }
             }
-        } else if (!this.wasAdded) {
-            if (this.DEBUG) {
+        } else if (!kswMcuLogic2.wasAdded) {
+            if (kswMcuLogic2.DEBUG) {
                 Log.v(TAG, "opInterceptView to op other View");
             }
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -188,49 +214,78 @@ public class KswMcuLogic {
             lp.alpha = 1.0f;
             lp.x = 0;
             lp.y = 0;
-            this.mInterceptView = new View(this.mContext);
-            this.mInterceptView.setClickable(true);
-            this.mInterceptView.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
-            this.mInterceptView.setOnClickListener(KswMcuLogic$$Lambda$1.$instance);
-            this.mInterceptView.setOnLongClickListener(new KswMcuLogic$$Lambda$2(this));
-            this.mInterceptView.setOnTouchListener(new KswMcuLogic$$Lambda$3(this));
+            kswMcuLogic2.mInterceptView = new View(kswMcuLogic2.mContext);
+            kswMcuLogic2.mInterceptView.setClickable(true);
+            kswMcuLogic2.mInterceptView.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
+            if (Settings.System.getInt(kswMcuLogic2.mContext.getContentResolver(), "touch_continuous_send", 0) == 1) {
+                z = true;
+            }
+            isNewPro = z;
+            kswMcuLogic2.mInterceptView.setOnTouchListener(new View.OnTouchListener() {
+                public final boolean onTouch(View view, MotionEvent motionEvent) {
+                    return KswMcuLogic.lambda$null$0(KswMcuLogic.this, view, motionEvent);
+                }
+            });
             try {
-                if (this.wasAdded) {
-                    this.mWindowManager.removeViewImmediate(this.mInterceptView);
+                if (kswMcuLogic2.wasAdded) {
+                    kswMcuLogic2.mWindowManager.removeViewImmediate(kswMcuLogic2.mInterceptView);
                 }
             } catch (Exception e2) {
                 Log.w(TAG, "remove interceptView failed.");
             }
-            this.wasAdded = true;
-            this.mWindowManager.addView(this.mInterceptView, lp);
+            kswMcuLogic2.wasAdded = true;
+            kswMcuLogic2.mWindowManager.addView(kswMcuLogic2.mInterceptView, lp);
         }
     }
 
-    static final /* synthetic */ void lambda$null$0$KswMcuLogic(View v) {
-    }
-
-    /* access modifiers changed from: package-private */
-    public final /* synthetic */ boolean lambda$null$1$KswMcuLogic(View v) {
-        sendTouchData(true);
-        return true;
-    }
-
-    /* access modifiers changed from: package-private */
-    public final /* synthetic */ boolean lambda$null$2$KswMcuLogic(View v, MotionEvent event) {
-        if (this.mCloseScreen) {
-            this.wasAdded = false;
+    public static /* synthetic */ boolean lambda$null$0(KswMcuLogic kswMcuLogic2, View v, MotionEvent event) {
+        if (kswMcuLogic2.mCloseScreen) {
+            kswMcuLogic2.wasAdded = false;
             try {
-                this.mWindowManager.removeViewImmediate(this.mInterceptView);
+                kswMcuLogic2.mWindowManager.removeViewImmediate(kswMcuLogic2.mInterceptView);
             } catch (Exception e) {
                 Log.w(TAG, "remove interceptView failed.");
             }
-            setScreenLightOn(true);
-        } else if (needSendTouchData()) {
-            this.mCurrentTouchX = (int) event.getX();
-            this.mCurrentTouchY = getTouchY((int) event.getY());
-            if (event.getAction() == 1) {
-                sendTouchData(false);
+            kswMcuLogic2.setScreenLightOn(true);
+        } else if (!kswMcuLogic2.needSendTouchData() || !kswMcuLogic2.filter(event)) {
+            return false;
+        } else {
+            kswMcuLogic2.mCurrentTouchX = (int) event.getX();
+            kswMcuLogic2.mCurrentTouchY = kswMcuLogic2.getTouchY((int) event.getY());
+            if (isNewPro) {
+                kswMcuLogic2.sendTouchDataA(event);
+            } else {
+                kswMcuLogic2.sendTouchDataB(event);
             }
+            kswMcuLogic2.mLastTouchX = kswMcuLogic2.mCurrentTouchX;
+            kswMcuLogic2.mLastTouchY = kswMcuLogic2.mCurrentTouchY;
+            kswMcuLogic2.mLastEventTime = event.getEventTime();
+            if (event.getAction() == 1) {
+                kswMcuLogic2.mLastEventTime = 0;
+            }
+        }
+        return false;
+    }
+
+    private boolean filter(MotionEvent event) {
+        return this.mLastEventTime == 0 || event.getEventTime() - this.mLastEventTime >= 25 || event.getAction() == 1;
+    }
+
+    private boolean isLongClick(MotionEvent event) {
+        if (this.mLastEventTime == 0) {
+            return false;
+        }
+        long downTime = event.getEventTime() - this.mLastEventTime;
+        float x = (float) (this.mCurrentTouchX - this.mLastTouchX);
+        float y = (float) (this.mCurrentTouchY - this.mLastTouchY);
+        boolean longPress = x < 5.0f && x > -5.0f && y < 5.0f && y > -5.0f;
+        if (event.getAction() == 1) {
+            this.mLongPressDownTime = 0;
+        } else if (longPress) {
+            this.mLongPressDownTime += downTime;
+        }
+        if (this.mLongPressDownTime >= 1500) {
+            return true;
         }
         return false;
     }
@@ -239,13 +294,52 @@ public class KswMcuLogic {
         return (SystemProperties.get("app.carMode.control").equals("0") ? 62 : 0) + currentY;
     }
 
-    private void sendTouchData(boolean isLongClicked) {
+    private void sendTouchDataA(MotionEvent event) {
+        byte[] touchData = new byte[6];
+        int i = 0;
+        touchData[0] = 10;
         int x = this.mCurrentTouchX;
         int y = this.mCurrentTouchY;
-        Log.i(TAG, "send Touch X - " + this.mCurrentTouchX + " ; Y - " + this.mCurrentTouchY);
-        byte[] touchData = {this.mCurrentStatus, (byte) (x >> 8), (byte) x, (byte) (y >> 8), (byte) y, isLongClicked ^ true ? (byte) 1 : 0};
+        Log.i(TAG, "sendTouchDataA Touch X - " + this.mCurrentTouchX + " ; Y - " + this.mCurrentTouchY + "- event:" + event.toString());
+        touchData[1] = (byte) (x >> 8);
+        touchData[2] = (byte) x;
+        touchData[3] = (byte) (y >> 8);
+        touchData[4] = (byte) y;
+        boolean isLongClicked = isLongClick(event);
+        if (event.getAction() == 1) {
+            i = 2;
+        } else if (isLongClicked) {
+            i = 1;
+        }
+        touchData[5] = (byte) i;
         if (!this.isUpdating) {
             send(KswMessage.obtain(107, touchData));
+        }
+    }
+
+    private void sendTouchDataB(MotionEvent event) {
+        byte[] touchData = new byte[6];
+        int i = 0;
+        touchData[0] = this.mCurrentStatus;
+        int x = this.mCurrentTouchX;
+        int y = this.mCurrentTouchY;
+        Log.i(TAG, "sendTouchDataB Touch X - " + this.mCurrentTouchX + " ; Y - " + this.mCurrentTouchY + "- event:" + event.toString());
+        boolean isDown = true;
+        touchData[1] = (byte) (x >> 8);
+        touchData[2] = (byte) x;
+        touchData[3] = (byte) (y >> 8);
+        touchData[4] = (byte) y;
+        if (event.getAction() == 0) {
+            if (event.getAction() != 0) {
+                isDown = false;
+            }
+            if (!isDown) {
+                i = 2;
+            }
+            touchData[5] = (byte) i;
+            if (!this.isUpdating) {
+                send(KswMessage.obtain(107, touchData));
+            }
         }
     }
 
@@ -312,20 +406,20 @@ public class KswMcuLogic {
             }
             if (msg.getCmdType() == 99) {
                 if (data == 1 && msg.getData()[1] > 0) {
-                    updateStatus(ANDROID_MODE);
+                    updateStatus((byte) 1);
                 }
             }
             if (msg.getCmdType() == 103) {
                 if (data == 0 || data == 8 || data == 12 || data == 5 || data == 6 || data == 11) {
-                    updateStatus(CAR_MODE);
+                    updateStatus((byte) 2);
                 } else {
-                    updateStatus(ANDROID_MODE);
+                    updateStatus((byte) 1);
                 }
                 SystemStatusControl.getStatus().lastMode = data;
             }
             if (msg.getCmdType() == 104) {
                 if (data == 4) {
-                    updateStatus(ANDROID_MODE);
+                    updateStatus((byte) 1);
                 }
             }
             if (msg.getCmdType() == 105) {
@@ -333,7 +427,7 @@ public class KswMcuLogic {
                     intercept = true;
                 }
                 if (intercept) {
-                    updateStatus(CAR_MODE);
+                    updateStatus((byte) 2);
                 }
             }
             return true;
@@ -382,10 +476,10 @@ public class KswMcuLogic {
                         switch (cmdType) {
                             case 26:
                                 if (message.getData()[0] == 1) {
-                                    updateStatus(CAR_MODE);
+                                    updateStatus((byte) 2);
                                     return;
                                 } else {
-                                    updateStatus(ANDROID_MODE);
+                                    updateStatus((byte) 1);
                                     return;
                                 }
                             default:

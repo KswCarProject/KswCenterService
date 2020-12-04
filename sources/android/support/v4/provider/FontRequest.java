@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.util.Preconditions;
 import android.util.Base64;
+import com.android.internal.content.NativeLibraryHelper;
 import java.util.List;
 
 public final class FontRequest {
@@ -22,7 +23,7 @@ public final class FontRequest {
         this.mQuery = (String) Preconditions.checkNotNull(query);
         this.mCertificates = (List) Preconditions.checkNotNull(certificates);
         this.mCertificatesArray = 0;
-        this.mIdentifier = this.mProviderAuthority + "-" + this.mProviderPackage + "-" + this.mQuery;
+        this.mIdentifier = this.mProviderAuthority + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + this.mProviderPackage + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + this.mQuery;
     }
 
     public FontRequest(@NonNull String providerAuthority, @NonNull String providerPackage, @NonNull String query, @ArrayRes int certificates) {
@@ -32,20 +33,17 @@ public final class FontRequest {
         this.mCertificates = null;
         Preconditions.checkArgument(certificates != 0);
         this.mCertificatesArray = certificates;
-        this.mIdentifier = this.mProviderAuthority + "-" + this.mProviderPackage + "-" + this.mQuery;
+        this.mIdentifier = this.mProviderAuthority + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + this.mProviderPackage + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + this.mQuery;
     }
 
-    @NonNull
     public String getProviderAuthority() {
         return this.mProviderAuthority;
     }
 
-    @NonNull
     public String getProviderPackage() {
         return this.mProviderPackage;
     }
 
-    @NonNull
     public String getQuery() {
         return this.mQuery;
     }

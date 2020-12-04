@@ -151,31 +151,35 @@ public class Preconditions {
     }
 
     public static <T> T[] checkArrayElementsNotNull(T[] value, String valueName) {
-        if (value == null) {
-            throw new NullPointerException(valueName + " must not be null");
-        }
-        for (int i = 0; i < value.length; i++) {
-            if (value[i] == null) {
-                throw new NullPointerException(String.format(Locale.US, "%s[%d] must not be null", new Object[]{valueName, Integer.valueOf(i)}));
+        if (value != null) {
+            int i = 0;
+            while (i < value.length) {
+                if (value[i] != null) {
+                    i++;
+                } else {
+                    throw new NullPointerException(String.format(Locale.US, "%s[%d] must not be null", new Object[]{valueName, Integer.valueOf(i)}));
+                }
             }
+            return value;
         }
-        return value;
+        throw new NullPointerException(valueName + " must not be null");
     }
 
     @NonNull
     public static <C extends Collection<T>, T> C checkCollectionElementsNotNull(C value, String valueName) {
-        if (value == null) {
-            throw new NullPointerException(valueName + " must not be null");
-        }
-        long ctr = 0;
-        Iterator it = value.iterator();
-        while (it.hasNext()) {
-            if (it.next() == null) {
-                throw new NullPointerException(String.format(Locale.US, "%s[%d] must not be null", new Object[]{valueName, Long.valueOf(ctr)}));
+        if (value != null) {
+            long ctr = 0;
+            Iterator it = value.iterator();
+            while (it.hasNext()) {
+                if (it.next() != null) {
+                    ctr++;
+                } else {
+                    throw new NullPointerException(String.format(Locale.US, "%s[%d] must not be null", new Object[]{valueName, Long.valueOf(ctr)}));
+                }
             }
-            ctr++;
+            return value;
         }
-        return value;
+        throw new NullPointerException(valueName + " must not be null");
     }
 
     public static <T> Collection<T> checkCollectionNotEmpty(Collection<T> value, String valueName) {
@@ -197,15 +201,12 @@ public class Preconditions {
                 throw new IllegalArgumentException(valueName + "[" + i + "] must not be NaN");
             } else if (v < lower) {
                 throw new IllegalArgumentException(String.format(Locale.US, "%s[%d] is out of range of [%f, %f] (too low)", new Object[]{valueName, Integer.valueOf(i), Float.valueOf(lower), Float.valueOf(upper)}));
-            } else if (v > upper) {
-                throw new IllegalArgumentException(String.format(Locale.US, "%s[%d] is out of range of [%f, %f] (too high)", new Object[]{valueName, Integer.valueOf(i), Float.valueOf(lower), Float.valueOf(upper)}));
-            } else {
+            } else if (v <= upper) {
                 i++;
+            } else {
+                throw new IllegalArgumentException(String.format(Locale.US, "%s[%d] is out of range of [%f, %f] (too high)", new Object[]{valueName, Integer.valueOf(i), Float.valueOf(lower), Float.valueOf(upper)}));
             }
         }
         return value;
-    }
-
-    private Preconditions() {
     }
 }

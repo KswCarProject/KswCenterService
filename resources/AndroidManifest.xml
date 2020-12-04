@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="1" android:versionName="1.0" coreApp="true" package="com.wits.pms">
-    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="1" android:versionName="1.0" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" coreApp="true" package="com.wits.pms" platformBuildVersionCode="1" platformBuildVersionName="1">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="28"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -21,7 +21,8 @@
     <uses-permission android:name="android.permission.STATUS_BAR"/>
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
     <permission android:name="com.txz.service.CENTER_CONTROL" android:protectionLevel="signature"/>
-    <application android:theme="@style/AppTheme" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:persistent="true" android:debuggable="true" android:allowBackup="true" android:supportsRtl="true" android:directBootAware="true" android:roundIcon="@mipmap/ic_launcher_round" android:appComponentFactory="android.support.v4.app.CoreComponentFactory">
+    <application android:theme="@style/AppTheme" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:persistent="true" android:debuggable="true" android:allowBackup="true" android:supportsRtl="true" android:directBootAware="true" android:roundIcon="@mipmap/ic_launcher_round">
+        <service android:name="com.wits.pms.core.TempControllerService" android:exported="false"/>
         <receiver android:name="com.wits.pms.receiver.EcarReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="com.android.ecar.send"/>
@@ -38,6 +39,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="com.wits.boot.Start"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.wits.pms.APPLY_MCU_CHECK_CAR"/>
             </intent-filter>
         </receiver>
         <service android:name="com.wits.pms.mcu.McuService" android:exported="true"/>
@@ -49,5 +51,7 @@
         </receiver>
         <service android:name="com.wits.pms.core.PowerManagerAppService" android:exported="true"/>
         <activity android:theme="@style/FullScreenTheme" android:name="com.wits.pms.ClockActivity" android:exported="true" android:excludeFromRecents="true"/>
+        <meta-data android:name="android.support.VERSION" android:value="26.1.0"/>
+        <meta-data android:name="android.arch.lifecycle.VERSION" android:value="27.0.0-SNAPSHOT"/>
     </application>
 </manifest>

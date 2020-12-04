@@ -13,7 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.FilterQueryProvider;
 import android.widget.Filterable;
-import com.wits.pms.BuildConfig;
 
 public abstract class CursorAdapter extends BaseAdapter implements Filterable, CursorFilter.CursorFilterClient {
     @Deprecated
@@ -129,9 +128,7 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable, C
         View v;
         if (!this.mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
-        } else if (!this.mCursor.moveToPosition(position)) {
-            throw new IllegalStateException("couldn't move cursor to position " + position);
-        } else {
+        } else if (this.mCursor.moveToPosition(position)) {
             if (convertView == null) {
                 v = newView(this.mContext, this.mCursor, parent);
             } else {
@@ -139,6 +136,8 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable, C
             }
             bindView(v, this.mContext, this.mCursor);
             return v;
+        } else {
+            throw new IllegalStateException("couldn't move cursor to position " + position);
         }
     }
 
@@ -201,7 +200,7 @@ public abstract class CursorAdapter extends BaseAdapter implements Filterable, C
     }
 
     public CharSequence convertToString(Cursor cursor) {
-        return cursor == null ? BuildConfig.FLAVOR : cursor.toString();
+        return cursor == null ? "" : cursor.toString();
     }
 
     public Cursor runQueryOnBackgroundThread(CharSequence constraint) {

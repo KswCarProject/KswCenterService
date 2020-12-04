@@ -3,7 +3,6 @@ package com.wits.pms.custom;
 import android.os.Handler;
 import android.util.Log;
 import com.google.gson.Gson;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.utils.SysConfigUtil;
 import java.io.File;
@@ -19,6 +18,7 @@ public class FactorySettings {
     public int APK_Install;
     public int AUX_Type;
     public int Android_Bt_Switch = 1;
+    public int AppsIcon_Select;
     public int Audi_Logo_Left;
     public int Audi_Logo_Right;
     public int BT_Type;
@@ -32,12 +32,13 @@ public class FactorySettings {
     public int CarVideoDisplayStyle;
     public int DTV_Type;
     public int DVD_Type;
-    public String DVRApk_PackageName = BuildConfig.FLAVOR;
+    public String DVRApk_PackageName = "";
     public int DVR_Type;
     public int DashBoardUnit;
     public int Dashboard_MaxSpeed;
     public int Dashboard_Select;
     public int Default_PowerBoot;
+    public int DirtTravelSelection;
     public int Front_view_camera;
     public int GoogleAPP;
     public int HandsetAutomaticSelect;
@@ -47,20 +48,72 @@ public class FactorySettings {
     public int Support_TXZ;
     public int Support_TXZ_Voice_Wakeup;
     public int Support_dashboard;
-    public String TXZ_Wakeup = BuildConfig.FLAVOR;
+    public String TXZ_Wakeup = "";
     public int UI;
-    public String UI_type = BuildConfig.FLAVOR;
+    public String UI_type = "";
     public int Voice_key;
     public int Wifi_or_4G;
     public int cam360_video;
-    public String client = BuildConfig.FLAVOR;
+    public int canBusType;
+    public int car_manufacturer;
+    public String client = "";
     public int e_car;
-    public String password = BuildConfig.FLAVOR;
-    public String ver = BuildConfig.FLAVOR;
+    public String password = "";
+    public int speed_play_switch = 1;
+    public int touch_continuous_send;
+    public String ver = "";
     public int zlink_auto_start;
 
     public FactorySettings() {
         LogI(TAG, "create a new factory settings");
+    }
+
+    public int getDirtTravelSelection() {
+        return this.DirtTravelSelection;
+    }
+
+    public void setDirtTravelSelection(int dirtTravelSelection) {
+        this.DirtTravelSelection = dirtTravelSelection;
+    }
+
+    public int getSpeed_play_switch() {
+        return this.speed_play_switch;
+    }
+
+    public void setSpeed_play_switch(int speed_play_switch2) {
+        this.speed_play_switch = speed_play_switch2;
+    }
+
+    public int getCanBusType() {
+        return this.canBusType;
+    }
+
+    public void setCanBusType(int canBusType2) {
+        this.canBusType = canBusType2;
+    }
+
+    public int getCar_manufacturer() {
+        return this.car_manufacturer;
+    }
+
+    public void setCar_manufacturer(int car_manufacturer2) {
+        this.car_manufacturer = car_manufacturer2;
+    }
+
+    public int getAppsIcon_Select() {
+        return this.AppsIcon_Select;
+    }
+
+    public void setAppsIcon_Select(int appsIcon_Select) {
+        this.AppsIcon_Select = appsIcon_Select;
+    }
+
+    public int getTouch_continuous_send() {
+        return this.touch_continuous_send;
+    }
+
+    public void setTouch_continuous_send(int touch_continuous_send2) {
+        this.touch_continuous_send = touch_continuous_send2;
     }
 
     public int getAndroid_Bt_Switch() {
@@ -454,7 +507,7 @@ public class FactorySettings {
 
     private String getFirstUpCaseString(String key) {
         StringBuilder sb = new StringBuilder(key);
-        sb.replace(0, 1, (key.charAt(0) + BuildConfig.FLAVOR).toUpperCase());
+        sb.replace(0, 1, (key.charAt(0) + "").toUpperCase());
         return sb.toString();
     }
 

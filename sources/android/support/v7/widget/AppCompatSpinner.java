@@ -35,13 +35,16 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
     private static final int MODE_THEME = -1;
     private static final String TAG = "AppCompatSpinner";
     private final AppCompatBackgroundHelper mBackgroundTintHelper;
-    int mDropDownWidth;
+    /* access modifiers changed from: private */
+    public int mDropDownWidth;
     private ForwardingListener mForwardingListener;
-    DropdownPopup mPopup;
+    /* access modifiers changed from: private */
+    public DropdownPopup mPopup;
     private final Context mPopupContext;
     private final boolean mPopupSet;
     private SpinnerAdapter mTempAdapter;
-    final Rect mTempRect;
+    /* access modifiers changed from: private */
+    public final Rect mTempRect;
 
     public AppCompatSpinner(Context context) {
         this(context, (AttributeSet) null);
@@ -63,14 +66,14 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
         this(context, attrs, defStyleAttr, mode, (Resources.Theme) null);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x0059, code lost:
-        if (r3 != null) goto L_0x005b;
+    /* JADX WARNING: Code restructure failed: missing block: B:23:0x005f, code lost:
+        if (r3 != null) goto L_0x0061;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:22:0x005b, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0061, code lost:
         r3.recycle();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:28:0x0069, code lost:
-        if (r3 == null) goto L_0x0072;
+    /* JADX WARNING: Code restructure failed: missing block: B:30:0x006f, code lost:
+        if (r3 == null) goto L_0x007a;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public AppCompatSpinner(android.content.Context r9, android.util.AttributeSet r10, int r11, int r12, android.content.res.Resources.Theme r13) {
@@ -113,39 +116,46 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
         L_0x003e:
             android.content.Context r3 = r8.mPopupContext
             r4 = 1
-            if (r3 == 0) goto L_0x00aa
+            if (r3 == 0) goto L_0x00b2
             r3 = -1
-            if (r12 != r3) goto L_0x0072
+            if (r12 != r3) goto L_0x007a
+            int r3 = android.os.Build.VERSION.SDK_INT
+            r5 = 11
+            if (r3 < r5) goto L_0x0079
             r3 = r2
-            int[] r5 = ATTRS_ANDROID_SPINNERMODE     // Catch:{ Exception -> 0x0061 }
-            android.content.res.TypedArray r5 = r9.obtainStyledAttributes(r10, r5, r11, r1)     // Catch:{ Exception -> 0x0061 }
+            int[] r5 = ATTRS_ANDROID_SPINNERMODE     // Catch:{ Exception -> 0x0067 }
+            android.content.res.TypedArray r5 = r9.obtainStyledAttributes(r10, r5, r11, r1)     // Catch:{ Exception -> 0x0067 }
             r3 = r5
-            boolean r5 = r3.hasValue(r1)     // Catch:{ Exception -> 0x0061 }
-            if (r5 == 0) goto L_0x0059
-            int r5 = r3.getInt(r1, r1)     // Catch:{ Exception -> 0x0061 }
+            boolean r5 = r3.hasValue(r1)     // Catch:{ Exception -> 0x0067 }
+            if (r5 == 0) goto L_0x005f
+            int r5 = r3.getInt(r1, r1)     // Catch:{ Exception -> 0x0067 }
             r12 = r5
-        L_0x0059:
+        L_0x005f:
             if (r3 == 0) goto L_0x0072
-        L_0x005b:
+        L_0x0061:
             r3.recycle()
             goto L_0x0072
-        L_0x005f:
+        L_0x0065:
             r1 = move-exception
-            goto L_0x006c
-        L_0x0061:
+            goto L_0x0073
+        L_0x0067:
             r5 = move-exception
             java.lang.String r6 = "AppCompatSpinner"
             java.lang.String r7 = "Could not read android:spinnerMode"
-            android.util.Log.i(r6, r7, r5)     // Catch:{ all -> 0x005f }
+            android.util.Log.i(r6, r7, r5)     // Catch:{ all -> 0x0065 }
             if (r3 == 0) goto L_0x0072
-            goto L_0x005b
-        L_0x006c:
-            if (r3 == 0) goto L_0x0071
-            r3.recycle()
-        L_0x0071:
-            throw r1
+            goto L_0x0061
         L_0x0072:
-            if (r12 != r4) goto L_0x00aa
+            goto L_0x007a
+        L_0x0073:
+            if (r3 == 0) goto L_0x0078
+            r3.recycle()
+        L_0x0078:
+            throw r1
+        L_0x0079:
+            r12 = 1
+        L_0x007a:
+            if (r12 != r4) goto L_0x00b2
             android.support.v7.widget.AppCompatSpinner$DropdownPopup r3 = new android.support.v7.widget.AppCompatSpinner$DropdownPopup
             android.content.Context r5 = r8.mPopupContext
             r3.<init>(r5, r10, r11)
@@ -167,25 +177,25 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
             android.support.v7.widget.AppCompatSpinner$1 r5 = new android.support.v7.widget.AppCompatSpinner$1
             r5.<init>(r8, r3)
             r8.mForwardingListener = r5
-        L_0x00aa:
+        L_0x00b2:
             int r1 = android.support.v7.appcompat.R.styleable.Spinner_android_entries
             java.lang.CharSequence[] r1 = r0.getTextArray(r1)
-            if (r1 == 0) goto L_0x00c2
+            if (r1 == 0) goto L_0x00ca
             android.widget.ArrayAdapter r3 = new android.widget.ArrayAdapter
             r5 = 17367048(0x1090008, float:2.5162948E-38)
-            r3.<init>(r9, r5, r1)
+            r3.<init>((android.content.Context) r9, (int) r5, (T[]) r1)
             int r5 = android.support.v7.appcompat.R.layout.support_simple_spinner_dropdown_item
             r3.setDropDownViewResource(r5)
             r8.setAdapter((android.widget.SpinnerAdapter) r3)
-        L_0x00c2:
+        L_0x00ca:
             r0.recycle()
             r8.mPopupSet = r4
             android.widget.SpinnerAdapter r3 = r8.mTempAdapter
-            if (r3 == 0) goto L_0x00d2
+            if (r3 == 0) goto L_0x00da
             android.widget.SpinnerAdapter r3 = r8.mTempAdapter
             r8.setAdapter((android.widget.SpinnerAdapter) r3)
             r8.mTempAdapter = r2
-        L_0x00d2:
+        L_0x00da:
             android.support.v7.widget.AppCompatBackgroundHelper r2 = r8.mBackgroundTintHelper
             r2.loadFromAttributes(r10, r11)
             return
@@ -561,15 +571,21 @@ public class AppCompatSpinner extends Spinner implements TintableBackgroundView 
         /* access modifiers changed from: package-private */
         public void computeContentWidth() {
             int hOffset;
+            int i;
             Drawable background = getBackground();
             int hOffset2 = 0;
             if (background != null) {
                 background.getPadding(AppCompatSpinner.this.mTempRect);
-                hOffset2 = ViewUtils.isLayoutRtl(AppCompatSpinner.this) ? AppCompatSpinner.this.mTempRect.right : -AppCompatSpinner.this.mTempRect.left;
+                if (ViewUtils.isLayoutRtl(AppCompatSpinner.this)) {
+                    i = AppCompatSpinner.this.mTempRect.right;
+                } else {
+                    i = -AppCompatSpinner.this.mTempRect.left;
+                }
+                hOffset2 = i;
             } else {
-                Rect rect = AppCompatSpinner.this.mTempRect;
+                Rect access$100 = AppCompatSpinner.this.mTempRect;
                 AppCompatSpinner.this.mTempRect.right = 0;
-                rect.left = 0;
+                access$100.left = 0;
             }
             int spinnerPaddingLeft = AppCompatSpinner.this.getPaddingLeft();
             int spinnerPaddingRight = AppCompatSpinner.this.getPaddingRight();

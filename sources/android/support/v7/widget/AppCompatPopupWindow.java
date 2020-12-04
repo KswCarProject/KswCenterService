@@ -5,15 +5,21 @@ import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import android.support.annotation.StyleRes;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.appcompat.R;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.PopupWindow;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 
 class AppCompatPopupWindow extends PopupWindow {
     private static final boolean COMPAT_OVERLAP_ANCHOR = (Build.VERSION.SDK_INT < 21);
+    private static final String TAG = "AppCompatPopupWindow";
     private boolean mOverlapAnchor;
 
     public AppCompatPopupWindow(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
@@ -32,7 +38,14 @@ class AppCompatPopupWindow extends PopupWindow {
             setSupportOverlapAnchor(a.getBoolean(R.styleable.PopupWindow_overlapAnchor, false));
         }
         setBackgroundDrawable(a.getDrawable(R.styleable.PopupWindow_android_popupBackground));
+        int sdk = Build.VERSION.SDK_INT;
+        if (defStyleRes != 0 && sdk < 11 && a.hasValue(R.styleable.PopupWindow_android_popupAnimationStyle)) {
+            setAnimationStyle(a.getResourceId(R.styleable.PopupWindow_android_popupAnimationStyle, -1));
+        }
         a.recycle();
+        if (Build.VERSION.SDK_INT < 14) {
+            wrapOnScrollChangedListener(this);
+        }
     }
 
     public void showAsDropDown(View anchor, int xoff, int yoff) {
@@ -56,11 +69,46 @@ class AppCompatPopupWindow extends PopupWindow {
         super.update(anchor, xoff, yoff, width, height);
     }
 
-    private void setSupportOverlapAnchor(boolean overlapAnchor) {
+    private static void wrapOnScrollChangedListener(final PopupWindow popup) {
+        try {
+            final Field fieldAnchor = PopupWindow.class.getDeclaredField("mAnchor");
+            fieldAnchor.setAccessible(true);
+            Field fieldListener = PopupWindow.class.getDeclaredField("mOnScrollChangedListener");
+            fieldListener.setAccessible(true);
+            final ViewTreeObserver.OnScrollChangedListener originalListener = (ViewTreeObserver.OnScrollChangedListener) fieldListener.get(popup);
+            fieldListener.set(popup, new ViewTreeObserver.OnScrollChangedListener() {
+                public void onScrollChanged() {
+                    try {
+                        WeakReference<View> mAnchor = (WeakReference) fieldAnchor.get(popup);
+                        if (mAnchor == null) {
+                            return;
+                        }
+                        if (mAnchor.get() != null) {
+                            originalListener.onScrollChanged();
+                        }
+                    } catch (IllegalAccessException e) {
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.d(TAG, "Exception while installing workaround OnScrollChangedListener", e);
+        }
+    }
+
+    @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
+    public void setSupportOverlapAnchor(boolean overlapAnchor) {
         if (COMPAT_OVERLAP_ANCHOR) {
             this.mOverlapAnchor = overlapAnchor;
         } else {
             PopupWindowCompat.setOverlapAnchor(this, overlapAnchor);
         }
+    }
+
+    @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
+    public boolean getSupportOverlapAnchor() {
+        if (COMPAT_OVERLAP_ANCHOR) {
+            return this.mOverlapAnchor;
+        }
+        return PopupWindowCompat.getOverlapAnchor(this);
     }
 }

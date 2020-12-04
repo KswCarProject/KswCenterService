@@ -2,6 +2,7 @@ package android.support.v4.app;
 
 import android.graphics.Rect;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.util.ArrayMap;
 import android.support.v4.view.ViewCompat;
 import android.util.SparseArray;
@@ -13,19 +14,12 @@ import java.util.List;
 
 class FragmentTransition {
     private static final int[] INVERSE_OPS = {0, 3, 0, 1, 5, 4, 7, 6, 9, 8};
-    private static final FragmentTransitionImpl PLATFORM_IMPL = (Build.VERSION.SDK_INT >= 21 ? new FragmentTransitionCompat21() : null);
-    private static final FragmentTransitionImpl SUPPORT_IMPL = resolveSupportImpl();
 
-    private static FragmentTransitionImpl resolveSupportImpl() {
-        try {
-            return (FragmentTransitionImpl) Class.forName("android.support.transition.FragmentTransitionSupport").getDeclaredConstructor(new Class[0]).newInstance(new Object[0]);
-        } catch (Exception e) {
-            return null;
-        }
+    FragmentTransition() {
     }
 
     static void startTransitions(FragmentManagerImpl fragmentManager, ArrayList<BackStackRecord> records, ArrayList<Boolean> isRecordPop, int startIndex, int endIndex, boolean isReordered) {
-        if (fragmentManager.mCurState >= 1) {
+        if (fragmentManager.mCurState >= 1 && Build.VERSION.SDK_INT >= 21) {
             SparseArray<FragmentContainerTransition> transitioningFragments = new SparseArray<>();
             for (int i = startIndex; i < endIndex; i++) {
                 BackStackRecord record = records.get(i);
@@ -85,138 +79,105 @@ class FragmentTransition {
         return nameOverrides;
     }
 
-    /* JADX WARNING: type inference failed for: r2v9, types: [android.view.View] */
-    /* JADX WARNING: Code restructure failed: missing block: B:7:0x0021, code lost:
-        r14 = r10.lastIn;
-        r15 = r10.firstOut;
-     */
+    /* JADX WARNING: type inference failed for: r2v6, types: [android.view.View] */
     /* JADX WARNING: Multi-variable type inference failed */
+    @android.support.annotation.RequiresApi(21)
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static void configureTransitionsReordered(android.support.v4.app.FragmentManagerImpl r25, int r26, android.support.v4.app.FragmentTransition.FragmentContainerTransition r27, android.view.View r28, android.support.v4.util.ArrayMap<java.lang.String, java.lang.String> r29) {
+    private static void configureTransitionsReordered(android.support.v4.app.FragmentManagerImpl r27, int r28, android.support.v4.app.FragmentTransition.FragmentContainerTransition r29, android.view.View r30, android.support.v4.util.ArrayMap<java.lang.String, java.lang.String> r31) {
         /*
-            r0 = r25
-            r10 = r27
-            r11 = r28
+            r0 = r27
+            r9 = r29
+            r10 = r30
             r1 = 0
             android.support.v4.app.FragmentContainer r2 = r0.mContainer
             boolean r2 = r2.onHasView()
             if (r2 == 0) goto L_0x001b
             android.support.v4.app.FragmentContainer r2 = r0.mContainer
-            r12 = r26
-            android.view.View r2 = r2.onFindViewById(r12)
+            r11 = r28
+            android.view.View r2 = r2.onFindViewById(r11)
             r1 = r2
             android.view.ViewGroup r1 = (android.view.ViewGroup) r1
             goto L_0x001d
         L_0x001b:
-            r12 = r26
+            r11 = r28
         L_0x001d:
-            r13 = r1
-            if (r13 != 0) goto L_0x0021
+            r12 = r1
+            if (r12 != 0) goto L_0x0021
             return
         L_0x0021:
-            android.support.v4.app.Fragment r14 = r10.lastIn
-            android.support.v4.app.Fragment r15 = r10.firstOut
-            android.support.v4.app.FragmentTransitionImpl r9 = chooseImpl(r15, r14)
-            if (r9 != 0) goto L_0x002c
-            return
-        L_0x002c:
-            boolean r8 = r10.lastInIsPop
-            boolean r7 = r10.firstOutIsPop
+            android.support.v4.app.Fragment r13 = r9.lastIn
+            android.support.v4.app.Fragment r14 = r9.firstOut
+            boolean r15 = r9.lastInIsPop
+            boolean r8 = r9.firstOutIsPop
+            java.util.ArrayList r1 = new java.util.ArrayList
+            r1.<init>()
+            r7 = r1
             java.util.ArrayList r1 = new java.util.ArrayList
             r1.<init>()
             r6 = r1
-            java.util.ArrayList r1 = new java.util.ArrayList
-            r1.<init>()
-            r5 = r1
-            java.lang.Object r4 = getEnterTransition(r9, r14, r8)
-            java.lang.Object r3 = getExitTransition(r9, r15, r7)
-            r1 = r9
-            r2 = r13
-            r16 = r3
-            r3 = r11
-            r17 = r4
+            java.lang.Object r5 = getEnterTransition(r13, r15)
+            java.lang.Object r4 = getExitTransition(r14, r8)
+            r1 = r12
+            r2 = r30
+            r3 = r31
+            r23 = r4
             r4 = r29
-            r18 = r5
-            r5 = r10
-            r19 = r6
-            r6 = r18
-            r20 = r7
-            r7 = r19
-            r21 = r8
-            r8 = r17
-            r0 = r9
-            r9 = r16
-            java.lang.Object r9 = configureSharedElementsReordered(r1, r2, r3, r4, r5, r6, r7, r8, r9)
-            if (r8 != 0) goto L_0x006c
-            if (r9 != 0) goto L_0x006c
-            r7 = r16
-            if (r7 != 0) goto L_0x006e
+            r24 = r5
+            r5 = r6
+            r0 = r6
+            r6 = r7
+            r9 = r7
+            r7 = r24
+            r25 = r8
+            r8 = r23
+            java.lang.Object r1 = configureSharedElementsReordered(r1, r2, r3, r4, r5, r6, r7, r8)
+            r2 = r24
+            if (r2 != 0) goto L_0x0061
+            if (r1 != 0) goto L_0x0061
+            r3 = r23
+            if (r3 != 0) goto L_0x0063
             return
-        L_0x006c:
-            r7 = r16
-        L_0x006e:
-            r6 = r18
-            java.util.ArrayList r5 = configureEnteringExitingViews(r0, r7, r15, r6, r11)
-            r4 = r19
-            java.util.ArrayList r3 = configureEnteringExitingViews(r0, r8, r14, r4, r11)
-            r1 = 4
-            setViewVisibility(r3, r1)
-            r1 = r0
-            r2 = r8
-            r22 = r3
-            r3 = r7
-            r10 = r4
-            r4 = r9
-            r11 = r5
-            r5 = r14
-            r23 = r6
-            r6 = r21
-            java.lang.Object r6 = mergeTransitions(r1, r2, r3, r4, r5, r6)
-            if (r6 == 0) goto L_0x00c5
-            replaceHide(r0, r7, r15, r11)
-            java.util.ArrayList r16 = r0.prepareSetNameOverridesReordered(r10)
-            r1 = r0
-            r2 = r6
-            r3 = r8
-            r4 = r22
-            r5 = r7
-            r12 = r6
-            r6 = r11
-            r17 = r7
-            r7 = r9
-            r18 = r8
-            r8 = r10
-            r1.scheduleRemoveTargets(r2, r3, r4, r5, r6, r7, r8)
-            r0.beginDelayedTransition(r13, r12)
-            r2 = r0
-            r3 = r13
-            r4 = r23
-            r5 = r10
-            r6 = r16
-            r7 = r29
-            r2.setNameOverridesReordered(r3, r4, r5, r6, r7)
-            r1 = 0
-            r2 = r22
-            setViewVisibility(r2, r1)
-            r1 = r23
-            r0.swapSharedElementTargets(r9, r1, r10)
-            goto L_0x00ce
-        L_0x00c5:
-            r12 = r6
-            r17 = r7
-            r18 = r8
-            r2 = r22
-            r1 = r23
-        L_0x00ce:
+        L_0x0061:
+            r3 = r23
+        L_0x0063:
+            java.util.ArrayList r4 = configureEnteringExitingViews(r3, r14, r0, r10)
+            java.util.ArrayList r5 = configureEnteringExitingViews(r2, r13, r9, r10)
+            r6 = 4
+            setViewVisibility(r5, r6)
+            java.lang.Object r6 = mergeTransitions(r2, r3, r1, r13, r15)
+            if (r6 == 0) goto L_0x00a0
+            replaceHide(r3, r14, r4)
+            java.util.ArrayList r7 = android.support.v4.app.FragmentTransitionCompat21.prepareSetNameOverridesReordered(r9)
+            r16 = r6
+            r17 = r2
+            r18 = r5
+            r19 = r3
+            r20 = r4
+            r21 = r1
+            r22 = r9
+            android.support.v4.app.FragmentTransitionCompat21.scheduleRemoveTargets(r16, r17, r18, r19, r20, r21, r22)
+            android.support.v4.app.FragmentTransitionCompat21.beginDelayedTransition(r12, r6)
+            r8 = r31
+            android.support.v4.app.FragmentTransitionCompat21.setNameOverridesReordered(r12, r0, r9, r7, r8)
+            r26 = r2
+            r2 = 0
+            setViewVisibility(r5, r2)
+            android.support.v4.app.FragmentTransitionCompat21.swapSharedElementTargets(r1, r0, r9)
+            goto L_0x00a4
+        L_0x00a0:
+            r8 = r31
+            r26 = r2
+        L_0x00a4:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: android.support.v4.app.FragmentTransition.configureTransitionsReordered(android.support.v4.app.FragmentManagerImpl, int, android.support.v4.app.FragmentTransition$FragmentContainerTransition, android.view.View, android.support.v4.util.ArrayMap):void");
     }
 
-    private static void replaceHide(FragmentTransitionImpl impl, Object exitTransition, Fragment exitingFragment, final ArrayList<View> exitingViews) {
+    @RequiresApi(21)
+    private static void replaceHide(Object exitTransition, Fragment exitingFragment, final ArrayList<View> exitingViews) {
         if (exitingFragment != null && exitTransition != null && exitingFragment.mAdded && exitingFragment.mHidden && exitingFragment.mHiddenChanged) {
             exitingFragment.setHideReplaced(true);
-            impl.scheduleHideFragmentView(exitTransition, exitingFragment.getView(), exitingViews);
+            FragmentTransitionCompat21.scheduleHideFragmentView(exitTransition, exitingFragment.getView(), exitingViews);
             OneShotPreDrawListener.add(exitingFragment.mContainer, new Runnable() {
                 public void run() {
                     FragmentTransition.setViewVisibility(exitingViews, 4);
@@ -225,162 +186,147 @@ class FragmentTransition {
         }
     }
 
-    /* JADX WARNING: type inference failed for: r2v8, types: [android.view.View] */
-    /* JADX WARNING: Code restructure failed: missing block: B:7:0x0023, code lost:
-        r15 = r10.lastIn;
-        r9 = r10.firstOut;
-     */
+    /* JADX WARNING: type inference failed for: r2v6, types: [android.view.View] */
     /* JADX WARNING: Multi-variable type inference failed */
+    @android.support.annotation.RequiresApi(21)
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static void configureTransitionsOrdered(android.support.v4.app.FragmentManagerImpl r32, int r33, android.support.v4.app.FragmentTransition.FragmentContainerTransition r34, android.view.View r35, android.support.v4.util.ArrayMap<java.lang.String, java.lang.String> r36) {
+    private static void configureTransitionsOrdered(android.support.v4.app.FragmentManagerImpl r29, int r30, android.support.v4.app.FragmentTransition.FragmentContainerTransition r31, android.view.View r32, android.support.v4.util.ArrayMap<java.lang.String, java.lang.String> r33) {
         /*
-            r0 = r32
-            r10 = r34
-            r11 = r35
-            r12 = r36
+            r0 = r29
+            r9 = r31
+            r10 = r32
+            r11 = r33
             r1 = 0
             android.support.v4.app.FragmentContainer r2 = r0.mContainer
             boolean r2 = r2.onHasView()
             if (r2 == 0) goto L_0x001d
             android.support.v4.app.FragmentContainer r2 = r0.mContainer
-            r13 = r33
-            android.view.View r2 = r2.onFindViewById(r13)
+            r12 = r30
+            android.view.View r2 = r2.onFindViewById(r12)
             r1 = r2
             android.view.ViewGroup r1 = (android.view.ViewGroup) r1
             goto L_0x001f
         L_0x001d:
-            r13 = r33
+            r12 = r30
         L_0x001f:
-            r14 = r1
-            if (r14 != 0) goto L_0x0023
+            r13 = r1
+            if (r13 != 0) goto L_0x0023
             return
         L_0x0023:
-            android.support.v4.app.Fragment r15 = r10.lastIn
-            android.support.v4.app.Fragment r9 = r10.firstOut
-            android.support.v4.app.FragmentTransitionImpl r8 = chooseImpl(r9, r15)
-            if (r8 != 0) goto L_0x002e
-            return
-        L_0x002e:
-            boolean r7 = r10.lastInIsPop
-            boolean r6 = r10.firstOutIsPop
-            java.lang.Object r5 = getEnterTransition(r8, r15, r7)
-            java.lang.Object r4 = getExitTransition(r8, r9, r6)
+            android.support.v4.app.Fragment r14 = r9.lastIn
+            android.support.v4.app.Fragment r15 = r9.firstOut
+            boolean r8 = r9.lastInIsPop
+            boolean r7 = r9.firstOutIsPop
+            java.lang.Object r6 = getEnterTransition(r14, r8)
+            java.lang.Object r5 = getExitTransition(r15, r7)
+            java.util.ArrayList r1 = new java.util.ArrayList
+            r1.<init>()
+            r4 = r1
             java.util.ArrayList r1 = new java.util.ArrayList
             r1.<init>()
             r3 = r1
-            java.util.ArrayList r1 = new java.util.ArrayList
-            r1.<init>()
-            r2 = r1
-            r1 = r8
-            r24 = r2
-            r2 = r14
-            r25 = r3
-            r3 = r11
-            r26 = r4
-            r4 = r12
-            r27 = r5
-            r5 = r10
-            r28 = r6
-            r6 = r25
-            r29 = r7
-            r7 = r24
-            r0 = r8
-            r8 = r27
-            r13 = r9
-            r9 = r26
-            java.lang.Object r30 = configureSharedElementsOrdered(r1, r2, r3, r4, r5, r6, r7, r8, r9)
-            r9 = r27
-            if (r9 != 0) goto L_0x0070
-            if (r30 != 0) goto L_0x0070
-            r1 = r26
-            if (r1 != 0) goto L_0x0072
-            return
-        L_0x0070:
-            r1 = r26
-        L_0x0072:
-            r8 = r25
-            java.util.ArrayList r7 = configureEnteringExitingViews(r0, r1, r13, r8, r11)
-            if (r7 == 0) goto L_0x0084
-            boolean r2 = r7.isEmpty()
-            if (r2 == 0) goto L_0x0081
-            goto L_0x0084
-        L_0x0081:
-            r25 = r1
-            goto L_0x0086
-        L_0x0084:
-            r1 = 0
-            goto L_0x0081
-        L_0x0086:
-            r0.addTarget(r9, r11)
-            boolean r6 = r10.lastInIsPop
-            r1 = r0
-            r2 = r9
-            r3 = r25
-            r4 = r30
-            r5 = r15
-            java.lang.Object r6 = mergeTransitions(r1, r2, r3, r4, r5, r6)
-            if (r6 == 0) goto L_0x00d1
-            java.util.ArrayList r1 = new java.util.ArrayList
-            r1.<init>()
-            r19 = r1
-            r16 = r0
-            r17 = r6
-            r18 = r9
-            r20 = r25
-            r21 = r7
-            r22 = r30
-            r23 = r24
-            r16.scheduleRemoveTargets(r17, r18, r19, r20, r21, r22, r23)
-            r1 = r0
-            r2 = r14
-            r3 = r15
-            r4 = r11
+            r1 = r13
+            r2 = r32
+            r23 = r3
+            r3 = r33
+            r24 = r4
+            r4 = r31
+            r25 = r5
             r5 = r24
-            r10 = r6
-            r6 = r9
-            r16 = r7
-            r7 = r19
-            r17 = r8
+            r26 = r6
+            r6 = r23
+            r27 = r7
+            r7 = r26
+            r28 = r8
             r8 = r25
-            r9 = r16
-            scheduleTargetChange(r1, r2, r3, r4, r5, r6, r7, r8, r9)
-            r1 = r24
-            r0.setNameOverridesOrdered(r14, r1, r12)
-            r0.beginDelayedTransition(r14, r10)
-            r0.scheduleNameReset(r14, r1, r12)
-            goto L_0x00da
-        L_0x00d1:
-            r10 = r6
-            r16 = r7
-            r17 = r8
-            r18 = r9
-            r1 = r24
-        L_0x00da:
+            java.lang.Object r8 = configureSharedElementsOrdered(r1, r2, r3, r4, r5, r6, r7, r8)
+            if (r7 != 0) goto L_0x0068
+            if (r8 != 0) goto L_0x0068
+            r1 = r25
+            if (r1 != 0) goto L_0x006a
+            return
+        L_0x0068:
+            r1 = r25
+        L_0x006a:
+            r6 = r24
+            java.util.ArrayList r24 = configureEnteringExitingViews(r1, r15, r6, r10)
+            if (r24 == 0) goto L_0x007b
+            boolean r2 = r24.isEmpty()
+            if (r2 == 0) goto L_0x0079
+            goto L_0x007b
+        L_0x0079:
+            r5 = r1
+            goto L_0x007d
+        L_0x007b:
+            r1 = 0
+            goto L_0x0079
+        L_0x007d:
+            android.support.v4.app.FragmentTransitionCompat21.addTarget(r7, r10)
+            boolean r1 = r9.lastInIsPop
+            java.lang.Object r4 = mergeTransitions(r7, r5, r8, r14, r1)
+            if (r4 == 0) goto L_0x00c1
+            java.util.ArrayList r18 = new java.util.ArrayList
+            r18.<init>()
+            r16 = r4
+            r17 = r7
+            r19 = r5
+            r20 = r24
+            r21 = r8
+            r22 = r23
+            android.support.v4.app.FragmentTransitionCompat21.scheduleRemoveTargets(r16, r17, r18, r19, r20, r21, r22)
+            r1 = r13
+            r2 = r14
+            r3 = r32
+            r0 = r4
+            r4 = r23
+            r16 = r5
+            r5 = r7
+            r17 = r6
+            r6 = r18
+            r19 = r7
+            r7 = r16
+            r20 = r8
+            r8 = r24
+            scheduleTargetChange(r1, r2, r3, r4, r5, r6, r7, r8)
+            r1 = r23
+            android.support.v4.app.FragmentTransitionCompat21.setNameOverridesOrdered(r13, r1, r11)
+            android.support.v4.app.FragmentTransitionCompat21.beginDelayedTransition(r13, r0)
+            android.support.v4.app.FragmentTransitionCompat21.scheduleNameReset(r13, r1, r11)
+            goto L_0x00cc
+        L_0x00c1:
+            r0 = r4
+            r16 = r5
+            r17 = r6
+            r19 = r7
+            r20 = r8
+            r1 = r23
+        L_0x00cc:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: android.support.v4.app.FragmentTransition.configureTransitionsOrdered(android.support.v4.app.FragmentManagerImpl, int, android.support.v4.app.FragmentTransition$FragmentContainerTransition, android.view.View, android.support.v4.util.ArrayMap):void");
     }
 
-    private static void scheduleTargetChange(FragmentTransitionImpl impl, ViewGroup sceneRoot, Fragment inFragment, View nonExistentView, ArrayList<View> sharedElementsIn, Object enterTransition, ArrayList<View> enteringViews, Object exitTransition, ArrayList<View> exitingViews) {
+    @RequiresApi(21)
+    private static void scheduleTargetChange(ViewGroup sceneRoot, Fragment inFragment, View nonExistentView, ArrayList<View> sharedElementsIn, Object enterTransition, ArrayList<View> enteringViews, Object exitTransition, ArrayList<View> exitingViews) {
         final Object obj = enterTransition;
-        final FragmentTransitionImpl fragmentTransitionImpl = impl;
         final View view = nonExistentView;
         final Fragment fragment = inFragment;
         final ArrayList<View> arrayList = sharedElementsIn;
         final ArrayList<View> arrayList2 = enteringViews;
         final ArrayList<View> arrayList3 = exitingViews;
         final Object obj2 = exitTransition;
+        ViewGroup viewGroup = sceneRoot;
         OneShotPreDrawListener.add(sceneRoot, new Runnable() {
             public void run() {
                 if (obj != null) {
-                    fragmentTransitionImpl.removeTarget(obj, view);
-                    arrayList2.addAll(FragmentTransition.configureEnteringExitingViews(fragmentTransitionImpl, obj, fragment, arrayList, view));
+                    FragmentTransitionCompat21.removeTarget(obj, view);
+                    arrayList2.addAll(FragmentTransition.configureEnteringExitingViews(obj, fragment, arrayList, view));
                 }
                 if (arrayList3 != null) {
                     if (obj2 != null) {
                         ArrayList<View> tempExiting = new ArrayList<>();
                         tempExiting.add(view);
-                        fragmentTransitionImpl.replaceTargets(obj2, arrayList3, tempExiting);
+                        FragmentTransitionCompat21.replaceTargets(obj2, arrayList3, tempExiting);
                     }
                     arrayList3.clear();
                     arrayList3.add(view);
@@ -389,62 +335,8 @@ class FragmentTransition {
         });
     }
 
-    private static FragmentTransitionImpl chooseImpl(Fragment outFragment, Fragment inFragment) {
-        ArrayList<Object> transitions = new ArrayList<>();
-        if (outFragment != null) {
-            Object exitTransition = outFragment.getExitTransition();
-            if (exitTransition != null) {
-                transitions.add(exitTransition);
-            }
-            Object returnTransition = outFragment.getReturnTransition();
-            if (returnTransition != null) {
-                transitions.add(returnTransition);
-            }
-            Object sharedReturnTransition = outFragment.getSharedElementReturnTransition();
-            if (sharedReturnTransition != null) {
-                transitions.add(sharedReturnTransition);
-            }
-        }
-        if (inFragment != null) {
-            Object enterTransition = inFragment.getEnterTransition();
-            if (enterTransition != null) {
-                transitions.add(enterTransition);
-            }
-            Object reenterTransition = inFragment.getReenterTransition();
-            if (reenterTransition != null) {
-                transitions.add(reenterTransition);
-            }
-            Object sharedEnterTransition = inFragment.getSharedElementEnterTransition();
-            if (sharedEnterTransition != null) {
-                transitions.add(sharedEnterTransition);
-            }
-        }
-        if (transitions.isEmpty()) {
-            return null;
-        }
-        if (PLATFORM_IMPL != null && canHandleAll(PLATFORM_IMPL, transitions)) {
-            return PLATFORM_IMPL;
-        }
-        if (SUPPORT_IMPL != null && canHandleAll(SUPPORT_IMPL, transitions)) {
-            return SUPPORT_IMPL;
-        }
-        if (PLATFORM_IMPL == null && SUPPORT_IMPL == null) {
-            return null;
-        }
-        throw new IllegalArgumentException("Invalid Transition types");
-    }
-
-    private static boolean canHandleAll(FragmentTransitionImpl impl, List<Object> transitions) {
-        int size = transitions.size();
-        for (int i = 0; i < size; i++) {
-            if (!impl.canHandle(transitions.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static Object getSharedElementTransition(FragmentTransitionImpl impl, Fragment inFragment, Fragment outFragment, boolean isPop) {
+    @RequiresApi(21)
+    private static Object getSharedElementTransition(Fragment inFragment, Fragment outFragment, boolean isPop) {
         Object obj;
         if (inFragment == null || outFragment == null) {
             return null;
@@ -454,10 +346,11 @@ class FragmentTransition {
         } else {
             obj = inFragment.getSharedElementEnterTransition();
         }
-        return impl.wrapTransitionInSet(impl.cloneTransition(obj));
+        return FragmentTransitionCompat21.wrapTransitionInSet(FragmentTransitionCompat21.cloneTransition(obj));
     }
 
-    private static Object getEnterTransition(FragmentTransitionImpl impl, Fragment inFragment, boolean isPop) {
+    @RequiresApi(21)
+    private static Object getEnterTransition(Fragment inFragment, boolean isPop) {
         Object obj;
         if (inFragment == null) {
             return null;
@@ -467,10 +360,11 @@ class FragmentTransition {
         } else {
             obj = inFragment.getEnterTransition();
         }
-        return impl.cloneTransition(obj);
+        return FragmentTransitionCompat21.cloneTransition(obj);
     }
 
-    private static Object getExitTransition(FragmentTransitionImpl impl, Fragment outFragment, boolean isPop) {
+    @RequiresApi(21)
+    private static Object getExitTransition(Fragment outFragment, boolean isPop) {
         Object obj;
         if (outFragment == null) {
             return null;
@@ -480,96 +374,86 @@ class FragmentTransition {
         } else {
             obj = outFragment.getExitTransition();
         }
-        return impl.cloneTransition(obj);
+        return FragmentTransitionCompat21.cloneTransition(obj);
     }
 
-    private static Object configureSharedElementsReordered(FragmentTransitionImpl impl, ViewGroup sceneRoot, View nonExistentView, ArrayMap<String, String> nameOverrides, FragmentContainerTransition fragments, ArrayList<View> sharedElementsOut, ArrayList<View> sharedElementsIn, Object enterTransition, Object exitTransition) {
-        Object sharedElementTransition;
+    @RequiresApi(21)
+    private static Object configureSharedElementsReordered(ViewGroup sceneRoot, View nonExistentView, ArrayMap<String, String> nameOverrides, FragmentContainerTransition fragments, ArrayList<View> sharedElementsOut, ArrayList<View> sharedElementsIn, Object enterTransition, Object exitTransition) {
         Rect epicenter;
-        ArrayMap<String, View> inSharedElements;
         final View epicenterView;
-        FragmentTransitionImpl fragmentTransitionImpl = impl;
         View view = nonExistentView;
         ArrayMap<String, String> arrayMap = nameOverrides;
         FragmentContainerTransition fragmentContainerTransition = fragments;
         ArrayList<View> arrayList = sharedElementsOut;
         ArrayList<View> arrayList2 = sharedElementsIn;
         Object obj = enterTransition;
+        Object obj2 = exitTransition;
         Fragment inFragment = fragmentContainerTransition.lastIn;
         Fragment outFragment = fragmentContainerTransition.firstOut;
         if (inFragment != null) {
             inFragment.getView().setVisibility(0);
         }
-        if (inFragment == null) {
+        if (inFragment == null || outFragment == null) {
             ViewGroup viewGroup = sceneRoot;
-            Fragment fragment = outFragment;
-        } else if (outFragment == null) {
-            ViewGroup viewGroup2 = sceneRoot;
-            Fragment fragment2 = outFragment;
-        } else {
-            boolean inIsPop = fragmentContainerTransition.lastInIsPop;
-            Object sharedElementTransition2 = nameOverrides.isEmpty() ? null : getSharedElementTransition(fragmentTransitionImpl, inFragment, outFragment, inIsPop);
-            ArrayMap<String, View> outSharedElements = captureOutSharedElements(fragmentTransitionImpl, arrayMap, sharedElementTransition2, fragmentContainerTransition);
-            ArrayMap<String, View> inSharedElements2 = captureInSharedElements(fragmentTransitionImpl, arrayMap, sharedElementTransition2, fragmentContainerTransition);
-            if (nameOverrides.isEmpty()) {
-                sharedElementTransition2 = null;
-                if (outSharedElements != null) {
-                    outSharedElements.clear();
-                }
-                if (inSharedElements2 != null) {
-                    inSharedElements2.clear();
-                }
-            } else {
-                addSharedElementsWithMatchingNames(arrayList, outSharedElements, nameOverrides.keySet());
-                addSharedElementsWithMatchingNames(arrayList2, inSharedElements2, nameOverrides.values());
-            }
-            Object sharedElementTransition3 = sharedElementTransition2;
-            if (obj == null && exitTransition == null && sharedElementTransition3 == null) {
-                return null;
-            }
-            callSharedElementStartEnd(inFragment, outFragment, inIsPop, outSharedElements, true);
-            if (sharedElementTransition3 != null) {
-                arrayList2.add(view);
-                fragmentTransitionImpl.setSharedElementTargets(sharedElementTransition3, view, arrayList);
-                sharedElementTransition = sharedElementTransition3;
-                inSharedElements = inSharedElements2;
-                ArrayMap<String, View> arrayMap2 = outSharedElements;
-                setOutEpicenter(fragmentTransitionImpl, sharedElementTransition3, exitTransition, outSharedElements, fragmentContainerTransition.firstOutIsPop, fragmentContainerTransition.firstOutTransaction);
-                Rect epicenter2 = new Rect();
-                View epicenterView2 = getInEpicenterView(inSharedElements, fragmentContainerTransition, obj, inIsPop);
-                if (epicenterView2 != null) {
-                    fragmentTransitionImpl.setEpicenter(obj, epicenter2);
-                }
-                epicenter = epicenter2;
-                epicenterView = epicenterView2;
-            } else {
-                sharedElementTransition = sharedElementTransition3;
-                inSharedElements = inSharedElements2;
-                ArrayMap<String, View> arrayMap3 = outSharedElements;
-                epicenterView = null;
-                epicenter = null;
-            }
-            final Fragment fragment3 = inFragment;
-            final Fragment fragment4 = outFragment;
-            final boolean z = inIsPop;
-            AnonymousClass3 r10 = r0;
-            final ArrayMap<String, View> arrayMap4 = inSharedElements;
-            boolean z2 = inIsPop;
-            final FragmentTransitionImpl fragmentTransitionImpl2 = fragmentTransitionImpl;
-            Fragment fragment5 = outFragment;
-            final Rect rect = epicenter;
-            AnonymousClass3 r0 = new Runnable() {
-                public void run() {
-                    FragmentTransition.callSharedElementStartEnd(fragment3, fragment4, z, arrayMap4, false);
-                    if (epicenterView != null) {
-                        fragmentTransitionImpl2.getBoundsOnScreen(epicenterView, rect);
-                    }
-                }
-            };
-            OneShotPreDrawListener.add(sceneRoot, r10);
-            return sharedElementTransition;
+            return null;
         }
-        return null;
+        boolean inIsPop = fragmentContainerTransition.lastInIsPop;
+        Object sharedElementTransition = nameOverrides.isEmpty() ? null : getSharedElementTransition(inFragment, outFragment, inIsPop);
+        ArrayMap<String, View> outSharedElements = captureOutSharedElements(arrayMap, sharedElementTransition, fragmentContainerTransition);
+        ArrayMap<String, View> inSharedElements = captureInSharedElements(arrayMap, sharedElementTransition, fragmentContainerTransition);
+        if (nameOverrides.isEmpty()) {
+            sharedElementTransition = null;
+            if (outSharedElements != null) {
+                outSharedElements.clear();
+            }
+            if (inSharedElements != null) {
+                inSharedElements.clear();
+            }
+        } else {
+            addSharedElementsWithMatchingNames(arrayList, outSharedElements, nameOverrides.keySet());
+            addSharedElementsWithMatchingNames(arrayList2, inSharedElements, nameOverrides.values());
+        }
+        Object sharedElementTransition2 = sharedElementTransition;
+        if (obj == null && obj2 == null && sharedElementTransition2 == null) {
+            return null;
+        }
+        callSharedElementStartEnd(inFragment, outFragment, inIsPop, outSharedElements, true);
+        if (sharedElementTransition2 != null) {
+            arrayList2.add(view);
+            FragmentTransitionCompat21.setSharedElementTargets(sharedElementTransition2, view, arrayList);
+            setOutEpicenter(sharedElementTransition2, obj2, outSharedElements, fragmentContainerTransition.firstOutIsPop, fragmentContainerTransition.firstOutTransaction);
+            Rect epicenter2 = new Rect();
+            View epicenterView2 = getInEpicenterView(inSharedElements, fragmentContainerTransition, obj, inIsPop);
+            if (epicenterView2 != null) {
+                FragmentTransitionCompat21.setEpicenter(obj, epicenter2);
+            }
+            View view2 = epicenterView2;
+            epicenter = epicenter2;
+            epicenterView = view2;
+        } else {
+            epicenterView = null;
+            epicenter = null;
+        }
+        AnonymousClass3 r0 = r7;
+        final Fragment fragment = inFragment;
+        Object sharedElementTransition3 = sharedElementTransition2;
+        final Fragment fragment2 = outFragment;
+        ArrayMap<String, View> inSharedElements2 = inSharedElements;
+        final boolean z = inIsPop;
+        ArrayMap<String, View> arrayMap2 = outSharedElements;
+        final ArrayMap<String, View> outSharedElements2 = inSharedElements2;
+        boolean z2 = inIsPop;
+        final Rect rect = epicenter;
+        AnonymousClass3 r7 = new Runnable() {
+            public void run() {
+                FragmentTransition.callSharedElementStartEnd(fragment, fragment2, z, outSharedElements2, false);
+                if (epicenterView != null) {
+                    FragmentTransitionCompat21.getBoundsOnScreen(epicenterView, rect);
+                }
+            }
+        };
+        OneShotPreDrawListener.add(sceneRoot, r0);
+        return sharedElementTransition3;
     }
 
     private static void addSharedElementsWithMatchingNames(ArrayList<View> views, ArrayMap<String, View> sharedElements, Collection<String> nameOverridesSet) {
@@ -581,15 +465,15 @@ class FragmentTransition {
         }
     }
 
-    private static Object configureSharedElementsOrdered(FragmentTransitionImpl impl, ViewGroup sceneRoot, View nonExistentView, ArrayMap<String, String> nameOverrides, FragmentContainerTransition fragments, ArrayList<View> sharedElementsOut, ArrayList<View> sharedElementsIn, Object enterTransition, Object exitTransition) {
-        ArrayMap<String, View> outSharedElements;
-        Rect inEpicenter;
-        FragmentTransitionImpl fragmentTransitionImpl = impl;
+    @RequiresApi(21)
+    private static Object configureSharedElementsOrdered(ViewGroup sceneRoot, View nonExistentView, ArrayMap<String, String> nameOverrides, FragmentContainerTransition fragments, ArrayList<View> sharedElementsOut, ArrayList<View> sharedElementsIn, Object enterTransition, Object exitTransition) {
         FragmentContainerTransition fragmentContainerTransition = fragments;
         ArrayList<View> arrayList = sharedElementsOut;
         Object obj = enterTransition;
+        Object obj2 = exitTransition;
         Fragment inFragment = fragmentContainerTransition.lastIn;
         Fragment outFragment = fragmentContainerTransition.firstOut;
+        Rect inEpicenter = null;
         if (inFragment == null) {
             ViewGroup viewGroup = sceneRoot;
             Fragment fragment = outFragment;
@@ -599,75 +483,70 @@ class FragmentTransition {
             Fragment fragment3 = outFragment;
             Fragment fragment4 = inFragment;
         } else {
-            boolean inIsPop = fragmentContainerTransition.lastInIsPop;
-            Object sharedElementTransition = nameOverrides.isEmpty() ? null : getSharedElementTransition(fragmentTransitionImpl, inFragment, outFragment, inIsPop);
-            ArrayMap<String, String> arrayMap = nameOverrides;
-            ArrayMap<String, View> outSharedElements2 = captureOutSharedElements(fragmentTransitionImpl, arrayMap, sharedElementTransition, fragmentContainerTransition);
+            final boolean inIsPop = fragmentContainerTransition.lastInIsPop;
+            Object sharedElementTransition = nameOverrides.isEmpty() ? null : getSharedElementTransition(inFragment, outFragment, inIsPop);
+            ArrayMap<String, View> outSharedElements = captureOutSharedElements(nameOverrides, sharedElementTransition, fragmentContainerTransition);
             if (nameOverrides.isEmpty()) {
                 sharedElementTransition = null;
             } else {
-                arrayList.addAll(outSharedElements2.values());
+                arrayList.addAll(outSharedElements.values());
             }
             Object sharedElementTransition2 = sharedElementTransition;
-            if (obj == null && exitTransition == null && sharedElementTransition2 == null) {
+            if (obj == null && obj2 == null && sharedElementTransition2 == null) {
                 return null;
             }
-            callSharedElementStartEnd(inFragment, outFragment, inIsPop, outSharedElements2, true);
+            callSharedElementStartEnd(inFragment, outFragment, inIsPop, outSharedElements, true);
             if (sharedElementTransition2 != null) {
-                Rect inEpicenter2 = new Rect();
-                fragmentTransitionImpl.setSharedElementTargets(sharedElementTransition2, nonExistentView, arrayList);
-                outSharedElements = outSharedElements2;
-                inEpicenter = inEpicenter2;
-                setOutEpicenter(fragmentTransitionImpl, sharedElementTransition2, exitTransition, outSharedElements2, fragmentContainerTransition.firstOutIsPop, fragmentContainerTransition.firstOutTransaction);
+                inEpicenter = new Rect();
+                FragmentTransitionCompat21.setSharedElementTargets(sharedElementTransition2, nonExistentView, arrayList);
+                setOutEpicenter(sharedElementTransition2, obj2, outSharedElements, fragmentContainerTransition.firstOutIsPop, fragmentContainerTransition.firstOutTransaction);
                 if (obj != null) {
-                    fragmentTransitionImpl.setEpicenter(obj, inEpicenter);
+                    FragmentTransitionCompat21.setEpicenter(obj, inEpicenter);
                 }
             } else {
-                outSharedElements = outSharedElements2;
-                inEpicenter = null;
+                View view = nonExistentView;
             }
-            Object sharedElementTransition3 = sharedElementTransition2;
-            final Rect inEpicenter3 = inEpicenter;
-            final Object finalSharedElementTransition = sharedElementTransition3;
-            final FragmentTransitionImpl fragmentTransitionImpl2 = fragmentTransitionImpl;
-            final ArrayMap<String, String> arrayMap2 = arrayMap;
-            final FragmentContainerTransition fragmentContainerTransition2 = fragmentContainerTransition;
+            final Rect inEpicenter2 = inEpicenter;
+            final Object finalSharedElementTransition = sharedElementTransition2;
+            final ArrayMap<String, String> arrayMap = nameOverrides;
+            AnonymousClass4 r12 = r0;
+            final FragmentContainerTransition fragmentContainerTransition2 = fragments;
             final ArrayList<View> arrayList2 = sharedElementsIn;
-            AnonymousClass4 r13 = r0;
-            ArrayMap<String, View> arrayMap3 = outSharedElements;
-            final View view = nonExistentView;
+            Object sharedElementTransition3 = sharedElementTransition2;
+            final View view2 = nonExistentView;
+            ArrayMap<String, View> arrayMap2 = outSharedElements;
             final Fragment fragment5 = inFragment;
-            boolean inIsPop2 = inIsPop;
             final Fragment fragment6 = outFragment;
+            boolean z = inIsPop;
             Fragment fragment7 = outFragment;
-            final boolean z = inIsPop2;
+            final ArrayList<View> arrayList3 = sharedElementsOut;
             Fragment fragment8 = inFragment;
-            final ArrayList<View> arrayList3 = arrayList;
-            final Object obj2 = enterTransition;
+            final Object obj3 = enterTransition;
             AnonymousClass4 r0 = new Runnable() {
                 public void run() {
-                    ArrayMap<String, View> inSharedElements = FragmentTransition.captureInSharedElements(fragmentTransitionImpl2, arrayMap2, finalSharedElementTransition, fragmentContainerTransition2);
+                    ArrayMap<String, View> inSharedElements = FragmentTransition.captureInSharedElements(arrayMap, finalSharedElementTransition, fragmentContainerTransition2);
                     if (inSharedElements != null) {
                         arrayList2.addAll(inSharedElements.values());
-                        arrayList2.add(view);
+                        arrayList2.add(view2);
                     }
-                    FragmentTransition.callSharedElementStartEnd(fragment5, fragment6, z, inSharedElements, false);
+                    FragmentTransition.callSharedElementStartEnd(fragment5, fragment6, inIsPop, inSharedElements, false);
                     if (finalSharedElementTransition != null) {
-                        fragmentTransitionImpl2.swapSharedElementTargets(finalSharedElementTransition, arrayList3, arrayList2);
-                        View inEpicenterView = FragmentTransition.getInEpicenterView(inSharedElements, fragmentContainerTransition2, obj2, z);
+                        FragmentTransitionCompat21.swapSharedElementTargets(finalSharedElementTransition, arrayList3, arrayList2);
+                        View inEpicenterView = FragmentTransition.getInEpicenterView(inSharedElements, fragmentContainerTransition2, obj3, inIsPop);
                         if (inEpicenterView != null) {
-                            fragmentTransitionImpl2.getBoundsOnScreen(inEpicenterView, inEpicenter3);
+                            FragmentTransitionCompat21.getBoundsOnScreen(inEpicenterView, inEpicenter2);
                         }
                     }
                 }
             };
-            OneShotPreDrawListener.add(sceneRoot, r13);
+            OneShotPreDrawListener.add(sceneRoot, r12);
             return sharedElementTransition3;
         }
         return null;
     }
 
-    private static ArrayMap<String, View> captureOutSharedElements(FragmentTransitionImpl impl, ArrayMap<String, String> nameOverrides, Object sharedElementTransition, FragmentContainerTransition fragments) {
+    @RequiresApi(21)
+    private static ArrayMap<String, View> captureOutSharedElements(ArrayMap<String, String> nameOverrides, Object sharedElementTransition, FragmentContainerTransition fragments) {
         ArrayList<String> names;
         SharedElementCallback sharedElementCallback;
         if (nameOverrides.isEmpty() || sharedElementTransition == null) {
@@ -676,7 +555,7 @@ class FragmentTransition {
         }
         Fragment outFragment = fragments.firstOut;
         ArrayMap<String, View> outSharedElements = new ArrayMap<>();
-        impl.findNamedViews(outSharedElements, outFragment.getView());
+        FragmentTransitionCompat21.findNamedViews(outSharedElements, outFragment.getView());
         BackStackRecord outTransaction = fragments.firstOutTransaction;
         if (fragments.firstOutIsPop) {
             sharedElementCallback = outFragment.getEnterTransitionCallback();
@@ -703,7 +582,9 @@ class FragmentTransition {
         return outSharedElements;
     }
 
-    static ArrayMap<String, View> captureInSharedElements(FragmentTransitionImpl impl, ArrayMap<String, String> nameOverrides, Object sharedElementTransition, FragmentContainerTransition fragments) {
+    /* access modifiers changed from: private */
+    @RequiresApi(21)
+    public static ArrayMap<String, View> captureInSharedElements(ArrayMap<String, String> nameOverrides, Object sharedElementTransition, FragmentContainerTransition fragments) {
         ArrayList<String> names;
         SharedElementCallback sharedElementCallback;
         String key;
@@ -714,7 +595,7 @@ class FragmentTransition {
             return null;
         }
         ArrayMap<String, View> inSharedElements = new ArrayMap<>();
-        impl.findNamedViews(inSharedElements, fragmentView);
+        FragmentTransitionCompat21.findNamedViews(inSharedElements, fragmentView);
         BackStackRecord inTransaction = fragments.lastInTransaction;
         if (fragments.lastInIsPop) {
             sharedElementCallback = inFragment.getExitTransitionCallback();
@@ -725,7 +606,6 @@ class FragmentTransition {
         }
         if (names != null) {
             inSharedElements.retainAll(names);
-            inSharedElements.retainAll(nameOverrides.values());
         }
         if (sharedElementCallback != null) {
             sharedElementCallback.onMapSharedElements(names, inSharedElements);
@@ -757,7 +637,8 @@ class FragmentTransition {
         return null;
     }
 
-    static View getInEpicenterView(ArrayMap<String, View> inSharedElements, FragmentContainerTransition fragments, Object enterTransition, boolean inIsPop) {
+    /* access modifiers changed from: private */
+    public static View getInEpicenterView(ArrayMap<String, View> inSharedElements, FragmentContainerTransition fragments, Object enterTransition, boolean inIsPop) {
         String targetName;
         BackStackRecord inTransaction = fragments.lastInTransaction;
         if (enterTransition == null || inSharedElements == null || inTransaction.mSharedElementSourceNames == null || inTransaction.mSharedElementSourceNames.isEmpty()) {
@@ -771,7 +652,8 @@ class FragmentTransition {
         return inSharedElements.get(targetName);
     }
 
-    private static void setOutEpicenter(FragmentTransitionImpl impl, Object sharedElementTransition, Object exitTransition, ArrayMap<String, View> outSharedElements, boolean outIsPop, BackStackRecord outTransaction) {
+    @RequiresApi(21)
+    private static void setOutEpicenter(Object sharedElementTransition, Object exitTransition, ArrayMap<String, View> outSharedElements, boolean outIsPop, BackStackRecord outTransaction) {
         String sourceName;
         if (outTransaction.mSharedElementSourceNames != null && !outTransaction.mSharedElementSourceNames.isEmpty()) {
             if (outIsPop) {
@@ -780,9 +662,9 @@ class FragmentTransition {
                 sourceName = outTransaction.mSharedElementSourceNames.get(0);
             }
             View outEpicenterView = outSharedElements.get(sourceName);
-            impl.setEpicenter(sharedElementTransition, outEpicenterView);
+            FragmentTransitionCompat21.setEpicenter(sharedElementTransition, outEpicenterView);
             if (exitTransition != null) {
-                impl.setEpicenter(exitTransition, outEpicenterView);
+                FragmentTransitionCompat21.setEpicenter(exitTransition, outEpicenterView);
             }
         }
     }
@@ -795,7 +677,8 @@ class FragmentTransition {
         }
     }
 
-    static void callSharedElementStartEnd(Fragment inFragment, Fragment outFragment, boolean isPop, ArrayMap<String, View> sharedElements, boolean isStart) {
+    /* access modifiers changed from: private */
+    public static void callSharedElementStartEnd(Fragment inFragment, Fragment outFragment, boolean isPop, ArrayMap<String, View> sharedElements, boolean isStart) {
         SharedElementCallback sharedElementCallback;
         if (isPop) {
             sharedElementCallback = outFragment.getEnterTransitionCallback();
@@ -818,26 +701,29 @@ class FragmentTransition {
         }
     }
 
-    static ArrayList<View> configureEnteringExitingViews(FragmentTransitionImpl impl, Object transition, Fragment fragment, ArrayList<View> sharedElements, View nonExistentView) {
+    /* access modifiers changed from: private */
+    @RequiresApi(21)
+    public static ArrayList<View> configureEnteringExitingViews(Object transition, Fragment fragment, ArrayList<View> sharedElements, View nonExistentView) {
         ArrayList<View> viewList = null;
         if (transition != null) {
             viewList = new ArrayList<>();
             View root = fragment.getView();
             if (root != null) {
-                impl.captureTransitioningViews(viewList, root);
+                FragmentTransitionCompat21.captureTransitioningViews(viewList, root);
             }
             if (sharedElements != null) {
                 viewList.removeAll(sharedElements);
             }
             if (!viewList.isEmpty()) {
                 viewList.add(nonExistentView);
-                impl.addTargets(transition, viewList);
+                FragmentTransitionCompat21.addTargets(transition, viewList);
             }
         }
         return viewList;
     }
 
-    static void setViewVisibility(ArrayList<View> views, int visibility) {
+    /* access modifiers changed from: private */
+    public static void setViewVisibility(ArrayList<View> views, int visibility) {
         if (views != null) {
             for (int i = views.size() - 1; i >= 0; i--) {
                 views.get(i).setVisibility(visibility);
@@ -845,7 +731,8 @@ class FragmentTransition {
         }
     }
 
-    private static Object mergeTransitions(FragmentTransitionImpl impl, Object enterTransition, Object exitTransition, Object sharedElementTransition, Fragment inFragment, boolean isPop) {
+    @RequiresApi(21)
+    private static Object mergeTransitions(Object enterTransition, Object exitTransition, Object sharedElementTransition, Fragment inFragment, boolean isPop) {
         boolean z;
         boolean overlap = true;
         if (!(enterTransition == null || exitTransition == null || inFragment == null)) {
@@ -857,9 +744,9 @@ class FragmentTransition {
             overlap = z;
         }
         if (overlap) {
-            return impl.mergeTransitionsTogether(exitTransition, enterTransition, sharedElementTransition);
+            return FragmentTransitionCompat21.mergeTransitionsTogether(exitTransition, enterTransition, sharedElementTransition);
         }
-        return impl.mergeTransitionsInSequence(exitTransition, enterTransition, sharedElementTransition);
+        return FragmentTransitionCompat21.mergeTransitionsInSequence(exitTransition, enterTransition, sharedElementTransition);
     }
 
     public static void calculateFragments(BackStackRecord transaction, SparseArray<FragmentContainerTransition> transitioningFragments, boolean isReordered) {
@@ -877,21 +764,15 @@ class FragmentTransition {
         }
     }
 
-    static boolean supportsTransition() {
-        return (PLATFORM_IMPL == null && SUPPORT_IMPL == null) ? false : true;
-    }
-
-    /* JADX WARNING: Removed duplicated region for block: B:100:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
     /* JADX WARNING: Removed duplicated region for block: B:86:0x00f2  */
-    /* JADX WARNING: Removed duplicated region for block: B:91:0x0106  */
-    /* JADX WARNING: Removed duplicated region for block: B:94:0x010b A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:91:0x0107  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static void addToFirstInLastOut(android.support.v4.app.BackStackRecord r23, android.support.v4.app.BackStackRecord.Op r24, android.util.SparseArray<android.support.v4.app.FragmentTransition.FragmentContainerTransition> r25, boolean r26, boolean r27) {
+    private static void addToFirstInLastOut(android.support.v4.app.BackStackRecord r22, android.support.v4.app.BackStackRecord.Op r23, android.util.SparseArray<android.support.v4.app.FragmentTransition.FragmentContainerTransition> r24, boolean r25, boolean r26) {
         /*
-            r0 = r23
-            r1 = r24
-            r2 = r25
-            r3 = r26
+            r0 = r22
+            r1 = r23
+            r2 = r24
+            r3 = r25
             android.support.v4.app.Fragment r10 = r1.fragment
             if (r10 != 0) goto L_0x000d
             return
@@ -931,14 +812,14 @@ class FragmentTransition {
             r14 = r7
             goto L_0x00a1
         L_0x0030:
-            if (r27 == 0) goto L_0x0042
+            if (r26 == 0) goto L_0x0042
             boolean r13 = r10.mHiddenChanged
             if (r13 == 0) goto L_0x0040
             boolean r13 = r10.mHidden
             if (r13 != 0) goto L_0x0040
             boolean r13 = r10.mAdded
             if (r13 == 0) goto L_0x0040
-            r8 = 1
+            r8 = r9
         L_0x0040:
             r4 = r8
             goto L_0x0044
@@ -948,14 +829,14 @@ class FragmentTransition {
             r7 = 1
             goto L_0x0029
         L_0x0046:
-            if (r27 == 0) goto L_0x0058
+            if (r26 == 0) goto L_0x0058
             boolean r13 = r10.mHiddenChanged
             if (r13 == 0) goto L_0x0056
             boolean r13 = r10.mAdded
             if (r13 == 0) goto L_0x0056
             boolean r13 = r10.mHidden
             if (r13 == 0) goto L_0x0056
-            r8 = 1
+            r8 = r9
         L_0x0056:
             r6 = r8
             goto L_0x0063
@@ -964,14 +845,14 @@ class FragmentTransition {
             if (r13 == 0) goto L_0x0062
             boolean r13 = r10.mHidden
             if (r13 != 0) goto L_0x0062
-            r8 = 1
+            r8 = r9
         L_0x0062:
             r6 = r8
         L_0x0063:
             r5 = 1
             goto L_0x0029
         L_0x0065:
-            if (r27 == 0) goto L_0x0082
+            if (r26 == 0) goto L_0x0082
             boolean r13 = r10.mAdded
             if (r13 != 0) goto L_0x0080
             android.view.View r13 = r10.mView
@@ -983,7 +864,7 @@ class FragmentTransition {
             r14 = 0
             int r13 = (r13 > r14 ? 1 : (r13 == r14 ? 0 : -1))
             if (r13 < 0) goto L_0x0080
-            r8 = 1
+            r8 = r9
         L_0x0080:
             r6 = r8
             goto L_0x008d
@@ -992,14 +873,14 @@ class FragmentTransition {
             if (r13 == 0) goto L_0x008c
             boolean r13 = r10.mHidden
             if (r13 != 0) goto L_0x008c
-            r8 = 1
+            r8 = r9
         L_0x008c:
             r6 = r8
         L_0x008d:
             r5 = 1
             goto L_0x0029
         L_0x008f:
-            if (r27 == 0) goto L_0x0094
+            if (r26 == 0) goto L_0x0094
             boolean r4 = r10.mIsNewlyAdded
             goto L_0x009f
         L_0x0094:
@@ -1007,7 +888,7 @@ class FragmentTransition {
             if (r13 != 0) goto L_0x009e
             boolean r13 = r10.mHidden
             if (r13 != 0) goto L_0x009e
-            r8 = 1
+            r8 = r9
         L_0x009e:
             r4 = r8
         L_0x009f:
@@ -1024,7 +905,7 @@ class FragmentTransition {
         L_0x00b4:
             r8 = r4
             r7 = 0
-            if (r27 != 0) goto L_0x00ed
+            if (r26 != 0) goto L_0x00ed
             if (r14 == 0) goto L_0x00ed
             if (r8 == 0) goto L_0x00c2
             android.support.v4.app.Fragment r4 = r8.firstOut
@@ -1059,28 +940,27 @@ class FragmentTransition {
             r1 = r7
             r21 = r8
         L_0x00f0:
-            if (r16 == 0) goto L_0x0106
+            if (r16 == 0) goto L_0x0107
             r4 = r21
             if (r4 == 0) goto L_0x00fa
             android.support.v4.app.Fragment r5 = r4.firstOut
-            if (r5 != 0) goto L_0x0108
+            if (r5 != 0) goto L_0x0109
         L_0x00fa:
             android.support.v4.app.FragmentTransition$FragmentContainerTransition r8 = ensureContainer(r4, r2, r11)
             r8.firstOut = r10
             r8.firstOutIsPop = r3
             r8.firstOutTransaction = r0
+            r4 = r8
             goto L_0x0109
-        L_0x0106:
+        L_0x0107:
             r4 = r21
-        L_0x0108:
-            r8 = r4
         L_0x0109:
-            if (r27 != 0) goto L_0x0115
+            if (r26 != 0) goto L_0x0115
             if (r15 == 0) goto L_0x0115
-            if (r8 == 0) goto L_0x0115
-            android.support.v4.app.Fragment r4 = r8.lastIn
-            if (r4 != r10) goto L_0x0115
-            r8.lastIn = r1
+            if (r4 == 0) goto L_0x0115
+            android.support.v4.app.Fragment r5 = r4.lastIn
+            if (r5 != r10) goto L_0x0115
+            r4.lastIn = r1
         L_0x0115:
             return
         */
@@ -1106,8 +986,5 @@ class FragmentTransition {
 
         FragmentContainerTransition() {
         }
-    }
-
-    private FragmentTransition() {
     }
 }

@@ -1,6 +1,7 @@
 package android.support.graphics.drawable;
 
 import android.support.annotation.StyleableRes;
+import com.android.internal.R;
 
 class AndroidResources {
     public static final int FAST_OUT_LINEAR_IN = 17563663;
@@ -13,9 +14,10 @@ class AndroidResources {
     static final int STYLEABLE_ANIMATED_VECTOR_DRAWABLE_TARGET_ANIMATION = 1;
     @StyleableRes
     static final int STYLEABLE_ANIMATED_VECTOR_DRAWABLE_TARGET_NAME = 0;
-    public static final int[] STYLEABLE_ANIMATOR = {16843073, 16843160, 16843198, 16843199, 16843200, 16843486, 16843487, 16843488};
+    public static final int[] STYLEABLE_ANIMATOR = {16843073, 16843160, 16843198, 16843199, 16843200, 16843486, 16843487, 16843488, R.bool.config_navBarCanMove};
     public static final int STYLEABLE_ANIMATOR_DURATION = 1;
     public static final int STYLEABLE_ANIMATOR_INTERPOLATOR = 0;
+    public static final int STYLEABLE_ANIMATOR_REMOVE_BEFORE_M_RELEASE = 8;
     public static final int STYLEABLE_ANIMATOR_REPEAT_COUNT = 3;
     public static final int STYLEABLE_ANIMATOR_REPEAT_MODE = 4;
     public static final int[] STYLEABLE_ANIMATOR_SET = {16843490};
@@ -83,6 +85,6 @@ class AndroidResources {
     static final int STYLEABLE_VECTOR_DRAWABLE_VIEWPORT_WIDTH = 7;
     static final int STYLEABLE_VECTOR_DRAWABLE_WIDTH = 3;
 
-    private AndroidResources() {
+    AndroidResources() {
     }
 }

@@ -97,11 +97,9 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
                     boolean deserialize = excludeField(field, false);
                     if (serialize || deserialize) {
                         field.setAccessible(true);
-                        Type fieldType = C$Gson$Types.resolve(type2.getType(), cls, field.getGenericType());
-                        Type type3 = fieldType;
                         Field field2 = field;
                         i$ = i$3;
-                        BoundField boundField = createBoundField(context, field, getFieldName(field), TypeToken.get(fieldType), serialize, deserialize);
+                        BoundField boundField = createBoundField(context, field, getFieldName(field), TypeToken.get(C$Gson$Types.resolve(type2.getType(), cls, field.getGenericType())), serialize, deserialize);
                         BoundField previous = result.put(boundField.name, boundField);
                         if (previous != null) {
                             throw new IllegalArgumentException(declaredType2 + " declares multiple JSON fields named " + previous.name);

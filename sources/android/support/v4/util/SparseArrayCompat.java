@@ -1,8 +1,5 @@
 package android.support.v4.util;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 public class SparseArrayCompat<E> implements Cloneable {
     private static final Object DELETED = new Object();
     private boolean mGarbage;
@@ -28,17 +25,17 @@ public class SparseArrayCompat<E> implements Cloneable {
     }
 
     public SparseArrayCompat<E> clone() {
+        SparseArrayCompat<E> clone = null;
         try {
-            SparseArrayCompat<E> clone = (SparseArrayCompat) super.clone();
+            clone = (SparseArrayCompat) super.clone();
             clone.mKeys = (int[]) this.mKeys.clone();
             clone.mValues = (Object[]) this.mValues.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
-            throw new AssertionError(e);
+            return clone;
         }
     }
 
-    @Nullable
     public E get(int key) {
         return get(key, (Object) null);
     }
@@ -131,22 +128,11 @@ public class SparseArrayCompat<E> implements Cloneable {
         this.mValues[i2] = value;
     }
 
-    public void putAll(@NonNull SparseArrayCompat<? extends E> other) {
-        int size = other.size();
-        for (int i = 0; i < size; i++) {
-            put(other.keyAt(i), other.valueAt(i));
-        }
-    }
-
     public int size() {
         if (this.mGarbage) {
             gc();
         }
         return this.mSize;
-    }
-
-    public boolean isEmpty() {
-        return size() == 0;
     }
 
     public int keyAt(int index) {
@@ -187,14 +173,6 @@ public class SparseArrayCompat<E> implements Cloneable {
             }
         }
         return -1;
-    }
-
-    public boolean containsKey(int key) {
-        return indexOfKey(key) >= 0;
-    }
-
-    public boolean containsValue(E value) {
-        return indexOfValue(value) >= 0;
     }
 
     public void clear() {

@@ -10,18 +10,13 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.util.SimpleArrayMap;
-import android.support.v4.view.KeyEventDispatcher;
-import android.view.KeyEvent;
-import android.view.View;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-/* compiled from: ComponentActivity */
-public class SupportActivity extends Activity implements LifecycleOwner, KeyEventDispatcher.Component {
+public class SupportActivity extends Activity implements LifecycleOwner {
     private SimpleArrayMap<Class<? extends ExtraData>, ExtraData> mExtraDataMap = new SimpleArrayMap<>();
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-    /* compiled from: ComponentActivity */
     public static class ExtraData {
     }
 
@@ -50,26 +45,5 @@ public class SupportActivity extends Activity implements LifecycleOwner, KeyEven
 
     public Lifecycle getLifecycle() {
         return this.mLifecycleRegistry;
-    }
-
-    @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-    public boolean superDispatchKeyEvent(KeyEvent event) {
-        return super.dispatchKeyEvent(event);
-    }
-
-    public boolean dispatchKeyShortcutEvent(KeyEvent event) {
-        View decor = getWindow().getDecorView();
-        if (decor == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decor, event)) {
-            return super.dispatchKeyShortcutEvent(event);
-        }
-        return true;
-    }
-
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        View decor = getWindow().getDecorView();
-        if (decor == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decor, event)) {
-            return KeyEventDispatcher.dispatchKeyEvent(this, decor, this, event);
-        }
-        return true;
     }
 }

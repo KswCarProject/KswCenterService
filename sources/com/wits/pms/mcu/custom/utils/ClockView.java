@@ -74,7 +74,7 @@ public class ClockView extends View {
     public ClockView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mViewInitComplete = false;
-        this.windowManager = (WindowManager) getContext().getSystemService("window");
+        this.windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         this.mHourBitmapOffsetY = 18;
         this.mMinuteBitmapOffsetY = 18;
         this.mSecondBitmapOffsetY = 33;

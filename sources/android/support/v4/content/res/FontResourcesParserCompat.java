@@ -2,7 +2,6 @@ package android.support.v4.content.res;
 
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.annotation.RestrictTo;
 import android.support.compat.R;
 import android.support.v4.provider.FontRequest;
 import android.util.Base64;
-import android.util.TypedValue;
 import android.util.Xml;
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -68,16 +66,12 @@ public class FontResourcesParserCompat {
         private final String mFileName;
         private boolean mItalic;
         private int mResourceId;
-        private int mTtcIndex;
-        private String mVariationSettings;
         private int mWeight;
 
-        public FontFileResourceEntry(@NonNull String fileName, int weight, boolean italic, @Nullable String variationSettings, int ttcIndex, int resourceId) {
+        public FontFileResourceEntry(@NonNull String fileName, int weight, boolean italic, int resourceId) {
             this.mFileName = fileName;
             this.mWeight = weight;
             this.mItalic = italic;
-            this.mVariationSettings = variationSettings;
-            this.mTtcIndex = ttcIndex;
             this.mResourceId = resourceId;
         }
 
@@ -92,15 +86,6 @@ public class FontResourcesParserCompat {
 
         public boolean isItalic() {
             return this.mItalic;
-        }
-
-        @Nullable
-        public String getVariationSettings() {
-            return this.mVariationSettings;
-        }
-
-        public int getTtcIndex() {
-            return this.mTtcIndex;
         }
 
         public int getResourceId() {
@@ -124,7 +109,7 @@ public class FontResourcesParserCompat {
 
     /* JADX WARNING: Removed duplicated region for block: B:0:0x0000 A[LOOP_START, MTH_ENTER_BLOCK] */
     /* JADX WARNING: Removed duplicated region for block: B:5:0x000e  */
-    /* JADX WARNING: Removed duplicated region for block: B:7:0x0016  */
+    /* JADX WARNING: Removed duplicated region for block: B:7:0x0013  */
     @android.support.annotation.Nullable
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public static android.support.v4.content.res.FontResourcesParserCompat.FamilyResourceEntry parse(org.xmlpull.v1.XmlPullParser r3, android.content.res.Resources r4) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
@@ -138,14 +123,14 @@ public class FontResourcesParserCompat {
             if (r1 == r0) goto L_0x000c
             goto L_0x0000
         L_0x000c:
-            if (r1 == r2) goto L_0x0016
+            if (r1 != r2) goto L_0x0013
+            android.support.v4.content.res.FontResourcesParserCompat$FamilyResourceEntry r0 = readFamilies(r3, r4)
+            return r0
+        L_0x0013:
             org.xmlpull.v1.XmlPullParserException r0 = new org.xmlpull.v1.XmlPullParserException
             java.lang.String r2 = "No start tag found"
             r0.<init>(r2)
             throw r0
-        L_0x0016:
-            android.support.v4.content.res.FontResourcesParserCompat$FamilyResourceEntry r0 = readFamilies(r3, r4)
-            return r0
         */
         throw new UnsupportedOperationException("Method not decompiled: android.support.v4.content.res.FontResourcesParserCompat.parse(org.xmlpull.v1.XmlPullParser, android.content.res.Resources):android.support.v4.content.res.FontResourcesParserCompat$FamilyResourceEntry");
     }
@@ -168,7 +153,7 @@ public class FontResourcesParserCompat {
         String query = array.getString(R.styleable.FontFamily_fontProviderQuery);
         int certsId = array.getResourceId(R.styleable.FontFamily_fontProviderCerts, 0);
         int strategy = array.getInteger(R.styleable.FontFamily_fontProviderFetchStrategy, 1);
-        int timeoutMs = array.getInteger(R.styleable.FontFamily_fontProviderFetchTimeout, DEFAULT_TIMEOUT_MILLIS);
+        int timeoutMs = array.getInteger(R.styleable.FontFamily_fontProviderFetchTimeout, 500);
         array.recycle();
         if (authority == null || providerPackage == null || query == null) {
             List<FontFileResourceEntry> fonts = new ArrayList<>();
@@ -192,41 +177,23 @@ public class FontResourcesParserCompat {
         return new ProviderResourceEntry(new FontRequest(authority, providerPackage, query, readCerts(resources, certsId)), strategy, timeoutMs);
     }
 
-    private static int getType(TypedArray typedArray, int index) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return typedArray.getType(index);
-        }
-        TypedValue tv = new TypedValue();
-        typedArray.getValue(index, tv);
-        return tv.type;
-    }
-
     public static List<List<byte[]>> readCerts(Resources resources, @ArrayRes int certsId) {
-        List<List<byte[]>> result;
-        if (certsId == 0) {
-            return Collections.emptyList();
-        }
-        TypedArray typedArray = resources.obtainTypedArray(certsId);
-        try {
-            if (typedArray.length() == 0) {
-                result = Collections.emptyList();
-            } else {
-                result = new ArrayList<>();
-                if (getType(typedArray, 0) == 1) {
+        List<List<byte[]>> certs = null;
+        if (certsId != 0) {
+            TypedArray typedArray = resources.obtainTypedArray(certsId);
+            if (typedArray.length() > 0) {
+                certs = new ArrayList<>();
+                if (typedArray.getResourceId(0, 0) != 0) {
                     for (int i = 0; i < typedArray.length(); i++) {
-                        int certId = typedArray.getResourceId(i, 0);
-                        if (certId != 0) {
-                            result.add(toByteArrayList(resources.getStringArray(certId)));
-                        }
+                        certs.add(toByteArrayList(resources.getStringArray(typedArray.getResourceId(i, 0))));
                     }
                 } else {
-                    result.add(toByteArrayList(resources.getStringArray(certsId)));
+                    certs.add(toByteArrayList(resources.getStringArray(certsId)));
                 }
             }
-            return result;
-        } finally {
             typedArray.recycle();
         }
+        return certs != null ? certs : Collections.emptyList();
     }
 
     private static List<byte[]> toByteArrayList(String[] stringArray) {
@@ -239,20 +206,19 @@ public class FontResourcesParserCompat {
 
     private static FontFileResourceEntry readFont(XmlPullParser parser, Resources resources) throws XmlPullParserException, IOException {
         TypedArray array = resources.obtainAttributes(Xml.asAttributeSet(parser), R.styleable.FontFamilyFont);
-        int weight = array.getInt(array.hasValue(R.styleable.FontFamilyFont_fontWeight) ? R.styleable.FontFamilyFont_fontWeight : R.styleable.FontFamilyFont_android_fontWeight, NORMAL_WEIGHT);
-        boolean isItalic = 1 == array.getInt(array.hasValue(R.styleable.FontFamilyFont_fontStyle) ? R.styleable.FontFamilyFont_fontStyle : R.styleable.FontFamilyFont_android_fontStyle, 0);
-        int ttcIndexAttr = array.hasValue(R.styleable.FontFamilyFont_ttcIndex) ? R.styleable.FontFamilyFont_ttcIndex : R.styleable.FontFamilyFont_android_ttcIndex;
-        String variationSettings = array.getString(array.hasValue(R.styleable.FontFamilyFont_fontVariationSettings) ? R.styleable.FontFamilyFont_fontVariationSettings : R.styleable.FontFamilyFont_android_fontVariationSettings);
-        int ttcIndex = array.getInt(ttcIndexAttr, 0);
-        int resourceAttr = array.hasValue(R.styleable.FontFamilyFont_font) ? R.styleable.FontFamilyFont_font : R.styleable.FontFamilyFont_android_font;
-        int resourceId = array.getResourceId(resourceAttr, 0);
-        String filename = array.getString(resourceAttr);
+        int weight = array.getInt(R.styleable.FontFamilyFont_fontWeight, 400);
+        boolean z = true;
+        if (1 != array.getInt(R.styleable.FontFamilyFont_fontStyle, 0)) {
+            z = false;
+        }
+        boolean isItalic = z;
+        int resourceId = array.getResourceId(R.styleable.FontFamilyFont_font, 0);
+        String filename = array.getString(R.styleable.FontFamilyFont_font);
         array.recycle();
         while (parser.next() != 3) {
             skip(parser);
         }
-        int i = resourceAttr;
-        return new FontFileResourceEntry(filename, weight, isItalic, variationSettings, ttcIndex, resourceId);
+        return new FontFileResourceEntry(filename, weight, isItalic, resourceId);
     }
 
     private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -267,8 +233,5 @@ public class FontResourcesParserCompat {
                     break;
             }
         }
-    }
-
-    private FontResourcesParserCompat() {
     }
 }

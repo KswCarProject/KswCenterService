@@ -7,8 +7,8 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcelable;
 import android.support.annotation.StringRes;
-import android.support.v4.content.IntentCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -60,10 +60,11 @@ public final class ShareCompat {
 
     public static void configureMenuItem(Menu menu, int menuItemId, IntentBuilder shareIntent) {
         MenuItem item = menu.findItem(menuItemId);
-        if (item == null) {
-            throw new IllegalArgumentException("Could not find menu item with id " + menuItemId + " in the supplied menu");
+        if (item != null) {
+            configureMenuItem(item, shareIntent);
+            return;
         }
-        configureMenuItem(item, shareIntent);
+        throw new IllegalArgumentException("Could not find menu item with id " + menuItemId + " in the supplied menu");
     }
 
     public static class IntentBuilder {
@@ -71,7 +72,7 @@ public final class ShareCompat {
         private ArrayList<String> mBccAddresses;
         private ArrayList<String> mCcAddresses;
         private CharSequence mChooserTitle;
-        private Intent mIntent = new Intent().setAction("android.intent.action.SEND");
+        private Intent mIntent = new Intent().setAction(Intent.ACTION_SEND);
         private ArrayList<Uri> mStreams;
         private ArrayList<String> mToAddresses;
 
@@ -82,21 +83,21 @@ public final class ShareCompat {
         private IntentBuilder(Activity launchingActivity) {
             this.mActivity = launchingActivity;
             this.mIntent.putExtra(ShareCompat.EXTRA_CALLING_PACKAGE, launchingActivity.getPackageName());
-            this.mIntent.putExtra(ShareCompat.EXTRA_CALLING_ACTIVITY, launchingActivity.getComponentName());
+            this.mIntent.putExtra(ShareCompat.EXTRA_CALLING_ACTIVITY, (Parcelable) launchingActivity.getComponentName());
             this.mIntent.addFlags(524288);
         }
 
         public Intent getIntent() {
             if (this.mToAddresses != null) {
-                combineArrayExtra("android.intent.extra.EMAIL", this.mToAddresses);
+                combineArrayExtra(Intent.EXTRA_EMAIL, this.mToAddresses);
                 this.mToAddresses = null;
             }
             if (this.mCcAddresses != null) {
-                combineArrayExtra("android.intent.extra.CC", this.mCcAddresses);
+                combineArrayExtra(Intent.EXTRA_CC, this.mCcAddresses);
                 this.mCcAddresses = null;
             }
             if (this.mBccAddresses != null) {
-                combineArrayExtra("android.intent.extra.BCC", this.mBccAddresses);
+                combineArrayExtra(Intent.EXTRA_BCC, this.mBccAddresses);
                 this.mBccAddresses = null;
             }
             boolean z = true;
@@ -104,22 +105,22 @@ public final class ShareCompat {
                 z = false;
             }
             boolean needsSendMultiple = z;
-            boolean isSendMultiple = this.mIntent.getAction().equals("android.intent.action.SEND_MULTIPLE");
+            boolean isSendMultiple = this.mIntent.getAction().equals(Intent.ACTION_SEND_MULTIPLE);
             if (!needsSendMultiple && isSendMultiple) {
-                this.mIntent.setAction("android.intent.action.SEND");
+                this.mIntent.setAction(Intent.ACTION_SEND);
                 if (this.mStreams == null || this.mStreams.isEmpty()) {
-                    this.mIntent.removeExtra("android.intent.extra.STREAM");
+                    this.mIntent.removeExtra(Intent.EXTRA_STREAM);
                 } else {
-                    this.mIntent.putExtra("android.intent.extra.STREAM", this.mStreams.get(0));
+                    this.mIntent.putExtra(Intent.EXTRA_STREAM, (Parcelable) this.mStreams.get(0));
                 }
                 this.mStreams = null;
             }
             if (needsSendMultiple && !isSendMultiple) {
-                this.mIntent.setAction("android.intent.action.SEND_MULTIPLE");
+                this.mIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
                 if (this.mStreams == null || this.mStreams.isEmpty()) {
-                    this.mIntent.removeExtra("android.intent.extra.STREAM");
+                    this.mIntent.removeExtra(Intent.EXTRA_STREAM);
                 } else {
-                    this.mIntent.putParcelableArrayListExtra("android.intent.extra.STREAM", this.mStreams);
+                    this.mIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, this.mStreams);
                 }
             }
             return this.mIntent;
@@ -176,29 +177,29 @@ public final class ShareCompat {
         }
 
         public IntentBuilder setText(CharSequence text) {
-            this.mIntent.putExtra("android.intent.extra.TEXT", text);
+            this.mIntent.putExtra(Intent.EXTRA_TEXT, text);
             return this;
         }
 
         public IntentBuilder setHtmlText(String htmlText) {
-            this.mIntent.putExtra(IntentCompat.EXTRA_HTML_TEXT, htmlText);
-            if (!this.mIntent.hasExtra("android.intent.extra.TEXT")) {
+            this.mIntent.putExtra("android.intent.extra.HTML_TEXT", htmlText);
+            if (!this.mIntent.hasExtra(Intent.EXTRA_TEXT)) {
                 setText(Html.fromHtml(htmlText));
             }
             return this;
         }
 
         public IntentBuilder setStream(Uri streamUri) {
-            if (!this.mIntent.getAction().equals("android.intent.action.SEND")) {
-                this.mIntent.setAction("android.intent.action.SEND");
+            if (!this.mIntent.getAction().equals(Intent.ACTION_SEND)) {
+                this.mIntent.setAction(Intent.ACTION_SEND);
             }
             this.mStreams = null;
-            this.mIntent.putExtra("android.intent.extra.STREAM", streamUri);
+            this.mIntent.putExtra(Intent.EXTRA_STREAM, (Parcelable) streamUri);
             return this;
         }
 
         public IntentBuilder addStream(Uri streamUri) {
-            Uri currentStream = (Uri) this.mIntent.getParcelableExtra("android.intent.extra.STREAM");
+            Uri currentStream = (Uri) this.mIntent.getParcelableExtra(Intent.EXTRA_STREAM);
             if (this.mStreams == null && currentStream == null) {
                 return setStream(streamUri);
             }
@@ -206,7 +207,7 @@ public final class ShareCompat {
                 this.mStreams = new ArrayList<>();
             }
             if (currentStream != null) {
-                this.mIntent.removeExtra("android.intent.extra.STREAM");
+                this.mIntent.removeExtra(Intent.EXTRA_STREAM);
                 this.mStreams.add(currentStream);
             }
             this.mStreams.add(streamUri);
@@ -217,7 +218,7 @@ public final class ShareCompat {
             if (this.mToAddresses != null) {
                 this.mToAddresses = null;
             }
-            this.mIntent.putExtra("android.intent.extra.EMAIL", addresses);
+            this.mIntent.putExtra(Intent.EXTRA_EMAIL, addresses);
             return this;
         }
 
@@ -230,12 +231,12 @@ public final class ShareCompat {
         }
 
         public IntentBuilder addEmailTo(String[] addresses) {
-            combineArrayExtra("android.intent.extra.EMAIL", addresses);
+            combineArrayExtra(Intent.EXTRA_EMAIL, addresses);
             return this;
         }
 
         public IntentBuilder setEmailCc(String[] addresses) {
-            this.mIntent.putExtra("android.intent.extra.CC", addresses);
+            this.mIntent.putExtra(Intent.EXTRA_CC, addresses);
             return this;
         }
 
@@ -248,12 +249,12 @@ public final class ShareCompat {
         }
 
         public IntentBuilder addEmailCc(String[] addresses) {
-            combineArrayExtra("android.intent.extra.CC", addresses);
+            combineArrayExtra(Intent.EXTRA_CC, addresses);
             return this;
         }
 
         public IntentBuilder setEmailBcc(String[] addresses) {
-            this.mIntent.putExtra("android.intent.extra.BCC", addresses);
+            this.mIntent.putExtra(Intent.EXTRA_BCC, addresses);
             return this;
         }
 
@@ -266,12 +267,12 @@ public final class ShareCompat {
         }
 
         public IntentBuilder addEmailBcc(String[] addresses) {
-            combineArrayExtra("android.intent.extra.BCC", addresses);
+            combineArrayExtra(Intent.EXTRA_BCC, addresses);
             return this;
         }
 
         public IntentBuilder setSubject(String subject) {
-            this.mIntent.putExtra("android.intent.extra.SUBJECT", subject);
+            this.mIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
             return this;
         }
     }
@@ -297,15 +298,15 @@ public final class ShareCompat {
 
         public boolean isShareIntent() {
             String action = this.mIntent.getAction();
-            return "android.intent.action.SEND".equals(action) || "android.intent.action.SEND_MULTIPLE".equals(action);
+            return Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action);
         }
 
         public boolean isSingleShare() {
-            return "android.intent.action.SEND".equals(this.mIntent.getAction());
+            return Intent.ACTION_SEND.equals(this.mIntent.getAction());
         }
 
         public boolean isMultipleShare() {
-            return "android.intent.action.SEND_MULTIPLE".equals(this.mIntent.getAction());
+            return Intent.ACTION_SEND_MULTIPLE.equals(this.mIntent.getAction());
         }
 
         public String getType() {
@@ -313,11 +314,11 @@ public final class ShareCompat {
         }
 
         public CharSequence getText() {
-            return this.mIntent.getCharSequenceExtra("android.intent.extra.TEXT");
+            return this.mIntent.getCharSequenceExtra(Intent.EXTRA_TEXT);
         }
 
         public String getHtmlText() {
-            String result = this.mIntent.getStringExtra(IntentCompat.EXTRA_HTML_TEXT);
+            String result = this.mIntent.getStringExtra("android.intent.extra.HTML_TEXT");
             if (result != null) {
                 return result;
             }
@@ -362,46 +363,46 @@ public final class ShareCompat {
         }
 
         public Uri getStream() {
-            return (Uri) this.mIntent.getParcelableExtra("android.intent.extra.STREAM");
+            return (Uri) this.mIntent.getParcelableExtra(Intent.EXTRA_STREAM);
         }
 
         public Uri getStream(int index) {
             if (this.mStreams == null && isMultipleShare()) {
-                this.mStreams = this.mIntent.getParcelableArrayListExtra("android.intent.extra.STREAM");
+                this.mStreams = this.mIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
             }
             if (this.mStreams != null) {
                 return this.mStreams.get(index);
             }
             if (index == 0) {
-                return (Uri) this.mIntent.getParcelableExtra("android.intent.extra.STREAM");
+                return (Uri) this.mIntent.getParcelableExtra(Intent.EXTRA_STREAM);
             }
             throw new IndexOutOfBoundsException("Stream items available: " + getStreamCount() + " index requested: " + index);
         }
 
         public int getStreamCount() {
             if (this.mStreams == null && isMultipleShare()) {
-                this.mStreams = this.mIntent.getParcelableArrayListExtra("android.intent.extra.STREAM");
+                this.mStreams = this.mIntent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
             }
             if (this.mStreams != null) {
                 return this.mStreams.size();
             }
-            return this.mIntent.hasExtra("android.intent.extra.STREAM") ? 1 : 0;
+            return this.mIntent.hasExtra(Intent.EXTRA_STREAM) ? 1 : 0;
         }
 
         public String[] getEmailTo() {
-            return this.mIntent.getStringArrayExtra("android.intent.extra.EMAIL");
+            return this.mIntent.getStringArrayExtra(Intent.EXTRA_EMAIL);
         }
 
         public String[] getEmailCc() {
-            return this.mIntent.getStringArrayExtra("android.intent.extra.CC");
+            return this.mIntent.getStringArrayExtra(Intent.EXTRA_CC);
         }
 
         public String[] getEmailBcc() {
-            return this.mIntent.getStringArrayExtra("android.intent.extra.BCC");
+            return this.mIntent.getStringArrayExtra(Intent.EXTRA_BCC);
         }
 
         public String getSubject() {
-            return this.mIntent.getStringExtra("android.intent.extra.SUBJECT");
+            return this.mIntent.getStringExtra(Intent.EXTRA_SUBJECT);
         }
 
         public String getCallingPackage() {

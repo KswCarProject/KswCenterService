@@ -11,7 +11,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ColorStateListInflaterCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.Log;
 import android.util.SparseArray;
@@ -55,7 +54,7 @@ public final class AppCompatResources {
         }
         Resources r = context.getResources();
         try {
-            return ColorStateListInflaterCompat.createFromXml(r, r.getXml(resId), context.getTheme());
+            return AppCompatColorStateListInflater.createFromXml(r, r.getXml(resId), context.getTheme());
         } catch (Exception e) {
             Log.e(LOG_TAG, "Failed to inflate ColorStateList, leaving it to the framework", e);
             return null;
@@ -83,7 +82,7 @@ public final class AppCompatResources {
             android.content.res.Configuration r3 = r2.configuration     // Catch:{ all -> 0x0035 }
             android.content.res.Resources r4 = r5.getResources()     // Catch:{ all -> 0x0035 }
             android.content.res.Configuration r4 = r4.getConfiguration()     // Catch:{ all -> 0x0035 }
-            boolean r3 = r3.equals(r4)     // Catch:{ all -> 0x0035 }
+            boolean r3 = r3.equals((android.content.res.Configuration) r4)     // Catch:{ all -> 0x0035 }
             if (r3 == 0) goto L_0x002f
             android.content.res.ColorStateList r3 = r2.value     // Catch:{ all -> 0x0035 }
             monitor-exit(r0)     // Catch:{ all -> 0x0035 }

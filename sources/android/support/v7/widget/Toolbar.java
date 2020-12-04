@@ -38,7 +38,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -766,7 +765,7 @@ public class Toolbar extends ViewGroup {
         }
         lp.mViewType = 1;
         if (!allowHide || this.mExpandedActionView == null) {
-            addView(v, lp);
+            addView(v, (ViewGroup.LayoutParams) lp);
             return;
         }
         v.setLayoutParams(lp);
@@ -891,8 +890,8 @@ public class Toolbar extends ViewGroup {
         int height;
         int childState2;
         int childState3;
+        int titleHeight;
         int i;
-        int menuWidth;
         int childCount;
         int height2 = 0;
         int childState4 = 0;
@@ -926,11 +925,11 @@ public class Toolbar extends ViewGroup {
             char c = i2;
             marginStartIndex2 = 0;
             measureChildConstrained(this.mMenuView, widthMeasureSpec, width, heightMeasureSpec, 0, this.mMaxButtonHeight);
-            int menuWidth2 = this.mMenuView.getMeasuredWidth() + getHorizontalMargins(this.mMenuView);
+            int menuWidth = this.mMenuView.getMeasuredWidth() + getHorizontalMargins(this.mMenuView);
             int height3 = Math.max(height2, this.mMenuView.getMeasuredHeight() + getVerticalMargins(this.mMenuView));
             childState2 = View.combineMeasuredStates(childState4, this.mMenuView.getMeasuredState());
             childState = height3;
-            height = menuWidth2;
+            height = menuWidth;
         } else {
             int marginStartIndex3 = i2;
             marginStartIndex2 = 0;
@@ -966,42 +965,46 @@ public class Toolbar extends ViewGroup {
             if (lp.mViewType != 0) {
                 i = i5;
                 childCount = childCount2;
-                menuWidth = height;
             } else if (!shouldLayout(child)) {
                 i = i5;
                 childCount = childCount2;
-                menuWidth = height;
             } else {
                 LayoutParams layoutParams = lp;
-                menuWidth = height;
                 View child2 = child;
                 i = i5;
                 childCount = childCount2;
                 width2 += measureChildCollapseMargins(child, widthMeasureSpec, width2, heightMeasureSpec, 0, collapsingMargins);
-                childState = Math.max(childState, child2.getMeasuredHeight() + getVerticalMargins(child2));
-                childState3 = View.combineMeasuredStates(childState3, child2.getMeasuredState());
+                View child3 = child2;
+                childState = Math.max(childState, child2.getMeasuredHeight() + getVerticalMargins(child3));
+                childState3 = View.combineMeasuredStates(childState3, child3.getMeasuredState());
             }
             i4 = i + 1;
             childCount2 = childCount;
-            height = menuWidth;
         }
-        int i6 = height;
         int titleWidth = 0;
-        int titleHeight = 0;
+        int titleHeight2 = 0;
         int titleVertMargins = this.mTitleMarginTop + this.mTitleMarginBottom;
         int titleHorizMargins = this.mTitleMarginStart + this.mTitleMarginEnd;
         if (shouldLayout(this.mTitleTextView)) {
             int measureChildCollapseMargins = measureChildCollapseMargins(this.mTitleTextView, widthMeasureSpec, width2 + titleHorizMargins, heightMeasureSpec, titleVertMargins, collapsingMargins);
             titleWidth = this.mTitleTextView.getMeasuredWidth() + getHorizontalMargins(this.mTitleTextView);
-            titleHeight = this.mTitleTextView.getMeasuredHeight() + getVerticalMargins(this.mTitleTextView);
+            titleHeight2 = this.mTitleTextView.getMeasuredHeight() + getVerticalMargins(this.mTitleTextView);
             childState3 = View.combineMeasuredStates(childState3, this.mTitleTextView.getMeasuredState());
         }
+        int childState5 = childState3;
+        int titleWidth2 = titleWidth;
         if (shouldLayout(this.mSubtitleTextView)) {
-            titleWidth = Math.max(titleWidth, measureChildCollapseMargins(this.mSubtitleTextView, widthMeasureSpec, width2 + titleHorizMargins, heightMeasureSpec, titleHeight + titleVertMargins, collapsingMargins));
-            titleHeight += this.mSubtitleTextView.getMeasuredHeight() + getVerticalMargins(this.mSubtitleTextView);
-            childState3 = View.combineMeasuredStates(childState3, this.mSubtitleTextView.getMeasuredState());
+            int i6 = height;
+            titleWidth2 = Math.max(titleWidth2, measureChildCollapseMargins(this.mSubtitleTextView, widthMeasureSpec, width2 + titleHorizMargins, heightMeasureSpec, titleHeight2 + titleVertMargins, collapsingMargins));
+            int titleHeight3 = titleHeight2 + this.mSubtitleTextView.getMeasuredHeight() + getVerticalMargins(this.mSubtitleTextView);
+            childState5 = View.combineMeasuredStates(childState5, this.mSubtitleTextView.getMeasuredState());
+            titleHeight = titleHeight3;
+        } else {
+            int menuWidth2 = height;
+            int menuWidth3 = childState5;
+            titleHeight = titleHeight2;
         }
-        setMeasuredDimension(View.resolveSizeAndState(Math.max(width2 + titleWidth + getPaddingLeft() + getPaddingRight(), getSuggestedMinimumWidth()), widthMeasureSpec, -16777216 & childState3), shouldCollapse() ? 0 : View.resolveSizeAndState(Math.max(Math.max(childState, titleHeight) + getPaddingTop() + getPaddingBottom(), getSuggestedMinimumHeight()), heightMeasureSpec, childState3 << 16));
+        setMeasuredDimension(View.resolveSizeAndState(Math.max(width2 + titleWidth2 + getPaddingLeft() + getPaddingRight(), getSuggestedMinimumWidth()), widthMeasureSpec, -16777216 & childState5), shouldCollapse() ? 0 : View.resolveSizeAndState(Math.max(Math.max(childState, titleHeight) + getPaddingTop() + getPaddingBottom(), getSuggestedMinimumHeight()), heightMeasureSpec, childState5 << 16));
     }
 
     /* access modifiers changed from: protected */
@@ -1021,10 +1024,10 @@ public class Toolbar extends ViewGroup {
             r2 = 1
             r3 = 0
             if (r1 != r2) goto L_0x000c
-            r1 = 1
+            r1 = r2
             goto L_0x000d
         L_0x000c:
-            r1 = 0
+            r1 = r3
         L_0x000d:
             int r4 = r40.getWidth()
             int r5 = r40.getHeight()
@@ -1043,7 +1046,7 @@ public class Toolbar extends ViewGroup {
             int r2 = java.lang.Math.min(r13, r2)
             goto L_0x003c
         L_0x003b:
-            r2 = 0
+            r2 = r3
         L_0x003c:
             android.widget.ImageButton r3 = r0.mNavButtonView
             boolean r3 = r0.shouldLayout(r3)
@@ -1854,20 +1857,12 @@ public class Toolbar extends ViewGroup {
 
         public boolean expandItemActionView(MenuBuilder menu, MenuItemImpl item) {
             Toolbar.this.ensureCollapseButtonView();
-            ViewParent collapseButtonParent = Toolbar.this.mCollapseButtonView.getParent();
-            if (collapseButtonParent != Toolbar.this) {
-                if (collapseButtonParent instanceof ViewGroup) {
-                    ((ViewGroup) collapseButtonParent).removeView(Toolbar.this.mCollapseButtonView);
-                }
+            if (Toolbar.this.mCollapseButtonView.getParent() != Toolbar.this) {
                 Toolbar.this.addView(Toolbar.this.mCollapseButtonView);
             }
             Toolbar.this.mExpandedActionView = item.getActionView();
             this.mCurrentExpandedItem = item;
-            ViewParent expandedActionParent = Toolbar.this.mExpandedActionView.getParent();
-            if (expandedActionParent != Toolbar.this) {
-                if (expandedActionParent instanceof ViewGroup) {
-                    ((ViewGroup) expandedActionParent).removeView(Toolbar.this.mExpandedActionView);
-                }
+            if (Toolbar.this.mExpandedActionView.getParent() != Toolbar.this) {
                 LayoutParams lp = Toolbar.this.generateDefaultLayoutParams();
                 lp.gravity = 8388611 | (Toolbar.this.mButtonGravity & 112);
                 lp.mViewType = 2;

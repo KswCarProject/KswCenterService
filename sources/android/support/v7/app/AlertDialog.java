@@ -90,15 +90,11 @@ public class AlertDialog extends AppCompatDialog implements DialogInterface {
     }
 
     public void setButton(int whichButton, CharSequence text, Message msg) {
-        this.mAlert.setButton(whichButton, text, (DialogInterface.OnClickListener) null, msg, (Drawable) null);
+        this.mAlert.setButton(whichButton, text, (DialogInterface.OnClickListener) null, msg);
     }
 
     public void setButton(int whichButton, CharSequence text, DialogInterface.OnClickListener listener) {
-        this.mAlert.setButton(whichButton, text, listener, (Message) null, (Drawable) null);
-    }
-
-    public void setButton(int whichButton, CharSequence text, Drawable icon, DialogInterface.OnClickListener listener) {
-        this.mAlert.setButton(whichButton, text, listener, (Message) null, icon);
+        this.mAlert.setButton(whichButton, text, listener, (Message) null);
     }
 
     public void setIcon(int resId) {
@@ -207,11 +203,6 @@ public class AlertDialog extends AppCompatDialog implements DialogInterface {
             return this;
         }
 
-        public Builder setPositiveButtonIcon(Drawable icon) {
-            this.P.mPositiveButtonIcon = icon;
-            return this;
-        }
-
         public Builder setNegativeButton(@StringRes int textId, DialogInterface.OnClickListener listener) {
             this.P.mNegativeButtonText = this.P.mContext.getText(textId);
             this.P.mNegativeButtonListener = listener;
@@ -224,11 +215,6 @@ public class AlertDialog extends AppCompatDialog implements DialogInterface {
             return this;
         }
 
-        public Builder setNegativeButtonIcon(Drawable icon) {
-            this.P.mNegativeButtonIcon = icon;
-            return this;
-        }
-
         public Builder setNeutralButton(@StringRes int textId, DialogInterface.OnClickListener listener) {
             this.P.mNeutralButtonText = this.P.mContext.getText(textId);
             this.P.mNeutralButtonListener = listener;
@@ -238,11 +224,6 @@ public class AlertDialog extends AppCompatDialog implements DialogInterface {
         public Builder setNeutralButton(CharSequence text, DialogInterface.OnClickListener listener) {
             this.P.mNeutralButtonText = text;
             this.P.mNeutralButtonListener = listener;
-            return this;
-        }
-
-        public Builder setNeutralButtonIcon(Drawable icon) {
-            this.P.mNeutralButtonIcon = icon;
             return this;
         }
 

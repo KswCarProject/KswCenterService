@@ -18,16 +18,15 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.provider.SettingsStringUtil;
 import android.support.annotation.GuardedBy;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,8 +63,7 @@ public final class NotificationManagerCompat {
         void send(INotificationSideChannel iNotificationSideChannel) throws RemoteException;
     }
 
-    @NonNull
-    public static NotificationManagerCompat from(@NonNull Context context) {
+    public static NotificationManagerCompat from(Context context) {
         return new NotificationManagerCompat(context);
     }
 
@@ -77,7 +75,7 @@ public final class NotificationManagerCompat {
         cancel((String) null, id);
     }
 
-    public void cancel(@Nullable String tag, int id) {
+    public void cancel(String tag, int id) {
         this.mNotificationManager.cancel(tag, id);
         if (Build.VERSION.SDK_INT <= 19) {
             pushSideChannelQueue(new CancelTask(this.mContext.getPackageName(), id, tag));
@@ -91,11 +89,11 @@ public final class NotificationManagerCompat {
         }
     }
 
-    public void notify(int id, @NonNull Notification notification) {
+    public void notify(int id, Notification notification) {
         notify((String) null, id, notification);
     }
 
-    public void notify(@Nullable String tag, int id, @NonNull Notification notification) {
+    public void notify(String tag, int id, Notification notification) {
         if (useSideChannelForNotification(notification)) {
             pushSideChannelQueue(new NotifyTask(this.mContext.getPackageName(), id, tag, notification));
             this.mNotificationManager.cancel(tag, id);
@@ -111,7 +109,7 @@ public final class NotificationManagerCompat {
         if (Build.VERSION.SDK_INT < 19) {
             return true;
         }
-        AppOpsManager appOps = (AppOpsManager) this.mContext.getSystemService("appops");
+        AppOpsManager appOps = (AppOpsManager) this.mContext.getSystemService(Context.APP_OPS_SERVICE);
         ApplicationInfo appInfo = this.mContext.getApplicationInfo();
         String pkg = this.mContext.getApplicationContext().getPackageName();
         int uid = appInfo.uid;
@@ -130,18 +128,17 @@ public final class NotificationManagerCompat {
         if (Build.VERSION.SDK_INT >= 24) {
             return this.mNotificationManager.getImportance();
         }
-        return IMPORTANCE_UNSPECIFIED;
+        return -1000;
     }
 
-    @NonNull
-    public static Set<String> getEnabledListenerPackages(@NonNull Context context) {
+    public static Set<String> getEnabledListenerPackages(Context context) {
         Set<String> set;
-        String enabledNotificationListeners = Settings.Secure.getString(context.getContentResolver(), SETTING_ENABLED_NOTIFICATION_LISTENERS);
+        String enabledNotificationListeners = Settings.Secure.getString(context.getContentResolver(), "enabled_notification_listeners");
         synchronized (sEnabledNotificationListenersLock) {
             if (enabledNotificationListeners != null) {
                 try {
                     if (!enabledNotificationListeners.equals(sEnabledNotificationListeners)) {
-                        String[] components = enabledNotificationListeners.split(":", -1);
+                        String[] components = enabledNotificationListeners.split(SettingsStringUtil.DELIMITER);
                         Set<String> packageNames = new HashSet<>(components.length);
                         for (String component : components) {
                             ComponentName componentName = ComponentName.unflattenFromString(component);
@@ -186,11 +183,11 @@ public final class NotificationManagerCompat {
         private final HandlerThread mHandlerThread;
         private final Map<ComponentName, ListenerRecord> mRecordMap = new HashMap();
 
-        SideChannelManager(Context context) {
+        public SideChannelManager(Context context) {
             this.mContext = context;
             this.mHandlerThread = new HandlerThread("NotificationManagerCompat");
             this.mHandlerThread.start();
-            this.mHandler = new Handler(this.mHandlerThread.getLooper(), this);
+            this.mHandler = new Handler(this.mHandlerThread.getLooper(), (Handler.Callback) this);
         }
 
         public void queueTask(Task task) {
@@ -373,13 +370,13 @@ public final class NotificationManagerCompat {
         }
 
         private static class ListenerRecord {
-            boolean bound = false;
-            final ComponentName componentName;
-            int retryCount = 0;
-            INotificationSideChannel service;
-            ArrayDeque<Task> taskQueue = new ArrayDeque<>();
+            public boolean bound = false;
+            public final ComponentName componentName;
+            public int retryCount = 0;
+            public INotificationSideChannel service;
+            public LinkedList<Task> taskQueue = new LinkedList<>();
 
-            ListenerRecord(ComponentName componentName2) {
+            public ListenerRecord(ComponentName componentName2) {
                 this.componentName = componentName2;
             }
         }

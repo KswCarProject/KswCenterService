@@ -2,8 +2,8 @@ package com.wits.pms.utils;
 
 import android.os.Handler;
 import android.util.Log;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.core.PowerManagerAppService;
+import com.wits.pms.utils.SysConfigUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,7 +41,11 @@ public class SysConfigUtil {
         }
 
         public void run() {
-            this.mHandler.post(new SysConfigUtil$WriteRunnable$$Lambda$0(this));
+            this.mHandler.post(new Runnable() {
+                public final void run() {
+                    SysConfigUtil.WriteRunnable.lambda$run$0(SysConfigUtil.WriteRunnable.this);
+                }
+            });
             try {
                 FileWriter fr = new FileWriter(new File(this.path));
                 if (this.value != null) {
@@ -49,31 +53,36 @@ public class SysConfigUtil {
                 }
                 fr.flush();
                 fr.close();
-                this.mHandler.post(new SysConfigUtil$WriteRunnable$$Lambda$1(this));
+                this.mHandler.post(new Runnable() {
+                    public final void run() {
+                        SysConfigUtil.WriteRunnable.lambda$run$1(SysConfigUtil.WriteRunnable.this);
+                    }
+                });
             } catch (IOException e) {
                 Log.e(SysConfigUtil.class.getName(), "save failed. cause:", e);
-                this.mHandler.post(new SysConfigUtil$WriteRunnable$$Lambda$2(this));
+                this.mHandler.post(new Runnable() {
+                    public final void run() {
+                        SysConfigUtil.WriteRunnable.lambda$run$2(SysConfigUtil.WriteRunnable.this);
+                    }
+                });
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public final /* synthetic */ void lambda$run$0$SysConfigUtil$WriteRunnable() {
-            if (this.listener != null) {
-                this.listener.start();
+        public static /* synthetic */ void lambda$run$0(WriteRunnable writeRunnable) {
+            if (writeRunnable.listener != null) {
+                writeRunnable.listener.start();
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public final /* synthetic */ void lambda$run$1$SysConfigUtil$WriteRunnable() {
-            if (this.listener != null) {
-                this.listener.success();
+        public static /* synthetic */ void lambda$run$1(WriteRunnable writeRunnable) {
+            if (writeRunnable.listener != null) {
+                writeRunnable.listener.success();
             }
         }
 
-        /* access modifiers changed from: package-private */
-        public final /* synthetic */ void lambda$run$2$SysConfigUtil$WriteRunnable() {
-            if (this.listener != null) {
-                this.listener.failed();
+        public static /* synthetic */ void lambda$run$2(WriteRunnable writeRunnable) {
+            if (writeRunnable.listener != null) {
+                writeRunnable.listener.failed();
             }
         }
     }
@@ -98,7 +107,7 @@ public class SysConfigUtil {
             }
             return new BufferedReader(new FileReader(file)).readLine();
         } catch (FileNotFoundException | IOException e) {
-            return BuildConfig.FLAVOR;
+            return "";
         }
     }
 }

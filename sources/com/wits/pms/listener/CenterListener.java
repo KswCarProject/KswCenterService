@@ -19,7 +19,9 @@ import com.wits.pms.ICmdListener;
 import com.wits.pms.bean.ZlinkMessage;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.SystemStatusControl;
+import com.wits.pms.custom.WitsMemoryController;
 import com.wits.pms.interfaces.LogicSystem;
+import com.wits.pms.interfaces.MemoryKiller;
 import com.wits.pms.mcu.custom.KswMcuSender;
 import com.wits.pms.receiver.AutoKitCallBackImpl;
 import com.wits.pms.statuscontrol.BtPhoneStatus;
@@ -52,6 +54,9 @@ public class CenterListener {
     public Context mContext;
     /* access modifiers changed from: private */
     public final LogicSystem mLogicSystem;
+    private MemoryKiller mMemoryKiller;
+    /* access modifiers changed from: private */
+    public boolean muted;
     private WifiReceiver wifiReceiver;
 
     public CenterListener(Context context, LogicSystem logicSystem) {
@@ -87,7 +92,6 @@ public class CenterListener {
                     String access$000 = CenterListener.TAG;
                     Log.i(access$000, "updateStatusInfo: Status type=" + witsStatus.getType() + "  jsonMsg v2 = " + jsonMsg);
                     int type = witsStatus.getType();
-                    boolean z = false;
                     if (type == 1) {
                         CenterListener.this.mLogicSystem.updateStatus(SystemStatus.getStatusFormJson(witsStatus.jsonArg));
                         int lastMode = SystemStatus.getStatusFormJson(witsStatus.jsonArg).getLastMode();
@@ -96,11 +100,12 @@ public class CenterListener {
                         if (lastMode == 5 || lastMode == 8) {
                             CenterControlImpl.getImpl().stopZlinkMusic();
                         }
-                        CenterControlImpl impl = CenterControlImpl.getImpl();
                         if (CenterListener.this.mLogicSystem.getSystemStatus().getAcc() == 0) {
-                            z = true;
+                            CenterControlImpl.getImpl().mute(true);
+                            boolean unused = CenterListener.this.muted = true;
+                        } else if (CenterListener.this.muted) {
+                            CenterControlImpl.getImpl().mute(false);
                         }
-                        impl.mute(z);
                     } else if (type == 3) {
                         CenterListener.this.mLogicSystem.updateStatus(BtPhoneStatus.getStatusForJson(witsStatus.jsonArg));
                         if (BtPhoneStatus.getStatusForJson(witsStatus.jsonArg).isConnected && Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "zlink_auto_start", 0) == 1) {
@@ -181,7 +186,7 @@ public class CenterListener {
         if (packageName.contains("com.mxtech")) {
             CenterControlImpl.getImpl().openSourceMode(13);
         }
-        if (packageName.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
+        if (packageName.contains(ZlinkMessage.ZLINK_NORMAL_ACTION) || packageName.contains("com.suding.speedplay")) {
             CenterControlImpl.getImpl().openSourceMode(3);
             Bundle bundle = new Bundle();
             bundle.putString("command", "REQ_SPEC_FUNC_CMD");
@@ -209,7 +214,7 @@ public class CenterListener {
     }
 
     private void observeActivity() {
-        final ActivityManager am = (ActivityManager) this.mContext.getSystemService("activity");
+        final ActivityManager am = (ActivityManager) this.mContext.getSystemService(Context.ACTIVITY_SERVICE);
         new Thread() {
             private String packageName;
 
@@ -244,6 +249,7 @@ public class CenterListener {
                             }
                         } catch (Exception e3) {
                         }
+                        CenterListener.this.checkMemory();
                     }
                 }
             }
@@ -252,10 +258,23 @@ public class CenterListener {
 
     private void observeWifiSwitch() {
         IntentFilter filter = new IntentFilter();
-        filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
-        filter.addAction("android.net.wifi.STATE_CHANGE");
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         this.wifiReceiver = new WifiReceiver();
         this.mContext.registerReceiver(this.wifiReceiver, filter);
+    }
+
+    public void setMemoryKiller(WitsMemoryController witsMemoryController) {
+        this.mMemoryKiller = witsMemoryController;
+    }
+
+    /* access modifiers changed from: private */
+    public void checkMemory() {
+        try {
+            this.mMemoryKiller.clearMemoryWits();
+        } catch (Exception e) {
+            Log.e("MemoryKiller", "ERROR!", e);
+        }
     }
 
     class WifiReceiver extends BroadcastReceiver {
@@ -263,9 +282,9 @@ public class CenterListener {
         }
 
         public void onReceive(Context context, Intent intent) {
-            if (!"android.net.wifi.WIFI_STATE_CHANGED".equals(intent.getAction()) || intent.getIntExtra("wifi_state", 0) != 1) {
+            if (!WifiManager.WIFI_STATE_CHANGED_ACTION.equals(intent.getAction()) || intent.getIntExtra("wifi_state", 0) != 1) {
             }
-            if ("android.net.wifi.STATE_CHANGE".equals(intent.getAction())) {
+            if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(intent.getAction())) {
                 NetworkInfo info = (NetworkInfo) intent.getParcelableExtra("networkInfo");
                 if (!info.getState().equals(NetworkInfo.State.DISCONNECTED) && info.getState().equals(NetworkInfo.State.CONNECTED)) {
                     ((WifiManager) CenterListener.this.mContext.getApplicationContext().getSystemService("wifi")).getConnectionInfo();

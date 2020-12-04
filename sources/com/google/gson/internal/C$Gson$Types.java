@@ -258,7 +258,7 @@ public final class C$Gson$Types {
             if (r4 == r3) goto L_0x005c
             goto L_0x005d
         L_0x005c:
-            r1 = 0
+            r1 = r2
         L_0x005d:
             java.lang.reflect.Type[] r2 = r0.getActualTypeArguments()
             r5 = 0

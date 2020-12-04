@@ -1,8 +1,10 @@
 package com.wits.pms.mcu.custom;
 
+import android.telephony.SmsManager;
 import android.util.Log;
-import com.wits.pms.BuildConfig;
+import com.android.internal.midi.MidiConstants;
 import com.wits.pms.mcu.McuService;
+import java.io.PrintStream;
 
 public abstract class KswMcuReceiver implements McuService.OnReceiveData {
     private static byte[] bytes;
@@ -15,8 +17,8 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
     public abstract void onMcuMessage(byte[] bArr);
 
     public static void main(String... a) {
-        StringBuilder sb = new StringBuilder("pass");
-        sb.replace(0, 1, ("pass".charAt(0) + BuildConfig.FLAVOR).toUpperCase());
+        PrintStream printStream = System.out;
+        printStream.println("-----" + (((float) (((41 & 255) << 8) + (14 & 255))) / 100.0f));
     }
 
     public void reset() {
@@ -49,7 +51,7 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
                     this.dataIndex = 0;
                     this.recvHead = true;
                     this.currentPack = new byte[128];
-                    this.currentPack[0] = -14;
+                    this.currentPack[0] = MidiConstants.STATUS_SONG_POSITION;
                 }
                 this.dataIndex++;
                 i++;
@@ -73,9 +75,9 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
             }
             sb.append("0x");
             sb.append(hex.toUpperCase());
-            sb.append(",");
+            sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
         }
-        sb.replace(sb.length() - 1, sb.length(), BuildConfig.FLAVOR);
+        sb.replace(sb.length() - 1, sb.length(), "");
         sb.append("]\n");
         Log.v("KswMcuMessage", sb.toString());
     }

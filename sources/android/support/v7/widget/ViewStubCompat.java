@@ -1,6 +1,5 @@
 package android.support.v7.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -70,7 +69,6 @@ public final class ViewStubCompat extends View {
         setMeasuredDimension(0, 0);
     }
 
-    @SuppressLint({"MissingSuperCall"})
     public void draw(Canvas canvas) {
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.RestrictTo;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
@@ -242,25 +243,26 @@ public class LinearLayoutCompat extends ViewGroup {
         if (this.mBaselineAlignedChildIndex < 0) {
             return super.getBaseline();
         }
-        if (getChildCount() <= this.mBaselineAlignedChildIndex) {
-            throw new RuntimeException("mBaselineAlignedChildIndex of LinearLayout set to an index that is out of bounds.");
-        }
-        View child = getChildAt(this.mBaselineAlignedChildIndex);
-        int childBaseline = child.getBaseline();
-        if (childBaseline != -1) {
-            int childTop = this.mBaselineChildTop;
-            if (this.mOrientation == 1 && (majorGravity = this.mGravity & 112) != 48) {
-                if (majorGravity == 16) {
-                    childTop += ((((getBottom() - getTop()) - getPaddingTop()) - getPaddingBottom()) - this.mTotalLength) / 2;
-                } else if (majorGravity == 80) {
-                    childTop = ((getBottom() - getTop()) - getPaddingBottom()) - this.mTotalLength;
+        if (getChildCount() > this.mBaselineAlignedChildIndex) {
+            View child = getChildAt(this.mBaselineAlignedChildIndex);
+            int childBaseline = child.getBaseline();
+            if (childBaseline != -1) {
+                int childTop = this.mBaselineChildTop;
+                if (this.mOrientation == 1 && (majorGravity = this.mGravity & 112) != 48) {
+                    if (majorGravity == 16) {
+                        childTop += ((((getBottom() - getTop()) - getPaddingTop()) - getPaddingBottom()) - this.mTotalLength) / 2;
+                    } else if (majorGravity == 80) {
+                        childTop = ((getBottom() - getTop()) - getPaddingBottom()) - this.mTotalLength;
+                    }
                 }
+                return ((LayoutParams) child.getLayoutParams()).topMargin + childTop + childBaseline;
+            } else if (this.mBaselineAlignedChildIndex == 0) {
+                return -1;
+            } else {
+                throw new RuntimeException("mBaselineAlignedChildIndex of LinearLayout points to a View that doesn't know how to get its baseline.");
             }
-            return ((LayoutParams) child.getLayoutParams()).topMargin + childTop + childBaseline;
-        } else if (this.mBaselineAlignedChildIndex == 0) {
-            return -1;
         } else {
-            throw new RuntimeException("mBaselineAlignedChildIndex of LinearLayout points to a View that doesn't know how to get its baseline.");
+            throw new RuntimeException("mBaselineAlignedChildIndex of LinearLayout set to an index that is out of bounds.");
         }
     }
 
@@ -303,7 +305,6 @@ public class LinearLayoutCompat extends ViewGroup {
     }
 
     /* access modifiers changed from: protected */
-    @RestrictTo({RestrictTo.Scope.LIBRARY})
     public boolean hasDividerBeforeChildAt(int childIndex) {
         if (childIndex == 0) {
             if ((this.mShowDividers & 1) != 0) {
@@ -328,12 +329,14 @@ public class LinearLayoutCompat extends ViewGroup {
     }
 
     /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:156:0x03cc  */
-    /* JADX WARNING: Removed duplicated region for block: B:157:0x03cf  */
-    /* JADX WARNING: Removed duplicated region for block: B:160:0x03d6  */
-    /* JADX WARNING: Removed duplicated region for block: B:163:0x03df  */
-    /* JADX WARNING: Removed duplicated region for block: B:174:0x0454  */
+    /* JADX WARNING: Removed duplicated region for block: B:156:0x03d8  */
+    /* JADX WARNING: Removed duplicated region for block: B:157:0x03db  */
+    /* JADX WARNING: Removed duplicated region for block: B:160:0x03e2  */
+    /* JADX WARNING: Removed duplicated region for block: B:163:0x03ec  */
+    /* JADX WARNING: Removed duplicated region for block: B:174:0x045c  */
     /* JADX WARNING: Removed duplicated region for block: B:192:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:61:0x0190  */
+    /* JADX WARNING: Removed duplicated region for block: B:65:0x019c  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void measureVertical(int r58, int r59) {
         /*
@@ -356,7 +359,7 @@ public class LinearLayoutCompat extends ViewGroup {
             r14 = 0
             int r15 = r7.mBaselineAlignedChildIndex
             boolean r10 = r7.mUseLargestChild
-            r17 = 0
+            r17 = -2147483648(0xffffffff80000000, float:-0.0)
             r18 = r6
             r6 = r2
             r2 = r0
@@ -369,7 +372,7 @@ public class LinearLayoutCompat extends ViewGroup {
             r19 = r4
             r21 = 1
             r22 = 0
-            if (r0 >= r11) goto L_0x01bb
+            if (r0 >= r11) goto L_0x01c3
             android.view.View r4 = r7.getVirtualChildAt(r0)
             if (r4 != 0) goto L_0x0054
             r25 = r1
@@ -377,11 +380,11 @@ public class LinearLayoutCompat extends ViewGroup {
             int r20 = r7.measureNullChild(r0)
             int r1 = r1 + r20
             r7.mTotalLength = r1
-            r34 = r11
-            r33 = r13
+            r35 = r11
+            r34 = r13
             r4 = r19
             r1 = r25
-            goto L_0x01af
+            goto L_0x01b7
         L_0x0054:
             r25 = r1
             int r1 = r4.getVisibility()
@@ -390,12 +393,12 @@ public class LinearLayoutCompat extends ViewGroup {
             if (r1 != r2) goto L_0x0072
             int r1 = r7.getChildrenSkipCount(r4, r0)
             int r0 = r0 + r1
-            r34 = r11
-            r33 = r13
+            r35 = r11
+            r34 = r13
             r4 = r19
             r1 = r25
             r2 = r26
-            goto L_0x01af
+            goto L_0x01b7
         L_0x0072:
             boolean r1 = r7.hasDividerBeforeChildAt(r0)
             if (r1 == 0) goto L_0x007f
@@ -410,12 +413,12 @@ public class LinearLayoutCompat extends ViewGroup {
             float r1 = r2.weight
             float r23 = r5 + r1
             r5 = 1073741824(0x40000000, float:2.0)
-            if (r13 != r5) goto L_0x00bd
+            if (r13 != r5) goto L_0x00bc
             int r1 = r2.height
-            if (r1 != 0) goto L_0x00bd
+            if (r1 != 0) goto L_0x00bc
             float r1 = r2.weight
             int r1 = (r1 > r22 ? 1 : (r1 == r22 ? 0 : -1))
-            if (r1 <= 0) goto L_0x00bd
+            if (r1 <= 0) goto L_0x00bc
             int r1 = r7.mTotalLength
             int r5 = r2.topMargin
             int r5 = r5 + r1
@@ -426,244 +429,256 @@ public class LinearLayoutCompat extends ViewGroup {
             r7.mTotalLength = r0
             r14 = 1
             r0 = r2
-            r8 = r4
-            r9 = r6
-            r34 = r11
-            r33 = r13
-            r30 = r14
-            r35 = r19
-            r14 = r25
-            r32 = r26
+            r35 = r11
+            r34 = r13
+            r32 = r14
+            r9 = r19
+            r8 = r25
+            r31 = r26
             r29 = r27
-            goto L_0x012e
-        L_0x00bd:
+            r11 = r6
+            goto L_0x0133
+        L_0x00bc:
             r27 = r0
             r0 = -2147483648(0xffffffff80000000, float:-0.0)
             int r1 = r2.height
-            if (r1 != 0) goto L_0x00cf
+            if (r1 != 0) goto L_0x00ce
             float r1 = r2.weight
             int r1 = (r1 > r22 ? 1 : (r1 == r22 ? 0 : -1))
-            if (r1 <= 0) goto L_0x00cf
+            if (r1 <= 0) goto L_0x00ce
             r0 = 0
             r1 = -2
             r2.height = r1
-        L_0x00cf:
+        L_0x00ce:
             r5 = r0
             r24 = 0
             int r0 = (r23 > r22 ? 1 : (r23 == r22 ? 0 : -1))
-            if (r0 != 0) goto L_0x00db
+            if (r0 != 0) goto L_0x00da
             int r0 = r7.mTotalLength
             r28 = r0
-            goto L_0x00dd
-        L_0x00db:
+            goto L_0x00dc
+        L_0x00da:
             r28 = 0
-        L_0x00dd:
+        L_0x00dc:
             r1 = r27
-            r0 = r7
+            r0 = r57
             r29 = r1
-            r30 = r14
-            r14 = r25
+            r8 = r25
             r1 = r4
-            r31 = r2
-            r32 = r26
+            r30 = r2
+            r31 = r26
             r2 = r29
-            r33 = r13
-            r13 = r3
-            r3 = r8
-            r8 = r4
-            r34 = r11
-            r35 = r19
-            r11 = -2147483648(0xffffffff80000000, float:-0.0)
+            r32 = r14
+            r14 = r3
+            r3 = r58
+            r33 = r4
+            r34 = r13
+            r9 = r19
+            r13 = -2147483648(0xffffffff80000000, float:-0.0)
             r4 = r24
-            r11 = r5
-            r5 = r9
-            r9 = r6
+            r13 = r5
+            r5 = r59
+            r35 = r11
+            r11 = r6
             r6 = r28
             r0.measureChildBeforeLayout(r1, r2, r3, r4, r5, r6)
             r0 = -2147483648(0xffffffff80000000, float:-0.0)
-            if (r11 == r0) goto L_0x010b
-            r0 = r31
-            r0.height = r11
-            goto L_0x010d
-        L_0x010b:
-            r0 = r31
-        L_0x010d:
-            int r1 = r8.getMeasuredHeight()
+            if (r13 == r0) goto L_0x010e
+            r0 = r30
+            r0.height = r13
+            goto L_0x0110
+        L_0x010e:
+            r0 = r30
+        L_0x0110:
+            int r1 = r33.getMeasuredHeight()
             int r2 = r7.mTotalLength
             int r3 = r2 + r1
             int r4 = r0.topMargin
             int r3 = r3 + r4
             int r4 = r0.bottomMargin
             int r3 = r3 + r4
-            int r4 = r7.getNextLocationOffset(r8)
-            int r3 = r3 + r4
+            r4 = r33
+            int r5 = r7.getNextLocationOffset(r4)
+            int r3 = r3 + r5
             int r3 = java.lang.Math.max(r2, r3)
             r7.mTotalLength = r3
-            if (r10 == 0) goto L_0x012d
-            int r3 = java.lang.Math.max(r1, r13)
-            goto L_0x012e
-        L_0x012d:
-            r3 = r13
-        L_0x012e:
-            if (r15 < 0) goto L_0x013b
+            if (r10 == 0) goto L_0x0132
+            int r3 = java.lang.Math.max(r1, r14)
+            goto L_0x0133
+        L_0x0132:
+            r3 = r14
+        L_0x0133:
+            if (r15 < 0) goto L_0x0140
             r1 = r29
             int r2 = r1 + 1
-            if (r15 != r2) goto L_0x013d
+            if (r15 != r2) goto L_0x0142
             int r2 = r7.mTotalLength
             r7.mBaselineChildTop = r2
-            goto L_0x013d
-        L_0x013b:
+            goto L_0x0142
+        L_0x0140:
             r1 = r29
-        L_0x013d:
-            if (r1 >= r15) goto L_0x014d
+        L_0x0142:
+            if (r1 >= r15) goto L_0x0153
             float r2 = r0.weight
             int r2 = (r2 > r22 ? 1 : (r2 == r22 ? 0 : -1))
-            if (r2 <= 0) goto L_0x014d
+            if (r2 > 0) goto L_0x014b
+            goto L_0x0153
+        L_0x014b:
             java.lang.RuntimeException r2 = new java.lang.RuntimeException
-            java.lang.String r4 = "A child of LinearLayout with index less than mBaselineAlignedChildIndex has weight > 0, which won't work.  Either remove the weight, or don't set mBaselineAlignedChildIndex."
-            r2.<init>(r4)
+            java.lang.String r5 = "A child of LinearLayout with index less than mBaselineAlignedChildIndex has weight > 0, which won't work.  Either remove the weight, or don't set mBaselineAlignedChildIndex."
+            r2.<init>(r5)
             throw r2
-        L_0x014d:
+        L_0x0153:
             r2 = 0
-            r4 = 1073741824(0x40000000, float:2.0)
-            if (r12 == r4) goto L_0x015b
-            int r4 = r0.width
+            r5 = 1073741824(0x40000000, float:2.0)
+            if (r12 == r5) goto L_0x0161
+            int r5 = r0.width
             r6 = -1
-            if (r4 != r6) goto L_0x015c
+            if (r5 != r6) goto L_0x0162
             r18 = 1
             r2 = 1
-            goto L_0x015c
-        L_0x015b:
+            goto L_0x0162
+        L_0x0161:
             r6 = -1
-        L_0x015c:
-            int r4 = r0.leftMargin
-            int r5 = r0.rightMargin
-            int r4 = r4 + r5
-            int r5 = r8.getMeasuredWidth()
-            int r5 = r5 + r4
-            r11 = r32
-            int r11 = java.lang.Math.max(r11, r5)
-            int r13 = r8.getMeasuredState()
-            int r13 = android.view.View.combineMeasuredStates(r14, r13)
-            if (r17 == 0) goto L_0x017d
-            int r14 = r0.width
-            if (r14 != r6) goto L_0x017d
-            r6 = 1
-            goto L_0x017e
-        L_0x017d:
-            r6 = 0
-        L_0x017e:
-            float r14 = r0.weight
-            int r14 = (r14 > r22 ? 1 : (r14 == r22 ? 0 : -1))
-            if (r14 <= 0) goto L_0x0192
-            if (r2 == 0) goto L_0x0188
-            r14 = r4
-            goto L_0x0189
-        L_0x0188:
-            r14 = r5
+        L_0x0162:
+            int r5 = r0.leftMargin
+            int r13 = r0.rightMargin
+            int r5 = r5 + r13
+            int r13 = r4.getMeasuredWidth()
+            int r13 = r13 + r5
+            r14 = r31
+            int r14 = java.lang.Math.max(r14, r13)
+            int r6 = r4.getMeasuredState()
+            int r6 = android.view.View.combineMeasuredStates(r8, r6)
+            if (r17 == 0) goto L_0x0187
+            int r8 = r0.width
+            r36 = r3
+            r3 = -1
+            if (r8 != r3) goto L_0x0189
+            r3 = r21
+            goto L_0x018a
+        L_0x0187:
+            r36 = r3
         L_0x0189:
-            r36 = r6
-            r6 = r35
-            int r6 = java.lang.Math.max(r6, r14)
-            goto L_0x019f
-        L_0x0192:
-            r36 = r6
-            r6 = r35
-            if (r2 == 0) goto L_0x019a
-            r14 = r4
-            goto L_0x019b
-        L_0x019a:
-            r14 = r5
-        L_0x019b:
-            int r9 = java.lang.Math.max(r9, r14)
-        L_0x019f:
-            int r14 = r7.getChildrenSkipCount(r8, r1)
-            int r0 = r1 + r14
-            r4 = r6
-            r6 = r9
-            r2 = r11
-            r1 = r13
+            r3 = 0
+        L_0x018a:
+            float r8 = r0.weight
+            int r8 = (r8 > r22 ? 1 : (r8 == r22 ? 0 : -1))
+            if (r8 <= 0) goto L_0x019c
+            if (r2 == 0) goto L_0x0194
+            r8 = r5
+            goto L_0x0195
+        L_0x0194:
+            r8 = r13
+        L_0x0195:
+            int r8 = java.lang.Math.max(r9, r8)
+            r9 = r8
+            r8 = r11
+            goto L_0x01a5
+        L_0x019c:
+            if (r2 == 0) goto L_0x01a0
+            r8 = r5
+            goto L_0x01a1
+        L_0x01a0:
+            r8 = r13
+        L_0x01a1:
+            int r8 = java.lang.Math.max(r11, r8)
+        L_0x01a5:
+            int r11 = r7.getChildrenSkipCount(r4, r1)
+            int r0 = r1 + r11
+            r17 = r3
+            r1 = r6
+            r6 = r8
+            r4 = r9
+            r2 = r14
             r5 = r23
-            r14 = r30
-            r17 = r36
-        L_0x01af:
+            r14 = r32
+            r3 = r36
+        L_0x01b7:
             int r0 = r0 + 1
-            r13 = r33
-            r11 = r34
+            r13 = r34
+            r11 = r35
             r8 = r58
             r9 = r59
             goto L_0x002f
-        L_0x01bb:
-            r9 = r6
-            r34 = r11
-            r33 = r13
-            r30 = r14
-            r6 = r19
-            r0 = -1
-            r14 = r1
-            r11 = r2
-            r13 = r3
+        L_0x01c3:
+            r8 = r1
+            r0 = r2
+            r35 = r11
+            r34 = r13
+            r32 = r14
+            r9 = r19
+            r14 = r3
+            r11 = r6
             int r1 = r7.mTotalLength
-            if (r1 <= 0) goto L_0x01dc
-            r1 = r34
+            if (r1 <= 0) goto L_0x01e3
+            r1 = r35
             boolean r2 = r7.hasDividerBeforeChildAt(r1)
-            if (r2 == 0) goto L_0x01de
+            if (r2 == 0) goto L_0x01e5
             int r2 = r7.mTotalLength
             int r3 = r7.mDividerHeight
             int r2 = r2 + r3
             r7.mTotalLength = r2
-            goto L_0x01de
-        L_0x01dc:
-            r1 = r34
-        L_0x01de:
-            if (r10 == 0) goto L_0x0235
-            r2 = r33
+            goto L_0x01e5
+        L_0x01e3:
+            r1 = r35
+        L_0x01e5:
+            if (r10 == 0) goto L_0x0243
+            r2 = r34
             r3 = -2147483648(0xffffffff80000000, float:-0.0)
-            if (r2 == r3) goto L_0x01e8
-            if (r2 != 0) goto L_0x0237
-        L_0x01e8:
+            if (r2 == r3) goto L_0x01f3
+            if (r2 != 0) goto L_0x01f0
+            goto L_0x01f3
+        L_0x01f0:
+            r37 = r0
+            goto L_0x0247
+        L_0x01f3:
             r3 = 0
             r7.mTotalLength = r3
             r3 = 0
-        L_0x01ec:
-            if (r3 >= r1) goto L_0x0237
+        L_0x01f7:
+            if (r3 >= r1) goto L_0x0240
             android.view.View r4 = r7.getVirtualChildAt(r3)
-            if (r4 != 0) goto L_0x01ff
-            int r8 = r7.mTotalLength
-            int r19 = r7.measureNullChild(r3)
-            int r8 = r8 + r19
-            r7.mTotalLength = r8
-            goto L_0x020d
-        L_0x01ff:
-            int r8 = r4.getVisibility()
-            r0 = 8
-            if (r8 != r0) goto L_0x0210
-            int r0 = r7.getChildrenSkipCount(r4, r3)
-            int r3 = r3 + r0
-        L_0x020d:
-            r37 = r3
-            goto L_0x0231
-        L_0x0210:
-            android.view.ViewGroup$LayoutParams r0 = r4.getLayoutParams()
-            android.support.v7.widget.LinearLayoutCompat$LayoutParams r0 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r0
-            int r8 = r7.mTotalLength
-            int r19 = r8 + r13
-            r37 = r3
-            int r3 = r0.topMargin
-            int r19 = r19 + r3
-            int r3 = r0.bottomMargin
-            int r19 = r19 + r3
-            int r3 = r7.getNextLocationOffset(r4)
-            int r3 = r19 + r3
-            int r3 = java.lang.Math.max(r8, r3)
-            r7.mTotalLength = r3
-        L_0x0231:
-            int r3 = r37 + 1
-            r0 = -1
-            goto L_0x01ec
-        L_0x0235:
-            r2 = r33
-        L_0x0237:
+            if (r4 != 0) goto L_0x0209
+            int r6 = r7.mTotalLength
+            int r13 = r7.measureNullChild(r3)
+            int r6 = r6 + r13
+            r7.mTotalLength = r6
+            goto L_0x0217
+        L_0x0209:
+            int r6 = r4.getVisibility()
+            r13 = 8
+            if (r6 != r13) goto L_0x021a
+            int r6 = r7.getChildrenSkipCount(r4, r3)
+            int r3 = r3 + r6
+        L_0x0217:
+            r37 = r0
+            goto L_0x023b
+        L_0x021a:
+            android.view.ViewGroup$LayoutParams r6 = r4.getLayoutParams()
+            android.support.v7.widget.LinearLayoutCompat$LayoutParams r6 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r6
+            int r13 = r7.mTotalLength
+            int r19 = r13 + r14
+            r37 = r0
+            int r0 = r6.topMargin
+            int r19 = r19 + r0
+            int r0 = r6.bottomMargin
+            int r19 = r19 + r0
+            int r0 = r7.getNextLocationOffset(r4)
+            int r0 = r19 + r0
+            int r0 = java.lang.Math.max(r13, r0)
+            r7.mTotalLength = r0
+        L_0x023b:
+            int r3 = r3 + 1
+            r0 = r37
+            goto L_0x01f7
+        L_0x0240:
+            r37 = r0
+            goto L_0x0247
+        L_0x0243:
+            r37 = r0
+            r2 = r34
+        L_0x0247:
             int r0 = r7.mTotalLength
             int r3 = r57.getPaddingTop()
             int r4 = r57.getPaddingBottom()
@@ -673,230 +688,226 @@ public class LinearLayoutCompat extends ViewGroup {
             int r0 = r7.mTotalLength
             int r3 = r57.getSuggestedMinimumHeight()
             int r0 = java.lang.Math.max(r0, r3)
+            r4 = r9
             r3 = r59
-            r4 = 0
-            int r8 = android.view.View.resolveSizeAndState(r0, r3, r4)
-            r4 = 16777215(0xffffff, float:2.3509886E-38)
-            r0 = r8 & r4
-            int r4 = r7.mTotalLength
-            int r4 = r0 - r4
-            if (r30 != 0) goto L_0x02f4
-            if (r4 == 0) goto L_0x0271
-            int r19 = (r5 > r22 ? 1 : (r5 == r22 ? 0 : -1))
-            if (r19 <= 0) goto L_0x0271
+            r6 = 0
+            int r9 = android.view.View.resolveSizeAndState(r0, r3, r6)
+            r6 = 16777215(0xffffff, float:2.3509886E-38)
+            r0 = r9 & r6
+            int r6 = r7.mTotalLength
+            int r6 = r0 - r6
+            if (r32 != 0) goto L_0x02fc
+            if (r6 == 0) goto L_0x0282
+            int r13 = (r5 > r22 ? 1 : (r5 == r22 ? 0 : -1))
+            if (r13 <= 0) goto L_0x0282
             r38 = r0
             r39 = r4
             r40 = r5
-            r41 = r6
-            goto L_0x02fc
-        L_0x0271:
-            int r9 = java.lang.Math.max(r9, r6)
-            if (r10 == 0) goto L_0x02de
-            r38 = r0
-            r0 = 1073741824(0x40000000, float:2.0)
-            if (r2 == r0) goto L_0x02d5
-            r16 = 0
-        L_0x027f:
-            r0 = r16
-            if (r0 >= r1) goto L_0x02d5
-            r39 = r4
-            android.view.View r4 = r7.getVirtualChildAt(r0)
-            if (r4 == 0) goto L_0x02c4
-            r40 = r5
-            int r5 = r4.getVisibility()
-            r41 = r6
-            r6 = 8
-            if (r5 != r6) goto L_0x029b
-            r44 = r9
-            goto L_0x02ca
-        L_0x029b:
-            android.view.ViewGroup$LayoutParams r5 = r4.getLayoutParams()
-            android.support.v7.widget.LinearLayoutCompat$LayoutParams r5 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r5
-            float r6 = r5.weight
-            int r16 = (r6 > r22 ? 1 : (r6 == r22 ? 0 : -1))
-            if (r16 <= 0) goto L_0x02c1
-            r42 = r5
-            int r5 = r4.getMeasuredWidth()
             r43 = r6
-            r6 = 1073741824(0x40000000, float:2.0)
-            int r5 = android.view.View.MeasureSpec.makeMeasureSpec(r5, r6)
-            r44 = r9
-            int r9 = android.view.View.MeasureSpec.makeMeasureSpec(r13, r6)
-            r4.measure(r5, r9)
-            goto L_0x02ca
-        L_0x02c1:
-            r44 = r9
-            goto L_0x02ca
-        L_0x02c4:
+            goto L_0x0304
+        L_0x0282:
+            int r11 = java.lang.Math.max(r11, r4)
+            if (r10 == 0) goto L_0x02e4
+            r13 = 1073741824(0x40000000, float:2.0)
+            if (r2 == r13) goto L_0x02e4
+            r16 = 0
+        L_0x028e:
+            r13 = r16
+            if (r13 >= r1) goto L_0x02e4
+            r38 = r0
+            android.view.View r0 = r7.getVirtualChildAt(r13)
+            if (r0 == 0) goto L_0x02d3
+            r39 = r4
+            int r4 = r0.getVisibility()
             r40 = r5
-            r41 = r6
-            r44 = r9
-        L_0x02ca:
-            int r16 = r0 + 1
+            r5 = 8
+            if (r4 != r5) goto L_0x02aa
+            r43 = r6
+            goto L_0x02d9
+        L_0x02aa:
+            android.view.ViewGroup$LayoutParams r4 = r0.getLayoutParams()
+            android.support.v7.widget.LinearLayoutCompat$LayoutParams r4 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r4
+            float r5 = r4.weight
+            int r16 = (r5 > r22 ? 1 : (r5 == r22 ? 0 : -1))
+            if (r16 <= 0) goto L_0x02d0
+            r41 = r4
+            int r4 = r0.getMeasuredWidth()
+            r42 = r5
+            r5 = 1073741824(0x40000000, float:2.0)
+            int r4 = android.view.View.MeasureSpec.makeMeasureSpec(r4, r5)
+            r43 = r6
+            int r6 = android.view.View.MeasureSpec.makeMeasureSpec(r14, r5)
+            r0.measure(r4, r6)
+            goto L_0x02d9
+        L_0x02d0:
+            r43 = r6
+            goto L_0x02d9
+        L_0x02d3:
+            r39 = r4
+            r40 = r5
+            r43 = r6
+        L_0x02d9:
+            int r16 = r13 + 1
+            r0 = r38
             r4 = r39
             r5 = r40
-            r6 = r41
-            r9 = r44
-            goto L_0x027f
-        L_0x02d5:
-            r39 = r4
-            r40 = r5
-            r41 = r6
-            r44 = r9
-            goto L_0x02e8
-        L_0x02de:
+            r6 = r43
+            goto L_0x028e
+        L_0x02e4:
             r38 = r0
             r39 = r4
             r40 = r5
-            r41 = r6
-            r44 = r9
-        L_0x02e8:
-            r51 = r2
-            r45 = r10
-            r46 = r13
-            r47 = r15
-            r13 = r58
-            goto L_0x0431
-        L_0x02f4:
-            r38 = r0
-            r39 = r4
-            r40 = r5
-            r41 = r6
+            r43 = r6
+            r50 = r2
+            r44 = r10
+            r45 = r14
+            r46 = r15
+            r6 = r37
+            r13 = r43
+            r14 = r58
+            goto L_0x043a
         L_0x02fc:
+            r38 = r0
+            r39 = r4
+            r40 = r5
+            r43 = r6
+        L_0x0304:
             float r0 = r7.mWeightSum
             int r0 = (r0 > r22 ? 1 : (r0 == r22 ? 0 : -1))
-            if (r0 <= 0) goto L_0x0305
+            if (r0 <= 0) goto L_0x030d
             float r5 = r7.mWeightSum
-            goto L_0x0307
-        L_0x0305:
+            goto L_0x030f
+        L_0x030d:
             r5 = r40
-        L_0x0307:
+        L_0x030f:
             r0 = r5
             r4 = 0
             r7.mTotalLength = r4
-            r6 = r39
-            r0 = 0
-        L_0x030e:
-            if (r0 >= r1) goto L_0x0414
+            r0 = r4
+            r6 = r37
+            r13 = r43
+        L_0x0318:
+            if (r0 >= r1) goto L_0x0421
             android.view.View r4 = r7.getVirtualChildAt(r0)
-            r45 = r10
+            r44 = r10
             int r10 = r4.getVisibility()
-            r46 = r13
-            r13 = 8
-            if (r10 != r13) goto L_0x0329
-            r51 = r2
-            r47 = r15
-            r13 = r58
-            goto L_0x0407
-        L_0x0329:
+            r45 = r14
+            r14 = 8
+            if (r10 != r14) goto L_0x0333
+            r50 = r2
+            r46 = r15
+            r14 = r58
+            goto L_0x0414
+        L_0x0333:
             android.view.ViewGroup$LayoutParams r10 = r4.getLayoutParams()
             android.support.v7.widget.LinearLayoutCompat$LayoutParams r10 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r10
-            float r13 = r10.weight
-            int r16 = (r13 > r22 ? 1 : (r13 == r22 ? 0 : -1))
-            if (r16 <= 0) goto L_0x03a2
-            r47 = r15
-            float r15 = (float) r6
-            float r15 = r15 * r13
+            float r14 = r10.weight
+            int r16 = (r14 > r22 ? 1 : (r14 == r22 ? 0 : -1))
+            if (r16 <= 0) goto L_0x03ad
+            r46 = r15
+            float r15 = (float) r13
+            float r15 = r15 * r14
             float r15 = r15 / r5
             int r15 = (int) r15
-            float r5 = r5 - r13
-            int r6 = r6 - r15
+            float r5 = r5 - r14
+            int r13 = r13 - r15
             int r16 = r57.getPaddingLeft()
             int r19 = r57.getPaddingRight()
             int r16 = r16 + r19
-            r48 = r5
+            r47 = r5
             int r5 = r10.leftMargin
             int r16 = r16 + r5
             int r5 = r10.rightMargin
             int r5 = r16 + r5
-            r49 = r6
-            int r6 = r10.width
-            r50 = r13
-            r13 = r58
-            int r5 = getChildMeasureSpec(r13, r5, r6)
-            int r6 = r10.height
-            if (r6 != 0) goto L_0x037d
-            r6 = 1073741824(0x40000000, float:2.0)
-            if (r2 == r6) goto L_0x036a
-            r51 = r2
-            goto L_0x037f
-        L_0x036a:
-            if (r15 <= 0) goto L_0x036e
-            r6 = r15
-            goto L_0x036f
-        L_0x036e:
-            r6 = 0
-        L_0x036f:
-            r51 = r2
+            r48 = r13
+            int r13 = r10.width
+            r49 = r14
+            r14 = r58
+            int r5 = getChildMeasureSpec(r14, r5, r13)
+            int r13 = r10.height
+            if (r13 != 0) goto L_0x0386
+            r13 = 1073741824(0x40000000, float:2.0)
+            if (r2 == r13) goto L_0x0373
+            r50 = r2
+            goto L_0x0388
+        L_0x0373:
+            if (r15 <= 0) goto L_0x0377
+            r13 = r15
+            goto L_0x0378
+        L_0x0377:
+            r13 = 0
+        L_0x0378:
+            r50 = r2
             r2 = 1073741824(0x40000000, float:2.0)
-            int r6 = android.view.View.MeasureSpec.makeMeasureSpec(r6, r2)
-            r4.measure(r5, r6)
-            r52 = r15
-            goto L_0x0394
-        L_0x037d:
-            r51 = r2
-        L_0x037f:
+            int r13 = android.view.View.MeasureSpec.makeMeasureSpec(r13, r2)
+            r4.measure(r5, r13)
+            r51 = r15
+            goto L_0x039d
+        L_0x0386:
+            r50 = r2
+        L_0x0388:
             int r2 = r4.getMeasuredHeight()
             int r2 = r2 + r15
-            if (r2 >= 0) goto L_0x0387
+            if (r2 >= 0) goto L_0x0390
             r2 = 0
-        L_0x0387:
-            r52 = r15
-            r6 = 1073741824(0x40000000, float:2.0)
-            int r15 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r6)
+        L_0x0390:
+            r51 = r15
+            r13 = 1073741824(0x40000000, float:2.0)
+            int r15 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r13)
             r4.measure(r5, r15)
-        L_0x0394:
+        L_0x039d:
             int r2 = r4.getMeasuredState()
             r2 = r2 & -256(0xffffffffffffff00, float:NaN)
-            int r14 = android.view.View.combineMeasuredStates(r14, r2)
-            r5 = r48
-            goto L_0x03ac
-        L_0x03a2:
-            r51 = r2
-            r50 = r13
-            r47 = r15
-            r13 = r58
-            r49 = r6
-        L_0x03ac:
+            int r8 = android.view.View.combineMeasuredStates(r8, r2)
+            r5 = r47
+            r13 = r48
+            goto L_0x03b5
+        L_0x03ad:
+            r50 = r2
+            r49 = r14
+            r46 = r15
+            r14 = r58
+        L_0x03b5:
             int r2 = r10.leftMargin
-            int r6 = r10.rightMargin
-            int r2 = r2 + r6
-            int r6 = r4.getMeasuredWidth()
-            int r6 = r6 + r2
-            int r11 = java.lang.Math.max(r11, r6)
-            r15 = 1073741824(0x40000000, float:2.0)
-            if (r12 == r15) goto L_0x03c7
-            int r15 = r10.width
-            r53 = r2
-            r2 = -1
-            if (r15 != r2) goto L_0x03c9
-            r2 = 1
-            goto L_0x03ca
-        L_0x03c7:
-            r53 = r2
-        L_0x03c9:
+            int r15 = r10.rightMargin
+            int r2 = r2 + r15
+            int r15 = r4.getMeasuredWidth()
+            int r15 = r15 + r2
+            int r6 = java.lang.Math.max(r6, r15)
+            r52 = r2
+            r2 = 1073741824(0x40000000, float:2.0)
+            if (r12 == r2) goto L_0x03d3
+            int r2 = r10.width
+            r53 = r5
+            r5 = -1
+            if (r2 != r5) goto L_0x03d5
+            r2 = r21
+            goto L_0x03d6
+        L_0x03d3:
+            r53 = r5
+        L_0x03d5:
             r2 = 0
-        L_0x03ca:
-            if (r2 == 0) goto L_0x03cf
-            r15 = r53
-            goto L_0x03d0
-        L_0x03cf:
-            r15 = r6
-        L_0x03d0:
-            int r9 = java.lang.Math.max(r9, r15)
-            if (r17 == 0) goto L_0x03df
-            int r15 = r10.width
+        L_0x03d6:
+            if (r2 == 0) goto L_0x03db
+            r5 = r52
+            goto L_0x03dc
+        L_0x03db:
+            r5 = r15
+        L_0x03dc:
+            int r5 = java.lang.Math.max(r11, r5)
+            if (r17 == 0) goto L_0x03ec
+            int r11 = r10.width
             r54 = r2
             r2 = -1
-            if (r15 != r2) goto L_0x03e2
-            r15 = 1
-            goto L_0x03e3
-        L_0x03df:
+            if (r11 != r2) goto L_0x03ef
+            r11 = r21
+            goto L_0x03f0
+        L_0x03ec:
             r54 = r2
             r2 = -1
-        L_0x03e2:
-            r15 = 0
-        L_0x03e3:
+        L_0x03ef:
+            r11 = 0
+        L_0x03f0:
             int r2 = r7.mTotalLength
             int r16 = r4.getMeasuredHeight()
             int r16 = r2 + r16
@@ -909,48 +920,46 @@ public class LinearLayoutCompat extends ViewGroup {
             int r5 = r16 + r5
             int r5 = java.lang.Math.max(r2, r5)
             r7.mTotalLength = r5
-            r17 = r15
-            r6 = r49
-            r5 = r55
-        L_0x0407:
-            int r0 = r0 + 1
-            r10 = r45
-            r13 = r46
-            r15 = r47
-            r2 = r51
-            r4 = 0
-            goto L_0x030e
+            r17 = r11
+            r5 = r53
+            r11 = r55
         L_0x0414:
-            r51 = r2
-            r45 = r10
-            r46 = r13
-            r47 = r15
-            r13 = r58
+            int r0 = r0 + 1
+            r10 = r44
+            r14 = r45
+            r15 = r46
+            r2 = r50
+            r4 = 0
+            goto L_0x0318
+        L_0x0421:
+            r50 = r2
+            r44 = r10
+            r45 = r14
+            r46 = r15
+            r14 = r58
             int r0 = r7.mTotalLength
             int r2 = r57.getPaddingTop()
             int r4 = r57.getPaddingBottom()
             int r2 = r2 + r4
             int r0 = r0 + r2
             r7.mTotalLength = r0
-            r39 = r6
-            r44 = r9
-        L_0x0431:
-            if (r17 != 0) goto L_0x0439
+        L_0x043a:
+            if (r17 != 0) goto L_0x0441
             r0 = 1073741824(0x40000000, float:2.0)
-            if (r12 == r0) goto L_0x0439
-            r11 = r44
-        L_0x0439:
+            if (r12 == r0) goto L_0x0441
+            r6 = r11
+        L_0x0441:
             int r0 = r57.getPaddingLeft()
             int r2 = r57.getPaddingRight()
             int r0 = r0 + r2
-            int r11 = r11 + r0
+            int r6 = r6 + r0
             int r0 = r57.getSuggestedMinimumWidth()
-            int r0 = java.lang.Math.max(r11, r0)
-            int r2 = android.view.View.resolveSizeAndState(r0, r13, r14)
-            r7.setMeasuredDimension(r2, r8)
-            if (r18 == 0) goto L_0x0457
+            int r0 = java.lang.Math.max(r6, r0)
+            int r2 = android.view.View.resolveSizeAndState(r0, r14, r8)
+            r7.setMeasuredDimension(r2, r9)
+            if (r18 == 0) goto L_0x045f
             r7.forceUniformWidth(r1, r3)
-        L_0x0457:
+        L_0x045f:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: android.support.v7.widget.LinearLayoutCompat.measureVertical(int, int):void");
@@ -973,23 +982,21 @@ public class LinearLayoutCompat extends ViewGroup {
     }
 
     /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:195:0x04e2  */
-    /* JADX WARNING: Removed duplicated region for block: B:203:0x051a  */
-    /* JADX WARNING: Removed duplicated region for block: B:223:0x05c7  */
-    /* JADX WARNING: Removed duplicated region for block: B:224:0x05cf  */
-    /* JADX WARNING: Removed duplicated region for block: B:63:0x01c4  */
-    /* JADX WARNING: Removed duplicated region for block: B:68:0x01ec  */
-    /* JADX WARNING: Removed duplicated region for block: B:73:0x01fb  */
-    /* JADX WARNING: Removed duplicated region for block: B:74:0x01fd  */
-    /* JADX WARNING: Removed duplicated region for block: B:77:0x0204  */
-    /* JADX WARNING: Removed duplicated region for block: B:81:0x0214  */
+    /* JADX WARNING: Removed duplicated region for block: B:226:0x060e  */
+    /* JADX WARNING: Removed duplicated region for block: B:227:0x0616  */
+    /* JADX WARNING: Removed duplicated region for block: B:63:0x01cf  */
+    /* JADX WARNING: Removed duplicated region for block: B:68:0x01f7  */
+    /* JADX WARNING: Removed duplicated region for block: B:73:0x0206  */
+    /* JADX WARNING: Removed duplicated region for block: B:74:0x0209  */
+    /* JADX WARNING: Removed duplicated region for block: B:77:0x0210  */
+    /* JADX WARNING: Removed duplicated region for block: B:81:0x0220  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void measureHorizontal(int r64, int r65) {
+    public void measureHorizontal(int r65, int r66) {
         /*
-            r63 = this;
-            r7 = r63
-            r8 = r64
-            r9 = r65
+            r64 = this;
+            r7 = r64
+            r8 = r65
+            r9 = r66
             r10 = 0
             r7.mTotalLength = r10
             r0 = 0
@@ -998,9 +1005,9 @@ public class LinearLayoutCompat extends ViewGroup {
             r3 = 0
             r4 = 1
             r5 = 0
-            int r11 = r63.getVirtualChildCount()
-            int r12 = android.view.View.MeasureSpec.getMode(r64)
-            int r13 = android.view.View.MeasureSpec.getMode(r65)
+            int r11 = r64.getVirtualChildCount()
+            int r12 = android.view.View.MeasureSpec.getMode(r65)
+            int r13 = android.view.View.MeasureSpec.getMode(r66)
             r6 = 0
             r14 = 0
             int[] r15 = r7.mMaxAscent
@@ -1033,70 +1040,71 @@ public class LinearLayoutCompat extends ViewGroup {
             boolean r6 = r7.mBaselineAligned
             r22 = r14
             boolean r14 = r7.mUseLargestChild
-            r23 = r15
-            r15 = 1073741824(0x40000000, float:2.0)
-            if (r12 != r15) goto L_0x005c
-            r24 = 1
-            goto L_0x005e
+            r9 = 1073741824(0x40000000, float:2.0)
+            if (r12 != r9) goto L_0x005a
+            r23 = r20
+            goto L_0x005c
+        L_0x005a:
+            r23 = 0
         L_0x005c:
-            r24 = 0
-        L_0x005e:
-            r25 = 0
-            r26 = r1
-            r1 = r25
-            r25 = r18
+            r24 = -2147483648(0xffffffff80000000, float:-0.0)
+            r25 = r1
+            r1 = r24
+            r24 = r18
             r18 = r4
             r4 = r0
             r0 = 0
-            r62 = r3
+            r63 = r3
             r3 = r2
-            r2 = r62
-        L_0x006f:
+            r2 = r63
+        L_0x006d:
             r28 = 0
-            if (r0 >= r11) goto L_0x0241
-            android.view.View r15 = r7.getVirtualChildAt(r0)
-            if (r15 != 0) goto L_0x008c
+            if (r0 >= r11) goto L_0x024d
+            android.view.View r9 = r7.getVirtualChildAt(r0)
+            if (r9 != 0) goto L_0x008c
             r30 = r1
             int r1 = r7.mTotalLength
             int r27 = r7.measureNullChild(r0)
             int r1 = r1 + r27
             r7.mTotalLength = r1
             r21 = r6
+            r41 = r12
             r1 = r30
-            goto L_0x0235
+            goto L_0x0241
         L_0x008c:
             r30 = r1
-            int r1 = r15.getVisibility()
+            int r1 = r9.getVisibility()
             r31 = r2
             r2 = 8
-            if (r1 != r2) goto L_0x00a6
-            int r1 = r7.getChildrenSkipCount(r15, r0)
+            if (r1 != r2) goto L_0x00a8
+            int r1 = r7.getChildrenSkipCount(r9, r0)
             int r0 = r0 + r1
             r21 = r6
+            r41 = r12
             r1 = r30
             r2 = r31
-            goto L_0x0235
-        L_0x00a6:
+            goto L_0x0241
+        L_0x00a8:
             boolean r1 = r7.hasDividerBeforeChildAt(r0)
-            if (r1 == 0) goto L_0x00b3
+            if (r1 == 0) goto L_0x00b5
             int r1 = r7.mTotalLength
             int r2 = r7.mDividerWidth
             int r1 = r1 + r2
             r7.mTotalLength = r1
-        L_0x00b3:
-            android.view.ViewGroup$LayoutParams r1 = r15.getLayoutParams()
+        L_0x00b5:
+            android.view.ViewGroup$LayoutParams r1 = r9.getLayoutParams()
             r2 = r1
             android.support.v7.widget.LinearLayoutCompat$LayoutParams r2 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r2
             float r1 = r2.weight
             float r29 = r5 + r1
             r1 = 1073741824(0x40000000, float:2.0)
-            if (r12 != r1) goto L_0x0117
+            if (r12 != r1) goto L_0x011d
             int r1 = r2.width
-            if (r1 != 0) goto L_0x0117
+            if (r1 != 0) goto L_0x011d
             float r1 = r2.weight
             int r1 = (r1 > r28 ? 1 : (r1 == r28 ? 0 : -1))
-            if (r1 <= 0) goto L_0x0117
-            if (r24 == 0) goto L_0x00dc
+            if (r1 <= 0) goto L_0x011d
+            if (r23 == 0) goto L_0x00de
             int r1 = r7.mTotalLength
             int r5 = r2.leftMargin
             r32 = r0
@@ -1104,8 +1112,8 @@ public class LinearLayoutCompat extends ViewGroup {
             int r5 = r5 + r0
             int r1 = r1 + r5
             r7.mTotalLength = r1
-            goto L_0x00ec
-        L_0x00dc:
+            goto L_0x00ee
+        L_0x00de:
             r32 = r0
             int r0 = r7.mTotalLength
             int r1 = r2.leftMargin
@@ -1114,697 +1122,738 @@ public class LinearLayoutCompat extends ViewGroup {
             int r1 = r1 + r5
             int r1 = java.lang.Math.max(r0, r1)
             r7.mTotalLength = r1
-        L_0x00ec:
-            if (r6 == 0) goto L_0x0107
+        L_0x00ee:
+            if (r6 == 0) goto L_0x010b
             r0 = 0
             int r1 = android.view.View.MeasureSpec.makeMeasureSpec(r0, r0)
-            r15.measure(r1, r1)
+            r9.measure(r1, r1)
             r0 = r2
             r39 = r3
             r40 = r4
             r21 = r6
+            r41 = r12
             r2 = r30
             r38 = r31
             r35 = r32
-            r9 = -1
-            goto L_0x019a
-        L_0x0107:
+            r12 = -1
+            goto L_0x01a5
+        L_0x010b:
             r22 = 1
             r0 = r2
             r39 = r3
             r40 = r4
             r21 = r6
+            r41 = r12
             r38 = r31
             r35 = r32
-            r9 = -1
-            goto L_0x019c
-        L_0x0117:
+            r12 = -1
+            goto L_0x01a7
+        L_0x011d:
             r32 = r0
             r0 = -2147483648(0xffffffff80000000, float:-0.0)
             int r1 = r2.width
-            if (r1 != 0) goto L_0x0129
+            if (r1 != 0) goto L_0x012f
             float r1 = r2.weight
             int r1 = (r1 > r28 ? 1 : (r1 == r28 ? 0 : -1))
-            if (r1 <= 0) goto L_0x0129
+            if (r1 <= 0) goto L_0x012f
             r0 = 0
             r1 = -2
             r2.width = r1
-        L_0x0129:
+        L_0x012f:
             r5 = r0
             int r0 = (r29 > r28 ? 1 : (r29 == r28 ? 0 : -1))
-            if (r0 != 0) goto L_0x0133
+            if (r0 != 0) goto L_0x0139
             int r0 = r7.mTotalLength
             r33 = r0
-            goto L_0x0135
-        L_0x0133:
+            goto L_0x013b
+        L_0x0139:
             r33 = 0
-        L_0x0135:
+        L_0x013b:
             r34 = 0
             r1 = r32
-            r0 = r7
+            r0 = r64
             r35 = r1
             r36 = r30
-            r1 = r15
+            r1 = r9
             r37 = r2
             r38 = r31
             r2 = r35
             r39 = r3
-            r3 = r8
+            r3 = r65
             r40 = r4
             r4 = r33
             r8 = r5
-            r5 = r9
+            r5 = r66
             r21 = r6
-            r9 = -1
+            r41 = r12
+            r12 = -1
             r6 = r34
             r0.measureChildBeforeLayout(r1, r2, r3, r4, r5, r6)
             r0 = -2147483648(0xffffffff80000000, float:-0.0)
-            if (r8 == r0) goto L_0x015f
+            if (r8 == r0) goto L_0x016a
             r0 = r37
             r0.width = r8
-            goto L_0x0161
-        L_0x015f:
+            goto L_0x016c
+        L_0x016a:
             r0 = r37
-        L_0x0161:
-            int r1 = r15.getMeasuredWidth()
-            if (r24 == 0) goto L_0x0178
+        L_0x016c:
+            int r1 = r9.getMeasuredWidth()
+            if (r23 == 0) goto L_0x0183
             int r2 = r7.mTotalLength
             int r3 = r0.leftMargin
             int r3 = r3 + r1
             int r4 = r0.rightMargin
             int r3 = r3 + r4
-            int r4 = r7.getNextLocationOffset(r15)
+            int r4 = r7.getNextLocationOffset(r9)
             int r3 = r3 + r4
             int r2 = r2 + r3
             r7.mTotalLength = r2
-            goto L_0x018d
-        L_0x0178:
+            goto L_0x0198
+        L_0x0183:
             int r2 = r7.mTotalLength
             int r3 = r2 + r1
             int r4 = r0.leftMargin
             int r3 = r3 + r4
             int r4 = r0.rightMargin
             int r3 = r3 + r4
-            int r4 = r7.getNextLocationOffset(r15)
+            int r4 = r7.getNextLocationOffset(r9)
             int r3 = r3 + r4
             int r3 = java.lang.Math.max(r2, r3)
             r7.mTotalLength = r3
-        L_0x018d:
-            if (r14 == 0) goto L_0x0198
+        L_0x0198:
+            if (r14 == 0) goto L_0x01a3
             r2 = r36
             int r1 = java.lang.Math.max(r1, r2)
             r30 = r1
-            goto L_0x019c
-        L_0x0198:
+            goto L_0x01a7
+        L_0x01a3:
             r2 = r36
-        L_0x019a:
+        L_0x01a5:
             r30 = r2
-        L_0x019c:
+        L_0x01a7:
             r1 = 0
             r2 = 1073741824(0x40000000, float:2.0)
-            if (r13 == r2) goto L_0x01a8
+            if (r13 == r2) goto L_0x01b3
             int r2 = r0.height
-            if (r2 != r9) goto L_0x01a8
-            r25 = 1
+            if (r2 != r12) goto L_0x01b3
+            r24 = 1
             r1 = 1
-        L_0x01a8:
+        L_0x01b3:
             int r2 = r0.topMargin
             int r3 = r0.bottomMargin
             int r2 = r2 + r3
-            int r3 = r15.getMeasuredHeight()
+            int r3 = r9.getMeasuredHeight()
             int r3 = r3 + r2
-            int r4 = r15.getMeasuredState()
-            r6 = r26
+            int r4 = r9.getMeasuredState()
+            r6 = r25
             int r4 = android.view.View.combineMeasuredStates(r6, r4)
-            if (r21 == 0) goto L_0x01ec
-            int r5 = r15.getBaseline()
-            if (r5 == r9) goto L_0x01ec
+            if (r21 == 0) goto L_0x01f7
+            int r5 = r9.getBaseline()
+            if (r5 == r12) goto L_0x01f7
             int r6 = r0.gravity
-            if (r6 >= 0) goto L_0x01cb
+            if (r6 >= 0) goto L_0x01d6
             int r6 = r7.mGravity
-            goto L_0x01cd
-        L_0x01cb:
+            goto L_0x01d8
+        L_0x01d6:
             int r6 = r0.gravity
-        L_0x01cd:
+        L_0x01d8:
             r6 = r6 & 112(0x70, float:1.57E-43)
             int r8 = r6 >> 4
-            r26 = -2
+            r25 = -2
             r8 = r8 & -2
             int r8 = r8 >> 1
-            r9 = r10[r8]
-            int r9 = java.lang.Math.max(r9, r5)
-            r10[r8] = r9
-            r9 = r23[r8]
-            r41 = r2
+            r12 = r10[r8]
+            int r12 = java.lang.Math.max(r12, r5)
+            r10[r8] = r12
+            r12 = r15[r8]
+            r42 = r2
             int r2 = r3 - r5
-            int r2 = java.lang.Math.max(r9, r2)
-            r23[r8] = r2
-            goto L_0x01ee
-        L_0x01ec:
-            r41 = r2
-        L_0x01ee:
+            int r2 = java.lang.Math.max(r12, r2)
+            r15[r8] = r2
+            goto L_0x01f9
+        L_0x01f7:
+            r42 = r2
+        L_0x01f9:
             r8 = r40
             int r2 = java.lang.Math.max(r8, r3)
-            if (r18 == 0) goto L_0x01fd
+            if (r18 == 0) goto L_0x0209
             int r5 = r0.height
             r6 = -1
-            if (r5 != r6) goto L_0x01fd
-            r5 = 1
-            goto L_0x01fe
-        L_0x01fd:
-            r5 = 0
-        L_0x01fe:
-            float r6 = r0.weight
-            int r6 = (r6 > r28 ? 1 : (r6 == r28 ? 0 : -1))
-            if (r6 <= 0) goto L_0x0214
-            if (r1 == 0) goto L_0x0209
-            r6 = r41
+            if (r5 != r6) goto L_0x0209
+            r5 = r20
             goto L_0x020a
         L_0x0209:
-            r6 = r3
+            r5 = 0
         L_0x020a:
-            r9 = r38
-            int r6 = java.lang.Math.max(r9, r6)
-            r9 = r6
-            r6 = r39
-            goto L_0x0222
-        L_0x0214:
-            r9 = r38
-            if (r1 == 0) goto L_0x021b
-            r6 = r41
-            goto L_0x021c
-        L_0x021b:
+            float r6 = r0.weight
+            int r6 = (r6 > r28 ? 1 : (r6 == r28 ? 0 : -1))
+            if (r6 <= 0) goto L_0x0220
+            if (r1 == 0) goto L_0x0215
+            r6 = r42
+            goto L_0x0216
+        L_0x0215:
             r6 = r3
-        L_0x021c:
+        L_0x0216:
+            r12 = r38
+            int r6 = java.lang.Math.max(r12, r6)
+            r12 = r6
+            r6 = r39
+            goto L_0x022e
+        L_0x0220:
+            r12 = r38
+            if (r1 == 0) goto L_0x0227
+            r6 = r42
+            goto L_0x0228
+        L_0x0227:
+            r6 = r3
+        L_0x0228:
             r8 = r39
             int r6 = java.lang.Math.max(r8, r6)
-        L_0x0222:
+        L_0x022e:
             r8 = r35
-            int r18 = r7.getChildrenSkipCount(r15, r8)
+            int r18 = r7.getChildrenSkipCount(r9, r8)
             int r0 = r8 + r18
-            r26 = r4
+            r25 = r4
             r18 = r5
             r3 = r6
             r5 = r29
             r1 = r30
             r4 = r2
-            r2 = r9
-        L_0x0235:
+            r2 = r12
+        L_0x0241:
             int r0 = r0 + 1
             r6 = r21
-            r8 = r64
-            r9 = r65
-            r15 = 1073741824(0x40000000, float:2.0)
-            goto L_0x006f
-        L_0x0241:
-            r9 = r2
+            r12 = r41
+            r8 = r65
+            r9 = 1073741824(0x40000000, float:2.0)
+            goto L_0x006d
+        L_0x024d:
             r8 = r4
             r21 = r6
-            r6 = r26
+            r41 = r12
+            r6 = r25
+            r12 = r2
             r2 = r1
             int r0 = r7.mTotalLength
-            if (r0 <= 0) goto L_0x0259
+            if (r0 <= 0) goto L_0x0267
             boolean r0 = r7.hasDividerBeforeChildAt(r11)
-            if (r0 == 0) goto L_0x0259
+            if (r0 == 0) goto L_0x0267
             int r0 = r7.mTotalLength
             int r1 = r7.mDividerWidth
             int r0 = r0 + r1
             r7.mTotalLength = r0
-        L_0x0259:
+        L_0x0267:
             r0 = r10[r20]
             r1 = -1
-            if (r0 != r1) goto L_0x0270
+            if (r0 != r1) goto L_0x027e
             r0 = 0
             r4 = r10[r0]
-            if (r4 != r1) goto L_0x0270
+            if (r4 != r1) goto L_0x027e
             r0 = r10[r19]
-            if (r0 != r1) goto L_0x0270
+            if (r0 != r1) goto L_0x027e
             r0 = r10[r17]
-            if (r0 == r1) goto L_0x026c
-            goto L_0x0270
-        L_0x026c:
-            r42 = r6
+            if (r0 == r1) goto L_0x027a
+            goto L_0x027e
+        L_0x027a:
+            r43 = r6
             r4 = r8
-            goto L_0x02a2
-        L_0x0270:
+            goto L_0x02b0
+        L_0x027e:
             r0 = r10[r17]
             r1 = 0
             r4 = r10[r1]
-            r15 = r10[r20]
+            r9 = r10[r20]
             r1 = r10[r19]
-            int r1 = java.lang.Math.max(r15, r1)
+            int r1 = java.lang.Math.max(r9, r1)
             int r1 = java.lang.Math.max(r4, r1)
             int r0 = java.lang.Math.max(r0, r1)
-            r1 = r23[r17]
+            r1 = r15[r17]
             r4 = 0
-            r15 = r23[r4]
-            r4 = r23[r20]
-            r42 = r6
-            r6 = r23[r19]
+            r9 = r15[r4]
+            r4 = r15[r20]
+            r43 = r6
+            r6 = r15[r19]
             int r4 = java.lang.Math.max(r4, r6)
-            int r4 = java.lang.Math.max(r15, r4)
+            int r4 = java.lang.Math.max(r9, r4)
             int r1 = java.lang.Math.max(r1, r4)
             int r4 = r0 + r1
             int r4 = java.lang.Math.max(r8, r4)
-        L_0x02a2:
-            if (r14 == 0) goto L_0x0309
-            r0 = -2147483648(0xffffffff80000000, float:-0.0)
-            if (r12 == r0) goto L_0x02aa
-            if (r12 != 0) goto L_0x0309
-        L_0x02aa:
-            r0 = 0
-            r7.mTotalLength = r0
-            r0 = 0
-        L_0x02ae:
-            if (r0 >= r11) goto L_0x0309
-            android.view.View r1 = r7.getVirtualChildAt(r0)
-            if (r1 != 0) goto L_0x02c3
-            int r6 = r7.mTotalLength
-            int r8 = r7.measureNullChild(r0)
-            int r6 = r6 + r8
-            r7.mTotalLength = r6
-            r43 = r0
-            goto L_0x0304
-        L_0x02c3:
-            int r6 = r1.getVisibility()
-            r8 = 8
-            if (r6 != r8) goto L_0x02d1
-            int r6 = r7.getChildrenSkipCount(r1, r0)
-            int r0 = r0 + r6
-            goto L_0x0306
-        L_0x02d1:
-            android.view.ViewGroup$LayoutParams r6 = r1.getLayoutParams()
-            android.support.v7.widget.LinearLayoutCompat$LayoutParams r6 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r6
-            if (r24 == 0) goto L_0x02ed
-            int r8 = r7.mTotalLength
-            int r15 = r6.leftMargin
-            int r15 = r15 + r2
-            r43 = r0
-            int r0 = r6.rightMargin
-            int r15 = r15 + r0
-            int r0 = r7.getNextLocationOffset(r1)
-            int r15 = r15 + r0
-            int r8 = r8 + r15
-            r7.mTotalLength = r8
-            goto L_0x0304
-        L_0x02ed:
-            r43 = r0
-            int r0 = r7.mTotalLength
-            int r8 = r0 + r2
-            int r15 = r6.leftMargin
-            int r8 = r8 + r15
-            int r15 = r6.rightMargin
-            int r8 = r8 + r15
-            int r15 = r7.getNextLocationOffset(r1)
-            int r8 = r8 + r15
-            int r8 = java.lang.Math.max(r0, r8)
-            r7.mTotalLength = r8
-        L_0x0304:
-            r0 = r43
-        L_0x0306:
-            int r0 = r0 + 1
-            goto L_0x02ae
-        L_0x0309:
-            int r0 = r7.mTotalLength
-            int r1 = r63.getPaddingLeft()
-            int r6 = r63.getPaddingRight()
-            int r1 = r1 + r6
-            int r0 = r0 + r1
-            r7.mTotalLength = r0
-            int r0 = r7.mTotalLength
-            int r1 = r63.getSuggestedMinimumWidth()
-            int r0 = java.lang.Math.max(r0, r1)
-            r1 = r64
-            r6 = 0
-            int r8 = android.view.View.resolveSizeAndState(r0, r1, r6)
-            r6 = 16777215(0xffffff, float:2.3509886E-38)
-            r0 = r8 & r6
-            int r6 = r7.mTotalLength
-            int r6 = r0 - r6
-            if (r22 != 0) goto L_0x03bb
-            if (r6 == 0) goto L_0x0341
-            int r26 = (r5 > r28 ? 1 : (r5 == r28 ? 0 : -1))
-            if (r26 <= 0) goto L_0x0341
-            r44 = r0
-            r49 = r2
-            r46 = r4
-            goto L_0x03c1
-        L_0x0341:
-            int r3 = java.lang.Math.max(r3, r9)
-            if (r14 == 0) goto L_0x03a3
-            r15 = 1073741824(0x40000000, float:2.0)
-            if (r12 == r15) goto L_0x03a3
-            r16 = 0
-        L_0x034d:
-            r15 = r16
-            if (r15 >= r11) goto L_0x03a3
-            r44 = r0
-            android.view.View r0 = r7.getVirtualChildAt(r15)
-            if (r0 == 0) goto L_0x0392
-            r45 = r3
-            int r3 = r0.getVisibility()
-            r46 = r4
-            r4 = 8
-            if (r3 != r4) goto L_0x0369
-            r49 = r2
-            goto L_0x0398
-        L_0x0369:
-            android.view.ViewGroup$LayoutParams r3 = r0.getLayoutParams()
-            android.support.v7.widget.LinearLayoutCompat$LayoutParams r3 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r3
-            float r4 = r3.weight
-            int r16 = (r4 > r28 ? 1 : (r4 == r28 ? 0 : -1))
-            if (r16 <= 0) goto L_0x038f
-            r47 = r3
-            r48 = r4
-            r3 = 1073741824(0x40000000, float:2.0)
-            int r4 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r3)
-            r49 = r2
-            int r2 = r0.getMeasuredHeight()
-            int r2 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r3)
-            r0.measure(r4, r2)
-            goto L_0x0398
-        L_0x038f:
-            r49 = r2
-            goto L_0x0398
-        L_0x0392:
-            r49 = r2
-            r45 = r3
-            r46 = r4
-        L_0x0398:
-            int r16 = r15 + 1
-            r0 = r44
-            r3 = r45
-            r4 = r46
-            r2 = r49
-            goto L_0x034d
-        L_0x03a3:
-            r44 = r0
-            r49 = r2
-            r45 = r3
-            r46 = r4
-            r50 = r5
-            r51 = r9
-            r56 = r11
-            r52 = r14
-            r2 = r45
-            r15 = r46
-            r14 = r65
-            goto L_0x059e
-        L_0x03bb:
-            r44 = r0
-            r49 = r2
-            r46 = r4
-        L_0x03c1:
-            float r0 = r7.mWeightSum
-            int r0 = (r0 > r28 ? 1 : (r0 == r28 ? 0 : -1))
-            if (r0 <= 0) goto L_0x03ca
-            float r0 = r7.mWeightSum
-            goto L_0x03cb
-        L_0x03ca:
-            r0 = r5
-        L_0x03cb:
-            r2 = -1
-            r10[r17] = r2
-            r10[r19] = r2
-            r10[r20] = r2
-            r4 = 0
-            r10[r4] = r2
-            r23[r17] = r2
-            r23[r19] = r2
-            r23[r20] = r2
-            r23[r4] = r2
-            r15 = -1
-            r7.mTotalLength = r4
-            r2 = r3
-            r4 = r42
-            r3 = r0
-            r0 = 0
-        L_0x03e5:
-            if (r0 >= r11) goto L_0x0542
-            r50 = r5
-            android.view.View r5 = r7.getVirtualChildAt(r0)
-            if (r5 == 0) goto L_0x052a
-            r51 = r9
-            int r9 = r5.getVisibility()
-            r52 = r14
-            r14 = 8
-            if (r9 != r14) goto L_0x0404
-            r56 = r11
-            r14 = r65
-            r26 = -2
-            goto L_0x0534
-        L_0x0404:
-            android.view.ViewGroup$LayoutParams r9 = r5.getLayoutParams()
-            android.support.v7.widget.LinearLayoutCompat$LayoutParams r9 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r9
-            float r14 = r9.weight
-            int r26 = (r14 > r28 ? 1 : (r14 == r28 ? 0 : -1))
-            if (r26 <= 0) goto L_0x0476
-            float r1 = (float) r6
-            float r1 = r1 * r14
-            float r1 = r1 / r3
-            int r1 = (int) r1
-            float r3 = r3 - r14
-            int r6 = r6 - r1
-            int r26 = r63.getPaddingTop()
-            int r27 = r63.getPaddingBottom()
-            int r26 = r26 + r27
-            r53 = r3
-            int r3 = r9.topMargin
-            int r26 = r26 + r3
-            int r3 = r9.bottomMargin
-            int r3 = r26 + r3
-            r54 = r6
-            int r6 = r9.height
-            r56 = r11
-            r55 = r14
-            r11 = -1
-            r14 = r65
-            int r3 = getChildMeasureSpec(r14, r3, r6)
-            int r6 = r9.width
-            if (r6 != 0) goto L_0x0454
-            r6 = 1073741824(0x40000000, float:2.0)
-            if (r12 == r6) goto L_0x0445
-            goto L_0x0454
-        L_0x0445:
-            if (r1 <= 0) goto L_0x0449
-            r11 = r1
-            goto L_0x044a
-        L_0x0449:
-            r11 = 0
-        L_0x044a:
-            int r11 = android.view.View.MeasureSpec.makeMeasureSpec(r11, r6)
-            r5.measure(r11, r3)
-            r57 = r1
-            goto L_0x0469
-        L_0x0454:
-            int r6 = r5.getMeasuredWidth()
-            int r6 = r6 + r1
-            if (r6 >= 0) goto L_0x045c
-            r6 = 0
-        L_0x045c:
-            r57 = r1
-            r11 = 1073741824(0x40000000, float:2.0)
-            int r1 = android.view.View.MeasureSpec.makeMeasureSpec(r6, r11)
-            r5.measure(r1, r3)
-        L_0x0469:
-            int r1 = r5.getMeasuredState()
-            r6 = -16777216(0xffffffffff000000, float:-1.7014118E38)
-            r1 = r1 & r6
-            int r4 = android.view.View.combineMeasuredStates(r4, r1)
-            goto L_0x0480
-        L_0x0476:
-            r56 = r11
-            r55 = r14
-            r14 = r65
-            r53 = r3
-            r54 = r6
-        L_0x0480:
-            if (r24 == 0) goto L_0x0497
-            int r1 = r7.mTotalLength
-            int r3 = r5.getMeasuredWidth()
-            int r6 = r9.leftMargin
-            int r3 = r3 + r6
-            int r6 = r9.rightMargin
-            int r3 = r3 + r6
-            int r6 = r7.getNextLocationOffset(r5)
-            int r3 = r3 + r6
-            int r1 = r1 + r3
+        L_0x02b0:
+            if (r14 == 0) goto L_0x0327
+            r0 = r41
+            r1 = -2147483648(0xffffffff80000000, float:-0.0)
+            if (r0 == r1) goto L_0x02bf
+            if (r0 != 0) goto L_0x02bb
+            goto L_0x02bf
+        L_0x02bb:
+            r45 = r4
+            goto L_0x032b
+        L_0x02bf:
+            r1 = 0
             r7.mTotalLength = r1
-            goto L_0x04af
-        L_0x0497:
+            r1 = 0
+        L_0x02c3:
+            if (r1 >= r11) goto L_0x0324
+            android.view.View r6 = r7.getVirtualChildAt(r1)
+            if (r6 != 0) goto L_0x02d5
+            int r8 = r7.mTotalLength
+            int r9 = r7.measureNullChild(r1)
+            int r8 = r8 + r9
+            r7.mTotalLength = r8
+            goto L_0x02e3
+        L_0x02d5:
+            int r8 = r6.getVisibility()
+            r9 = 8
+            if (r8 != r9) goto L_0x02e8
+            int r8 = r7.getChildrenSkipCount(r6, r1)
+            int r1 = r1 + r8
+        L_0x02e3:
+            r44 = r1
+            r45 = r4
+            goto L_0x031f
+        L_0x02e8:
+            android.view.ViewGroup$LayoutParams r8 = r6.getLayoutParams()
+            android.support.v7.widget.LinearLayoutCompat$LayoutParams r8 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r8
+            if (r23 == 0) goto L_0x0306
+            int r9 = r7.mTotalLength
+            r44 = r1
+            int r1 = r8.leftMargin
+            int r1 = r1 + r2
+            r45 = r4
+            int r4 = r8.rightMargin
+            int r1 = r1 + r4
+            int r4 = r7.getNextLocationOffset(r6)
+            int r1 = r1 + r4
+            int r9 = r9 + r1
+            r7.mTotalLength = r9
+            goto L_0x031f
+        L_0x0306:
+            r44 = r1
+            r45 = r4
             int r1 = r7.mTotalLength
-            int r3 = r5.getMeasuredWidth()
-            int r3 = r3 + r1
-            int r6 = r9.leftMargin
-            int r3 = r3 + r6
-            int r6 = r9.rightMargin
-            int r3 = r3 + r6
-            int r6 = r7.getNextLocationOffset(r5)
-            int r3 = r3 + r6
-            int r3 = java.lang.Math.max(r1, r3)
-            r7.mTotalLength = r3
-        L_0x04af:
-            r1 = 1073741824(0x40000000, float:2.0)
-            if (r13 == r1) goto L_0x04ba
-            int r1 = r9.height
-            r3 = -1
-            if (r1 != r3) goto L_0x04ba
-            r1 = 1
-            goto L_0x04bb
-        L_0x04ba:
+            int r4 = r1 + r2
+            int r9 = r8.leftMargin
+            int r4 = r4 + r9
+            int r9 = r8.rightMargin
+            int r4 = r4 + r9
+            int r9 = r7.getNextLocationOffset(r6)
+            int r4 = r4 + r9
+            int r4 = java.lang.Math.max(r1, r4)
+            r7.mTotalLength = r4
+        L_0x031f:
+            int r1 = r44 + 1
+            r4 = r45
+            goto L_0x02c3
+        L_0x0324:
+            r45 = r4
+            goto L_0x032b
+        L_0x0327:
+            r45 = r4
+            r0 = r41
+        L_0x032b:
+            int r1 = r7.mTotalLength
+            int r4 = r64.getPaddingLeft()
+            int r6 = r64.getPaddingRight()
+            int r4 = r4 + r6
+            int r1 = r1 + r4
+            r7.mTotalLength = r1
+            int r1 = r7.mTotalLength
+            int r4 = r64.getSuggestedMinimumWidth()
+            int r1 = java.lang.Math.max(r1, r4)
+            r4 = r65
+            r6 = 0
+            int r8 = android.view.View.resolveSizeAndState(r1, r4, r6)
+            r6 = 16777215(0xffffff, float:2.3509886E-38)
+            r1 = r8 & r6
+            int r6 = r7.mTotalLength
+            int r6 = r1 - r6
+            if (r22 != 0) goto L_0x03f1
+            if (r6 == 0) goto L_0x0366
+            int r25 = (r5 > r28 ? 1 : (r5 == r28 ? 0 : -1))
+            if (r25 <= 0) goto L_0x0366
+            r46 = r1
+            r51 = r2
+            r2 = r3
+            r48 = r5
+            r3 = 1073741824(0x40000000, float:2.0)
+            goto L_0x03fa
+        L_0x0366:
+            int r3 = java.lang.Math.max(r3, r12)
+            if (r14 == 0) goto L_0x03d8
+            r9 = 1073741824(0x40000000, float:2.0)
+            if (r0 == r9) goto L_0x03ce
+            r16 = 0
+        L_0x0372:
+            r9 = r16
+            if (r9 >= r11) goto L_0x03d8
+            r46 = r1
+            android.view.View r1 = r7.getVirtualChildAt(r9)
+            if (r1 == 0) goto L_0x03bb
+            r47 = r3
+            int r3 = r1.getVisibility()
+            r48 = r5
+            r5 = 8
+            if (r3 != r5) goto L_0x0390
+            r51 = r2
+            r3 = 1073741824(0x40000000, float:2.0)
+            goto L_0x03c3
+        L_0x0390:
+            android.view.ViewGroup$LayoutParams r3 = r1.getLayoutParams()
+            android.support.v7.widget.LinearLayoutCompat$LayoutParams r3 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r3
+            float r5 = r3.weight
+            int r16 = (r5 > r28 ? 1 : (r5 == r28 ? 0 : -1))
+            if (r16 <= 0) goto L_0x03b6
+            r49 = r3
+            r50 = r5
+            r3 = 1073741824(0x40000000, float:2.0)
+            int r5 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r3)
+            r51 = r2
+            int r2 = r1.getMeasuredHeight()
+            int r2 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r3)
+            r1.measure(r5, r2)
+            goto L_0x03c3
+        L_0x03b6:
+            r51 = r2
+            r3 = 1073741824(0x40000000, float:2.0)
+            goto L_0x03c3
+        L_0x03bb:
+            r51 = r2
+            r47 = r3
+            r48 = r5
+            r3 = 1073741824(0x40000000, float:2.0)
+        L_0x03c3:
+            int r16 = r9 + 1
+            r1 = r46
+            r3 = r47
+            r5 = r48
+            r2 = r51
+            goto L_0x0372
+        L_0x03ce:
+            r46 = r1
+            r51 = r2
+            r47 = r3
+            r48 = r5
+            r3 = r9
+            goto L_0x03e2
+        L_0x03d8:
+            r46 = r1
+            r51 = r2
+            r47 = r3
+            r48 = r5
+            r3 = 1073741824(0x40000000, float:2.0)
+        L_0x03e2:
+            r59 = r0
+            r0 = r6
+            r58 = r8
+            r54 = r11
+            r52 = r12
+            r53 = r14
+            r6 = r66
+            goto L_0x05e2
+        L_0x03f1:
+            r46 = r1
+            r51 = r2
+            r2 = r3
+            r48 = r5
+            r3 = 1073741824(0x40000000, float:2.0)
+        L_0x03fa:
+            float r1 = r7.mWeightSum
+            int r1 = (r1 > r28 ? 1 : (r1 == r28 ? 0 : -1))
+            if (r1 <= 0) goto L_0x0403
+            float r5 = r7.mWeightSum
+            goto L_0x0405
+        L_0x0403:
+            r5 = r48
+        L_0x0405:
+            r1 = r5
+            r5 = -1
+            r10[r17] = r5
+            r10[r19] = r5
+            r10[r20] = r5
+            r9 = 0
+            r10[r9] = r5
+            r15[r17] = r5
+            r15[r19] = r5
+            r15[r20] = r5
+            r15[r9] = r5
+            r5 = -1
+            r7.mTotalLength = r9
+            r3 = r2
+            r9 = r43
+            r2 = r1
             r1 = 0
-        L_0x04bb:
-            int r3 = r9.topMargin
-            int r6 = r9.bottomMargin
-            int r3 = r3 + r6
-            int r6 = r5.getMeasuredHeight()
-            int r6 = r6 + r3
-            int r11 = java.lang.Math.max(r15, r6)
-            if (r1 == 0) goto L_0x04cd
-            r15 = r3
-            goto L_0x04ce
-        L_0x04cd:
-            r15 = r6
-        L_0x04ce:
-            int r2 = java.lang.Math.max(r2, r15)
-            if (r18 == 0) goto L_0x04dd
-            int r15 = r9.height
-            r58 = r1
-            r1 = -1
-            if (r15 != r1) goto L_0x04df
-            r1 = 1
-            goto L_0x04e0
-        L_0x04dd:
-            r58 = r1
-        L_0x04df:
-            r1 = 0
-        L_0x04e0:
-            if (r21 == 0) goto L_0x051a
-            int r15 = r5.getBaseline()
-            r59 = r1
-            r1 = -1
-            if (r15 == r1) goto L_0x0515
-            int r1 = r9.gravity
-            if (r1 >= 0) goto L_0x04f2
-            int r1 = r7.mGravity
-            goto L_0x04f4
+        L_0x0420:
+            if (r1 >= r11) goto L_0x057c
+            r52 = r12
+            android.view.View r12 = r7.getVirtualChildAt(r1)
+            if (r12 == 0) goto L_0x055b
+            r53 = r14
+            int r14 = r12.getVisibility()
+            r4 = 8
+            if (r14 != r4) goto L_0x0442
+            r59 = r0
+            r0 = r6
+            r58 = r8
+            r54 = r11
+            r6 = r66
+            r25 = -2
+            goto L_0x0568
+        L_0x0442:
+            android.view.ViewGroup$LayoutParams r14 = r12.getLayoutParams()
+            android.support.v7.widget.LinearLayoutCompat$LayoutParams r14 = (android.support.v7.widget.LinearLayoutCompat.LayoutParams) r14
+            float r4 = r14.weight
+            int r25 = (r4 > r28 ? 1 : (r4 == r28 ? 0 : -1))
+            if (r25 <= 0) goto L_0x04b2
+            r54 = r11
+            float r11 = (float) r6
+            float r11 = r11 * r4
+            float r11 = r11 / r2
+            int r11 = (int) r11
+            float r2 = r2 - r4
+            int r6 = r6 - r11
+            int r25 = r64.getPaddingTop()
+            int r26 = r64.getPaddingBottom()
+            int r25 = r25 + r26
+            r55 = r2
+            int r2 = r14.topMargin
+            int r25 = r25 + r2
+            int r2 = r14.bottomMargin
+            int r2 = r25 + r2
+            r56 = r4
+            int r4 = r14.height
+            r57 = r6
+            r58 = r8
+            r6 = r66
+            r8 = 1073741824(0x40000000, float:2.0)
+            int r2 = getChildMeasureSpec(r6, r2, r4)
+            int r4 = r14.width
+            if (r4 != 0) goto L_0x0492
+            if (r0 == r8) goto L_0x0483
+            goto L_0x0492
+        L_0x0483:
+            if (r11 <= 0) goto L_0x0487
+            r4 = r11
+            goto L_0x0488
+        L_0x0487:
+            r4 = 0
+        L_0x0488:
+            int r4 = android.view.View.MeasureSpec.makeMeasureSpec(r4, r8)
+            r12.measure(r4, r2)
+            r59 = r0
+            goto L_0x04a5
+        L_0x0492:
+            int r4 = r12.getMeasuredWidth()
+            int r4 = r4 + r11
+            if (r4 >= 0) goto L_0x049a
+            r4 = 0
+        L_0x049a:
+            r59 = r0
+            int r0 = android.view.View.MeasureSpec.makeMeasureSpec(r4, r8)
+            r12.measure(r0, r2)
+        L_0x04a5:
+            int r0 = r12.getMeasuredState()
+            r4 = -16777216(0xffffffffff000000, float:-1.7014118E38)
+            r0 = r0 & r4
+            int r9 = android.view.View.combineMeasuredStates(r9, r0)
+            goto L_0x04c3
+        L_0x04b2:
+            r59 = r0
+            r56 = r4
+            r0 = r6
+            r58 = r8
+            r54 = r11
+            r6 = r66
+            r8 = 1073741824(0x40000000, float:2.0)
+            r57 = r0
+            r55 = r2
+        L_0x04c3:
+            if (r23 == 0) goto L_0x04da
+            int r0 = r7.mTotalLength
+            int r2 = r12.getMeasuredWidth()
+            int r4 = r14.leftMargin
+            int r2 = r2 + r4
+            int r4 = r14.rightMargin
+            int r2 = r2 + r4
+            int r4 = r7.getNextLocationOffset(r12)
+            int r2 = r2 + r4
+            int r0 = r0 + r2
+            r7.mTotalLength = r0
+            goto L_0x04f2
+        L_0x04da:
+            int r0 = r7.mTotalLength
+            int r2 = r12.getMeasuredWidth()
+            int r2 = r2 + r0
+            int r4 = r14.leftMargin
+            int r2 = r2 + r4
+            int r4 = r14.rightMargin
+            int r2 = r2 + r4
+            int r4 = r7.getNextLocationOffset(r12)
+            int r2 = r2 + r4
+            int r2 = java.lang.Math.max(r0, r2)
+            r7.mTotalLength = r2
         L_0x04f2:
-            int r1 = r9.gravity
-        L_0x04f4:
-            r1 = r1 & 112(0x70, float:1.57E-43)
-            int r18 = r1 >> 4
-            r26 = -2
+            if (r13 == r8) goto L_0x04fc
+            int r0 = r14.height
+            r2 = -1
+            if (r0 != r2) goto L_0x04fc
+            r0 = r20
+            goto L_0x04fd
+        L_0x04fc:
+            r0 = 0
+        L_0x04fd:
+            int r2 = r14.topMargin
+            int r4 = r14.bottomMargin
+            int r2 = r2 + r4
+            int r4 = r12.getMeasuredHeight()
+            int r4 = r4 + r2
+            int r5 = java.lang.Math.max(r5, r4)
+            if (r0 == 0) goto L_0x050f
+            r11 = r2
+            goto L_0x0510
+        L_0x050f:
+            r11 = r4
+        L_0x0510:
+            int r3 = java.lang.Math.max(r3, r11)
+            if (r18 == 0) goto L_0x051e
+            int r11 = r14.height
+            r8 = -1
+            if (r11 != r8) goto L_0x051e
+            r8 = r20
+            goto L_0x051f
+        L_0x051e:
+            r8 = 0
+        L_0x051f:
+            if (r21 == 0) goto L_0x0554
+            int r11 = r12.getBaseline()
+            r60 = r0
+            r0 = -1
+            if (r11 == r0) goto L_0x0554
+            int r0 = r14.gravity
+            if (r0 >= 0) goto L_0x0531
+            int r0 = r7.mGravity
+            goto L_0x0533
+        L_0x0531:
+            int r0 = r14.gravity
+        L_0x0533:
+            r0 = r0 & 112(0x70, float:1.57E-43)
+            int r18 = r0 >> 4
+            r25 = -2
             r18 = r18 & -2
             int r18 = r18 >> 1
-            r60 = r1
-            r1 = r10[r18]
-            int r1 = java.lang.Math.max(r1, r15)
-            r10[r18] = r1
-            r1 = r23[r18]
-            r61 = r2
-            int r2 = r6 - r15
-            int r1 = java.lang.Math.max(r1, r2)
-            r23[r18] = r1
-            goto L_0x0520
-        L_0x0515:
-            r61 = r2
-            r26 = -2
-            goto L_0x0520
-        L_0x051a:
-            r59 = r1
-            r61 = r2
-            r26 = -2
-        L_0x0520:
-            r15 = r11
-            r3 = r53
-            r6 = r54
-            r18 = r59
-            r2 = r61
-            goto L_0x0534
-        L_0x052a:
-            r51 = r9
-            r56 = r11
-            r52 = r14
-            r14 = r65
-            r26 = -2
-        L_0x0534:
-            int r0 = r0 + 1
-            r5 = r50
-            r9 = r51
-            r14 = r52
-            r11 = r56
-            r1 = r64
-            goto L_0x03e5
-        L_0x0542:
-            r50 = r5
-            r51 = r9
-            r56 = r11
-            r52 = r14
-            r14 = r65
-            int r0 = r7.mTotalLength
-            int r1 = r63.getPaddingLeft()
-            int r5 = r63.getPaddingRight()
-            int r1 = r1 + r5
-            int r0 = r0 + r1
-            r7.mTotalLength = r0
-            r0 = r10[r20]
-            r1 = -1
-            if (r0 != r1) goto L_0x056c
-            r0 = 0
-            r5 = r10[r0]
-            if (r5 != r1) goto L_0x056c
-            r0 = r10[r19]
-            if (r0 != r1) goto L_0x056c
-            r0 = r10[r17]
-            if (r0 == r1) goto L_0x059c
-        L_0x056c:
-            r0 = r10[r17]
+            r61 = r0
+            r0 = r10[r18]
+            int r0 = java.lang.Math.max(r0, r11)
+            r10[r18] = r0
+            r0 = r15[r18]
+            r62 = r2
+            int r2 = r4 - r11
+            int r0 = java.lang.Math.max(r0, r2)
+            r15[r18] = r0
+            goto L_0x0556
+        L_0x0554:
+            r25 = -2
+        L_0x0556:
+            r18 = r8
+            r2 = r55
+            goto L_0x056a
+        L_0x055b:
+            r59 = r0
+            r0 = r6
+            r58 = r8
+            r54 = r11
+            r53 = r14
+            r6 = r66
+            r25 = -2
+        L_0x0568:
+            r57 = r0
+        L_0x056a:
+            int r1 = r1 + 1
+            r12 = r52
+            r14 = r53
+            r11 = r54
+            r6 = r57
+            r8 = r58
+            r0 = r59
+            r4 = r65
+            goto L_0x0420
+        L_0x057c:
+            r59 = r0
+            r0 = r6
+            r58 = r8
+            r54 = r11
+            r52 = r12
+            r53 = r14
+            r6 = r66
+            int r1 = r7.mTotalLength
+            int r4 = r64.getPaddingLeft()
+            int r8 = r64.getPaddingRight()
+            int r4 = r4 + r8
+            int r1 = r1 + r4
+            r7.mTotalLength = r1
+            r1 = r10[r20]
+            r4 = -1
+            if (r1 != r4) goto L_0x05ac
             r1 = 0
-            r5 = r10[r1]
-            r9 = r10[r20]
-            r11 = r10[r19]
-            int r9 = java.lang.Math.max(r9, r11)
-            int r5 = java.lang.Math.max(r5, r9)
-            int r0 = java.lang.Math.max(r0, r5)
-            r5 = r23[r17]
-            r1 = r23[r1]
-            r9 = r23[r20]
-            r11 = r23[r19]
-            int r9 = java.lang.Math.max(r9, r11)
-            int r1 = java.lang.Math.max(r1, r9)
-            int r1 = java.lang.Math.max(r5, r1)
-            int r5 = r0 + r1
-            int r0 = java.lang.Math.max(r15, r5)
-            r15 = r0
-        L_0x059c:
-            r42 = r4
-        L_0x059e:
-            if (r18 != 0) goto L_0x05a5
-            r0 = 1073741824(0x40000000, float:2.0)
-            if (r13 == r0) goto L_0x05a5
-            r15 = r2
-        L_0x05a5:
-            int r0 = r63.getPaddingTop()
-            int r1 = r63.getPaddingBottom()
-            int r0 = r0 + r1
-            int r15 = r15 + r0
-            int r0 = r63.getSuggestedMinimumHeight()
-            int r0 = java.lang.Math.max(r15, r0)
-            r1 = -16777216(0xffffffffff000000, float:-1.7014118E38)
-            r1 = r42 & r1
-            r1 = r1 | r8
-            int r3 = r42 << 16
-            int r3 = android.view.View.resolveSizeAndState(r0, r14, r3)
-            r7.setMeasuredDimension(r1, r3)
-            if (r25 == 0) goto L_0x05cf
-            r3 = r56
-            r1 = r64
-            r7.forceUniformHeight(r3, r1)
-            goto L_0x05d3
-        L_0x05cf:
-            r3 = r56
-            r1 = r64
-        L_0x05d3:
+            r8 = r10[r1]
+            if (r8 != r4) goto L_0x05ac
+            r1 = r10[r19]
+            if (r1 != r4) goto L_0x05ac
+            r1 = r10[r17]
+            if (r1 == r4) goto L_0x05aa
+            goto L_0x05ac
+        L_0x05aa:
+            r4 = r5
+            goto L_0x05dc
+        L_0x05ac:
+            r1 = r10[r17]
+            r4 = 0
+            r8 = r10[r4]
+            r11 = r10[r20]
+            r12 = r10[r19]
+            int r11 = java.lang.Math.max(r11, r12)
+            int r8 = java.lang.Math.max(r8, r11)
+            int r1 = java.lang.Math.max(r1, r8)
+            r8 = r15[r17]
+            r4 = r15[r4]
+            r11 = r15[r20]
+            r12 = r15[r19]
+            int r11 = java.lang.Math.max(r11, r12)
+            int r4 = java.lang.Math.max(r4, r11)
+            int r4 = java.lang.Math.max(r8, r4)
+            int r8 = r1 + r4
+            int r1 = java.lang.Math.max(r5, r8)
+            r4 = r1
+        L_0x05dc:
+            r47 = r3
+            r45 = r4
+            r43 = r9
+        L_0x05e2:
+            if (r18 != 0) goto L_0x05ea
+            r1 = 1073741824(0x40000000, float:2.0)
+            if (r13 == r1) goto L_0x05ea
+            r45 = r47
+        L_0x05ea:
+            int r1 = r64.getPaddingTop()
+            int r2 = r64.getPaddingBottom()
+            int r1 = r1 + r2
+            int r1 = r45 + r1
+            int r2 = r64.getSuggestedMinimumHeight()
+            int r1 = java.lang.Math.max(r1, r2)
+            r2 = -16777216(0xffffffffff000000, float:-1.7014118E38)
+            r2 = r43 & r2
+            r2 = r58 | r2
+            int r3 = r43 << 16
+            int r3 = android.view.View.resolveSizeAndState(r1, r6, r3)
+            r7.setMeasuredDimension(r2, r3)
+            if (r24 == 0) goto L_0x0616
+            r3 = r54
+            r2 = r65
+            r7.forceUniformHeight(r3, r2)
+            goto L_0x061a
+        L_0x0616:
+            r3 = r54
+            r2 = r65
+        L_0x061a:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: android.support.v7.widget.LinearLayoutCompat.measureHorizontal(int, int):void");
@@ -1872,7 +1921,7 @@ public class LinearLayoutCompat extends ViewGroup {
         int childSpace = (width - paddingLeft2) - getPaddingRight();
         int count = getVirtualChildCount();
         int majorGravity2 = this.mGravity & 112;
-        int minorGravity = this.mGravity & GravityCompat.RELATIVE_HORIZONTAL_GRAVITY_MASK;
+        int minorGravity = this.mGravity & 8388615;
         if (majorGravity2 == 16) {
             childTop = getPaddingTop() + (((bottom - top) - this.mTotalLength) / 2);
         } else if (majorGravity2 != 80) {
@@ -1915,21 +1964,21 @@ public class LinearLayoutCompat extends ViewGroup {
                     LayoutParams lp2 = lp;
                     View child2 = child;
                     paddingLeft = paddingLeft2;
-                    int paddingLeft3 = i2;
+                    int i5 = i2;
                     setChildFrame(child, childLeft, childTop2 + getLocationOffset(child), childWidth, childHeight);
                     int childTop3 = childTop2 + childHeight + lp2.bottomMargin + getNextLocationOffset(child2);
-                    i2 = paddingLeft3 + getChildrenSkipCount(child2, paddingLeft3);
+                    i2 = i5 + getChildrenSkipCount(child2, i5);
                     childTop = childTop3;
                 } else {
                     majorGravity = majorGravity2;
                     paddingLeft = paddingLeft2;
-                    int paddingLeft4 = i2;
+                    int paddingLeft3 = i2;
                 }
                 i = i2 + 1;
                 majorGravity2 = majorGravity;
                 paddingLeft2 = paddingLeft;
             } else {
-                int i5 = paddingLeft2;
+                int i6 = paddingLeft2;
                 return;
             }
         }
@@ -2000,7 +2049,7 @@ public class LinearLayoutCompat extends ViewGroup {
             r20 = r3
         L_0x006d:
             r3 = r19
-            if (r3 >= r5) goto L_0x015f
+            if (r3 >= r5) goto L_0x0160
             int r19 = r12 * r3
             int r7 = r11 + r19
             android.view.View r8 = r6.getVirtualChildAt(r7)
@@ -2013,13 +2062,13 @@ public class LinearLayoutCompat extends ViewGroup {
             r22 = r4
             r27 = r5
             r30 = r9
-            goto L_0x014e
+            goto L_0x014f
         L_0x008f:
             r21 = r3
             int r3 = r8.getVisibility()
             r22 = r4
             r4 = 8
-            if (r3 == r4) goto L_0x0142
+            if (r3 == r4) goto L_0x0143
             int r19 = r8.getMeasuredWidth()
             int r23 = r8.getMeasuredHeight()
             r3 = -1
@@ -2094,7 +2143,7 @@ public class LinearLayoutCompat extends ViewGroup {
             int r5 = r6.getLocationOffset(r8)
             int r5 = r20 + r5
             r26 = r0
-            r0 = r6
+            r0 = r31
             r28 = r1
             r1 = r8
             r29 = r2
@@ -2112,15 +2161,15 @@ public class LinearLayoutCompat extends ViewGroup {
             int r20 = r20 + r0
             int r0 = r6.getChildrenSkipCount(r8, r7)
             int r3 = r21 + r0
-            goto L_0x014e
-        L_0x0142:
+            goto L_0x014f
+        L_0x0143:
             r26 = r0
             r28 = r1
             r25 = r2
             r27 = r5
             r30 = r9
             r3 = r21
-        L_0x014e:
+        L_0x014f:
             r0 = 1
             int r19 = r3 + 1
             r4 = r22
@@ -2130,7 +2179,7 @@ public class LinearLayoutCompat extends ViewGroup {
             r1 = r28
             r9 = r30
             goto L_0x006d
-        L_0x015f:
+        L_0x0160:
             r26 = r0
             r28 = r1
             r25 = r2
@@ -2160,7 +2209,7 @@ public class LinearLayoutCompat extends ViewGroup {
     public void setGravity(int gravity) {
         if (this.mGravity != gravity) {
             if ((8388615 & gravity) == 0) {
-                gravity |= GravityCompat.START;
+                gravity |= 8388611;
             }
             if ((gravity & 112) == 0) {
                 gravity |= 48;
@@ -2175,7 +2224,7 @@ public class LinearLayoutCompat extends ViewGroup {
     }
 
     public void setHorizontalGravity(int horizontalGravity) {
-        int gravity = horizontalGravity & GravityCompat.RELATIVE_HORIZONTAL_GRAVITY_MASK;
+        int gravity = horizontalGravity & 8388615;
         if ((8388615 & this.mGravity) != gravity) {
             this.mGravity = (this.mGravity & -8388616) | gravity;
             requestLayout();
@@ -2216,13 +2265,17 @@ public class LinearLayoutCompat extends ViewGroup {
     }
 
     public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
-        super.onInitializeAccessibilityEvent(event);
-        event.setClassName(LinearLayoutCompat.class.getName());
+        if (Build.VERSION.SDK_INT >= 14) {
+            super.onInitializeAccessibilityEvent(event);
+            event.setClassName(LinearLayoutCompat.class.getName());
+        }
     }
 
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
-        super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(LinearLayoutCompat.class.getName());
+        if (Build.VERSION.SDK_INT >= 14) {
+            super.onInitializeAccessibilityNodeInfo(info);
+            info.setClassName(LinearLayoutCompat.class.getName());
+        }
     }
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
@@ -2261,7 +2314,7 @@ public class LinearLayoutCompat extends ViewGroup {
         }
 
         public LayoutParams(LayoutParams source) {
-            super(source);
+            super((ViewGroup.MarginLayoutParams) source);
             this.gravity = -1;
             this.weight = source.weight;
             this.gravity = source.gravity;

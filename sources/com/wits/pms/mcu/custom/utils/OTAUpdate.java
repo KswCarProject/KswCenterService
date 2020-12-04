@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.R;
 import com.wits.pms.utils.SystemProperties;
 import java.io.File;
@@ -40,16 +39,17 @@ public class OTAUpdate {
     public static Handler mHandler;
     public static File tempFile;
     public static boolean test = false;
+    private static String version = Build.DISPLAY;
 
     static {
         StringBuilder sb = new StringBuilder();
         sb.append("Ksw-P-");
-        sb.append(device.contains("8937") ? "S-" : BuildConfig.FLAVOR);
+        sb.append(device.contains("8937") ? "S-" : "");
         sb.append("Userdebug_OS_v");
         OTAFileName9 = sb.toString();
         StringBuilder sb2 = new StringBuilder();
         sb2.append("Ksw-Q-");
-        sb2.append(device.contains("8937") ? "S-" : BuildConfig.FLAVOR);
+        sb2.append(device.contains("8937") ? version.contains("8937") ? "8937-" : "S-" : "");
         sb2.append("Userdebug_OS_v");
         OTAFileName10 = sb2.toString();
     }
@@ -58,7 +58,7 @@ public class OTAUpdate {
         if (parent.listFiles() == null || parent.listFiles().length == 0) {
             return -1;
         }
-        String versionCode = Build.DISPLAY.replace("Ksw-Q-Userdebug OS v", BuildConfig.FLAVOR).replace(".", BuildConfig.FLAVOR);
+        String versionCode = Build.DISPLAY.replace("Ksw-Q-Userdebug OS v", "").replace(".", "");
         File[] listFiles = parent.listFiles();
         int length = listFiles.length;
         int i = 0;
@@ -80,10 +80,10 @@ public class OTAUpdate {
     }
 
     private static String getVersion(File file) {
-        String version = file.getName().replace(OTAFileName, BuildConfig.FLAVOR).replace("-ota.zip", BuildConfig.FLAVOR).replace(".", BuildConfig.FLAVOR);
+        String version2 = file.getName().replace(OTAFileName, "").replace("-ota.zip", "").replace(".", "");
         String str = TAG;
-        Log.i(str, "getVersion" + version);
-        return version;
+        Log.i(str, "getVersion" + version2);
+        return version2;
     }
 
     public static boolean checkFile(Context context, String path) {
@@ -98,15 +98,15 @@ public class OTAUpdate {
             showUpdateDialog(context);
             return true;
         }
-        String version = Settings.System.getString(context.getContentResolver(), "ota_update");
-        if (!TextUtils.isEmpty(version)) {
-            File updateFile = new File("/storage/emulated/0/" + OTAFileName + version + "-ota.zip");
+        String version2 = Settings.System.getString(context.getContentResolver(), "ota_update");
+        if (!TextUtils.isEmpty(version2)) {
+            File updateFile = new File("/storage/emulated/0/" + OTAFileName + version2 + "-ota.zip");
             if (updateFile.exists()) {
                 updateFile.delete();
             }
             reinstallApk();
-            Toast.makeText(context, R.string.update_success, 0).show();
-            Settings.System.putString(context.getContentResolver(), "ota_update", BuildConfig.FLAVOR);
+            Toast.makeText(context, (int) R.string.update_success, 0).show();
+            Settings.System.putString(context.getContentResolver(), "ota_update", "");
         }
         if (tempFile != null && tempFile.getParent().contains("/0")) {
             tempFile.delete();
@@ -135,6 +135,7 @@ public class OTAUpdate {
     }
 
     private static boolean copyToUpdate(File file) {
+        int byteread;
         Log.i(TAG, "Ready. copy to /data/media/0/");
         File target = new File("/data/media/0/" + file.getName());
         tempFile = target;
@@ -143,8 +144,7 @@ public class OTAUpdate {
             try {
                 long count = file.length();
                 if (file.exists()) {
-                    String str = TAG;
-                    Log.i(str, "start copy" + file.getName() + " to /data/media/0/");
+                    Log.i(TAG, "start copy" + file.getName() + " to /data/media/0/");
                     InputStream inStream = new FileInputStream(file.getPath());
                     FileOutputStream fs = new FileOutputStream("/storage/emulated/0/" + file.getName());
                     FileDescriptor fd = fs.getFD();
@@ -153,7 +153,7 @@ public class OTAUpdate {
                     int progress = -1;
                     while (true) {
                         int read = inStream.read(buffer);
-                        int byteread = read;
+                        byteread = read;
                         if (read == -1) {
                             break;
                         }
@@ -161,8 +161,7 @@ public class OTAUpdate {
                         fs.write(buffer, i, byteread);
                         if (!(progress == ((int) (((long) bytesum) / (count / 100))) || progress == 100)) {
                             progress = (int) (((long) bytesum) / (count / 100));
-                            String str2 = TAG;
-                            Log.i(str2, "progress: " + progress);
+                            Log.i(TAG, "progress: " + progress);
                             mHandler.obtainMessage(99, progress, 0).sendToTarget();
                         }
                         i = 0;
@@ -171,6 +170,7 @@ public class OTAUpdate {
                     fs.flush();
                     fd.sync();
                     if (!test) {
+                        int i2 = byteread;
                         mHandler.sendMessageDelayed(mHandler.obtainMessage(99, 100, 0), 60000);
                     }
                 }
@@ -215,17 +215,27 @@ public class OTAUpdate {
                 }
             }
         };
-        AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AlertDialogCustom).setCancelable(true).setTitle((int) R.string.ota_update).setMessage((int) R.string.ota_update_message).setOnDismissListener(OTAUpdate$$Lambda$0.$instance).setNegativeButton((int) R.string.no_update, OTAUpdate$$Lambda$1.$instance).setPositiveButton((int) R.string.yes_update, (DialogInterface.OnClickListener) new OTAUpdate$$Lambda$2(context, progressBar)).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AlertDialogCustom).setCancelable(true).setTitle((int) R.string.ota_update).setMessage((int) R.string.ota_update_message).setOnDismissListener($$Lambda$OTAUpdate$6FQxO82I90YiE1q7Sjy_xP3o7Pg.INSTANCE).setNegativeButton((int) R.string.no_update, (DialogInterface.OnClickListener) $$Lambda$OTAUpdate$TGn6oUqsXc_FFgiDcru9tSAyk.INSTANCE).setPositiveButton((int) R.string.yes_update, (DialogInterface.OnClickListener) new DialogInterface.OnClickListener(progressBar) {
+            private final /* synthetic */ ProgressBar f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void onClick(DialogInterface dialogInterface, int i) {
+                OTAUpdate.lambda$showUpdateDialog$2(Context.this, this.f$1, dialogInterface, i);
+            }
+        }).create();
         alertDialog.getWindow().setType(2003);
         alertDialog.show();
     }
 
-    static final /* synthetic */ void lambda$showUpdateDialog$1$OTAUpdate(DialogInterface dialog, int which) {
+    static /* synthetic */ void lambda$showUpdateDialog$1(DialogInterface dialog, int which) {
         dialog.dismiss();
         isUpdating = false;
     }
 
-    static final /* synthetic */ void lambda$showUpdateDialog$2$OTAUpdate(final Context context, ProgressBar progressBar, DialogInterface dialog, int which) {
+    static /* synthetic */ void lambda$showUpdateDialog$2(final Context context, ProgressBar progressBar, DialogInterface dialog, int which) {
         Settings.System.putString(context.getContentResolver(), "ota_update", getVersion(tempFile));
         dialog.dismiss();
         AlertDialog alertDialog1 = new AlertDialog.Builder(context, R.style.AlertDialogCustom).setCancelable(false).setTitle((int) R.string.copy_file).setView((View) progressBar).create();

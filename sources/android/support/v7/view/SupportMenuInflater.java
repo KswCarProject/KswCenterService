@@ -7,7 +7,6 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.PorterDuff;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.RestrictTo;
 import android.support.v4.internal.view.SupportMenu;
 import android.support.v4.view.ActionProvider;
@@ -51,7 +50,7 @@ public class SupportMenuInflater extends MenuInflater {
         this.mActionViewConstructorArguments = new Object[]{context};
     }
 
-    public void inflate(@LayoutRes int menuRes, Menu menu) {
+    public void inflate(int menuRes, Menu menu) {
         if (!(menu instanceof SupportMenu)) {
             super.inflate(menuRes, menu);
             return;
@@ -103,8 +102,8 @@ public class SupportMenuInflater extends MenuInflater {
                 case 2:
                     if (!lookingForEndOfUnknownTag) {
                         String tagName2 = parser.getName();
-                        if (!tagName2.equals(XML_GROUP)) {
-                            if (!tagName2.equals(XML_ITEM)) {
+                        if (!tagName2.equals("group")) {
+                            if (!tagName2.equals("item")) {
                                 if (!tagName2.equals(XML_MENU)) {
                                     lookingForEndOfUnknownTag = true;
                                     unknownTagName = tagName2;
@@ -127,8 +126,8 @@ public class SupportMenuInflater extends MenuInflater {
                 case 3:
                     String tagName3 = parser.getName();
                     if (!lookingForEndOfUnknownTag || !tagName3.equals(unknownTagName)) {
-                        if (!tagName3.equals(XML_GROUP)) {
-                            if (!tagName3.equals(XML_ITEM)) {
+                        if (!tagName3.equals("group")) {
+                            if (!tagName3.equals("item")) {
                                 if (!tagName3.equals(XML_MENU)) {
                                     break;
                                 } else {
@@ -155,6 +154,7 @@ public class SupportMenuInflater extends MenuInflater {
                         unknownTagName = null;
                         break;
                     }
+                    break;
             }
             eventType = parser.next();
         }
@@ -340,10 +340,11 @@ public class SupportMenuInflater extends MenuInflater {
                 item.setShowAsAction(this.itemShowAsAction);
             }
             if (this.itemListenerMethodName != null) {
-                if (SupportMenuInflater.this.mContext.isRestricted()) {
+                if (!SupportMenuInflater.this.mContext.isRestricted()) {
+                    item.setOnMenuItemClickListener(new InflatedOnMenuItemClickListener(SupportMenuInflater.this.getRealOwner(), this.itemListenerMethodName));
+                } else {
                     throw new IllegalStateException("The android:onClick attribute cannot be used within a restricted context");
                 }
-                item.setOnMenuItemClickListener(new InflatedOnMenuItemClickListener(SupportMenuInflater.this.getRealOwner(), this.itemListenerMethodName));
             }
             if (item instanceof MenuItemImpl) {
                 MenuItemImpl menuItemImpl = (MenuItemImpl) item;

@@ -6,10 +6,12 @@ import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.support.annotation.RestrictTo;
 import android.support.annotation.StyleRes;
 import android.support.v7.appcompat.R;
 import android.view.LayoutInflater;
 
+@RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
 public class ContextThemeWrapper extends ContextWrapper {
     private LayoutInflater mInflater;
     private Configuration mOverrideConfiguration;
@@ -39,11 +41,15 @@ public class ContextThemeWrapper extends ContextWrapper {
     public void applyOverrideConfiguration(Configuration overrideConfiguration) {
         if (this.mResources != null) {
             throw new IllegalStateException("getResources() or getAssets() has already been called");
-        } else if (this.mOverrideConfiguration != null) {
-            throw new IllegalStateException("Override configuration has already been set");
-        } else {
+        } else if (this.mOverrideConfiguration == null) {
             this.mOverrideConfiguration = new Configuration(overrideConfiguration);
+        } else {
+            throw new IllegalStateException("Override configuration has already been set");
         }
+    }
+
+    public Configuration getOverrideConfiguration() {
+        return this.mOverrideConfiguration;
     }
 
     public Resources getResources() {
@@ -84,7 +90,7 @@ public class ContextThemeWrapper extends ContextWrapper {
     }
 
     public Object getSystemService(String name) {
-        if (!"layout_inflater".equals(name)) {
+        if (!Context.LAYOUT_INFLATER_SERVICE.equals(name)) {
             return getBaseContext().getSystemService(name);
         }
         if (this.mInflater == null) {

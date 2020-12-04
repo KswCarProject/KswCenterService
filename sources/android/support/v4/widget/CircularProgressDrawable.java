@@ -43,18 +43,20 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
     private static final float STROKE_WIDTH = 2.5f;
     private static final float STROKE_WIDTH_LARGE = 3.0f;
     private Animator mAnimator;
-    boolean mFinishing;
+    /* access modifiers changed from: private */
+    public boolean mFinishing;
     private Resources mResources;
     private final Ring mRing = new Ring();
     private float mRotation;
-    float mRotationCount;
+    /* access modifiers changed from: private */
+    public float mRotationCount;
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ProgressDrawableSize {
     }
 
-    public CircularProgressDrawable(@NonNull Context context) {
+    public CircularProgressDrawable(Context context) {
         this.mResources = ((Context) Preconditions.checkNotNull(context)).getResources();
         this.mRing.setColors(COLORS);
         setStrokeWidth(STROKE_WIDTH);
@@ -72,7 +74,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
     public void setStyle(int size) {
         if (size == 0) {
-            setSizeParameters(CENTER_RADIUS_LARGE, STROKE_WIDTH_LARGE, 12.0f, 6.0f);
+            setSizeParameters(11.0f, STROKE_WIDTH_LARGE, 12.0f, 6.0f);
         } else {
             setSizeParameters(CENTER_RADIUS, STROKE_WIDTH, 10.0f, 5.0f);
         }
@@ -97,12 +99,11 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         invalidateSelf();
     }
 
-    public void setStrokeCap(@NonNull Paint.Cap strokeCap) {
+    public void setStrokeCap(Paint.Cap strokeCap) {
         this.mRing.setStrokeCap(strokeCap);
         invalidateSelf();
     }
 
-    @NonNull
     public Paint.Cap getStrokeCap() {
         return this.mRing.getStrokeCap();
     }
@@ -170,12 +171,11 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         invalidateSelf();
     }
 
-    @NonNull
     public int[] getColorSchemeColors() {
         return this.mRing.getColors();
     }
 
-    public void setColorSchemeColors(@NonNull int... colors) {
+    public void setColorSchemeColors(int... colors) {
         this.mRing.setColors(colors);
         this.mRing.setColorIndex(0);
         invalidateSelf();
@@ -251,7 +251,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         return ((((int) (((float) (((endValue >> 24) & 255) - startA)) * fraction)) + startA) << 24) | ((((int) (((float) (((endValue >> 16) & 255) - startR)) * fraction)) + startR) << 16) | ((((int) (((float) (((endValue >> 8) & 255) - startG)) * fraction)) + startG) << 8) | (((int) (((float) ((endValue & 255) - startB)) * fraction)) + startB);
     }
 
-    /* access modifiers changed from: package-private */
+    /* access modifiers changed from: private */
     public void updateRingColor(float interpolatedTime, Ring ring) {
         if (interpolatedTime > COLOR_CHANGE_OFFSET) {
             ring.setColor(evaluateColorChange((interpolatedTime - COLOR_CHANGE_OFFSET) / 0.25f, ring.getStartingColor(), ring.getNextColor()));
@@ -267,7 +267,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         ring.setRotation(ring.getStartingRotation() + ((((float) (Math.floor((double) (ring.getStartingRotation() / MAX_PROGRESS_ARC)) + 1.0d)) - ring.getStartingRotation()) * interpolatedTime));
     }
 
-    /* access modifiers changed from: package-private */
+    /* access modifiers changed from: private */
     public void applyTransformation(float interpolatedTime, Ring ring, boolean lastFrame) {
         float startTrim;
         float startTrim2;
@@ -295,7 +295,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
     private void setupAnimators() {
         final Ring ring = this.mRing;
-        ValueAnimator animator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator animator = ValueAnimator.ofFloat(0.0f, 1.0f);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float interpolatedTime = ((Float) animation.getAnimatedValue()).floatValue();
@@ -309,7 +309,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
         animator.setInterpolator(LINEAR_INTERPOLATOR);
         animator.addListener(new Animator.AnimatorListener() {
             public void onAnimationStart(Animator animator) {
-                CircularProgressDrawable.this.mRotationCount = 0.0f;
+                float unused = CircularProgressDrawable.this.mRotationCount = 0.0f;
             }
 
             public void onAnimationEnd(Animator animator) {
@@ -323,14 +323,14 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
                 ring.storeOriginals();
                 ring.goToNextColor();
                 if (CircularProgressDrawable.this.mFinishing) {
-                    CircularProgressDrawable.this.mFinishing = false;
+                    boolean unused = CircularProgressDrawable.this.mFinishing = false;
                     animator.cancel();
                     animator.setDuration(1332);
                     animator.start();
                     ring.setShowArrow(false);
                     return;
                 }
-                CircularProgressDrawable.this.mRotationCount += 1.0f;
+                float unused2 = CircularProgressDrawable.this.mRotationCount = CircularProgressDrawable.this.mRotationCount + 1.0f;
             }
         });
         this.mAnimator = animator;

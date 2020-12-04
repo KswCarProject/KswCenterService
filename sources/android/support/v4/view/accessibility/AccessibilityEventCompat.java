@@ -1,6 +1,7 @@
 package android.support.v4.view.accessibility;
 
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityRecord;
 
@@ -9,6 +10,7 @@ public final class AccessibilityEventCompat {
     public static final int CONTENT_CHANGE_TYPE_SUBTREE = 1;
     public static final int CONTENT_CHANGE_TYPE_TEXT = 2;
     public static final int CONTENT_CHANGE_TYPE_UNDEFINED = 0;
+    private static final AccessibilityEventCompatBaseImpl IMPL;
     public static final int TYPES_ALL_MASK = -1;
     public static final int TYPE_ANNOUNCEMENT = 16384;
     public static final int TYPE_ASSIST_READING_CONTEXT = 16777216;
@@ -36,6 +38,78 @@ public final class AccessibilityEventCompat {
     @Deprecated
     public static final int TYPE_WINDOW_CONTENT_CHANGED = 2048;
 
+    static class AccessibilityEventCompatBaseImpl {
+        AccessibilityEventCompatBaseImpl() {
+        }
+
+        public void setContentChangeTypes(AccessibilityEvent event, int types) {
+        }
+
+        public int getContentChangeTypes(AccessibilityEvent event) {
+            return 0;
+        }
+
+        public void setMovementGranularity(AccessibilityEvent event, int granularity) {
+        }
+
+        public int getMovementGranularity(AccessibilityEvent event) {
+            return 0;
+        }
+
+        public void setAction(AccessibilityEvent event, int action) {
+        }
+
+        public int getAction(AccessibilityEvent event) {
+            return 0;
+        }
+    }
+
+    @RequiresApi(16)
+    static class AccessibilityEventCompatApi16Impl extends AccessibilityEventCompatBaseImpl {
+        AccessibilityEventCompatApi16Impl() {
+        }
+
+        public void setMovementGranularity(AccessibilityEvent event, int granularity) {
+            event.setMovementGranularity(granularity);
+        }
+
+        public int getMovementGranularity(AccessibilityEvent event) {
+            return event.getMovementGranularity();
+        }
+
+        public void setAction(AccessibilityEvent event, int action) {
+            event.setAction(action);
+        }
+
+        public int getAction(AccessibilityEvent event) {
+            return event.getAction();
+        }
+    }
+
+    @RequiresApi(19)
+    static class AccessibilityEventCompatApi19Impl extends AccessibilityEventCompatApi16Impl {
+        AccessibilityEventCompatApi19Impl() {
+        }
+
+        public void setContentChangeTypes(AccessibilityEvent event, int types) {
+            event.setContentChangeTypes(types);
+        }
+
+        public int getContentChangeTypes(AccessibilityEvent event) {
+            return event.getContentChangeTypes();
+        }
+    }
+
+    static {
+        if (Build.VERSION.SDK_INT >= 19) {
+            IMPL = new AccessibilityEventCompatApi19Impl();
+        } else if (Build.VERSION.SDK_INT >= 16) {
+            IMPL = new AccessibilityEventCompatApi16Impl();
+        } else {
+            IMPL = new AccessibilityEventCompatBaseImpl();
+        }
+    }
+
     private AccessibilityEventCompat() {
     }
 
@@ -60,41 +134,26 @@ public final class AccessibilityEventCompat {
     }
 
     public static void setContentChangeTypes(AccessibilityEvent event, int changeTypes) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            event.setContentChangeTypes(changeTypes);
-        }
+        IMPL.setContentChangeTypes(event, changeTypes);
     }
 
     public static int getContentChangeTypes(AccessibilityEvent event) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return event.getContentChangeTypes();
-        }
-        return 0;
+        return IMPL.getContentChangeTypes(event);
     }
 
-    public static void setMovementGranularity(AccessibilityEvent event, int granularity) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            event.setMovementGranularity(granularity);
-        }
+    public void setMovementGranularity(AccessibilityEvent event, int granularity) {
+        IMPL.setMovementGranularity(event, granularity);
     }
 
-    public static int getMovementGranularity(AccessibilityEvent event) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return event.getMovementGranularity();
-        }
-        return 0;
+    public int getMovementGranularity(AccessibilityEvent event) {
+        return IMPL.getMovementGranularity(event);
     }
 
-    public static void setAction(AccessibilityEvent event, int action) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            event.setAction(action);
-        }
+    public void setAction(AccessibilityEvent event, int action) {
+        IMPL.setAction(event, action);
     }
 
-    public static int getAction(AccessibilityEvent event) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return event.getAction();
-        }
-        return 0;
+    public int getAction(AccessibilityEvent event) {
+        return IMPL.getAction(event);
     }
 }

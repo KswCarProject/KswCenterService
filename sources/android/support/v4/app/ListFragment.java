@@ -3,8 +3,6 @@ package android.support.v4.app;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,24 +48,24 @@ public class ListFragment extends Fragment {
         pframe.setOrientation(1);
         pframe.setVisibility(8);
         pframe.setGravity(17);
-        pframe.addView(new ProgressBar(context, (AttributeSet) null, 16842874), new FrameLayout.LayoutParams(-2, -2));
-        root.addView(pframe, new FrameLayout.LayoutParams(-1, -1));
+        pframe.addView((View) new ProgressBar(context, (AttributeSet) null, 16842874), (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-2, -2));
+        root.addView((View) pframe, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -1));
         FrameLayout lframe = new FrameLayout(context);
         lframe.setId(INTERNAL_LIST_CONTAINER_ID);
         TextView tv = new TextView(context);
         tv.setId(INTERNAL_EMPTY_ID);
         tv.setGravity(17);
-        lframe.addView(tv, new FrameLayout.LayoutParams(-1, -1));
+        lframe.addView((View) tv, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -1));
         ListView lv = new ListView(context);
         lv.setId(16908298);
         lv.setDrawSelectorOnTop(false);
-        lframe.addView(lv, new FrameLayout.LayoutParams(-1, -1));
-        root.addView(lframe, new FrameLayout.LayoutParams(-1, -1));
+        lframe.addView((View) lv, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -1));
+        root.addView((View) lframe, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -1));
         root.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
         return root;
     }
 
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ensureList();
     }
@@ -123,14 +121,15 @@ public class ListFragment extends Fragment {
 
     public void setEmptyText(CharSequence text) {
         ensureList();
-        if (this.mStandardEmptyView == null) {
-            throw new IllegalStateException("Can't be used with a custom content view");
+        if (this.mStandardEmptyView != null) {
+            this.mStandardEmptyView.setText(text);
+            if (this.mEmptyText == null) {
+                this.mList.setEmptyView(this.mStandardEmptyView);
+            }
+            this.mEmptyText = text;
+            return;
         }
-        this.mStandardEmptyView.setText(text);
-        if (this.mEmptyText == null) {
-            this.mList.setEmptyView(this.mStandardEmptyView);
-        }
-        this.mEmptyText = text;
+        throw new IllegalStateException("Can't be used with a custom content view");
     }
 
     public void setListShown(boolean shown) {
@@ -178,45 +177,46 @@ public class ListFragment extends Fragment {
     private void ensureList() {
         if (this.mList == null) {
             View root = getView();
-            if (root == null) {
-                throw new IllegalStateException("Content view not yet created");
-            }
-            if (root instanceof ListView) {
-                this.mList = (ListView) root;
-            } else {
-                this.mStandardEmptyView = (TextView) root.findViewById(INTERNAL_EMPTY_ID);
-                if (this.mStandardEmptyView == null) {
-                    this.mEmptyView = root.findViewById(16908292);
+            if (root != null) {
+                if (root instanceof ListView) {
+                    this.mList = (ListView) root;
                 } else {
-                    this.mStandardEmptyView.setVisibility(8);
-                }
-                this.mProgressContainer = root.findViewById(INTERNAL_PROGRESS_CONTAINER_ID);
-                this.mListContainer = root.findViewById(INTERNAL_LIST_CONTAINER_ID);
-                View rawListView = root.findViewById(16908298);
-                if (rawListView instanceof ListView) {
-                    this.mList = (ListView) rawListView;
-                    if (this.mEmptyView != null) {
-                        this.mList.setEmptyView(this.mEmptyView);
-                    } else if (this.mEmptyText != null) {
-                        this.mStandardEmptyView.setText(this.mEmptyText);
-                        this.mList.setEmptyView(this.mStandardEmptyView);
+                    this.mStandardEmptyView = (TextView) root.findViewById(INTERNAL_EMPTY_ID);
+                    if (this.mStandardEmptyView == null) {
+                        this.mEmptyView = root.findViewById(16908292);
+                    } else {
+                        this.mStandardEmptyView.setVisibility(8);
                     }
-                } else if (rawListView == null) {
-                    throw new RuntimeException("Your content must have a ListView whose id attribute is 'android.R.id.list'");
-                } else {
-                    throw new RuntimeException("Content has view with id attribute 'android.R.id.list' that is not a ListView class");
+                    this.mProgressContainer = root.findViewById(INTERNAL_PROGRESS_CONTAINER_ID);
+                    this.mListContainer = root.findViewById(INTERNAL_LIST_CONTAINER_ID);
+                    View rawListView = root.findViewById(16908298);
+                    if (rawListView instanceof ListView) {
+                        this.mList = (ListView) rawListView;
+                        if (this.mEmptyView != null) {
+                            this.mList.setEmptyView(this.mEmptyView);
+                        } else if (this.mEmptyText != null) {
+                            this.mStandardEmptyView.setText(this.mEmptyText);
+                            this.mList.setEmptyView(this.mStandardEmptyView);
+                        }
+                    } else if (rawListView == null) {
+                        throw new RuntimeException("Your content must have a ListView whose id attribute is 'android.R.id.list'");
+                    } else {
+                        throw new RuntimeException("Content has view with id attribute 'android.R.id.list' that is not a ListView class");
+                    }
                 }
+                this.mListShown = true;
+                this.mList.setOnItemClickListener(this.mOnClickListener);
+                if (this.mAdapter != null) {
+                    ListAdapter adapter = this.mAdapter;
+                    this.mAdapter = null;
+                    setListAdapter(adapter);
+                } else if (this.mProgressContainer != null) {
+                    setListShown(false, false);
+                }
+                this.mHandler.post(this.mRequestFocus);
+                return;
             }
-            this.mListShown = true;
-            this.mList.setOnItemClickListener(this.mOnClickListener);
-            if (this.mAdapter != null) {
-                ListAdapter adapter = this.mAdapter;
-                this.mAdapter = null;
-                setListAdapter(adapter);
-            } else if (this.mProgressContainer != null) {
-                setListShown(false, false);
-            }
-            this.mHandler.post(this.mRequestFocus);
+            throw new IllegalStateException("Content view not yet created");
         }
     }
 }

@@ -1,8 +1,6 @@
 package android.support.v4.app;
 
 import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.ViewModelStore;
-import android.arch.lifecycle.ViewModelStoreOwner;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -15,9 +13,10 @@ import android.os.Parcelable;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.internal.view.SupportMenu;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v4.util.SparseArrayCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -29,10 +28,11 @@ import android.view.Window;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
-public class FragmentActivity extends SupportActivity implements ViewModelStoreOwner, ActivityCompat.OnRequestPermissionsResultCallback, ActivityCompat.RequestPermissionsRequestCodeValidator {
+public class FragmentActivity extends BaseFragmentActivityApi16 implements ActivityCompat.OnRequestPermissionsResultCallback, ActivityCompat.RequestPermissionsRequestCodeValidator {
     static final String ALLOCATED_REQUEST_INDICIES_TAG = "android:support:request_indicies";
     static final String FRAGMENTS_TAG = "android:support:fragments";
     static final int MAX_NUM_PENDING_FRAGMENT_ACTIVITY_RESULTS = 65534;
+    static final int MSG_REALLY_STOPPED = 1;
     static final int MSG_RESUME_PENDING = 2;
     static final String NEXT_CANDIDATE_REQUEST_INDEX_TAG = "android:support:next_request_index";
     static final String REQUEST_FRAGMENT_WHO_TAG = "android:support:request_fragment_who";
@@ -41,34 +41,64 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
     final FragmentController mFragments = FragmentController.createController(new HostCallbacks());
     final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-            if (msg.what != 2) {
-                super.handleMessage(msg);
-                return;
+            switch (msg.what) {
+                case 1:
+                    if (FragmentActivity.this.mStopped) {
+                        FragmentActivity.this.doReallyStop(false);
+                        return;
+                    }
+                    return;
+                case 2:
+                    FragmentActivity.this.onResumeFragments();
+                    FragmentActivity.this.mFragments.execPendingActions();
+                    return;
+                default:
+                    super.handleMessage(msg);
+                    return;
             }
-            FragmentActivity.this.onResumeFragments();
-            FragmentActivity.this.mFragments.execPendingActions();
         }
     };
     int mNextCandidateRequestIndex;
     SparseArrayCompat<String> mPendingFragmentActivityResults;
+    boolean mReallyStopped = true;
     boolean mRequestedPermissionsFromFragment;
     boolean mResumed;
-    boolean mStartedActivityFromFragment;
-    boolean mStartedIntentSenderFromFragment;
+    boolean mRetaining;
     boolean mStopped = true;
-    private ViewModelStore mViewModelStore;
+
+    public /* bridge */ /* synthetic */ View onCreateView(View view, String str, Context context, AttributeSet attributeSet) {
+        return super.onCreateView(view, str, context, attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ View onCreateView(String str, Context context, AttributeSet attributeSet) {
+        return super.onCreateView(str, context, attributeSet);
+    }
+
+    @RequiresApi(16)
+    public /* bridge */ /* synthetic */ void startActivityForResult(Intent intent, int i, @Nullable Bundle bundle) {
+        super.startActivityForResult(intent, i, bundle);
+    }
+
+    public /* bridge */ /* synthetic */ void startIntentSenderForResult(IntentSender intentSender, int i, @Nullable Intent intent, int i2, int i3, int i4) throws IntentSender.SendIntentException {
+        super.startIntentSenderForResult(intentSender, i, intent, i2, i3, i4);
+    }
+
+    @RequiresApi(16)
+    public /* bridge */ /* synthetic */ void startIntentSenderForResult(IntentSender intentSender, int i, @Nullable Intent intent, int i2, int i3, int i4, Bundle bundle) throws IntentSender.SendIntentException {
+        super.startIntentSenderForResult(intentSender, i, intent, i2, i3, i4, bundle);
+    }
 
     static final class NonConfigurationInstances {
         Object custom;
         FragmentManagerNonConfig fragments;
-        ViewModelStore viewModelStore;
+        SimpleArrayMap<String, LoaderManager> loaders;
 
         NonConfigurationInstances() {
         }
     }
 
     /* access modifiers changed from: protected */
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         this.mFragments.noteStateNotSaved();
         int requestIndex = requestCode >> 16;
         if (requestIndex != 0) {
@@ -87,10 +117,7 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
             targetFragment.onActivityResult(65535 & requestCode, resultCode, data);
             return;
         }
-        ActivityCompat.PermissionCompatDelegate delegate = ActivityCompat.getPermissionCompatDelegate();
-        if (delegate == null || !delegate.onActivityResult(this, requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onBackPressed() {
@@ -136,25 +163,7 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
 
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        this.mFragments.noteStateNotSaved();
         this.mFragments.dispatchConfigurationChanged(newConfig);
-    }
-
-    @NonNull
-    public ViewModelStore getViewModelStore() {
-        if (getApplication() == null) {
-            throw new IllegalStateException("Your activity is not yet attached to the Application instance. You can't request ViewModel before onCreate call.");
-        }
-        if (this.mViewModelStore == null) {
-            NonConfigurationInstances nc = (NonConfigurationInstances) getLastNonConfigurationInstance();
-            if (nc != null) {
-                this.mViewModelStore = nc.viewModelStore;
-            }
-            if (this.mViewModelStore == null) {
-                this.mViewModelStore = new ViewModelStore();
-            }
-        }
-        return this.mViewModelStore;
     }
 
     public Lifecycle getLifecycle() {
@@ -167,8 +176,8 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
         this.mFragments.attachHost((Fragment) null);
         super.onCreate(savedInstanceState);
         NonConfigurationInstances nc = (NonConfigurationInstances) getLastNonConfigurationInstance();
-        if (!(nc == null || nc.viewModelStore == null || this.mViewModelStore != null)) {
-            this.mViewModelStore = nc.viewModelStore;
+        if (nc != null) {
+            this.mFragments.restoreLoaderNonConfig(nc.loaders);
         }
         if (savedInstanceState != null) {
             Parcelable p = savedInstanceState.getParcelable(FRAGMENTS_TAG);
@@ -205,22 +214,6 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
         return super.onCreatePanelMenu(featureId, menu);
     }
 
-    public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        View v = dispatchFragmentsOnCreateView(parent, name, context, attrs);
-        if (v == null) {
-            return super.onCreateView(parent, name, context, attrs);
-        }
-        return v;
-    }
-
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        View v = dispatchFragmentsOnCreateView((View) null, name, context, attrs);
-        if (v == null) {
-            return super.onCreateView(name, context, attrs);
-        }
-        return v;
-    }
-
     /* access modifiers changed from: package-private */
     public final View dispatchFragmentsOnCreateView(View parent, String name, Context context, AttributeSet attrs) {
         return this.mFragments.onCreateView(parent, name, context, attrs);
@@ -229,10 +222,9 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
     /* access modifiers changed from: protected */
     public void onDestroy() {
         super.onDestroy();
-        if (this.mViewModelStore != null && !isChangingConfigurations()) {
-            this.mViewModelStore.clear();
-        }
+        doReallyStop(false);
         this.mFragments.dispatchDestroy();
+        this.mFragments.doLoaderDestroy();
     }
 
     public void onLowMemory() {
@@ -316,22 +308,26 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
     }
 
     public final Object onRetainNonConfigurationInstance() {
+        if (this.mStopped) {
+            doReallyStop(true);
+        }
         Object custom = onRetainCustomNonConfigurationInstance();
         FragmentManagerNonConfig fragments = this.mFragments.retainNestedNonConfig();
-        if (fragments == null && this.mViewModelStore == null && custom == null) {
+        SimpleArrayMap<String, LoaderManager> loaders = this.mFragments.retainLoaderNonConfig();
+        if (fragments == null && loaders == null && custom == null) {
             return null;
         }
         NonConfigurationInstances nci = new NonConfigurationInstances();
         nci.custom = custom;
-        nci.viewModelStore = this.mViewModelStore;
         nci.fragments = fragments;
+        nci.loaders = loaders;
         return nci;
     }
 
     /* access modifiers changed from: protected */
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        markFragmentsCreated();
+        markState(getSupportFragmentManager(), Lifecycle.State.CREATED);
         Parcelable p = this.mFragments.saveAllState();
         if (p != null) {
             outState.putParcelable(FRAGMENTS_TAG, p);
@@ -353,20 +349,25 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
     public void onStart() {
         super.onStart();
         this.mStopped = false;
+        this.mReallyStopped = false;
+        this.mHandler.removeMessages(1);
         if (!this.mCreated) {
             this.mCreated = true;
             this.mFragments.dispatchActivityCreated();
         }
         this.mFragments.noteStateNotSaved();
         this.mFragments.execPendingActions();
+        this.mFragments.doLoaderStart();
         this.mFragments.dispatchStart();
+        this.mFragments.reportLoaderStart();
     }
 
     /* access modifiers changed from: protected */
     public void onStop() {
         super.onStop();
         this.mStopped = true;
-        markFragmentsCreated();
+        markState(getSupportFragmentManager(), Lifecycle.State.CREATED);
+        this.mHandler.sendEmptyMessage(1);
         this.mFragments.dispatchStop();
     }
 
@@ -397,14 +398,33 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
         writer.print(innerPrefix);
         writer.print("mCreated=");
         writer.print(this.mCreated);
-        writer.print(" mResumed=");
+        writer.print("mResumed=");
         writer.print(this.mResumed);
         writer.print(" mStopped=");
         writer.print(this.mStopped);
-        if (getApplication() != null) {
-            LoaderManager.getInstance(this).dump(innerPrefix, fd, writer, args);
-        }
+        writer.print(" mReallyStopped=");
+        writer.println(this.mReallyStopped);
+        this.mFragments.dumpLoaders(innerPrefix, fd, writer, args);
         this.mFragments.getSupportFragmentManager().dump(prefix, fd, writer, args);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void doReallyStop(boolean retaining) {
+        if (!this.mReallyStopped) {
+            this.mReallyStopped = true;
+            this.mRetaining = retaining;
+            this.mHandler.removeMessages(1);
+            onReallyStop();
+        } else if (retaining) {
+            this.mFragments.doLoaderStart();
+            this.mFragments.doLoaderStop(true);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void onReallyStop() {
+        this.mFragments.doLoaderStop(this.mRetaining);
+        this.mFragments.dispatchReallyStop();
     }
 
     public void onAttachFragment(Fragment fragment) {
@@ -414,9 +434,8 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
         return this.mFragments.getSupportFragmentManager();
     }
 
-    @Deprecated
     public LoaderManager getSupportLoaderManager() {
-        return LoaderManager.getInstance(this);
+        return this.mFragments.getSupportLoaderManager();
     }
 
     public void startActivityForResult(Intent intent, int requestCode) {
@@ -426,33 +445,6 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
         super.startActivityForResult(intent, requestCode);
     }
 
-    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
-        if (!this.mStartedActivityFromFragment && requestCode != -1) {
-            checkForValidRequestCode(requestCode);
-        }
-        super.startActivityForResult(intent, requestCode, options);
-    }
-
-    public void startIntentSenderForResult(IntentSender intent, int requestCode, @Nullable Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags) throws IntentSender.SendIntentException {
-        if (!this.mStartedIntentSenderFromFragment && requestCode != -1) {
-            checkForValidRequestCode(requestCode);
-        }
-        super.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags);
-    }
-
-    public void startIntentSenderForResult(IntentSender intent, int requestCode, @Nullable Intent fillInIntent, int flagsMask, int flagsValues, int extraFlags, Bundle options) throws IntentSender.SendIntentException {
-        if (!this.mStartedIntentSenderFromFragment && requestCode != -1) {
-            checkForValidRequestCode(requestCode);
-        }
-        super.startIntentSenderForResult(intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
-    }
-
-    static void checkForValidRequestCode(int requestCode) {
-        if ((-65536 & requestCode) != 0) {
-            throw new IllegalArgumentException("Can only use lower 16 bits for requestCode");
-        }
-    }
-
     public final void validateRequestPermissionsRequestCode(int requestCode) {
         if (!this.mRequestedPermissionsFromFragment && requestCode != -1) {
             checkForValidRequestCode(requestCode);
@@ -460,8 +452,7 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        this.mFragments.noteStateNotSaved();
-        int index = (requestCode >> 16) & SupportMenu.USER_MASK;
+        int index = (requestCode >> 16) & 65535;
         if (index != 0) {
             int index2 = index - 1;
             String who = this.mPendingFragmentActivityResults.get(index2);
@@ -503,12 +494,9 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
         this.mStartedIntentSenderFromFragment = true;
         if (i == -1) {
             try {
-                ActivityCompat.startIntentSenderForResult(this, intent, i, fillInIntent, flagsMask, flagsValues, extraFlags, options);
+                ActivityCompat.startIntentSenderForResult(this, intent, requestCode, fillInIntent, flagsMask, flagsValues, extraFlags, options);
+            } finally {
                 this.mStartedIntentSenderFromFragment = false;
-            } catch (Throwable th) {
-                Throwable th2 = th;
-                this.mStartedIntentSenderFromFragment = false;
-                throw th2;
             }
         } else {
             checkForValidRequestCode(requestCode);
@@ -518,16 +506,16 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
     }
 
     private int allocateRequestIndex(Fragment fragment) {
-        if (this.mPendingFragmentActivityResults.size() >= MAX_NUM_PENDING_FRAGMENT_ACTIVITY_RESULTS) {
-            throw new IllegalStateException("Too many pending Fragment activity results.");
+        if (this.mPendingFragmentActivityResults.size() < 65534) {
+            while (this.mPendingFragmentActivityResults.indexOfKey(this.mNextCandidateRequestIndex) >= 0) {
+                this.mNextCandidateRequestIndex = (this.mNextCandidateRequestIndex + 1) % 65534;
+            }
+            int requestIndex = this.mNextCandidateRequestIndex;
+            this.mPendingFragmentActivityResults.put(requestIndex, fragment.mWho);
+            this.mNextCandidateRequestIndex = (this.mNextCandidateRequestIndex + 1) % 65534;
+            return requestIndex;
         }
-        while (this.mPendingFragmentActivityResults.indexOfKey(this.mNextCandidateRequestIndex) >= 0) {
-            this.mNextCandidateRequestIndex = (this.mNextCandidateRequestIndex + 1) % MAX_NUM_PENDING_FRAGMENT_ACTIVITY_RESULTS;
-        }
-        int requestIndex = this.mNextCandidateRequestIndex;
-        this.mPendingFragmentActivityResults.put(requestIndex, fragment.mWho);
-        this.mNextCandidateRequestIndex = (this.mNextCandidateRequestIndex + 1) % MAX_NUM_PENDING_FRAGMENT_ACTIVITY_RESULTS;
-        return requestIndex;
+        throw new IllegalStateException("Too many pending Fragment activity results.");
     }
 
     /* JADX INFO: finally extract failed */
@@ -620,25 +608,12 @@ public class FragmentActivity extends SupportActivity implements ViewModelStoreO
         }
     }
 
-    private void markFragmentsCreated() {
-        do {
-        } while (markState(getSupportFragmentManager(), Lifecycle.State.CREATED));
-    }
-
-    private static boolean markState(FragmentManager manager, Lifecycle.State state) {
-        boolean hadNotMarked = false;
+    private static void markState(FragmentManager manager, Lifecycle.State state) {
         for (Fragment fragment : manager.getFragments()) {
             if (fragment != null) {
-                if (fragment.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-                    fragment.mLifecycleRegistry.markState(state);
-                    hadNotMarked = true;
-                }
-                FragmentManager childFragmentManager = fragment.peekChildFragmentManager();
-                if (childFragmentManager != null) {
-                    hadNotMarked |= markState(childFragmentManager, state);
-                }
+                fragment.mLifecycleRegistry.markState(state);
+                markState(fragment.getChildFragmentManager(), state);
             }
         }
-        return hadNotMarked;
     }
 }

@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
+import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.utils.SystemProperties;
 import java.io.PrintStream;
@@ -25,12 +26,13 @@ public class BtController {
     private static Thread startGocSdkThread;
 
     public static void rebootBt() {
-        Log.d(TAG, "reboot gocsdk");
-        SystemProperties.set("vendor.init.ksw.bt_address", "0");
-        SystemProperties.set("vendor.disable.bt", "0");
-        SystemProperties.set("vendor.disable.gocsdk", "1");
-        SystemProperties.set("vendor.disable.gocsdk", "0");
-        fixBt(PowerManagerAppService.serviceContext);
+        if (!CenterControlImpl.getImpl().isUsingCarPlay() && !CenterControlImpl.getImpl().isUsingUsbCarPlay()) {
+            Log.d(TAG, "reboot gocsdk");
+            SystemProperties.set("vendor.init.ksw.bt_address", "0");
+            SystemProperties.set("vendor.disable.bt", "0");
+            SystemProperties.set("vendor.disable.gocsdk", "1");
+            SystemProperties.set("vendor.disable.gocsdk", "0");
+        }
     }
 
     public static void fixBt(Context context) {
@@ -49,8 +51,8 @@ public class BtController {
         Settings.System.putInt(context.getContentResolver(), "btSwitch", 1);
         context.registerReceiver(new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals("android.bluetooth.adapter.action.STATE_CHANGED")) {
-                    int state = intent.getIntExtra("android.bluetooth.adapter.extra.STATE", 10);
+                if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                    int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 10);
                     Log.v(BtController.TAG, "fixBt----Start----gocsdk state=" + state + " btEnable=" + BluetoothAdapter.getDefaultAdapter().isEnabled());
                     if (state == 12) {
                         String unused = BtController.mRealBtAddress = BluetoothAdapter.getDefaultAdapter().getAddress();
@@ -70,7 +72,7 @@ public class BtController {
                     }
                 }
             }
-        }, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
+        }, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         mKswBtHandler = new Handler() {
             public void handleMessage(Message msg) {
                 boolean enable = BluetoothAdapter.getDefaultAdapter().enable();
@@ -94,8 +96,8 @@ public class BtController {
         Settings.System.putInt(context.getContentResolver(), "btSwitch", 1);
         context.registerReceiver(new BroadcastReceiver() {
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals("android.bluetooth.adapter.action.STATE_CHANGED")) {
-                    int state = intent.getIntExtra("android.bluetooth.adapter.extra.STATE", 10);
+                if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                    int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 10);
                     Log.d(BtController.TAG, "fixBt----Start----gocsdk state=" + state + " btEnable=" + BluetoothAdapter.getDefaultAdapter().isEnabled());
                     if (state == 12) {
                         String unused = BtController.mRealBtAddress = BluetoothAdapter.getDefaultAdapter().getAddress();
@@ -117,7 +119,7 @@ public class BtController {
                     }
                 }
             }
-        }, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
+        }, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         mKswBtHandler = new Handler() {
             public void handleMessage(Message msg) {
                 boolean enable = BluetoothAdapter.getDefaultAdapter().enable();

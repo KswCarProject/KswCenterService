@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarService</string>
+    <string name="auto_update_mcu">MCU מתוקן!</string>
+    <string name="auto_update_mcu_success">MCU תוקן בהצלחה!</string>
+    <string name="bootanimation_success">אנימציית האתחול השתנתה</string>
+    <string name="copy_file">מוכן לעדכון</string>
+    <string name="disable_open">נכים!</string>
+    <string name="import_config_success">ייבוא התצורה הצליח!</string>
+    <string name="no_update">לא</string>
+    <string name="ota_update">עדכון OTA</string>
+    <string name="ota_update_message">שדרג קובץ שדרג. האם ברצונך לשדרג עכשיו?</string>
+    <string name="update_success">עודכן בהצלחה!</string>
+    <string name="yes_update">כן</string>
+</resources>

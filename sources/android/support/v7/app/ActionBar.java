@@ -368,7 +368,7 @@ public abstract class ActionBar {
         }
 
         public LayoutParams(LayoutParams source) {
-            super(source);
+            super((ViewGroup.MarginLayoutParams) source);
             this.gravity = 0;
             this.gravity = source.gravity;
         }

@@ -6,7 +6,6 @@ import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.support.annotation.RestrictTo;
-import android.support.v4.view.PointerIconCompat;
 import android.support.v7.appcompat.R;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -29,11 +28,11 @@ class TooltipPopup {
 
     TooltipPopup(Context context) {
         this.mContext = context;
-        this.mContentView = LayoutInflater.from(this.mContext).inflate(R.layout.abc_tooltip, (ViewGroup) null);
+        this.mContentView = LayoutInflater.from(this.mContext).inflate(R.layout.tooltip, (ViewGroup) null);
         this.mMessageView = (TextView) this.mContentView.findViewById(R.id.message);
         this.mLayoutParams.setTitle(getClass().getSimpleName());
         this.mLayoutParams.packageName = this.mContext.getPackageName();
-        this.mLayoutParams.type = PointerIconCompat.TYPE_HAND;
+        this.mLayoutParams.type = 1002;
         this.mLayoutParams.width = -2;
         this.mLayoutParams.height = -2;
         this.mLayoutParams.format = -3;
@@ -48,13 +47,13 @@ class TooltipPopup {
         }
         this.mMessageView.setText(tooltipText);
         computePosition(anchorView, anchorX, anchorY, fromTouch, this.mLayoutParams);
-        ((WindowManager) this.mContext.getSystemService("window")).addView(this.mContentView, this.mLayoutParams);
+        ((WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE)).addView(this.mContentView, this.mLayoutParams);
     }
 
     /* access modifiers changed from: package-private */
     public void hide() {
         if (isShowing()) {
-            ((WindowManager) this.mContext.getSystemService("window")).removeView(this.mContentView);
+            ((WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE)).removeView(this.mContentView);
         }
     }
 
@@ -69,7 +68,6 @@ class TooltipPopup {
         int offsetExtra;
         int statusBarHeight;
         WindowManager.LayoutParams layoutParams = outParams;
-        layoutParams.token = anchorView.getApplicationWindowToken();
         int tooltipPreciseAnchorThreshold = this.mContext.getResources().getDimensionPixelOffset(R.dimen.tooltip_precise_anchor_threshold);
         if (anchorView.getWidth() >= tooltipPreciseAnchorThreshold) {
             offsetX = anchorX;
@@ -111,7 +109,7 @@ class TooltipPopup {
         iArr[0] = iArr[0] - this.mTmpAppPos[0];
         int[] iArr2 = this.mTmpAnchorPos;
         iArr2[1] = iArr2[1] - this.mTmpAppPos[1];
-        layoutParams.x = (this.mTmpAnchorPos[0] + offsetX) - (appView.getWidth() / 2);
+        layoutParams.x = (this.mTmpAnchorPos[0] + offsetX) - (this.mTmpDisplayFrame.width() / 2);
         int spec = View.MeasureSpec.makeMeasureSpec(0, 0);
         this.mContentView.measure(spec, spec);
         int tooltipHeight = this.mContentView.getMeasuredHeight();
@@ -131,16 +129,11 @@ class TooltipPopup {
     }
 
     private static View getAppRootView(View anchorView) {
-        View rootView = anchorView.getRootView();
-        ViewGroup.LayoutParams lp = rootView.getLayoutParams();
-        if ((lp instanceof WindowManager.LayoutParams) && ((WindowManager.LayoutParams) lp).type == 2) {
-            return rootView;
-        }
         for (Context context = anchorView.getContext(); context instanceof ContextWrapper; context = ((ContextWrapper) context).getBaseContext()) {
             if (context instanceof Activity) {
                 return ((Activity) context).getWindow().getDecorView();
             }
         }
-        return rootView;
+        return anchorView.getRootView();
     }
 }

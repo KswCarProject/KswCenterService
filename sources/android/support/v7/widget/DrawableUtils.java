@@ -11,8 +11,7 @@ import android.graphics.drawable.ScaleDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
-import android.support.v4.graphics.drawable.WrappedDrawable;
-import android.support.v7.graphics.drawable.DrawableWrapper;
+import android.support.v4.graphics.drawable.DrawableWrapper;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
 public class DrawableUtils {
@@ -33,111 +32,111 @@ public class DrawableUtils {
     private DrawableUtils() {
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:30:0x0079 A[Catch:{ Exception -> 0x009b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:31:0x007a A[Catch:{ Exception -> 0x009b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x0081 A[Catch:{ Exception -> 0x009b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:33:0x0088 A[Catch:{ Exception -> 0x009b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:34:0x008f A[Catch:{ Exception -> 0x009b }] */
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x007b A[Catch:{ Exception -> 0x009d }] */
+    /* JADX WARNING: Removed duplicated region for block: B:31:0x007c A[Catch:{ Exception -> 0x009d }] */
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x0083 A[Catch:{ Exception -> 0x009d }] */
+    /* JADX WARNING: Removed duplicated region for block: B:33:0x008a A[Catch:{ Exception -> 0x009d }] */
+    /* JADX WARNING: Removed duplicated region for block: B:34:0x0091 A[Catch:{ Exception -> 0x009d }] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public static android.graphics.Rect getOpticalBounds(android.graphics.drawable.Drawable r12) {
         /*
             java.lang.Class<?> r0 = sInsetsClazz
-            if (r0 == 0) goto L_0x00a3
-            android.graphics.drawable.Drawable r0 = android.support.v4.graphics.drawable.DrawableCompat.unwrap(r12)     // Catch:{ Exception -> 0x009b }
+            if (r0 == 0) goto L_0x00a5
+            android.graphics.drawable.Drawable r0 = android.support.v4.graphics.drawable.DrawableCompat.unwrap(r12)     // Catch:{ Exception -> 0x009d }
             r12 = r0
-            java.lang.Class r0 = r12.getClass()     // Catch:{ Exception -> 0x009b }
+            java.lang.Class r0 = r12.getClass()     // Catch:{ Exception -> 0x009d }
             java.lang.String r1 = "getOpticalInsets"
             r2 = 0
-            java.lang.Class[] r3 = new java.lang.Class[r2]     // Catch:{ Exception -> 0x009b }
-            java.lang.reflect.Method r0 = r0.getMethod(r1, r3)     // Catch:{ Exception -> 0x009b }
-            java.lang.Object[] r1 = new java.lang.Object[r2]     // Catch:{ Exception -> 0x009b }
-            java.lang.Object r1 = r0.invoke(r12, r1)     // Catch:{ Exception -> 0x009b }
-            if (r1 == 0) goto L_0x009a
-            android.graphics.Rect r3 = new android.graphics.Rect     // Catch:{ Exception -> 0x009b }
-            r3.<init>()     // Catch:{ Exception -> 0x009b }
-            java.lang.Class<?> r4 = sInsetsClazz     // Catch:{ Exception -> 0x009b }
-            java.lang.reflect.Field[] r4 = r4.getFields()     // Catch:{ Exception -> 0x009b }
-            int r5 = r4.length     // Catch:{ Exception -> 0x009b }
-            r6 = 0
+            java.lang.Class[] r3 = new java.lang.Class[r2]     // Catch:{ Exception -> 0x009d }
+            java.lang.reflect.Method r0 = r0.getMethod(r1, r3)     // Catch:{ Exception -> 0x009d }
+            java.lang.Object[] r1 = new java.lang.Object[r2]     // Catch:{ Exception -> 0x009d }
+            java.lang.Object r1 = r0.invoke(r12, r1)     // Catch:{ Exception -> 0x009d }
+            if (r1 == 0) goto L_0x009c
+            android.graphics.Rect r3 = new android.graphics.Rect     // Catch:{ Exception -> 0x009d }
+            r3.<init>()     // Catch:{ Exception -> 0x009d }
+            java.lang.Class<?> r4 = sInsetsClazz     // Catch:{ Exception -> 0x009d }
+            java.lang.reflect.Field[] r4 = r4.getFields()     // Catch:{ Exception -> 0x009d }
+            int r5 = r4.length     // Catch:{ Exception -> 0x009d }
+            r6 = r2
         L_0x002b:
-            if (r6 >= r5) goto L_0x0099
-            r7 = r4[r6]     // Catch:{ Exception -> 0x009b }
-            java.lang.String r8 = r7.getName()     // Catch:{ Exception -> 0x009b }
+            if (r6 >= r5) goto L_0x009b
+            r7 = r4[r6]     // Catch:{ Exception -> 0x009d }
+            java.lang.String r8 = r7.getName()     // Catch:{ Exception -> 0x009d }
             r9 = -1
-            int r10 = r8.hashCode()     // Catch:{ Exception -> 0x009b }
+            int r10 = r8.hashCode()     // Catch:{ Exception -> 0x009d }
             r11 = -1383228885(0xffffffffad8d9a2b, float:-1.6098308E-11)
-            if (r10 == r11) goto L_0x006b
+            if (r10 == r11) goto L_0x006d
             r11 = 115029(0x1c155, float:1.6119E-40)
-            if (r10 == r11) goto L_0x0061
+            if (r10 == r11) goto L_0x0062
             r11 = 3317767(0x32a007, float:4.649182E-39)
-            if (r10 == r11) goto L_0x0057
+            if (r10 == r11) goto L_0x0058
             r11 = 108511772(0x677c21c, float:4.6598146E-35)
             if (r10 == r11) goto L_0x004d
-            goto L_0x0075
+            goto L_0x0077
         L_0x004d:
             java.lang.String r10 = "right"
-            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009b }
-            if (r8 == 0) goto L_0x0075
+            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009d }
+            if (r8 == 0) goto L_0x0077
             r8 = 2
-            goto L_0x0076
-        L_0x0057:
+            goto L_0x0078
+        L_0x0058:
             java.lang.String r10 = "left"
-            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009b }
-            if (r8 == 0) goto L_0x0075
-            r8 = 0
-            goto L_0x0076
-        L_0x0061:
+            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009d }
+            if (r8 == 0) goto L_0x0077
+            r8 = r2
+            goto L_0x0078
+        L_0x0062:
             java.lang.String r10 = "top"
-            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009b }
-            if (r8 == 0) goto L_0x0075
+            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009d }
+            if (r8 == 0) goto L_0x0077
             r8 = 1
-            goto L_0x0076
-        L_0x006b:
+            goto L_0x0078
+        L_0x006d:
             java.lang.String r10 = "bottom"
-            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009b }
-            if (r8 == 0) goto L_0x0075
+            boolean r8 = r8.equals(r10)     // Catch:{ Exception -> 0x009d }
+            if (r8 == 0) goto L_0x0077
             r8 = 3
-            goto L_0x0076
-        L_0x0075:
-            r8 = -1
-        L_0x0076:
+            goto L_0x0078
+        L_0x0077:
+            r8 = r9
+        L_0x0078:
             switch(r8) {
-                case 0: goto L_0x008f;
-                case 1: goto L_0x0088;
-                case 2: goto L_0x0081;
-                case 3: goto L_0x007a;
-                default: goto L_0x0079;
-            }     // Catch:{ Exception -> 0x009b }
-        L_0x0079:
-            goto L_0x0096
-        L_0x007a:
-            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009b }
-            r3.bottom = r8     // Catch:{ Exception -> 0x009b }
-            goto L_0x0096
-        L_0x0081:
-            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009b }
-            r3.right = r8     // Catch:{ Exception -> 0x009b }
-            goto L_0x0096
-        L_0x0088:
-            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009b }
-            r3.top = r8     // Catch:{ Exception -> 0x009b }
-            goto L_0x0096
-        L_0x008f:
-            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009b }
-            r3.left = r8     // Catch:{ Exception -> 0x009b }
-        L_0x0096:
+                case 0: goto L_0x0091;
+                case 1: goto L_0x008a;
+                case 2: goto L_0x0083;
+                case 3: goto L_0x007c;
+                default: goto L_0x007b;
+            }     // Catch:{ Exception -> 0x009d }
+        L_0x007b:
+            goto L_0x0098
+        L_0x007c:
+            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009d }
+            r3.bottom = r8     // Catch:{ Exception -> 0x009d }
+            goto L_0x0098
+        L_0x0083:
+            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009d }
+            r3.right = r8     // Catch:{ Exception -> 0x009d }
+            goto L_0x0098
+        L_0x008a:
+            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009d }
+            r3.top = r8     // Catch:{ Exception -> 0x009d }
+            goto L_0x0098
+        L_0x0091:
+            int r8 = r7.getInt(r1)     // Catch:{ Exception -> 0x009d }
+            r3.left = r8     // Catch:{ Exception -> 0x009d }
+        L_0x0098:
             int r6 = r6 + 1
             goto L_0x002b
-        L_0x0099:
-            return r3
-        L_0x009a:
-            goto L_0x00a3
         L_0x009b:
+            return r3
+        L_0x009c:
+            goto L_0x00a5
+        L_0x009d:
             r0 = move-exception
             java.lang.String r1 = "DrawableUtils"
             java.lang.String r2 = "Couldn't obtain the optical insets. Ignoring."
             android.util.Log.e(r1, r2)
-        L_0x00a3:
+        L_0x00a5:
             android.graphics.Rect r0 = INSETS_NONE
             return r0
         */
@@ -171,11 +170,11 @@ public class DrawableUtils {
                 }
             }
             return true;
-        } else if (drawable instanceof WrappedDrawable) {
-            return canSafelyMutateDrawable(((WrappedDrawable) drawable).getWrappedDrawable());
+        } else if (drawable instanceof DrawableWrapper) {
+            return canSafelyMutateDrawable(((DrawableWrapper) drawable).getWrappedDrawable());
         } else {
-            if (drawable instanceof DrawableWrapper) {
-                return canSafelyMutateDrawable(((DrawableWrapper) drawable).getWrappedDrawable());
+            if (drawable instanceof android.support.v7.graphics.drawable.DrawableWrapper) {
+                return canSafelyMutateDrawable(((android.support.v7.graphics.drawable.DrawableWrapper) drawable).getWrappedDrawable());
             }
             if (drawable instanceof ScaleDrawable) {
                 return canSafelyMutateDrawable(((ScaleDrawable) drawable).getDrawable());
@@ -210,7 +209,7 @@ public class DrawableUtils {
             case 15:
                 return PorterDuff.Mode.SCREEN;
             case 16:
-                return PorterDuff.Mode.ADD;
+                return Build.VERSION.SDK_INT >= 11 ? PorterDuff.Mode.valueOf("ADD") : defaultMode;
             default:
                 return defaultMode;
         }

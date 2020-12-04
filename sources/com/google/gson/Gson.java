@@ -441,10 +441,11 @@ public final class Gson {
         }
 
         public void setDelegate(TypeAdapter<T> typeAdapter) {
-            if (this.delegate != null) {
-                throw new AssertionError();
+            if (this.delegate == null) {
+                this.delegate = typeAdapter;
+                return;
             }
-            this.delegate = typeAdapter;
+            throw new AssertionError();
         }
 
         public T read(JsonReader in) throws IOException {
@@ -455,10 +456,11 @@ public final class Gson {
         }
 
         public void write(JsonWriter out, T value) throws IOException {
-            if (this.delegate == null) {
-                throw new IllegalStateException();
+            if (this.delegate != null) {
+                this.delegate.write(out, value);
+                return;
             }
-            this.delegate.write(out, value);
+            throw new IllegalStateException();
         }
     }
 

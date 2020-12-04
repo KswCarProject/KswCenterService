@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.v4.app.NotificationCompat;
+import android.provider.Telephony;
 import android.util.Log;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.IContentObserver;
 import com.wits.pms.bean.TxzMessage;
 import com.wits.pms.statuscontrol.PowerManagerApp;
@@ -17,15 +16,15 @@ public class CenterCallBackImpl {
     private static Context mContext;
 
     public static void init(Context context) {
-        if (context == null) {
-            try {
-                throw new Exception();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
+        if (context != null) {
             mContext = context.getApplicationContext();
             centerCall = new CenterCallBackImpl();
+            return;
+        }
+        try {
+            throw new Exception();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +63,7 @@ public class CenterCallBackImpl {
         Intent txzIntent = new Intent();
         txzIntent.putExtras(message.bundle);
         txzIntent.setAction("com.txznet.adapter.recv");
-        Log.v(TAG, "keyType: " + txzIntent.getIntExtra("key_type", 0) + " - action: " + txzIntent.getStringExtra("action"));
+        Log.v(TAG, "keyType: " + txzIntent.getIntExtra(Telephony.CarrierColumns.KEY_TYPE, 0) + " - action: " + txzIntent.getStringExtra("action"));
         mContext.sendBroadcast(txzIntent);
     }
 
@@ -193,10 +192,10 @@ public class CenterCallBackImpl {
                 playStatus = "stop";
                 break;
             default:
-                playStatus = BuildConfig.FLAVOR;
+                playStatus = "";
                 break;
         }
-        bundle.putString(NotificationCompat.CATEGORY_STATUS, playStatus);
+        bundle.putString("status", playStatus);
         sendBroadCast(new TxzMessage(2060, "music.status", bundle));
     }
 
@@ -214,7 +213,7 @@ public class CenterCallBackImpl {
                 action = "blue.music";
                 break;
             default:
-                action = BuildConfig.FLAVOR;
+                action = "";
                 break;
         }
         sendBroadCast(new TxzMessage(2061, action, bundle));

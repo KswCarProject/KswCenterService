@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.util.Log;
+import com.android.internal.content.NativeLibraryHelper;
 
 public class AutoKitMessage {
     public static final String AUTOBOX_CALL = "vendor.wits.autobox.call";
@@ -58,6 +59,6 @@ public class AutoKitMessage {
     }
 
     public String toString() {
-        return "receiveKey:" + this.receiveKey + " - action:" + this.action + "-" + this.bundle.toString();
+        return "receiveKey:" + this.receiveKey + " - action:" + this.action + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + this.bundle.toString();
     }
 }

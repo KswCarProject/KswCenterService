@@ -30,7 +30,6 @@ public final class MimeTypeFilter {
         return mimeTypeAgainstFilter(mimeType.split("/"), filter.split("/"));
     }
 
-    @Nullable
     public static String matches(@Nullable String mimeType, @NonNull String[] filters) {
         if (mimeType == null) {
             return null;
@@ -44,7 +43,6 @@ public final class MimeTypeFilter {
         return null;
     }
 
-    @Nullable
     public static String matches(@Nullable String[] mimeTypes, @NonNull String filter) {
         if (mimeTypes == null) {
             return null;
@@ -58,7 +56,6 @@ public final class MimeTypeFilter {
         return null;
     }
 
-    @NonNull
     public static String[] matchesMany(@Nullable String[] mimeTypes, @NonNull String filter) {
         if (mimeTypes == null) {
             return new String[0];

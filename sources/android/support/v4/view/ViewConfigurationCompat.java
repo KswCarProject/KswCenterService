@@ -1,7 +1,6 @@
 package android.support.v4.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -9,6 +8,7 @@ import android.util.TypedValue;
 import android.view.ViewConfiguration;
 import java.lang.reflect.Method;
 
+@Deprecated
 public final class ViewConfigurationCompat {
     private static final String TAG = "ViewConfigCompat";
     private static Method sGetScaledScrollFactorMethod;
@@ -60,22 +60,6 @@ public final class ViewConfigurationCompat {
             return outValue.getDimension(context.getResources().getDisplayMetrics());
         }
         return 0.0f;
-    }
-
-    public static int getScaledHoverSlop(ViewConfiguration config) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return config.getScaledHoverSlop();
-        }
-        return config.getScaledTouchSlop() / 2;
-    }
-
-    public static boolean shouldShowMenuShortcutsWhenKeyboardPresent(ViewConfiguration config, @NonNull Context context) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return config.shouldShowMenuShortcutsWhenKeyboardPresent();
-        }
-        Resources res = context.getResources();
-        int platformResId = res.getIdentifier("config_showMenuShortcutsWhenKeyboardPresent", "bool", "android");
-        return platformResId != 0 && res.getBoolean(platformResId);
     }
 
     private ViewConfigurationCompat() {

@@ -15,7 +15,6 @@ import android.widget.RadioButton;
 
 public class AppCompatRadioButton extends RadioButton implements TintableCompoundButton {
     private final AppCompatCompoundButtonHelper mCompoundButtonHelper;
-    private final AppCompatTextHelper mTextHelper;
 
     public AppCompatRadioButton(Context context) {
         this(context, (AttributeSet) null);
@@ -29,8 +28,6 @@ public class AppCompatRadioButton extends RadioButton implements TintableCompoun
         super(TintContextWrapper.wrap(context), attrs, defStyleAttr);
         this.mCompoundButtonHelper = new AppCompatCompoundButtonHelper(this);
         this.mCompoundButtonHelper.loadFromAttributes(attrs, defStyleAttr);
-        this.mTextHelper = new AppCompatTextHelper(this);
-        this.mTextHelper.loadFromAttributes(attrs, defStyleAttr);
     }
 
     public void setButtonDrawable(Drawable buttonDrawable) {

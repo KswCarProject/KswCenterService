@@ -87,7 +87,7 @@ public class ToolbarWidgetWrapper implements DecorToolbar {
             setDisplayOptions(a.getInt(R.styleable.ActionBar_displayOptions, 0));
             int customNavId = a.getResourceId(R.styleable.ActionBar_customNavigationLayout, 0);
             if (customNavId != 0) {
-                setCustomView(LayoutInflater.from(this.mToolbar.getContext()).inflate(customNavId, this.mToolbar, false));
+                setCustomView(LayoutInflater.from(this.mToolbar.getContext()).inflate(customNavId, (ViewGroup) this.mToolbar, false));
                 setDisplayOptions(this.mDisplayOpts | 16);
             }
             int height = a.getLayoutDimension(R.styleable.ActionBar_height, 0);
@@ -375,7 +375,7 @@ public class ToolbarWidgetWrapper implements DecorToolbar {
                     return;
                 case 1:
                     ensureSpinner();
-                    this.mToolbar.addView(this.mSpinner, 0);
+                    this.mToolbar.addView((View) this.mSpinner, 0);
                     return;
                 case 2:
                     if (this.mTabView != null) {
@@ -407,10 +407,11 @@ public class ToolbarWidgetWrapper implements DecorToolbar {
     }
 
     public void setDropdownSelectedPosition(int position) {
-        if (this.mSpinner == null) {
-            throw new IllegalStateException("Can't set dropdown selected position without an adapter");
+        if (this.mSpinner != null) {
+            this.mSpinner.setSelection(position);
+            return;
         }
-        this.mSpinner.setSelection(position);
+        throw new IllegalStateException("Can't set dropdown selected position without an adapter");
     }
 
     public int getDropdownSelectedPosition() {

@@ -1,7 +1,7 @@
 package android.support.v4.provider;
 
+import android.content.ContentResolver;
 import android.net.Uri;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import java.io.File;
@@ -11,12 +11,11 @@ import java.util.ArrayList;
 class RawDocumentFile extends DocumentFile {
     private File mFile;
 
-    RawDocumentFile(@Nullable DocumentFile parent, File file) {
+    RawDocumentFile(DocumentFile parent, File file) {
         super(parent);
         this.mFile = file;
     }
 
-    @Nullable
     public DocumentFile createFile(String mimeType, String displayName) {
         String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
         if (extension != null) {
@@ -32,7 +31,6 @@ class RawDocumentFile extends DocumentFile {
         }
     }
 
-    @Nullable
     public DocumentFile createDirectory(String displayName) {
         File target = new File(this.mFile, displayName);
         if (target.isDirectory() || target.mkdir()) {
@@ -49,7 +47,6 @@ class RawDocumentFile extends DocumentFile {
         return this.mFile.getName();
     }
 
-    @Nullable
     public String getType() {
         if (this.mFile.isDirectory()) {
             return null;
@@ -118,7 +115,7 @@ class RawDocumentFile extends DocumentFile {
         String mime;
         int lastDot = name.lastIndexOf(46);
         if (lastDot < 0 || (mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(name.substring(lastDot + 1).toLowerCase())) == null) {
-            return "application/octet-stream";
+            return ContentResolver.MIME_TYPE_DEFAULT;
         }
         return mime;
     }

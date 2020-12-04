@@ -2,6 +2,7 @@ package android.support.v4.graphics;
 
 import android.graphics.Path;
 import android.support.annotation.RestrictTo;
+import android.text.format.DateFormat;
 import android.util.Log;
 import java.util.ArrayList;
 
@@ -10,17 +11,17 @@ public class PathParser {
     private static final String LOGTAG = "PathParser";
 
     static float[] copyOfRange(float[] original, int start, int end) {
-        if (start > end) {
-            throw new IllegalArgumentException();
+        if (start <= end) {
+            int originalLength = original.length;
+            if (start < 0 || start > originalLength) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+            int resultLength = end - start;
+            float[] result = new float[resultLength];
+            System.arraycopy(original, start, result, 0, Math.min(resultLength, originalLength - start));
+            return result;
         }
-        int originalLength = original.length;
-        if (start < 0 || start > originalLength) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        int resultLength = end - start;
-        float[] result = new float[resultLength];
-        System.arraycopy(original, start, result, 0, Math.min(resultLength, originalLength - start));
-        return result;
+        throw new IllegalArgumentException();
     }
 
     public static Path createPathFromPathData(String pathData) {
@@ -224,7 +225,7 @@ public class PathParser {
 
         public static void nodesToPath(PathDataNode[] node, Path path) {
             float[] current = new float[6];
-            char previousCommand = 'm';
+            char previousCommand = DateFormat.MINUTE;
             for (int i = 0; i < node.length; i++) {
                 addCommand(path, current, previousCommand, node[i].mType, node[i].mParams);
                 previousCommand = node[i].mType;
@@ -240,36 +241,36 @@ public class PathParser {
         /* JADX WARNING: Code restructure failed: missing block: B:16:0x006d, code lost:
             r27 = r6;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:42:0x019c, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:42:0x019e, code lost:
             r21 = r0;
             r22 = r1;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:43:0x01a0, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:43:0x01a2, code lost:
             r14 = r7;
          */
-        /* JADX WARNING: Code restructure failed: missing block: B:79:0x033e, code lost:
+        /* JADX WARNING: Code restructure failed: missing block: B:79:0x0343, code lost:
             r21 = r0;
             r22 = r1;
          */
         /* Code decompiled incorrectly, please refer to instructions dump. */
-        private static void addCommand(android.graphics.Path r29, float[] r30, char r31, char r32, float[] r33) {
+        private static void addCommand(android.graphics.Path r28, float[] r29, char r30, char r31, float[] r32) {
             /*
-                r10 = r29
-                r13 = r33
+                r10 = r28
+                r13 = r32
                 r0 = 2
                 r14 = 0
-                r1 = r30[r14]
+                r1 = r29[r14]
                 r15 = 1
-                r2 = r30[r15]
+                r2 = r29[r15]
                 r16 = 2
-                r3 = r30[r16]
+                r3 = r29[r16]
                 r17 = 3
-                r4 = r30[r17]
+                r4 = r29[r17]
                 r18 = 4
-                r5 = r30[r18]
+                r5 = r29[r18]
                 r19 = 5
-                r6 = r30[r19]
-                switch(r32) {
+                r6 = r29[r19]
+                switch(r31) {
                     case 65: goto L_0x0034;
                     case 67: goto L_0x0032;
                     case 72: goto L_0x0030;
@@ -296,7 +297,7 @@ public class PathParser {
                 r20 = r0
                 goto L_0x0036
             L_0x0021:
-                r29.close()
+                r28.close()
                 r1 = r5
                 r2 = r6
                 r3 = r5
@@ -319,43 +320,43 @@ public class PathParser {
                 r0 = 7
                 goto L_0x001e
             L_0x0036:
-                r7 = r31
+                r7 = r30
                 r9 = r1
                 r8 = r2
                 r21 = r3
                 r22 = r4
                 r23 = r5
                 r24 = r6
-                r0 = 0
+                r0 = r14
             L_0x0043:
                 r6 = r0
                 int r0 = r13.length
-                if (r6 >= r0) goto L_0x038b
-                r0 = 115(0x73, float:1.61E-43)
-                r1 = 99
-                r2 = 84
-                r3 = 81
-                r4 = 116(0x74, float:1.63E-43)
-                r5 = 113(0x71, float:1.58E-43)
+                if (r6 >= r0) goto L_0x0391
+                r0 = 81
+                r1 = 67
+                r2 = 116(0x74, float:1.63E-43)
+                r3 = 115(0x73, float:1.61E-43)
+                r4 = 113(0x71, float:1.58E-43)
+                r5 = 99
                 r25 = 1073741824(0x40000000, float:2.0)
                 r15 = 0
-                switch(r32) {
-                    case 65: goto L_0x0343;
-                    case 67: goto L_0x030c;
-                    case 72: goto L_0x02fa;
-                    case 76: goto L_0x02e0;
-                    case 77: goto L_0x02b0;
-                    case 81: goto L_0x0286;
-                    case 83: goto L_0x0238;
-                    case 84: goto L_0x0205;
-                    case 86: goto L_0x01f3;
-                    case 97: goto L_0x01a3;
-                    case 99: goto L_0x0169;
-                    case 104: goto L_0x015a;
-                    case 108: goto L_0x0142;
-                    case 109: goto L_0x0114;
-                    case 113: goto L_0x00e9;
-                    case 115: goto L_0x009e;
+                switch(r31) {
+                    case 65: goto L_0x0348;
+                    case 67: goto L_0x0310;
+                    case 72: goto L_0x02fe;
+                    case 76: goto L_0x02e4;
+                    case 77: goto L_0x02b4;
+                    case 81: goto L_0x028a;
+                    case 83: goto L_0x023d;
+                    case 84: goto L_0x0208;
+                    case 86: goto L_0x01f6;
+                    case 97: goto L_0x01a5;
+                    case 99: goto L_0x016a;
+                    case 104: goto L_0x015b;
+                    case 108: goto L_0x0143;
+                    case 109: goto L_0x0115;
+                    case 113: goto L_0x00ea;
+                    case 115: goto L_0x00a0;
                     case 116: goto L_0x0071;
                     case 118: goto L_0x0060;
                     default: goto L_0x0059;
@@ -363,9 +364,9 @@ public class PathParser {
             L_0x0059:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
-                goto L_0x0383
+                r12 = r8
+                r11 = r9
+                goto L_0x0389
             L_0x0060:
                 int r0 = r6 + 0
                 r0 = r13[r0]
@@ -375,47 +376,47 @@ public class PathParser {
                 float r8 = r8 + r0
             L_0x006d:
                 r27 = r6
-                goto L_0x01a0
+                goto L_0x01a2
             L_0x0071:
-                r0 = 0
                 r1 = 0
-                if (r7 == r5) goto L_0x007b
-                if (r7 == r4) goto L_0x007b
-                if (r7 == r3) goto L_0x007b
-                if (r7 != r2) goto L_0x007f
-            L_0x007b:
-                float r0 = r9 - r21
-                float r1 = r8 - r22
-            L_0x007f:
-                int r2 = r6 + 0
+                r3 = 0
+                if (r7 == r4) goto L_0x007d
+                if (r7 == r2) goto L_0x007d
+                if (r7 == r0) goto L_0x007d
+                r0 = 84
+                if (r7 != r0) goto L_0x0081
+            L_0x007d:
+                float r1 = r9 - r21
+                float r3 = r8 - r22
+            L_0x0081:
+                int r0 = r6 + 0
+                r0 = r13[r0]
+                int r2 = r6 + 1
                 r2 = r13[r2]
-                int r3 = r6 + 1
-                r3 = r13[r3]
-                r10.rQuadTo(r0, r1, r2, r3)
-                float r2 = r9 + r0
-                float r3 = r8 + r1
+                r10.rQuadTo(r1, r3, r0, r2)
+                float r0 = r9 + r1
+                float r2 = r8 + r3
                 int r4 = r6 + 0
                 r4 = r13[r4]
                 float r9 = r9 + r4
                 int r4 = r6 + 1
                 r4 = r13[r4]
                 float r8 = r8 + r4
-                r21 = r2
-                r22 = r3
+                r21 = r0
+                r22 = r2
                 goto L_0x006d
-            L_0x009e:
+            L_0x00a0:
+                r0 = 0
                 r2 = 0
-                r3 = 0
+                if (r7 == r5) goto L_0x00b1
+                if (r7 == r3) goto L_0x00b1
                 if (r7 == r1) goto L_0x00b1
-                if (r7 == r0) goto L_0x00b1
-                r0 = 67
-                if (r7 == r0) goto L_0x00b1
-                r0 = 83
-                if (r7 != r0) goto L_0x00ad
+                r1 = 83
+                if (r7 != r1) goto L_0x00ad
                 goto L_0x00b1
             L_0x00ad:
-                r15 = r2
-                r25 = r3
+                r15 = r0
+                r25 = r2
                 goto L_0x00b8
             L_0x00b1:
                 float r0 = r9 - r21
@@ -431,7 +432,7 @@ public class PathParser {
                 r5 = r13[r0]
                 int r0 = r6 + 3
                 r26 = r13[r0]
-                r0 = r10
+                r0 = r28
                 r1 = r15
                 r2 = r25
                 r27 = r6
@@ -449,8 +450,8 @@ public class PathParser {
                 int r6 = r27 + 3
                 r2 = r13[r6]
                 float r8 = r8 + r2
-                goto L_0x019c
-            L_0x00e9:
+                goto L_0x019e
+            L_0x00ea:
                 r27 = r6
                 int r6 = r27 + 0
                 r0 = r13[r6]
@@ -473,8 +474,8 @@ public class PathParser {
                 int r6 = r27 + 3
                 r2 = r13[r6]
                 float r8 = r8 + r2
-                goto L_0x019c
-            L_0x0114:
+                goto L_0x019e
+            L_0x0115:
                 r27 = r6
                 int r6 = r27 + 0
                 r0 = r13[r6]
@@ -482,14 +483,14 @@ public class PathParser {
                 int r6 = r27 + 1
                 r0 = r13[r6]
                 float r8 = r8 + r0
-                if (r27 <= 0) goto L_0x012f
+                if (r27 <= 0) goto L_0x0130
                 int r6 = r27 + 0
                 r0 = r13[r6]
                 int r6 = r27 + 1
                 r1 = r13[r6]
                 r10.rLineTo(r0, r1)
-                goto L_0x01a0
-            L_0x012f:
+                goto L_0x01a2
+            L_0x0130:
                 int r6 = r27 + 0
                 r0 = r13[r6]
                 int r6 = r27 + 1
@@ -499,8 +500,8 @@ public class PathParser {
                 r1 = r8
                 r23 = r0
                 r24 = r1
-                goto L_0x01a0
-            L_0x0142:
+                goto L_0x01a2
+            L_0x0143:
                 r27 = r6
                 int r6 = r27 + 0
                 r0 = r13[r6]
@@ -513,8 +514,8 @@ public class PathParser {
                 int r6 = r27 + 1
                 r0 = r13[r6]
                 float r8 = r8 + r0
-                goto L_0x01a0
-            L_0x015a:
+                goto L_0x01a2
+            L_0x015b:
                 r27 = r6
                 int r6 = r27 + 0
                 r0 = r13[r6]
@@ -522,8 +523,8 @@ public class PathParser {
                 int r6 = r27 + 0
                 r0 = r13[r6]
                 float r9 = r9 + r0
-                goto L_0x01a0
-            L_0x0169:
+                goto L_0x01a2
+            L_0x016a:
                 r27 = r6
                 int r6 = r27 + 0
                 r1 = r13[r6]
@@ -537,7 +538,7 @@ public class PathParser {
                 r5 = r13[r6]
                 int r6 = r27 + 5
                 r6 = r13[r6]
-                r0 = r10
+                r0 = r28
                 r0.rCubicTo(r1, r2, r3, r4, r5, r6)
                 int r6 = r27 + 2
                 r0 = r13[r6]
@@ -551,13 +552,13 @@ public class PathParser {
                 int r6 = r27 + 5
                 r2 = r13[r6]
                 float r8 = r8 + r2
-            L_0x019c:
+            L_0x019e:
                 r21 = r0
                 r22 = r1
-            L_0x01a0:
+            L_0x01a2:
                 r14 = r7
-                goto L_0x0383
-            L_0x01a3:
+                goto L_0x0389
+            L_0x01a5:
                 r27 = r6
                 int r6 = r27 + 5
                 r0 = r13[r6]
@@ -574,106 +575,106 @@ public class PathParser {
                 int r0 = r27 + 3
                 r0 = r13[r0]
                 int r0 = (r0 > r15 ? 1 : (r0 == r15 ? 0 : -1))
-                if (r0 == 0) goto L_0x01c8
+                if (r0 == 0) goto L_0x01ca
                 r26 = 1
-                goto L_0x01ca
-            L_0x01c8:
-                r26 = 0
+                goto L_0x01cc
             L_0x01ca:
+                r26 = r14
+            L_0x01cc:
                 int r0 = r27 + 4
                 r0 = r13[r0]
                 int r0 = (r0 > r15 ? 1 : (r0 == r15 ? 0 : -1))
-                if (r0 == 0) goto L_0x01d4
+                if (r0 == 0) goto L_0x01d6
                 r15 = 1
-                goto L_0x01d5
-            L_0x01d4:
-                r15 = 0
-            L_0x01d5:
-                r0 = r10
+                goto L_0x01d7
+            L_0x01d6:
+                r15 = r14
+            L_0x01d7:
+                r0 = r28
                 r1 = r9
                 r2 = r8
                 r14 = r7
                 r7 = r25
-                r11 = r8
+                r12 = r8
                 r8 = r26
-                r12 = r9
+                r11 = r9
                 r9 = r15
                 drawArc(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9)
                 int r6 = r27 + 5
                 r0 = r13[r6]
-                float r9 = r12 + r0
+                float r9 = r11 + r0
                 int r6 = r27 + 6
                 r0 = r13[r6]
-                float r8 = r11 + r0
+                float r8 = r12 + r0
                 r0 = r9
                 r1 = r8
-                goto L_0x033e
-            L_0x01f3:
+                goto L_0x0343
+            L_0x01f6:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
                 int r6 = r27 + 0
                 r0 = r13[r6]
-                r10.lineTo(r12, r0)
+                r10.lineTo(r11, r0)
                 int r6 = r27 + 0
                 r8 = r13[r6]
-                goto L_0x0383
-            L_0x0205:
+                goto L_0x0389
+            L_0x0208:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
-                r0 = r12
+                r12 = r8
+                r11 = r9
                 r1 = r11
-                if (r14 == r5) goto L_0x0214
-                if (r14 == r4) goto L_0x0214
-                if (r14 == r3) goto L_0x0214
-                if (r14 != r2) goto L_0x021c
-            L_0x0214:
-                float r9 = r12 * r25
-                float r0 = r9 - r21
-                float r8 = r11 * r25
-                float r1 = r8 - r22
-            L_0x021c:
+                r3 = r12
+                if (r14 == r4) goto L_0x0219
+                if (r14 == r2) goto L_0x0219
+                if (r14 == r0) goto L_0x0219
+                r0 = 84
+                if (r14 != r0) goto L_0x0221
+            L_0x0219:
+                float r9 = r11 * r25
+                float r1 = r9 - r21
+                float r8 = r12 * r25
+                float r3 = r8 - r22
+            L_0x0221:
                 int r6 = r27 + 0
-                r2 = r13[r6]
+                r0 = r13[r6]
                 int r6 = r27 + 1
-                r3 = r13[r6]
-                r10.quadTo(r0, r1, r2, r3)
-                r2 = r0
-                r3 = r1
+                r2 = r13[r6]
+                r10.quadTo(r1, r3, r0, r2)
+                r0 = r1
+                r2 = r3
                 int r6 = r27 + 0
                 r9 = r13[r6]
                 int r6 = r27 + 1
                 r8 = r13[r6]
-                r21 = r2
-                r22 = r3
-                goto L_0x0383
-            L_0x0238:
+                r21 = r0
+                r22 = r2
+                goto L_0x0389
+            L_0x023d:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
+                r0 = r11
                 r2 = r12
-                r3 = r11
-                if (r14 == r1) goto L_0x024f
-                if (r14 == r0) goto L_0x024f
-                r0 = 67
-                if (r14 == r0) goto L_0x024f
-                r0 = 83
-                if (r14 != r0) goto L_0x024c
-                goto L_0x024f
-            L_0x024c:
-                r9 = r2
-                r8 = r3
-                goto L_0x0257
+                if (r14 == r5) goto L_0x0252
+                if (r14 == r3) goto L_0x0252
+                if (r14 == r1) goto L_0x0252
+                r1 = 83
+                if (r14 != r1) goto L_0x024f
+                goto L_0x0252
             L_0x024f:
-                float r9 = r12 * r25
+                r9 = r0
+                r8 = r2
+                goto L_0x025a
+            L_0x0252:
+                float r9 = r11 * r25
                 float r9 = r9 - r21
-                float r8 = r11 * r25
+                float r8 = r12 * r25
                 float r8 = r8 - r22
-            L_0x0257:
+            L_0x025a:
                 int r6 = r27 + 0
                 r3 = r13[r6]
                 int r6 = r27 + 1
@@ -682,7 +683,7 @@ public class PathParser {
                 r5 = r13[r6]
                 int r6 = r27 + 3
                 r6 = r13[r6]
-                r0 = r10
+                r0 = r28
                 r1 = r9
                 r2 = r8
                 r0.cubicTo(r1, r2, r3, r4, r5, r6)
@@ -698,12 +699,12 @@ public class PathParser {
                 r22 = r1
                 r9 = r2
                 r8 = r3
-                goto L_0x0383
-            L_0x0286:
+                goto L_0x0389
+            L_0x028a:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
                 int r6 = r27 + 0
                 r0 = r13[r6]
                 int r6 = r27 + 1
@@ -721,24 +722,24 @@ public class PathParser {
                 r9 = r13[r6]
                 int r6 = r27 + 3
                 r8 = r13[r6]
-                goto L_0x033e
-            L_0x02b0:
+                goto L_0x0343
+            L_0x02b4:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
                 int r6 = r27 + 0
                 r9 = r13[r6]
                 int r6 = r27 + 1
                 r8 = r13[r6]
-                if (r27 <= 0) goto L_0x02cc
+                if (r27 <= 0) goto L_0x02d0
                 int r6 = r27 + 0
                 r0 = r13[r6]
                 int r6 = r27 + 1
                 r1 = r13[r6]
                 r10.lineTo(r0, r1)
-                goto L_0x0383
-            L_0x02cc:
+                goto L_0x0389
+            L_0x02d0:
                 int r6 = r27 + 0
                 r0 = r13[r6]
                 int r6 = r27 + 1
@@ -748,12 +749,12 @@ public class PathParser {
                 r1 = r8
                 r23 = r0
                 r24 = r1
-                goto L_0x0383
-            L_0x02e0:
+                goto L_0x0389
+            L_0x02e4:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
                 int r6 = r27 + 0
                 r0 = r13[r6]
                 int r6 = r27 + 1
@@ -763,23 +764,23 @@ public class PathParser {
                 r9 = r13[r6]
                 int r6 = r27 + 1
                 r8 = r13[r6]
-                goto L_0x0383
-            L_0x02fa:
+                goto L_0x0389
+            L_0x02fe:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
                 int r6 = r27 + 0
                 r0 = r13[r6]
-                r10.lineTo(r0, r11)
+                r10.lineTo(r0, r12)
                 int r6 = r27 + 0
                 r9 = r13[r6]
-                goto L_0x0383
-            L_0x030c:
+                goto L_0x0389
+            L_0x0310:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
                 int r6 = r27 + 0
                 r1 = r13[r6]
                 int r6 = r27 + 1
@@ -792,7 +793,7 @@ public class PathParser {
                 r5 = r13[r6]
                 int r6 = r27 + 5
                 r6 = r13[r6]
-                r0 = r10
+                r0 = r28
                 r0.cubicTo(r1, r2, r3, r4, r5, r6)
                 int r6 = r27 + 4
                 r9 = r13[r6]
@@ -802,15 +803,15 @@ public class PathParser {
                 r0 = r13[r6]
                 int r6 = r27 + 3
                 r1 = r13[r6]
-            L_0x033e:
+            L_0x0343:
                 r21 = r0
                 r22 = r1
-                goto L_0x0383
-            L_0x0343:
+                goto L_0x0389
+            L_0x0348:
                 r27 = r6
                 r14 = r7
-                r11 = r8
-                r12 = r9
+                r12 = r8
+                r11 = r9
                 int r6 = r27 + 5
                 r3 = r13[r6]
                 int r6 = r27 + 6
@@ -824,24 +825,24 @@ public class PathParser {
                 int r0 = r27 + 3
                 r0 = r13[r0]
                 int r0 = (r0 > r15 ? 1 : (r0 == r15 ? 0 : -1))
-                if (r0 == 0) goto L_0x0366
+                if (r0 == 0) goto L_0x036b
                 r8 = 1
-                goto L_0x0367
-            L_0x0366:
+                goto L_0x036c
+            L_0x036b:
                 r8 = 0
-            L_0x0367:
+            L_0x036c:
                 int r0 = r27 + 4
                 r0 = r13[r0]
                 int r0 = (r0 > r15 ? 1 : (r0 == r15 ? 0 : -1))
-                if (r0 == 0) goto L_0x0371
+                if (r0 == 0) goto L_0x0376
                 r9 = 1
-                goto L_0x0372
-            L_0x0371:
+                goto L_0x0377
+            L_0x0376:
                 r9 = 0
-            L_0x0372:
-                r0 = r10
-                r1 = r12
-                r2 = r11
+            L_0x0377:
+                r0 = r28
+                r1 = r11
+                r2 = r12
                 drawArc(r0, r1, r2, r3, r4, r5, r6, r7, r8, r9)
                 int r6 = r27 + 5
                 r9 = r13[r6]
@@ -849,25 +850,26 @@ public class PathParser {
                 r8 = r13[r6]
                 r0 = r9
                 r1 = r8
-                goto L_0x033e
-            L_0x0383:
-                r7 = r32
+                goto L_0x0343
+            L_0x0389:
+                r7 = r31
                 int r0 = r27 + r20
                 r14 = 0
                 r15 = 1
                 goto L_0x0043
-            L_0x038b:
+            L_0x0391:
                 r14 = r7
-                r11 = r8
-                r2 = r11
-                r1 = 0
-                r30[r1] = r9
-                r1 = 1
-                r30[r1] = r2
-                r30[r16] = r21
-                r30[r17] = r22
-                r30[r18] = r23
-                r30[r19] = r24
+                r12 = r8
+                r11 = r9
+                r1 = r11
+                r2 = 0
+                r29[r2] = r1
+                r2 = 1
+                r29[r2] = r12
+                r29[r16] = r21
+                r29[r17] = r22
+                r29[r18] = r23
+                r29[r19] = r24
                 return
             */
             throw new UnsupportedOperationException("Method not decompiled: android.support.v4.graphics.PathParser.PathDataNode.addCommand(android.graphics.Path, float[], char, char, float[]):void");
@@ -876,22 +878,20 @@ public class PathParser {
         private static void drawArc(Path p, float x0, float y0, float x1, float y1, float a, float b, float theta, boolean isMoreThanHalf, boolean isPositiveArc) {
             double cy;
             double cx;
-            boolean z;
             float f = x0;
             float f2 = y0;
-            float adjust = x1;
-            float f3 = y1;
-            float f4 = a;
-            float f5 = b;
-            boolean z2 = isPositiveArc;
-            float f6 = theta;
-            double thetaD = Math.toRadians((double) f6);
+            float f3 = x1;
+            float f4 = y1;
+            float f5 = a;
+            float f6 = b;
+            boolean z = isPositiveArc;
+            double thetaD = Math.toRadians((double) theta);
             double cosTheta = Math.cos(thetaD);
             double sinTheta = Math.sin(thetaD);
-            double x0p = ((((double) f) * cosTheta) + (((double) f2) * sinTheta)) / ((double) f4);
-            double y0p = ((((double) (-f)) * sinTheta) + (((double) f2) * cosTheta)) / ((double) f5);
-            double x1p = ((((double) adjust) * cosTheta) + (((double) f3) * sinTheta)) / ((double) f4);
-            double y1p = ((((double) (-adjust)) * sinTheta) + (((double) f3) * cosTheta)) / ((double) f5);
+            double x0p = ((((double) f) * cosTheta) + (((double) f2) * sinTheta)) / ((double) f5);
+            double y0p = ((((double) (-f)) * sinTheta) + (((double) f2) * cosTheta)) / ((double) f6);
+            double x1p = ((((double) f3) * cosTheta) + (((double) f4) * sinTheta)) / ((double) f5);
+            double y1p = ((((double) (-f3)) * sinTheta) + (((double) f4) * cosTheta)) / ((double) f6);
             double dx = x0p - x1p;
             double dy = y0p - y1p;
             double xm = (x0p + x1p) / 2.0d;
@@ -904,20 +904,17 @@ public class PathParser {
             double disc = (1.0d / dsq) - 0.25d;
             if (disc < 0.0d) {
                 Log.w(PathParser.LOGTAG, "Points are too far apart " + dsq);
-                float adjust2 = (float) (Math.sqrt(dsq) / 1.99999d);
-                double d = disc;
-                float f7 = adjust2;
-                double d2 = dsq;
-                double d3 = thetaD;
-                drawArc(p, f, f2, adjust, f3, f4 * adjust2, f5 * adjust2, f6, isMoreThanHalf, isPositiveArc);
+                float adjust = (float) (Math.sqrt(dsq) / 1.99999d);
+                float f7 = adjust;
+                double d = dsq;
+                boolean z2 = z;
+                drawArc(p, x0, y0, x1, y1, f5 * adjust, f6 * adjust, theta, isMoreThanHalf, isPositiveArc);
                 return;
             }
-            double d4 = dsq;
-            double thetaD2 = thetaD;
-            double disc2 = Math.sqrt(disc);
-            double sdx = disc2 * dx;
-            double sdy = disc2 * dy;
-            boolean z3 = isPositiveArc;
+            boolean z3 = z;
+            double s = Math.sqrt(disc);
+            double sdx = s * dx;
+            double sdy = s * dy;
             if (isMoreThanHalf == z3) {
                 cx = xm - sdy;
                 cy = ym + sdx;
@@ -925,33 +922,24 @@ public class PathParser {
                 cx = xm + sdy;
                 cy = ym - sdx;
             }
-            double d5 = disc2;
+            double d2 = s;
             double eta0 = Math.atan2(y0p - cy, x0p - cx);
-            double d6 = sdx;
+            double d3 = sdx;
             double eta1 = Math.atan2(y1p - cy, x1p - cx);
             double sweep = eta1 - eta0;
-            if (sweep >= 0.0d) {
-                double d7 = eta1;
-                z = true;
-            } else {
-                double d8 = eta1;
-                z = false;
-            }
-            if (z3 != z) {
+            if (z3 != (sweep >= 0.0d)) {
                 if (sweep > 0.0d) {
                     sweep -= 6.283185307179586d;
                 } else {
                     sweep += 6.283185307179586d;
                 }
             }
-            double d9 = sdy;
-            float f8 = a;
-            double cx2 = cx * ((double) f8);
-            float f9 = b;
-            double cy2 = cy * ((double) f9);
-            double tcx = cx2;
-            double d10 = tcx;
-            arcToBezier(p, (cx2 * cosTheta) - (cy2 * sinTheta), (tcx * sinTheta) + (cy2 * cosTheta), (double) f8, (double) f9, (double) f, (double) f2, thetaD2, eta0, sweep);
+            double d4 = eta1;
+            double cx2 = cx * ((double) f5);
+            double cy2 = ((double) f6) * cy;
+            double cy3 = (cx2 * sinTheta) + (cy2 * cosTheta);
+            double d5 = cy3;
+            arcToBezier(p, (cx2 * cosTheta) - (cy2 * sinTheta), cy3, (double) f5, (double) f6, (double) f, (double) f2, thetaD, eta0, sweep);
         }
 
         private static void arcToBezier(Path p, double cx, double cy, double a, double b, double e1x, double e1y, double theta, double start, double sweep) {
@@ -971,36 +959,31 @@ public class PathParser {
             while (true) {
                 int i2 = i;
                 if (i2 < numSegments) {
-                    int i3 = i2;
                     double eta2 = eta12 + anglePerSegment;
                     double sinEta2 = Math.sin(eta2);
                     double cosEta2 = Math.cos(eta2);
                     double anglePerSegment2 = anglePerSegment;
-                    double e2x = (cx + ((eta1 * cosTheta) * cosEta2)) - ((b * sinTheta) * sinEta2);
                     double e2y = cy + (eta1 * sinTheta * cosEta2) + (b * cosTheta * sinEta2);
                     double ep2x = (((-eta1) * cosTheta) * sinEta2) - ((b * sinTheta) * cosEta2);
+                    int i3 = i2;
+                    double e2x = (cx + ((eta1 * cosTheta) * cosEta2)) - ((b * sinTheta) * sinEta2);
                     double ep2y = ((-eta1) * sinTheta * sinEta2) + (b * cosTheta * cosEta2);
                     double tanDiff2 = Math.tan((eta2 - eta12) / 2.0d);
-                    double d = tanDiff2;
                     double alpha = (Math.sin(eta2 - eta12) * (Math.sqrt(((tanDiff2 * 3.0d) * tanDiff2) + 4.0d) - 1.0d)) / 3.0d;
                     double q1x = e1x2 + (alpha * ep1x);
-                    int numSegments2 = numSegments;
-                    double d2 = eta12;
                     double q1y = e1y2 + (alpha * ep1y);
+                    double d = eta12;
                     double q2x = e2x - (alpha * ep2x);
-                    double d3 = alpha;
-                    double alpha2 = e2y - (alpha * ep2y);
-                    double sinTheta2 = sinTheta;
-                    Path path = p;
-                    path.rLineTo(0.0f, 0.0f);
-                    double d4 = q1x;
-                    float f = (float) alpha2;
-                    double d5 = alpha2;
-                    double d6 = q1y;
+                    double cosTheta2 = cosTheta;
+                    double q2y = e2y - (alpha * ep2y);
+                    p.rLineTo(0.0f, 0.0f);
+                    double d2 = q1x;
+                    double d3 = q1y;
+                    double d4 = q2x;
                     double e2x2 = e2x;
-                    double d7 = q2x;
+                    double d5 = q2y;
                     double e2y2 = e2y;
-                    path.cubicTo((float) q1x, (float) q1y, (float) q2x, f, (float) e2x2, (float) e2y2);
+                    p.cubicTo((float) q1x, (float) q1y, (float) q2x, (float) q2y, (float) e2x2, (float) e2y2);
                     e1x2 = e2x2;
                     e1y2 = e2y2;
                     ep1x = ep2x;
@@ -1008,22 +991,19 @@ public class PathParser {
                     i = i3 + 1;
                     eta12 = eta2;
                     anglePerSegment = anglePerSegment2;
-                    numSegments = numSegments2;
-                    cosTheta = cosTheta;
-                    sinTheta = sinTheta2;
+                    numSegments = numSegments;
+                    cosTheta = cosTheta2;
+                    sinTheta = sinTheta;
                     eta1 = a;
                 } else {
                     int i4 = numSegments;
-                    double d8 = eta12;
-                    double d9 = cosTheta;
-                    double d10 = sinTheta;
-                    Path path2 = p;
+                    double d6 = eta12;
+                    double d7 = cosTheta;
+                    double d8 = sinTheta;
+                    Path path = p;
                     return;
                 }
             }
         }
-    }
-
-    private PathParser() {
     }
 }

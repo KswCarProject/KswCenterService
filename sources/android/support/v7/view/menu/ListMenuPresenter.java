@@ -66,7 +66,7 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
             if (this.mAdapter == null) {
                 this.mAdapter = new MenuAdapter();
             }
-            this.mMenuView.setAdapter(this.mAdapter);
+            this.mMenuView.setAdapter((ListAdapter) this.mAdapter);
             this.mMenuView.setOnItemClickListener(this);
         }
         return this.mMenuView;
@@ -140,11 +140,11 @@ public class ListMenuPresenter implements MenuPresenter, AdapterView.OnItemClick
         if (this.mMenuView != null) {
             this.mMenuView.saveHierarchyState(viewStates);
         }
-        outState.putSparseParcelableArray(VIEWS_TAG, viewStates);
+        outState.putSparseParcelableArray("android:menu:list", viewStates);
     }
 
     public void restoreHierarchyState(Bundle inState) {
-        SparseArray<Parcelable> viewStates = inState.getSparseParcelableArray(VIEWS_TAG);
+        SparseArray<Parcelable> viewStates = inState.getSparseParcelableArray("android:menu:list");
         if (viewStates != null) {
             this.mMenuView.restoreHierarchyState(viewStates);
         }

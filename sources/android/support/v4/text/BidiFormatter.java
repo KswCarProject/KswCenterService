@@ -5,9 +5,12 @@ import java.util.Locale;
 
 public final class BidiFormatter {
     private static final int DEFAULT_FLAGS = 2;
-    static final BidiFormatter DEFAULT_LTR_INSTANCE = new BidiFormatter(false, 2, DEFAULT_TEXT_DIRECTION_HEURISTIC);
-    static final BidiFormatter DEFAULT_RTL_INSTANCE = new BidiFormatter(true, 2, DEFAULT_TEXT_DIRECTION_HEURISTIC);
-    static final TextDirectionHeuristicCompat DEFAULT_TEXT_DIRECTION_HEURISTIC = TextDirectionHeuristicsCompat.FIRSTSTRONG_LTR;
+    /* access modifiers changed from: private */
+    public static final BidiFormatter DEFAULT_LTR_INSTANCE = new BidiFormatter(false, 2, DEFAULT_TEXT_DIRECTION_HEURISTIC);
+    /* access modifiers changed from: private */
+    public static final BidiFormatter DEFAULT_RTL_INSTANCE = new BidiFormatter(true, 2, DEFAULT_TEXT_DIRECTION_HEURISTIC);
+    /* access modifiers changed from: private */
+    public static TextDirectionHeuristicCompat DEFAULT_TEXT_DIRECTION_HEURISTIC = TextDirectionHeuristicsCompat.FIRSTSTRONG_LTR;
     private static final int DIR_LTR = -1;
     private static final int DIR_RTL = 1;
     private static final int DIR_UNKNOWN = 0;
@@ -85,7 +88,7 @@ public final class BidiFormatter {
         return new Builder(locale).build();
     }
 
-    BidiFormatter(boolean isRtlContext, int flags, TextDirectionHeuristicCompat heuristic) {
+    private BidiFormatter(boolean isRtlContext, int flags, TextDirectionHeuristicCompat heuristic) {
         this.mIsRtlContext = isRtlContext;
         this.mFlags = flags;
         this.mDefaultTextDirectionHeuristicCompat = heuristic;
@@ -149,17 +152,17 @@ public final class BidiFormatter {
         boolean isRtl = heuristic.isRtl(str, 0, str.length());
         SpannableStringBuilder result = new SpannableStringBuilder();
         if (getStereoReset() && isolate) {
-            result.append(markBefore(str, isRtl ? TextDirectionHeuristicsCompat.RTL : TextDirectionHeuristicsCompat.LTR));
+            result.append((CharSequence) markBefore(str, isRtl ? TextDirectionHeuristicsCompat.RTL : TextDirectionHeuristicsCompat.LTR));
         }
         if (isRtl != this.mIsRtlContext) {
             result.append(isRtl ? RLE : LRE);
             result.append(str);
-            result.append(PDF);
+            result.append((char) PDF);
         } else {
             result.append(str);
         }
         if (isolate) {
-            result.append(markAfter(str, isRtl ? TextDirectionHeuristicsCompat.RTL : TextDirectionHeuristicsCompat.LTR));
+            result.append((CharSequence) markAfter(str, isRtl ? TextDirectionHeuristicsCompat.RTL : TextDirectionHeuristicsCompat.LTR));
         }
         return result;
     }
@@ -188,7 +191,8 @@ public final class BidiFormatter {
         return unicodeWrap(str, this.mDefaultTextDirectionHeuristicCompat, true);
     }
 
-    static boolean isRtlLocale(Locale locale) {
+    /* access modifiers changed from: private */
+    public static boolean isRtlLocale(Locale locale) {
         return TextUtilsCompat.getLayoutDirectionFromLocale(locale) == 1;
     }
 
@@ -201,7 +205,7 @@ public final class BidiFormatter {
     }
 
     private static class DirectionalityEstimator {
-        private static final byte[] DIR_TYPE_CACHE = new byte[DIR_TYPE_CACHE_SIZE];
+        private static final byte[] DIR_TYPE_CACHE = new byte[1792];
         private static final int DIR_TYPE_CACHE_SIZE = 1792;
         private int charIndex;
         private final boolean isHtml;
@@ -210,7 +214,7 @@ public final class BidiFormatter {
         private final CharSequence text;
 
         static {
-            for (int i = 0; i < DIR_TYPE_CACHE_SIZE; i++) {
+            for (int i = 0; i < 1792; i++) {
                 DIR_TYPE_CACHE[i] = Character.getDirectionality(i);
             }
         }
@@ -369,7 +373,7 @@ public final class BidiFormatter {
         }
 
         private static byte getCachedDirectionality(char c) {
-            return c < DIR_TYPE_CACHE_SIZE ? DIR_TYPE_CACHE[c] : Character.getDirectionality(c);
+            return c < 1792 ? DIR_TYPE_CACHE[c] : Character.getDirectionality(c);
         }
 
         /* access modifiers changed from: package-private */

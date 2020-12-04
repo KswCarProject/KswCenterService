@@ -3,7 +3,6 @@ package com.wits.pms.utils;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.ProgressBar;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.R;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.utils.SysConfigUtil;
@@ -12,15 +11,19 @@ public class UsbUtil {
     private static final String USB_CHANGE_PATH = "/sys/kernel/mhl_8334/wits_mhl_mode";
     public static final int USB_HOST_MODE = 1;
     public static final int USB_SLAVE_MODE = 0;
+    private static boolean forceSlaveMode;
 
     public static void updateUsbMode(boolean isHost) {
         updateUsbMode((int) isHost);
     }
 
     public static void updateUsbMode(final int hostMode) {
-        if (hostMode == 1 || hostMode == 0) {
-            if (!(BuildConfig.FLAVOR + hostMode).equals(SysConfigUtil.getArg(USB_CHANGE_PATH))) {
-                SysConfigUtil.writeArg(hostMode + BuildConfig.FLAVOR, USB_CHANGE_PATH, new SysConfigUtil.WriteListener() {
+        if (hostMode != 1 && hostMode != 0) {
+            return;
+        }
+        if (!forceSlaveMode || hostMode != 1) {
+            if (!("" + hostMode).equals(SysConfigUtil.getArg(USB_CHANGE_PATH))) {
+                SysConfigUtil.writeArg(hostMode + "", USB_CHANGE_PATH, new SysConfigUtil.WriteListener() {
                     private AlertDialog usbDialog;
 
                     public void start() {
@@ -50,5 +53,28 @@ public class UsbUtil {
                 });
             }
         }
+    }
+
+    public static void forceSlave(boolean open) {
+        if (open) {
+            updateUsbMode(false);
+        }
+        new Thread() {
+            public void run() {
+                int i = 0;
+                while (true) {
+                    try {
+                        Thread.sleep(2500);
+                    } catch (InterruptedException e) {
+                    }
+                    if (SysConfigUtil.getArg(UsbUtil.USB_CHANGE_PATH).contains("1")) {
+                        Log.i("UsbUtil", "force Slave - updateUsbMode slave.");
+                        UsbUtil.updateUsbMode(false);
+                    }
+                    i++;
+                }
+            }
+        }.start();
+        forceSlaveMode = open;
     }
 }

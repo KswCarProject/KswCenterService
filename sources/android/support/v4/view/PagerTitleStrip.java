@@ -6,8 +6,6 @@ import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.TextViewCompat;
 import android.text.TextUtils;
@@ -61,11 +59,11 @@ public class PagerTitleStrip extends ViewGroup {
         text.setTransformationMethod(new SingleLineAllCapsTransform(text.getContext()));
     }
 
-    public PagerTitleStrip(@NonNull Context context) {
+    public PagerTitleStrip(Context context) {
         this(context, (AttributeSet) null);
     }
 
-    public PagerTitleStrip(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public PagerTitleStrip(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mLastKnownCurrentPage = -1;
         this.mLastKnownPositionOffset = -1.0f;
@@ -99,7 +97,7 @@ public class PagerTitleStrip extends ViewGroup {
         this.mGravity = a.getInteger(3, 80);
         a.recycle();
         this.mTextColor = this.mCurrText.getTextColors().getDefaultColor();
-        setNonPrimaryAlpha(SIDE_ALPHA);
+        setNonPrimaryAlpha(0.6f);
         this.mPrevText.setEllipsize(TextUtils.TruncateAt.END);
         this.mCurrText.setEllipsize(TextUtils.TruncateAt.END);
         this.mNextText.setEllipsize(TextUtils.TruncateAt.END);
@@ -132,7 +130,7 @@ public class PagerTitleStrip extends ViewGroup {
 
     public void setNonPrimaryAlpha(@FloatRange(from = 0.0d, to = 1.0d) float alpha) {
         this.mNonPrimaryAlpha = ((int) (255.0f * alpha)) & 255;
-        int transparentColor = (this.mNonPrimaryAlpha << 24) | (this.mTextColor & ViewCompat.MEASURED_SIZE_MASK);
+        int transparentColor = (this.mNonPrimaryAlpha << 24) | (this.mTextColor & 16777215);
         this.mPrevText.setTextColor(transparentColor);
         this.mNextText.setTextColor(transparentColor);
     }
@@ -140,7 +138,7 @@ public class PagerTitleStrip extends ViewGroup {
     public void setTextColor(@ColorInt int color) {
         this.mTextColor = color;
         this.mCurrText.setTextColor(color);
-        int transparentColor = (this.mNonPrimaryAlpha << 24) | (this.mTextColor & ViewCompat.MEASURED_SIZE_MASK);
+        int transparentColor = (this.mNonPrimaryAlpha << 24) | (this.mTextColor & 16777215);
         this.mPrevText.setTextColor(transparentColor);
         this.mNextText.setTextColor(transparentColor);
     }
@@ -160,15 +158,16 @@ public class PagerTitleStrip extends ViewGroup {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ViewParent parent = getParent();
-        if (!(parent instanceof ViewPager)) {
-            throw new IllegalStateException("PagerTitleStrip must be a direct child of a ViewPager.");
+        if (parent instanceof ViewPager) {
+            ViewPager pager = (ViewPager) parent;
+            PagerAdapter adapter = pager.getAdapter();
+            pager.setInternalPageChangeListener(this.mPageListener);
+            pager.addOnAdapterChangeListener(this.mPageListener);
+            this.mPager = pager;
+            updateAdapter(this.mWatchingAdapter != null ? (PagerAdapter) this.mWatchingAdapter.get() : null, adapter);
+            return;
         }
-        ViewPager pager = (ViewPager) parent;
-        PagerAdapter adapter = pager.getAdapter();
-        pager.setInternalPageChangeListener(this.mPageListener);
-        pager.addOnAdapterChangeListener(this.mPageListener);
-        this.mPager = pager;
-        updateAdapter(this.mWatchingAdapter != null ? (PagerAdapter) this.mWatchingAdapter.get() : null, adapter);
+        throw new IllegalStateException("PagerTitleStrip must be a direct child of a ViewPager.");
     }
 
     /* access modifiers changed from: protected */
@@ -265,30 +264,30 @@ public class PagerTitleStrip extends ViewGroup {
         }
         int currLeft = ((stripWidth - textPaddedRight) - ((int) (((float) contentWidth) * currOffset))) - (currWidth / 2);
         int i2 = contentWidth;
-        int currRight = currLeft + currWidth;
+        int contentWidth2 = currLeft + currWidth;
         int i3 = currWidth;
         int prevBaseline = this.mPrevText.getBaseline();
         int i4 = halfCurrWidth;
-        int halfCurrWidth2 = this.mCurrText.getBaseline();
+        int currBaseline = this.mCurrText.getBaseline();
         int i5 = textPaddedLeft;
         int nextBaseline = this.mNextText.getBaseline();
         int i6 = textPaddedRight;
-        int maxBaseline = Math.max(Math.max(prevBaseline, halfCurrWidth2), nextBaseline);
+        int maxBaseline = Math.max(Math.max(prevBaseline, currBaseline), nextBaseline);
         int prevTopOffset = maxBaseline - prevBaseline;
-        int currTopOffset = maxBaseline - halfCurrWidth2;
+        int currTopOffset = maxBaseline - currBaseline;
         int nextTopOffset = maxBaseline - nextBaseline;
         int i7 = prevBaseline;
         int alignedPrevHeight = prevTopOffset + this.mPrevText.getMeasuredHeight();
-        int i8 = halfCurrWidth2;
+        int i8 = currBaseline;
         int alignedCurrHeight = currTopOffset + this.mCurrText.getMeasuredHeight();
         int i9 = nextBaseline;
         int i10 = maxBaseline;
-        int maxBaseline2 = Math.max(Math.max(alignedPrevHeight, alignedCurrHeight), nextTopOffset + this.mNextText.getMeasuredHeight());
+        int maxTextHeight = Math.max(Math.max(alignedPrevHeight, alignedCurrHeight), nextTopOffset + this.mNextText.getMeasuredHeight());
         int i11 = alignedPrevHeight;
         int vgrav2 = this.mGravity & 112;
         int i12 = alignedCurrHeight;
         if (vgrav2 == 16) {
-            int centeredTop = (((stripHeight2 - paddingTop) - paddingBottom) - maxBaseline2) / 2;
+            int centeredTop = (((stripHeight2 - paddingTop) - paddingBottom) - maxTextHeight) / 2;
             int i13 = vgrav2;
             int i14 = stripHeight2;
             vgrav = centeredTop + prevTopOffset;
@@ -301,7 +300,7 @@ public class PagerTitleStrip extends ViewGroup {
             prevTop = paddingTop + currTopOffset;
             stripHeight = paddingTop + nextTopOffset;
         } else {
-            int bottomGravTop = (stripHeight2 - paddingBottom) - maxBaseline2;
+            int bottomGravTop = (stripHeight2 - paddingBottom) - maxTextHeight;
             int i17 = vgrav2;
             int i18 = stripHeight2;
             vgrav = bottomGravTop + prevTopOffset;
@@ -310,13 +309,13 @@ public class PagerTitleStrip extends ViewGroup {
         }
         int i19 = paddingTop;
         int i20 = paddingBottom;
-        this.mCurrText.layout(currLeft, prevTop, currRight, this.mCurrText.getMeasuredHeight() + prevTop);
+        this.mCurrText.layout(currLeft, prevTop, contentWidth2, this.mCurrText.getMeasuredHeight() + prevTop);
         int prevLeft = Math.min(paddingLeft, (currLeft - this.mScaledTextSpacing) - prevWidth);
         int i21 = currLeft;
         int i22 = prevWidth;
         this.mPrevText.layout(prevLeft, vgrav, prevLeft + prevWidth, this.mPrevText.getMeasuredHeight() + vgrav);
-        int nextLeft = Math.max((stripWidth - paddingRight) - nextWidth, this.mScaledTextSpacing + currRight);
-        int i23 = currRight;
+        int nextLeft = Math.max((stripWidth - paddingRight) - nextWidth, this.mScaledTextSpacing + contentWidth2);
+        int i23 = contentWidth2;
         this.mNextText.layout(nextLeft, stripHeight, nextLeft + nextWidth, this.mNextText.getMeasuredHeight() + stripHeight);
         this.mLastKnownPositionOffset = f;
         this.mUpdatingPositions = false;
@@ -325,22 +324,23 @@ public class PagerTitleStrip extends ViewGroup {
     /* access modifiers changed from: protected */
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int textHeight;
-        if (View.MeasureSpec.getMode(widthMeasureSpec) != 1073741824) {
-            throw new IllegalStateException("Must measure with an exact width");
+        if (View.MeasureSpec.getMode(widthMeasureSpec) == 1073741824) {
+            int heightPadding = getPaddingTop() + getPaddingBottom();
+            int childHeightSpec = getChildMeasureSpec(heightMeasureSpec, heightPadding, -2);
+            int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
+            int childWidthSpec = getChildMeasureSpec(widthMeasureSpec, (int) (((float) widthSize) * 0.2f), -2);
+            this.mPrevText.measure(childWidthSpec, childHeightSpec);
+            this.mCurrText.measure(childWidthSpec, childHeightSpec);
+            this.mNextText.measure(childWidthSpec, childHeightSpec);
+            if (View.MeasureSpec.getMode(heightMeasureSpec) == 1073741824) {
+                textHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+            } else {
+                textHeight = Math.max(getMinHeight(), this.mCurrText.getMeasuredHeight() + heightPadding);
+            }
+            setMeasuredDimension(widthSize, View.resolveSizeAndState(textHeight, heightMeasureSpec, this.mCurrText.getMeasuredState() << 16));
+            return;
         }
-        int heightPadding = getPaddingTop() + getPaddingBottom();
-        int childHeightSpec = getChildMeasureSpec(heightMeasureSpec, heightPadding, -2);
-        int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
-        int childWidthSpec = getChildMeasureSpec(widthMeasureSpec, (int) (((float) widthSize) * 0.2f), -2);
-        this.mPrevText.measure(childWidthSpec, childHeightSpec);
-        this.mCurrText.measure(childWidthSpec, childHeightSpec);
-        this.mNextText.measure(childWidthSpec, childHeightSpec);
-        if (View.MeasureSpec.getMode(heightMeasureSpec) == 1073741824) {
-            textHeight = View.MeasureSpec.getSize(heightMeasureSpec);
-        } else {
-            textHeight = Math.max(getMinHeight(), this.mCurrText.getMeasuredHeight() + heightPadding);
-        }
-        setMeasuredDimension(widthSize, View.resolveSizeAndState(textHeight, heightMeasureSpec, this.mCurrText.getMeasuredState() << 16));
+        throw new IllegalStateException("Must measure with an exact width");
     }
 
     /* access modifiers changed from: protected */

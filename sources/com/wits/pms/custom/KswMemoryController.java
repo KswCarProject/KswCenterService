@@ -22,8 +22,7 @@ public class KswMemoryController extends MemoryKiller {
 
     public void clearMemoryForCustom() {
         for (MemoryKiller.AppProcess appProcess : this.mAppList) {
-            if (!appProcess.isUsingMediaApp() && !appProcess.isWhiteListApp()) {
-                kill(appProcess.getPkgName());
+            if (!appProcess.isUsingMediaApp() && appProcess.isWhiteListApp()) {
             }
         }
     }

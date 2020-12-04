@@ -1,19 +1,18 @@
 package android.support.v4.content;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.ProviderInfo;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.media.AudioSystem;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.GuardedBy;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import java.io.File;
@@ -33,7 +32,6 @@ public class FileProvider extends ContentProvider {
     private static final String TAG_EXTERNAL = "external-path";
     private static final String TAG_EXTERNAL_CACHE = "external-cache-path";
     private static final String TAG_EXTERNAL_FILES = "external-files-path";
-    private static final String TAG_EXTERNAL_MEDIA = "external-media-path";
     private static final String TAG_FILES_PATH = "files-path";
     private static final String TAG_ROOT_PATH = "root-path";
     @GuardedBy("sCache")
@@ -50,22 +48,22 @@ public class FileProvider extends ContentProvider {
         return true;
     }
 
-    public void attachInfo(@NonNull Context context, @NonNull ProviderInfo info) {
+    public void attachInfo(Context context, ProviderInfo info) {
         super.attachInfo(context, info);
         if (info.exported) {
             throw new SecurityException("Provider must not be exported");
-        } else if (!info.grantUriPermissions) {
-            throw new SecurityException("Provider must grant uri permissions");
-        } else {
+        } else if (info.grantUriPermissions) {
             this.mStrategy = getPathStrategy(context, info.authority);
+        } else {
+            throw new SecurityException("Provider must grant uri permissions");
         }
     }
 
-    public static Uri getUriForFile(@NonNull Context context, @NonNull String authority, @NonNull File file) {
+    public static Uri getUriForFile(Context context, String authority, File file) {
         return getPathStrategy(context, authority).getUriForFile(file);
     }
 
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         int i;
         File file = this.mStrategy.getFileForUri(uri);
         if (projection == null) {
@@ -93,29 +91,29 @@ public class FileProvider extends ContentProvider {
         return cursor;
     }
 
-    public String getType(@NonNull Uri uri) {
+    public String getType(Uri uri) {
         String mime;
         File file = this.mStrategy.getFileForUri(uri);
         int lastDot = file.getName().lastIndexOf(46);
         if (lastDot < 0 || (mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.getName().substring(lastDot + 1))) == null) {
-            return "application/octet-stream";
+            return ContentResolver.MIME_TYPE_DEFAULT;
         }
         return mime;
     }
 
-    public Uri insert(@NonNull Uri uri, ContentValues values) {
+    public Uri insert(Uri uri, ContentValues values) {
         throw new UnsupportedOperationException("No external inserts");
     }
 
-    public int update(@NonNull Uri uri, ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         throw new UnsupportedOperationException("No external updates");
     }
 
-    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
         return this.mStrategy.getFileForUri(uri).delete() ? 1 : 0;
     }
 
-    public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
+    public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
         return ParcelFileDescriptor.open(this.mStrategy.getFileForUri(uri), modeToMode(mode));
     }
 
@@ -140,48 +138,44 @@ public class FileProvider extends ContentProvider {
     private static PathStrategy parsePathStrategy(Context context, String authority) throws IOException, XmlPullParserException {
         SimplePathStrategy strat = new SimplePathStrategy(authority);
         XmlResourceParser in = context.getPackageManager().resolveContentProvider(authority, 128).loadXmlMetaData(context.getPackageManager(), META_DATA_FILE_PROVIDER_PATHS);
-        if (in == null) {
+        if (in != null) {
+            while (true) {
+                int next = in.next();
+                int type = next;
+                if (next == 1) {
+                    return strat;
+                }
+                if (type == 2) {
+                    String tag = in.getName();
+                    String name = in.getAttributeValue((String) null, "name");
+                    String path = in.getAttributeValue((String) null, ATTR_PATH);
+                    File target = null;
+                    if (TAG_ROOT_PATH.equals(tag)) {
+                        target = DEVICE_ROOT;
+                    } else if (TAG_FILES_PATH.equals(tag)) {
+                        target = context.getFilesDir();
+                    } else if (TAG_CACHE_PATH.equals(tag)) {
+                        target = context.getCacheDir();
+                    } else if (TAG_EXTERNAL.equals(tag)) {
+                        target = Environment.getExternalStorageDirectory();
+                    } else if (TAG_EXTERNAL_FILES.equals(tag)) {
+                        File[] externalFilesDirs = ContextCompat.getExternalFilesDirs(context, (String) null);
+                        if (externalFilesDirs.length > 0) {
+                            target = externalFilesDirs[0];
+                        }
+                    } else if (TAG_EXTERNAL_CACHE.equals(tag)) {
+                        File[] externalCacheDirs = ContextCompat.getExternalCacheDirs(context);
+                        if (externalCacheDirs.length > 0) {
+                            target = externalCacheDirs[0];
+                        }
+                    }
+                    if (target != null) {
+                        strat.addRoot(name, buildPath(target, path));
+                    }
+                }
+            }
+        } else {
             throw new IllegalArgumentException("Missing android.support.FILE_PROVIDER_PATHS meta-data");
-        }
-        while (true) {
-            int next = in.next();
-            int type = next;
-            if (next == 1) {
-                return strat;
-            }
-            if (type == 2) {
-                String tag = in.getName();
-                String name = in.getAttributeValue((String) null, ATTR_NAME);
-                String path = in.getAttributeValue((String) null, ATTR_PATH);
-                File target = null;
-                if (TAG_ROOT_PATH.equals(tag)) {
-                    target = DEVICE_ROOT;
-                } else if (TAG_FILES_PATH.equals(tag)) {
-                    target = context.getFilesDir();
-                } else if (TAG_CACHE_PATH.equals(tag)) {
-                    target = context.getCacheDir();
-                } else if (TAG_EXTERNAL.equals(tag)) {
-                    target = Environment.getExternalStorageDirectory();
-                } else if (TAG_EXTERNAL_FILES.equals(tag)) {
-                    File[] externalFilesDirs = ContextCompat.getExternalFilesDirs(context, (String) null);
-                    if (externalFilesDirs.length > 0) {
-                        target = externalFilesDirs[0];
-                    }
-                } else if (TAG_EXTERNAL_CACHE.equals(tag)) {
-                    File[] externalCacheDirs = ContextCompat.getExternalCacheDirs(context);
-                    if (externalCacheDirs.length > 0) {
-                        target = externalCacheDirs[0];
-                    }
-                } else if (Build.VERSION.SDK_INT >= 21 && TAG_EXTERNAL_MEDIA.equals(tag)) {
-                    File[] externalMediaDirs = context.getExternalMediaDirs();
-                    if (externalMediaDirs.length > 0) {
-                        target = externalMediaDirs[0];
-                    }
-                }
-                if (target != null) {
-                    strat.addRoot(name, buildPath(target, path));
-                }
-            }
         }
     }
 
@@ -189,19 +183,19 @@ public class FileProvider extends ContentProvider {
         private final String mAuthority;
         private final HashMap<String, File> mRoots = new HashMap<>();
 
-        SimplePathStrategy(String authority) {
+        public SimplePathStrategy(String authority) {
             this.mAuthority = authority;
         }
 
-        /* access modifiers changed from: package-private */
         public void addRoot(String name, File root) {
-            if (TextUtils.isEmpty(name)) {
+            if (!TextUtils.isEmpty(name)) {
+                try {
+                    this.mRoots.put(name, root.getCanonicalFile());
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("Failed to resolve canonical path for " + root, e);
+                }
+            } else {
                 throw new IllegalArgumentException("Name must not be empty");
-            }
-            try {
-                this.mRoots.put(name, root.getCanonicalFile());
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Failed to resolve canonical path for " + root, e);
             }
         }
 
@@ -216,16 +210,16 @@ public class FileProvider extends ContentProvider {
                         mostSpecific = root;
                     }
                 }
-                if (mostSpecific == null) {
-                    throw new IllegalArgumentException("Failed to find configured root that contains " + path2);
+                if (mostSpecific != null) {
+                    String rootPath2 = mostSpecific.getValue().getPath();
+                    if (rootPath2.endsWith("/")) {
+                        path = path2.substring(rootPath2.length());
+                    } else {
+                        path = path2.substring(rootPath2.length() + 1);
+                    }
+                    return new Uri.Builder().scheme("content").authority(this.mAuthority).encodedPath(Uri.encode(mostSpecific.getKey()) + '/' + Uri.encode(path, "/")).build();
                 }
-                String rootPath2 = mostSpecific.getValue().getPath();
-                if (rootPath2.endsWith("/")) {
-                    path = path2.substring(rootPath2.length());
-                } else {
-                    path = path2.substring(rootPath2.length() + 1);
-                }
-                return new Uri.Builder().scheme("content").authority(this.mAuthority).encodedPath(Uri.encode(mostSpecific.getKey()) + '/' + Uri.encode(path, "/")).build();
+                throw new IllegalArgumentException("Failed to find configured root that contains " + path2);
             } catch (IOException e) {
                 throw new IllegalArgumentException("Failed to resolve canonical path for " + file);
             }
@@ -237,18 +231,19 @@ public class FileProvider extends ContentProvider {
             String tag = Uri.decode(path.substring(1, splitIndex));
             String path2 = Uri.decode(path.substring(splitIndex + 1));
             File root = this.mRoots.get(tag);
-            if (root == null) {
-                throw new IllegalArgumentException("Unable to find configured root for " + uri);
-            }
-            File file = new File(root, path2);
-            try {
-                File file2 = file.getCanonicalFile();
-                if (file2.getPath().startsWith(root.getPath())) {
-                    return file2;
+            if (root != null) {
+                File file = new File(root, path2);
+                try {
+                    File file2 = file.getCanonicalFile();
+                    if (file2.getPath().startsWith(root.getPath())) {
+                        return file2;
+                    }
+                    throw new SecurityException("Resolved path jumped beyond configured root");
+                } catch (IOException e) {
+                    throw new IllegalArgumentException("Failed to resolve canonical path for " + file);
                 }
-                throw new SecurityException("Resolved path jumped beyond configured root");
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Failed to resolve canonical path for " + file);
+            } else {
+                throw new IllegalArgumentException("Unable to find configured root for " + uri);
             }
         }
     }
@@ -261,7 +256,7 @@ public class FileProvider extends ContentProvider {
             return 738197504;
         }
         if ("wa".equals(mode)) {
-            return 704643072;
+            return AudioSystem.AUDIO_FORMAT_APTX_TWSP;
         }
         if ("rw".equals(mode)) {
             return 939524096;

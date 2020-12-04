@@ -25,7 +25,6 @@ import android.support.v4.util.LruCache;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.content.res.AppCompatResources;
-import android.support.v7.graphics.drawable.AnimatedStateListDrawableCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -44,11 +43,12 @@ public final class AppCompatDrawableManager {
     private static AppCompatDrawableManager INSTANCE = null;
     private static final String PLATFORM_VD_CLAZZ = "android.graphics.drawable.VectorDrawable";
     private static final String SKIP_DRAWABLE_TAG = "appcompat_skip_skip";
-    private static final String TAG = "AppCompatDrawableManag";
+    private static final String TAG = "AppCompatDrawableManager";
     private static final int[] TINT_CHECKABLE_BUTTON_LIST = {R.drawable.abc_btn_check_material, R.drawable.abc_btn_radio_material};
     private static final int[] TINT_COLOR_CONTROL_NORMAL = {R.drawable.abc_ic_commit_search_api_mtrl_alpha, R.drawable.abc_seekbar_tick_mark_material, R.drawable.abc_ic_menu_share_mtrl_alpha, R.drawable.abc_ic_menu_copy_mtrl_am_alpha, R.drawable.abc_ic_menu_cut_mtrl_alpha, R.drawable.abc_ic_menu_selectall_mtrl_alpha, R.drawable.abc_ic_menu_paste_mtrl_am_alpha};
     private static final int[] TINT_COLOR_CONTROL_STATE_LIST = {R.drawable.abc_tab_indicator_material, R.drawable.abc_textfield_search_material};
     private ArrayMap<String, InflateDelegate> mDelegates;
+    private final Object mDrawableCacheLock = new Object();
     private final WeakHashMap<Context, LongSparseArray<WeakReference<Drawable.ConstantState>>> mDrawableCaches = new WeakHashMap<>(0);
     private boolean mHasCheckedVectorDrawableSetup;
     private SparseArrayCompat<String> mKnownDrawableIdTags;
@@ -59,35 +59,31 @@ public final class AppCompatDrawableManager {
         Drawable createFromXmlInner(@NonNull Context context, @NonNull XmlPullParser xmlPullParser, @NonNull AttributeSet attributeSet, @Nullable Resources.Theme theme);
     }
 
-    public static synchronized AppCompatDrawableManager get() {
-        AppCompatDrawableManager appCompatDrawableManager;
-        synchronized (AppCompatDrawableManager.class) {
-            if (INSTANCE == null) {
-                INSTANCE = new AppCompatDrawableManager();
-                installDefaultInflateDelegates(INSTANCE);
-            }
-            appCompatDrawableManager = INSTANCE;
+    public static AppCompatDrawableManager get() {
+        if (INSTANCE == null) {
+            INSTANCE = new AppCompatDrawableManager();
+            installDefaultInflateDelegates(INSTANCE);
         }
-        return appCompatDrawableManager;
+        return INSTANCE;
     }
 
     private static void installDefaultInflateDelegates(@NonNull AppCompatDrawableManager manager) {
         if (Build.VERSION.SDK_INT < 24) {
             manager.addDelegate("vector", new VdcInflateDelegate());
-            manager.addDelegate("animated-vector", new AvdcInflateDelegate());
-            manager.addDelegate("animated-selector", new AsldcInflateDelegate());
+            if (Build.VERSION.SDK_INT >= 11) {
+                manager.addDelegate("animated-vector", new AvdcInflateDelegate());
+            }
         }
     }
 
-    public synchronized Drawable getDrawable(@NonNull Context context, @DrawableRes int resId) {
+    public Drawable getDrawable(@NonNull Context context, @DrawableRes int resId) {
         return getDrawable(context, resId, false);
     }
 
     /* access modifiers changed from: package-private */
-    public synchronized Drawable getDrawable(@NonNull Context context, @DrawableRes int resId, boolean failIfNotKnown) {
-        Drawable drawable;
+    public Drawable getDrawable(@NonNull Context context, @DrawableRes int resId, boolean failIfNotKnown) {
         checkVectorDrawableSetup(context);
-        drawable = loadDrawableFromDelegates(context, resId);
+        Drawable drawable = loadDrawableFromDelegates(context, resId);
         if (drawable == null) {
             drawable = createDrawableIfNeeded(context, resId);
         }
@@ -103,10 +99,12 @@ public final class AppCompatDrawableManager {
         return drawable;
     }
 
-    public synchronized void onConfigurationChanged(@NonNull Context context) {
-        LongSparseArray<WeakReference<Drawable.ConstantState>> cache = this.mDrawableCaches.get(context);
-        if (cache != null) {
-            cache.clear();
+    public void onConfigurationChanged(@NonNull Context context) {
+        synchronized (this.mDrawableCacheLock) {
+            LongSparseArray<WeakReference<Drawable.ConstantState>> cache = this.mDrawableCaches.get(context);
+            if (cache != null) {
+                cache.clear();
+            }
         }
     }
 
@@ -169,7 +167,7 @@ public final class AppCompatDrawableManager {
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:30:0x007c A[Catch:{ Exception -> 0x00ac }] */
-    /* JADX WARNING: Removed duplicated region for block: B:32:0x0084 A[Catch:{ Exception -> 0x00ac }] */
+    /* JADX WARNING: Removed duplicated region for block: B:36:0x00a4 A[Catch:{ Exception -> 0x00ac }] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private android.graphics.drawable.Drawable loadDrawableFromDelegates(@android.support.annotation.NonNull android.content.Context r12, @android.support.annotation.DrawableRes int r13) {
         /*
@@ -211,7 +209,7 @@ public final class AppCompatDrawableManager {
             android.util.TypedValue r0 = r11.mTypedValue
             android.content.res.Resources r1 = r12.getResources()
             r2 = 1
-            r1.getValue(r13, r0, r2)
+            r1.getValue((int) r13, (android.util.TypedValue) r0, (boolean) r2)
             long r3 = createCacheKey(r0)
             android.graphics.drawable.Drawable r5 = r11.getCachedDrawable(r12, r3)
             if (r5 == 0) goto L_0x0055
@@ -234,32 +232,32 @@ public final class AppCompatDrawableManager {
             if (r9 == r2) goto L_0x007a
             goto L_0x006f
         L_0x007a:
-            if (r9 == r10) goto L_0x0084
-            org.xmlpull.v1.XmlPullParserException r2 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ Exception -> 0x00ac }
-            java.lang.String r8 = "No start tag found"
-            r2.<init>(r8)     // Catch:{ Exception -> 0x00ac }
-            throw r2     // Catch:{ Exception -> 0x00ac }
-        L_0x0084:
+            if (r9 != r10) goto L_0x00a4
             java.lang.String r2 = r6.getName()     // Catch:{ Exception -> 0x00ac }
             android.support.v4.util.SparseArrayCompat<java.lang.String> r8 = r11.mKnownDrawableIdTags     // Catch:{ Exception -> 0x00ac }
             r8.append(r13, r2)     // Catch:{ Exception -> 0x00ac }
             android.support.v4.util.ArrayMap<java.lang.String, android.support.v7.widget.AppCompatDrawableManager$InflateDelegate> r8 = r11.mDelegates     // Catch:{ Exception -> 0x00ac }
             java.lang.Object r8 = r8.get(r2)     // Catch:{ Exception -> 0x00ac }
             android.support.v7.widget.AppCompatDrawableManager$InflateDelegate r8 = (android.support.v7.widget.AppCompatDrawableManager.InflateDelegate) r8     // Catch:{ Exception -> 0x00ac }
-            if (r8 == 0) goto L_0x00a1
+            if (r8 == 0) goto L_0x0099
             android.content.res.Resources$Theme r10 = r12.getTheme()     // Catch:{ Exception -> 0x00ac }
             android.graphics.drawable.Drawable r10 = r8.createFromXmlInner(r12, r6, r7, r10)     // Catch:{ Exception -> 0x00ac }
             r5 = r10
-        L_0x00a1:
-            if (r5 == 0) goto L_0x00ab
+        L_0x0099:
+            if (r5 == 0) goto L_0x00a3
             int r10 = r0.changingConfigurations     // Catch:{ Exception -> 0x00ac }
             r5.setChangingConfigurations(r10)     // Catch:{ Exception -> 0x00ac }
             r11.addDrawableToCache(r12, r3, r5)     // Catch:{ Exception -> 0x00ac }
-        L_0x00ab:
+        L_0x00a3:
             goto L_0x00b4
+        L_0x00a4:
+            org.xmlpull.v1.XmlPullParserException r2 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ Exception -> 0x00ac }
+            java.lang.String r8 = "No start tag found"
+            r2.<init>(r8)     // Catch:{ Exception -> 0x00ac }
+            throw r2     // Catch:{ Exception -> 0x00ac }
         L_0x00ac:
             r2 = move-exception
-            java.lang.String r6 = "AppCompatDrawableManag"
+            java.lang.String r6 = "AppCompatDrawableManager"
             java.lang.String r7 = "Exception while inflating drawable"
             android.util.Log.e(r6, r7, r2)
         L_0x00b4:
@@ -275,69 +273,72 @@ public final class AppCompatDrawableManager {
         throw new UnsupportedOperationException("Method not decompiled: android.support.v7.widget.AppCompatDrawableManager.loadDrawableFromDelegates(android.content.Context, int):android.graphics.drawable.Drawable");
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x002c, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:16:0x002e, code lost:
         return null;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private synchronized android.graphics.drawable.Drawable getCachedDrawable(@android.support.annotation.NonNull android.content.Context r5, long r6) {
+    private android.graphics.drawable.Drawable getCachedDrawable(@android.support.annotation.NonNull android.content.Context r6, long r7) {
         /*
-            r4 = this;
-            monitor-enter(r4)
-            java.util.WeakHashMap<android.content.Context, android.support.v4.util.LongSparseArray<java.lang.ref.WeakReference<android.graphics.drawable.Drawable$ConstantState>>> r0 = r4.mDrawableCaches     // Catch:{ all -> 0x002d }
-            java.lang.Object r0 = r0.get(r5)     // Catch:{ all -> 0x002d }
-            android.support.v4.util.LongSparseArray r0 = (android.support.v4.util.LongSparseArray) r0     // Catch:{ all -> 0x002d }
-            r1 = 0
-            if (r0 != 0) goto L_0x000e
-            monitor-exit(r4)
-            return r1
-        L_0x000e:
-            java.lang.Object r2 = r0.get(r6)     // Catch:{ all -> 0x002d }
-            java.lang.ref.WeakReference r2 = (java.lang.ref.WeakReference) r2     // Catch:{ all -> 0x002d }
-            if (r2 == 0) goto L_0x002b
-            java.lang.Object r3 = r2.get()     // Catch:{ all -> 0x002d }
-            android.graphics.drawable.Drawable$ConstantState r3 = (android.graphics.drawable.Drawable.ConstantState) r3     // Catch:{ all -> 0x002d }
-            if (r3 == 0) goto L_0x0028
-            android.content.res.Resources r1 = r5.getResources()     // Catch:{ all -> 0x002d }
-            android.graphics.drawable.Drawable r1 = r3.newDrawable(r1)     // Catch:{ all -> 0x002d }
-            monitor-exit(r4)
-            return r1
-        L_0x0028:
-            r0.delete(r6)     // Catch:{ all -> 0x002d }
-        L_0x002b:
-            monitor-exit(r4)
-            return r1
+            r5 = this;
+            java.lang.Object r0 = r5.mDrawableCacheLock
+            monitor-enter(r0)
+            java.util.WeakHashMap<android.content.Context, android.support.v4.util.LongSparseArray<java.lang.ref.WeakReference<android.graphics.drawable.Drawable$ConstantState>>> r1 = r5.mDrawableCaches     // Catch:{ all -> 0x002f }
+            java.lang.Object r1 = r1.get(r6)     // Catch:{ all -> 0x002f }
+            android.support.v4.util.LongSparseArray r1 = (android.support.v4.util.LongSparseArray) r1     // Catch:{ all -> 0x002f }
+            r2 = 0
+            if (r1 != 0) goto L_0x0010
+            monitor-exit(r0)     // Catch:{ all -> 0x002f }
+            return r2
+        L_0x0010:
+            java.lang.Object r3 = r1.get(r7)     // Catch:{ all -> 0x002f }
+            java.lang.ref.WeakReference r3 = (java.lang.ref.WeakReference) r3     // Catch:{ all -> 0x002f }
+            if (r3 == 0) goto L_0x002d
+            java.lang.Object r4 = r3.get()     // Catch:{ all -> 0x002f }
+            android.graphics.drawable.Drawable$ConstantState r4 = (android.graphics.drawable.Drawable.ConstantState) r4     // Catch:{ all -> 0x002f }
+            if (r4 == 0) goto L_0x002a
+            android.content.res.Resources r2 = r6.getResources()     // Catch:{ all -> 0x002f }
+            android.graphics.drawable.Drawable r2 = r4.newDrawable(r2)     // Catch:{ all -> 0x002f }
+            monitor-exit(r0)     // Catch:{ all -> 0x002f }
+            return r2
+        L_0x002a:
+            r1.delete(r7)     // Catch:{ all -> 0x002f }
         L_0x002d:
-            r5 = move-exception
-            monitor-exit(r4)
-            throw r5
+            monitor-exit(r0)     // Catch:{ all -> 0x002f }
+            return r2
+        L_0x002f:
+            r1 = move-exception
+            monitor-exit(r0)     // Catch:{ all -> 0x002f }
+            throw r1
         */
         throw new UnsupportedOperationException("Method not decompiled: android.support.v7.widget.AppCompatDrawableManager.getCachedDrawable(android.content.Context, long):android.graphics.drawable.Drawable");
     }
 
-    private synchronized boolean addDrawableToCache(@NonNull Context context, long key, @NonNull Drawable drawable) {
+    private boolean addDrawableToCache(@NonNull Context context, long key, @NonNull Drawable drawable) {
         Drawable.ConstantState cs = drawable.getConstantState();
         if (cs == null) {
             return false;
         }
-        LongSparseArray<WeakReference<Drawable.ConstantState>> cache = this.mDrawableCaches.get(context);
-        if (cache == null) {
-            cache = new LongSparseArray<>();
-            this.mDrawableCaches.put(context, cache);
+        synchronized (this.mDrawableCacheLock) {
+            LongSparseArray<WeakReference<Drawable.ConstantState>> cache = this.mDrawableCaches.get(context);
+            if (cache == null) {
+                cache = new LongSparseArray<>();
+                this.mDrawableCaches.put(context, cache);
+            }
+            cache.put(key, new WeakReference(cs));
         }
-        cache.put(key, new WeakReference(cs));
         return true;
     }
 
     /* access modifiers changed from: package-private */
-    public synchronized Drawable onDrawableLoadedFromResources(@NonNull Context context, @NonNull VectorEnabledTintResources resources, @DrawableRes int resId) {
+    public Drawable onDrawableLoadedFromResources(@NonNull Context context, @NonNull VectorEnabledTintResources resources, @DrawableRes int resId) {
         Drawable drawable = loadDrawableFromDelegates(context, resId);
         if (drawable == null) {
             drawable = resources.superGetDrawable(resId);
         }
-        if (drawable == null) {
-            return null;
+        if (drawable != null) {
+            return tintDrawable(context, resId, false, drawable);
         }
-        return tintDrawable(context, resId, false, drawable);
+        return null;
     }
 
     static boolean tintDrawableUsingColorFilter(@NonNull Context context, @DrawableRes int resId, @NonNull Drawable drawable) {
@@ -407,9 +408,8 @@ public final class AppCompatDrawableManager {
     }
 
     /* access modifiers changed from: package-private */
-    public synchronized ColorStateList getTintList(@NonNull Context context, @DrawableRes int resId) {
-        ColorStateList tint;
-        tint = getTintListFromCache(context, resId);
+    public ColorStateList getTintList(@NonNull Context context, @DrawableRes int resId) {
+        ColorStateList tint = getTintListFromCache(context, resId);
         if (tint == null) {
             if (resId == R.drawable.abc_edit_text_material) {
                 tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_edittext);
@@ -423,21 +423,16 @@ public final class AppCompatDrawableManager {
                 tint = createBorderlessButtonColorStateList(context);
             } else if (resId == R.drawable.abc_btn_colored_material) {
                 tint = createColoredButtonColorStateList(context);
-            } else {
-                if (resId != R.drawable.abc_spinner_mtrl_am_alpha) {
-                    if (resId != R.drawable.abc_spinner_textfield_background_material) {
-                        if (arrayContains(TINT_COLOR_CONTROL_NORMAL, resId)) {
-                            tint = ThemeUtils.getThemeAttrColorStateList(context, R.attr.colorControlNormal);
-                        } else if (arrayContains(TINT_COLOR_CONTROL_STATE_LIST, resId)) {
-                            tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_default);
-                        } else if (arrayContains(TINT_CHECKABLE_BUTTON_LIST, resId)) {
-                            tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_btn_checkable);
-                        } else if (resId == R.drawable.abc_seekbar_thumb_material) {
-                            tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_seek_thumb);
-                        }
-                    }
-                }
+            } else if (resId == R.drawable.abc_spinner_mtrl_am_alpha || resId == R.drawable.abc_spinner_textfield_background_material) {
                 tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_spinner);
+            } else if (arrayContains(TINT_COLOR_CONTROL_NORMAL, resId)) {
+                tint = ThemeUtils.getThemeAttrColorStateList(context, R.attr.colorControlNormal);
+            } else if (arrayContains(TINT_COLOR_CONTROL_STATE_LIST, resId)) {
+                tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_default);
+            } else if (arrayContains(TINT_CHECKABLE_BUTTON_LIST, resId)) {
+                tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_btn_checkable);
+            } else if (resId == R.drawable.abc_seekbar_thumb_material) {
+                tint = AppCompatResources.getColorStateList(context, R.color.abc_tint_seek_thumb);
             }
             if (tint != null) {
                 addTintListToCache(context, resId, tint);
@@ -569,16 +564,14 @@ public final class AppCompatDrawableManager {
         return getPorterDuffColorFilter(tint.getColorForState(state, 0), tintMode);
     }
 
-    public static synchronized PorterDuffColorFilter getPorterDuffColorFilter(int color, PorterDuff.Mode mode) {
-        PorterDuffColorFilter filter;
-        synchronized (AppCompatDrawableManager.class) {
-            filter = COLOR_FILTER_CACHE.get(color, mode);
-            if (filter == null) {
-                filter = new PorterDuffColorFilter(color, mode);
-                COLOR_FILTER_CACHE.put(color, mode, filter);
-            }
+    public static PorterDuffColorFilter getPorterDuffColorFilter(int color, PorterDuff.Mode mode) {
+        PorterDuffColorFilter filter = COLOR_FILTER_CACHE.get(color, mode);
+        if (filter != null) {
+            return filter;
         }
-        return filter;
+        PorterDuffColorFilter filter2 = new PorterDuffColorFilter(color, mode);
+        COLOR_FILTER_CACHE.put(color, mode, filter2);
+        return filter2;
     }
 
     private static void setPorterDuffColorFilter(Drawable d, int color, PorterDuff.Mode mode) {
@@ -617,6 +610,7 @@ public final class AppCompatDrawableManager {
         }
     }
 
+    @RequiresApi(11)
     private static class AvdcInflateDelegate implements InflateDelegate {
         AvdcInflateDelegate() {
         }
@@ -626,21 +620,6 @@ public final class AppCompatDrawableManager {
                 return AnimatedVectorDrawableCompat.createFromXmlInner(context, context.getResources(), parser, attrs, theme);
             } catch (Exception e) {
                 Log.e("AvdcInflateDelegate", "Exception while inflating <animated-vector>", e);
-                return null;
-            }
-        }
-    }
-
-    @RequiresApi(11)
-    static class AsldcInflateDelegate implements InflateDelegate {
-        AsldcInflateDelegate() {
-        }
-
-        public Drawable createFromXmlInner(@NonNull Context context, @NonNull XmlPullParser parser, @NonNull AttributeSet attrs, @Nullable Resources.Theme theme) {
-            try {
-                return AnimatedStateListDrawableCompat.createFromXmlInner(context, context.getResources(), parser, attrs, theme);
-            } catch (Exception e) {
-                Log.e("AsldcInflateDelegate", "Exception while inflating <animated-selector>", e);
                 return null;
             }
         }

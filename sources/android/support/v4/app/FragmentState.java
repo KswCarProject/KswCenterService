@@ -1,12 +1,12 @@
 package android.support.v4.app;
 
-import android.arch.lifecycle.ViewModelStore;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+/* compiled from: Fragment */
 final class FragmentState implements Parcelable {
     public static final Parcelable.Creator<FragmentState> CREATOR = new Parcelable.Creator<FragmentState>() {
         public FragmentState createFromParcel(Parcel in) {
@@ -30,7 +30,7 @@ final class FragmentState implements Parcelable {
     Bundle mSavedFragmentState;
     final String mTag;
 
-    FragmentState(Fragment frag) {
+    public FragmentState(Fragment frag) {
         this.mClassName = frag.getClass().getName();
         this.mIndex = frag.mIndex;
         this.mFromLayout = frag.mFromLayout;
@@ -43,7 +43,7 @@ final class FragmentState implements Parcelable {
         this.mHidden = frag.mHidden;
     }
 
-    FragmentState(Parcel in) {
+    public FragmentState(Parcel in) {
         this.mClassName = in.readString();
         this.mIndex = in.readInt();
         boolean z = false;
@@ -58,7 +58,7 @@ final class FragmentState implements Parcelable {
         this.mSavedFragmentState = in.readBundle();
     }
 
-    public Fragment instantiate(FragmentHostCallback host, FragmentContainer container, Fragment parent, FragmentManagerNonConfig childNonConfig, ViewModelStore viewModelStore) {
+    public Fragment instantiate(FragmentHostCallback host, FragmentContainer container, Fragment parent, FragmentManagerNonConfig childNonConfig) {
         if (this.mInstance == null) {
             Context context = host.getContext();
             if (this.mArguments != null) {
@@ -88,7 +88,6 @@ final class FragmentState implements Parcelable {
             }
         }
         this.mInstance.mChildNonConfig = childNonConfig;
-        this.mInstance.mViewModelStore = viewModelStore;
         return this.mInstance;
     }
 

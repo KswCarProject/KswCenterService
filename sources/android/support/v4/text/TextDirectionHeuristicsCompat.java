@@ -57,7 +57,7 @@ public final class TextDirectionHeuristicsCompat {
         /* access modifiers changed from: protected */
         public abstract boolean defaultIsRtl();
 
-        TextDirectionHeuristicImpl(TextDirectionAlgorithm algorithm) {
+        public TextDirectionHeuristicImpl(TextDirectionAlgorithm algorithm) {
             this.mAlgorithm = algorithm;
         }
 
@@ -102,7 +102,7 @@ public final class TextDirectionHeuristicsCompat {
     }
 
     private static class FirstStrong implements TextDirectionAlgorithm {
-        static final FirstStrong INSTANCE = new FirstStrong();
+        public static final FirstStrong INSTANCE = new FirstStrong();
 
         public int checkRtl(CharSequence cs, int start, int count) {
             int result = 2;
@@ -118,8 +118,8 @@ public final class TextDirectionHeuristicsCompat {
     }
 
     private static class AnyStrong implements TextDirectionAlgorithm {
-        static final AnyStrong INSTANCE_LTR = new AnyStrong(false);
-        static final AnyStrong INSTANCE_RTL = new AnyStrong(true);
+        public static final AnyStrong INSTANCE_LTR = new AnyStrong(false);
+        public static final AnyStrong INSTANCE_RTL = new AnyStrong(true);
         private final boolean mLookForRtl;
 
         public int checkRtl(CharSequence cs, int start, int count) {
@@ -155,9 +155,9 @@ public final class TextDirectionHeuristicsCompat {
     }
 
     private static class TextDirectionHeuristicLocale extends TextDirectionHeuristicImpl {
-        static final TextDirectionHeuristicLocale INSTANCE = new TextDirectionHeuristicLocale();
+        public static final TextDirectionHeuristicLocale INSTANCE = new TextDirectionHeuristicLocale();
 
-        TextDirectionHeuristicLocale() {
+        public TextDirectionHeuristicLocale() {
             super((TextDirectionAlgorithm) null);
         }
 

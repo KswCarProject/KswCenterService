@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import com.wits.pms.R;
 import com.wits.pms.mcu.custom.utils.UpdateHelper;
 import java.io.File;
@@ -22,7 +23,7 @@ public class ForceMcuUpdate {
         File file = new File(path);
         if (file.listFiles() != null && file.listFiles().length != 0) {
             for (File subFile : file.listFiles()) {
-                if (subFile.getName().equals("ksw_mcu.bin")) {
+                if (subFile.getName().toLowerCase().equals("ksw_mcu.bin")) {
                     Log.i(TAG, "file checked: " + subFile.getAbsolutePath());
                     mcuFile = subFile;
                     if (NEEDFIX) {
@@ -40,11 +41,21 @@ public class ForceMcuUpdate {
             Handler handler = new Handler(context.getMainLooper());
             ProgressBar progressBar = new ProgressBar(context, (AttributeSet) null, 16842872);
             progressBar.setPadding(20, 20, 20, 20);
-            handler.post(new ForceMcuUpdate$$Lambda$0(context, progressBar));
+            handler.post(new Runnable(progressBar) {
+                private final /* synthetic */ ProgressBar f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                public final void run() {
+                    ForceMcuUpdate.lambda$fix$0(Context.this, this.f$1);
+                }
+            });
         }
     }
 
-    static final /* synthetic */ void lambda$fix$0$ForceMcuUpdate(final Context context, final ProgressBar progressBar) {
+    static /* synthetic */ void lambda$fix$0(final Context context, final ProgressBar progressBar) {
         final AlertDialog alertDialog = new AlertDialog.Builder(context, R.style.AlertDialogCustom).setCancelable(false).setTitle((int) R.string.auto_update_mcu).setView((View) progressBar).create();
         alertDialog.getWindow().setType(2003);
         alertDialog.show();
@@ -56,7 +67,17 @@ public class ForceMcuUpdate {
 
             public void failed(int errorCode) {
                 alertDialog.dismiss();
-                new Handler(Looper.getMainLooper()).post(new ForceMcuUpdate$1$$Lambda$0(context, errorCode));
+                new Handler(Looper.getMainLooper()).post(new Runnable(errorCode) {
+                    private final /* synthetic */ int f$1;
+
+                    {
+                        this.f$1 = r2;
+                    }
+
+                    public final void run() {
+                        Toast.makeText(Context.this, (CharSequence) "Mcu Error Code:" + this.f$1, 0).show();
+                    }
+                });
             }
 
             public void progress(float pg) {

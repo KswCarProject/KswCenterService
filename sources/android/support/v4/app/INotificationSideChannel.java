@@ -49,7 +49,7 @@ public interface INotificationSideChannel extends IInterface {
                         int _arg1 = data.readInt();
                         String _arg2 = data.readString();
                         if (data.readInt() != 0) {
-                            _arg3 = (Notification) Notification.CREATOR.createFromParcel(data);
+                            _arg3 = Notification.CREATOR.createFromParcel(data);
                         } else {
                             _arg3 = null;
                         }

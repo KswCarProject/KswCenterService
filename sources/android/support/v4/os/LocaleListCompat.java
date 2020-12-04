@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.Size;
+import android.telephony.SmsManager;
 import java.util.Locale;
 
 public final class LocaleListCompat {
@@ -197,7 +198,7 @@ public final class LocaleListCompat {
         if (list == null || list.isEmpty()) {
             return getEmptyLocaleList();
         }
-        String[] tags = list.split(",", -1);
+        String[] tags = list.split(SmsManager.REGEX_PREFIX_DELIMITER);
         Locale[] localeArray = new Locale[tags.length];
         for (int i = 0; i < localeArray.length; i++) {
             if (Build.VERSION.SDK_INT >= 21) {

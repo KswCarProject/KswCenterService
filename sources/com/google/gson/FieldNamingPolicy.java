@@ -1,5 +1,8 @@
 package com.google.gson;
 
+import android.net.wifi.WifiEnterpriseConfig;
+import android.telecom.Logging.Session;
+import com.android.internal.content.NativeLibraryHelper;
 import java.lang.reflect.Field;
 
 public enum FieldNamingPolicy implements FieldNamingStrategy {
@@ -15,17 +18,17 @@ public enum FieldNamingPolicy implements FieldNamingStrategy {
     },
     UPPER_CAMEL_CASE_WITH_SPACES {
         public String translateName(Field f) {
-            return FieldNamingPolicy.upperCaseFirstLetter(FieldNamingPolicy.separateCamelCase(f.getName(), " "));
+            return FieldNamingPolicy.upperCaseFirstLetter(FieldNamingPolicy.separateCamelCase(f.getName(), WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER));
         }
     },
     LOWER_CASE_WITH_UNDERSCORES {
         public String translateName(Field f) {
-            return FieldNamingPolicy.separateCamelCase(f.getName(), "_").toLowerCase();
+            return FieldNamingPolicy.separateCamelCase(f.getName(), Session.SESSION_SEPARATION_CHAR_CHILD).toLowerCase();
         }
     },
     LOWER_CASE_WITH_DASHES {
         public String translateName(Field f) {
-            return FieldNamingPolicy.separateCamelCase(f.getName(), "-").toLowerCase();
+            return FieldNamingPolicy.separateCamelCase(f.getName(), NativeLibraryHelper.CLEAR_ABI_OVERRIDE).toLowerCase();
         }
     };
 

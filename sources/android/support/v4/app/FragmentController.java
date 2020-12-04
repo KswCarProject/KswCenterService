@@ -1,6 +1,5 @@
 package android.support.v4.app;
 
-import android.arch.lifecycle.ViewModelStore;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Parcelable;
@@ -18,7 +17,7 @@ import java.util.List;
 public class FragmentController {
     private final FragmentHostCallback<?> mHost;
 
-    public static FragmentController createController(FragmentHostCallback<?> callbacks) {
+    public static final FragmentController createController(FragmentHostCallback<?> callbacks) {
         return new FragmentController(callbacks);
     }
 
@@ -30,9 +29,8 @@ public class FragmentController {
         return this.mHost.getFragmentManagerImpl();
     }
 
-    @Deprecated
     public LoaderManager getSupportLoaderManager() {
-        throw new UnsupportedOperationException("Loaders are managed separately from FragmentController, use LoaderManager.getInstance() to obtain a LoaderManager.");
+        return this.mHost.getLoaderManagerImpl();
     }
 
     @Nullable
@@ -66,7 +64,7 @@ public class FragmentController {
 
     @Deprecated
     public void restoreAllState(Parcelable state, List<Fragment> nonConfigList) {
-        this.mHost.mFragmentManager.restoreAllState(state, new FragmentManagerNonConfig(nonConfigList, (List<FragmentManagerNonConfig>) null, (List<ViewModelStore>) null));
+        this.mHost.mFragmentManager.restoreAllState(state, new FragmentManagerNonConfig(nonConfigList, (List<FragmentManagerNonConfig>) null));
     }
 
     public void restoreAllState(Parcelable state, FragmentManagerNonConfig nonConfig) {
@@ -110,8 +108,8 @@ public class FragmentController {
         this.mHost.mFragmentManager.dispatchStop();
     }
 
-    @Deprecated
     public void dispatchReallyStop() {
+        this.mHost.mFragmentManager.dispatchReallyStop();
     }
 
     public void dispatchDestroyView() {
@@ -162,36 +160,35 @@ public class FragmentController {
         return this.mHost.mFragmentManager.execPendingActions();
     }
 
-    @Deprecated
     public void doLoaderStart() {
+        this.mHost.doLoaderStart();
     }
 
-    @Deprecated
     public void doLoaderStop(boolean retain) {
+        this.mHost.doLoaderStop(retain);
     }
 
-    @Deprecated
     public void doLoaderRetain() {
+        this.mHost.doLoaderRetain();
     }
 
-    @Deprecated
     public void doLoaderDestroy() {
+        this.mHost.doLoaderDestroy();
     }
 
-    @Deprecated
     public void reportLoaderStart() {
+        this.mHost.reportLoaderStart();
     }
 
-    @Deprecated
     public SimpleArrayMap<String, LoaderManager> retainLoaderNonConfig() {
-        return null;
+        return this.mHost.retainLoaderNonConfig();
     }
 
-    @Deprecated
-    public void restoreLoaderNonConfig(SimpleArrayMap<String, LoaderManager> simpleArrayMap) {
+    public void restoreLoaderNonConfig(SimpleArrayMap<String, LoaderManager> loaderManagers) {
+        this.mHost.restoreLoaderNonConfig(loaderManagers);
     }
 
-    @Deprecated
     public void dumpLoaders(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
+        this.mHost.dumpLoaders(prefix, fd, writer, args);
     }
 }

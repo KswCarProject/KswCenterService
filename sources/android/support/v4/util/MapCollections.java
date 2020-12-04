@@ -1,6 +1,5 @@
 package android.support.v4.util;
 
-import android.support.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
@@ -9,11 +8,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 abstract class MapCollections<K, V> {
-    @Nullable
     MapCollections<K, V>.EntrySet mEntrySet;
-    @Nullable
     MapCollections<K, V>.KeySet mKeySet;
-    @Nullable
     MapCollections<K, V>.ValuesCollection mValues;
 
     /* access modifiers changed from: protected */
@@ -62,23 +58,24 @@ abstract class MapCollections<K, V> {
         }
 
         public T next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
+            if (hasNext()) {
+                Object res = MapCollections.this.colGetEntry(this.mIndex, this.mOffset);
+                this.mIndex++;
+                this.mCanRemove = true;
+                return res;
             }
-            Object res = MapCollections.this.colGetEntry(this.mIndex, this.mOffset);
-            this.mIndex++;
-            this.mCanRemove = true;
-            return res;
+            throw new NoSuchElementException();
         }
 
         public void remove() {
-            if (!this.mCanRemove) {
-                throw new IllegalStateException();
+            if (this.mCanRemove) {
+                this.mIndex--;
+                this.mSize--;
+                this.mCanRemove = false;
+                MapCollections.this.colRemoveAt(this.mIndex);
+                return;
             }
-            this.mIndex--;
-            this.mSize--;
-            this.mCanRemove = false;
-            MapCollections.this.colRemoveAt(this.mIndex);
+            throw new IllegalStateException();
         }
     }
 
@@ -97,22 +94,23 @@ abstract class MapCollections<K, V> {
         }
 
         public Map.Entry<K, V> next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
+            if (hasNext()) {
+                this.mIndex++;
+                this.mEntryValid = true;
+                return this;
             }
-            this.mIndex++;
-            this.mEntryValid = true;
-            return this;
+            throw new NoSuchElementException();
         }
 
         public void remove() {
-            if (!this.mEntryValid) {
-                throw new IllegalStateException();
+            if (this.mEntryValid) {
+                MapCollections.this.colRemoveAt(this.mIndex);
+                this.mIndex--;
+                this.mEnd--;
+                this.mEntryValid = false;
+                return;
             }
-            MapCollections.this.colRemoveAt(this.mIndex);
-            this.mIndex--;
-            this.mEnd--;
-            this.mEntryValid = false;
+            throw new IllegalStateException();
         }
 
         public K getKey() {
@@ -136,7 +134,7 @@ abstract class MapCollections<K, V> {
             throw new IllegalStateException("This container does not support retaining Map.Entry objects");
         }
 
-        public boolean equals(Object o) {
+        public final boolean equals(Object o) {
             if (!this.mEntryValid) {
                 throw new IllegalStateException("This container does not support retaining Map.Entry objects");
             } else if (!(o instanceof Map.Entry)) {
@@ -150,21 +148,21 @@ abstract class MapCollections<K, V> {
             }
         }
 
-        public int hashCode() {
-            if (!this.mEntryValid) {
-                throw new IllegalStateException("This container does not support retaining Map.Entry objects");
+        public final int hashCode() {
+            if (this.mEntryValid) {
+                int i = 0;
+                Object key = MapCollections.this.colGetEntry(this.mIndex, 0);
+                Object value = MapCollections.this.colGetEntry(this.mIndex, 1);
+                int hashCode = key == null ? 0 : key.hashCode();
+                if (value != null) {
+                    i = value.hashCode();
+                }
+                return i ^ hashCode;
             }
-            int i = 0;
-            Object key = MapCollections.this.colGetEntry(this.mIndex, 0);
-            Object value = MapCollections.this.colGetEntry(this.mIndex, 1);
-            int hashCode = key == null ? 0 : key.hashCode();
-            if (value != null) {
-                i = value.hashCode();
-            }
-            return i ^ hashCode;
+            throw new IllegalStateException("This container does not support retaining Map.Entry objects");
         }
 
-        public String toString() {
+        public final String toString() {
             return getKey() + "=" + getValue();
         }
     }

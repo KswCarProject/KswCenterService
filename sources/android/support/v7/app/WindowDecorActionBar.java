@@ -171,8 +171,8 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         }
         StringBuilder sb = new StringBuilder();
         sb.append("Can't make a decor toolbar out of ");
-        sb.append(view != null ? view.getClass().getSimpleName() : "null");
-        throw new IllegalStateException(sb.toString());
+        sb.append(view);
+        throw new IllegalStateException(sb.toString() != null ? view.getClass().getSimpleName() : "null");
     }
 
     public void setElevation(float elevation) {
@@ -426,15 +426,16 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
 
     private void configureTab(ActionBar.Tab tab, int position) {
         TabImpl tabi = (TabImpl) tab;
-        if (tabi.getCallback() == null) {
-            throw new IllegalStateException("Action Bar Tab must have a Callback");
+        if (tabi.getCallback() != null) {
+            tabi.setPosition(position);
+            this.mTabs.add(position, tabi);
+            int count = this.mTabs.size();
+            for (int i = position + 1; i < count; i++) {
+                this.mTabs.get(i).setPosition(i);
+            }
+            return;
         }
-        tabi.setPosition(position);
-        this.mTabs.add(position, tabi);
-        int count = this.mTabs.size();
-        for (int i = position + 1; i < count; i++) {
-            this.mTabs.get(i).setPosition(i);
-        }
+        throw new IllegalStateException("Action Bar Tab must have a Callback");
     }
 
     public void addTab(ActionBar.Tab tab) {

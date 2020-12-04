@@ -8,13 +8,9 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.view.TintableBackgroundView;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
-import android.view.ActionMode;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 import android.widget.AutoCompleteTextView;
 
 public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implements TintableBackgroundView {
@@ -39,7 +35,7 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         a.recycle();
         this.mBackgroundTintHelper = new AppCompatBackgroundHelper(this);
         this.mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
-        this.mTextHelper = new AppCompatTextHelper(this);
+        this.mTextHelper = AppCompatTextHelper.create(this);
         this.mTextHelper.loadFromAttributes(attrs, defStyleAttr);
         this.mTextHelper.applyCompoundDrawablesTints();
     }
@@ -110,13 +106,5 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         if (this.mTextHelper != null) {
             this.mTextHelper.onSetTextAppearance(context, resId);
         }
-    }
-
-    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return AppCompatHintHelper.onCreateInputConnection(super.onCreateInputConnection(outAttrs), outAttrs, this);
-    }
-
-    public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
-        super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, actionModeCallback));
     }
 }

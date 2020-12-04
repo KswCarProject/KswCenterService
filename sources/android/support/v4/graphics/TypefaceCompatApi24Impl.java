@@ -136,14 +136,13 @@ class TypefaceCompatApi24Impl extends TypefaceCompatBaseImpl {
                 return null;
             }
         }
-        return Typeface.create(createFromFamiliesWithDefault(family), style);
+        return createFromFamiliesWithDefault(family);
     }
 
     public Typeface createFromFontFamilyFilesResourceEntry(Context context, FontResourcesParserCompat.FontFamilyFilesResourceEntry entry, Resources resources, int style) {
         Object family = newFamily();
         for (FontResourcesParserCompat.FontFileResourceEntry e : entry.getEntries()) {
-            ByteBuffer buffer = TypefaceCompatUtil.copyToDirectBuffer(context, resources, e.getResourceId());
-            if (buffer == null || !addFontWeightStyle(family, buffer, e.getTtcIndex(), e.getWeight(), e.isItalic())) {
+            if (!addFontWeightStyle(family, TypefaceCompatUtil.copyToDirectBuffer(context, resources, e.getResourceId()), 0, e.getWeight(), e.isItalic())) {
                 return null;
             }
         }

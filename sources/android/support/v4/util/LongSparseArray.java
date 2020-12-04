@@ -1,8 +1,5 @@
 package android.support.v4.util;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 public class LongSparseArray<E> implements Cloneable {
     private static final Object DELETED = new Object();
     private boolean mGarbage;
@@ -28,17 +25,17 @@ public class LongSparseArray<E> implements Cloneable {
     }
 
     public LongSparseArray<E> clone() {
+        LongSparseArray<E> clone = null;
         try {
-            LongSparseArray<E> clone = (LongSparseArray) super.clone();
+            clone = (LongSparseArray) super.clone();
             clone.mKeys = (long[]) this.mKeys.clone();
             clone.mValues = (Object[]) this.mValues.clone();
             return clone;
         } catch (CloneNotSupportedException e) {
-            throw new AssertionError(e);
+            return clone;
         }
     }
 
-    @Nullable
     public E get(long key) {
         return get(key, (Object) null);
     }
@@ -124,22 +121,11 @@ public class LongSparseArray<E> implements Cloneable {
         this.mValues[i2] = value;
     }
 
-    public void putAll(@NonNull LongSparseArray<? extends E> other) {
-        int size = other.size();
-        for (int i = 0; i < size; i++) {
-            put(other.keyAt(i), other.valueAt(i));
-        }
-    }
-
     public int size() {
         if (this.mGarbage) {
             gc();
         }
         return this.mSize;
-    }
-
-    public boolean isEmpty() {
-        return size() == 0;
     }
 
     public long keyAt(int index) {
@@ -180,14 +166,6 @@ public class LongSparseArray<E> implements Cloneable {
             }
         }
         return -1;
-    }
-
-    public boolean containsKey(long key) {
-        return indexOfKey(key) >= 0;
-    }
-
-    public boolean containsValue(E value) {
-        return indexOfValue(value) >= 0;
     }
 
     public void clear() {

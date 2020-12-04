@@ -8,17 +8,14 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
-import android.support.v4.view.KeyEventDispatcher;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.ActionMode;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class AppCompatDialog extends Dialog implements AppCompatCallback {
     private AppCompatDelegate mDelegate;
-    private final KeyEventDispatcher.Component mKeyDispatcher;
 
     public AppCompatDialog(Context context) {
         this(context, 0);
@@ -26,22 +23,12 @@ public class AppCompatDialog extends Dialog implements AppCompatCallback {
 
     public AppCompatDialog(Context context, int theme) {
         super(context, getThemeResId(context, theme));
-        this.mKeyDispatcher = new KeyEventDispatcher.Component() {
-            public boolean superDispatchKeyEvent(KeyEvent event) {
-                return AppCompatDialog.this.superDispatchKeyEvent(event);
-            }
-        };
         getDelegate().onCreate((Bundle) null);
         getDelegate().applyDayNight();
     }
 
     protected AppCompatDialog(Context context, boolean cancelable, DialogInterface.OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
-        this.mKeyDispatcher = new KeyEventDispatcher.Component() {
-            public boolean superDispatchKeyEvent(KeyEvent event) {
-                return AppCompatDialog.this.superDispatchKeyEvent(event);
-            }
-        };
     }
 
     /* access modifiers changed from: protected */
@@ -126,14 +113,5 @@ public class AppCompatDialog extends Dialog implements AppCompatCallback {
     @Nullable
     public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
         return null;
-    }
-
-    /* access modifiers changed from: package-private */
-    public boolean superDispatchKeyEvent(KeyEvent event) {
-        return super.dispatchKeyEvent(event);
-    }
-
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        return KeyEventDispatcher.dispatchKeyEvent(this.mKeyDispatcher, getWindow().getDecorView(), this, event);
     }
 }

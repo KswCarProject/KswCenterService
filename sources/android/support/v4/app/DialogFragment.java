@@ -11,6 +11,8 @@ import android.support.annotation.RestrictTo;
 import android.support.annotation.StyleRes;
 import android.view.LayoutInflater;
 import android.view.View;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class DialogFragment extends Fragment implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
     private static final String SAVED_BACK_STACK_ID = "android:backStackId";
@@ -32,6 +34,11 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
     int mStyle = 0;
     int mTheme = 0;
     boolean mViewDestroyed;
+
+    @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface DialogStyle {
+    }
 
     public void setStyle(int style, @StyleRes int theme) {
         this.mStyle = style;
@@ -60,14 +67,6 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         return this.mBackStackId;
     }
 
-    public void showNow(FragmentManager manager, String tag) {
-        this.mDismissed = false;
-        this.mShownByMe = true;
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.add((Fragment) this, tag);
-        ft.commitNow();
-    }
-
     public void dismiss() {
         dismissInternal(false);
     }
@@ -83,6 +82,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
             this.mShownByMe = false;
             if (this.mDialog != null) {
                 this.mDialog.dismiss();
+                this.mDialog = null;
             }
             this.mViewDestroyed = true;
             if (this.mBackStackId >= 0) {
@@ -154,17 +154,16 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
-    @NonNull
-    public LayoutInflater onGetLayoutInflater(@Nullable Bundle savedInstanceState) {
+    public LayoutInflater onGetLayoutInflater(Bundle savedInstanceState) {
         if (!this.mShowsDialog) {
             return super.onGetLayoutInflater(savedInstanceState);
         }
         this.mDialog = onCreateDialog(savedInstanceState);
         if (this.mDialog == null) {
-            return (LayoutInflater) this.mHost.getContext().getSystemService("layout_inflater");
+            return (LayoutInflater) this.mHost.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         setupDialog(this.mDialog, this.mStyle);
-        return (LayoutInflater) this.mDialog.getContext().getSystemService("layout_inflater");
+        return (LayoutInflater) this.mDialog.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
@@ -183,7 +182,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
     }
 
     @NonNull
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new Dialog(getActivity(), getTheme());
     }
 
@@ -196,16 +195,17 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         Bundle dialogState;
         super.onActivityCreated(savedInstanceState);
         if (this.mShowsDialog) {
             View view = getView();
             if (view != null) {
-                if (view.getParent() != null) {
+                if (view.getParent() == null) {
+                    this.mDialog.setContentView(view);
+                } else {
                     throw new IllegalStateException("DialogFragment can not be attached to a container view");
                 }
-                this.mDialog.setContentView(view);
             }
             Activity activity = getActivity();
             if (activity != null) {
@@ -228,7 +228,7 @@ public class DialogFragment extends Fragment implements DialogInterface.OnCancel
         }
     }
 
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         Bundle dialogState;
         super.onSaveInstanceState(outState);
         if (!(this.mDialog == null || (dialogState = this.mDialog.onSaveInstanceState()) == null)) {

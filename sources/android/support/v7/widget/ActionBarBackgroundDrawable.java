@@ -2,11 +2,10 @@ package android.support.v7.widget;
 
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
-import android.graphics.Outline;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 
+@RequiresApi(9)
 class ActionBarBackgroundDrawable extends Drawable {
     final ActionBarContainer mContainer;
 
@@ -35,16 +34,5 @@ class ActionBarBackgroundDrawable extends Drawable {
 
     public int getOpacity() {
         return 0;
-    }
-
-    @RequiresApi(21)
-    public void getOutline(@NonNull Outline outline) {
-        if (this.mContainer.mIsSplit) {
-            if (this.mContainer.mSplitBackground != null) {
-                this.mContainer.mSplitBackground.getOutline(outline);
-            }
-        } else if (this.mContainer.mBackground != null) {
-            this.mContainer.mBackground.getOutline(outline);
-        }
     }
 }

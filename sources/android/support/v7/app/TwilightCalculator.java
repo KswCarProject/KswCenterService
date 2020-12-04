@@ -36,13 +36,11 @@ class TwilightCalculator {
         float f = n;
         double d = trueAnomaly;
         double solarTransitJ2000 = ((double) (J0 + n)) + arcLongitude + (Math.sin((double) meanAnomaly) * 0.0053d) + (Math.sin(2.0d * solarLng) * -0.0069d);
-        float f2 = daysSince2000;
-        float f3 = meanAnomaly;
         double solarDec = Math.asin(Math.sin(solarLng) * Math.sin(0.4092797040939331d));
         double latRad = 0.01745329238474369d * latitude;
-        double d2 = solarLng;
         double cosHourAngle = (Math.sin(-0.10471975803375244d) - (Math.sin(latRad) * Math.sin(solarDec))) / (Math.cos(latRad) * Math.cos(solarDec));
-        double d3 = solarDec;
+        float f2 = daysSince2000;
+        float f3 = meanAnomaly;
         if (cosHourAngle >= 1.0d) {
             this.state = 1;
             this.sunset = -1;
@@ -53,7 +51,7 @@ class TwilightCalculator {
             this.sunrise = -1;
         } else {
             float hourAngle = (float) (Math.acos(cosHourAngle) / 6.283185307179586d);
-            double d4 = latRad;
+            double d2 = solarDec;
             this.sunset = Math.round((((double) hourAngle) + solarTransitJ2000) * 8.64E7d) + UTC_2000;
             this.sunrise = Math.round((solarTransitJ2000 - ((double) hourAngle)) * 8.64E7d) + UTC_2000;
             if (this.sunrise >= time || this.sunset <= time) {

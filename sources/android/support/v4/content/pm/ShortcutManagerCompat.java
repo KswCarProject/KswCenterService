@@ -43,7 +43,7 @@ public class ShortcutManagerCompat {
             android.content.pm.PackageManager r0 = r5.getPackageManager()
             android.content.Intent r2 = new android.content.Intent
             java.lang.String r3 = "com.android.launcher.action.INSTALL_SHORTCUT"
-            r2.<init>(r3)
+            r2.<init>((java.lang.String) r3)
             java.util.List r0 = r0.queryBroadcastReceivers(r2, r1)
             java.util.Iterator r0 = r0.iterator()
         L_0x0030:

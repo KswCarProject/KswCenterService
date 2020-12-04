@@ -55,13 +55,13 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
     }
 
     public V put(K key, V value) {
-        if (key == null) {
-            throw new NullPointerException("key == null");
+        if (key != null) {
+            Node<K, V> created = find(key, true);
+            V result = created.value;
+            created.value = value;
+            return result;
         }
-        Node<K, V> created = find(key, true);
-        V result = created.value;
-        created.value = value;
-        return result;
+        throw new NullPointerException("key == null");
     }
 
     public void clear() {
@@ -472,22 +472,23 @@ public final class LinkedTreeMap<K, V> extends AbstractMap<K, V> implements Seri
             Node<K, V> e = this.next;
             if (e == LinkedTreeMap.this.header) {
                 throw new NoSuchElementException();
-            } else if (LinkedTreeMap.this.modCount != this.expectedModCount) {
-                throw new ConcurrentModificationException();
-            } else {
+            } else if (LinkedTreeMap.this.modCount == this.expectedModCount) {
                 this.next = e.next;
                 this.lastReturned = e;
                 return e;
+            } else {
+                throw new ConcurrentModificationException();
             }
         }
 
         public final void remove() {
-            if (this.lastReturned == null) {
-                throw new IllegalStateException();
+            if (this.lastReturned != null) {
+                LinkedTreeMap.this.removeInternal(this.lastReturned, true);
+                this.lastReturned = null;
+                this.expectedModCount = LinkedTreeMap.this.modCount;
+                return;
             }
-            LinkedTreeMap.this.removeInternal(this.lastReturned, true);
-            this.lastReturned = null;
-            this.expectedModCount = LinkedTreeMap.this.modCount;
+            throw new IllegalStateException();
         }
     }
 

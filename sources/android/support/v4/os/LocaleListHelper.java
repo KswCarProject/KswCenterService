@@ -5,15 +5,16 @@ import android.support.annotation.GuardedBy;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.Size;
-import android.support.v7.widget.ActivityChooserView;
-import com.wits.pms.BuildConfig;
+import android.telephony.SmsManager;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
 
+@RequiresApi(14)
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
 final class LocaleListHelper {
     private static final Locale EN_LATN = LocaleHelper.forLanguageTag("en-Latn");
@@ -122,7 +123,7 @@ final class LocaleListHelper {
     LocaleListHelper(@NonNull Locale... list) {
         if (list.length == 0) {
             this.mList = sEmptyList;
-            this.mStringRepresentation = BuildConfig.FLAVOR;
+            this.mStringRepresentation = "";
             return;
         }
         Locale[] localeList = new Locale[list.length];
@@ -133,9 +134,7 @@ final class LocaleListHelper {
             Locale l = list[i];
             if (l == null) {
                 throw new NullPointerException("list[" + i + "] is null");
-            } else if (seenLocales.contains(l)) {
-                throw new IllegalArgumentException("list[" + i + "] is a repetition");
-            } else {
+            } else if (!seenLocales.contains(l)) {
                 Locale localeClone = (Locale) l.clone();
                 localeList[i] = localeClone;
                 sb.append(LocaleHelper.toLanguageTag(localeClone));
@@ -144,6 +143,8 @@ final class LocaleListHelper {
                 }
                 seenLocales.add(localeClone);
                 i++;
+            } else {
+                throw new IllegalArgumentException("list[" + i + "] is a repetition");
             }
         }
         this.mList = localeList;
@@ -152,46 +153,47 @@ final class LocaleListHelper {
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     LocaleListHelper(@NonNull Locale topLocale, LocaleListHelper otherLocales) {
-        if (topLocale == null) {
-            throw new NullPointerException("topLocale is null");
-        }
-        int inputLength = otherLocales == null ? 0 : otherLocales.mList.length;
-        int topLocaleIndex = -1;
-        int i = 0;
-        while (true) {
-            if (i >= inputLength) {
-                break;
-            } else if (topLocale.equals(otherLocales.mList[i])) {
-                topLocaleIndex = i;
-                break;
+        if (topLocale != null) {
+            int inputLength = otherLocales == null ? 0 : otherLocales.mList.length;
+            int topLocaleIndex = -1;
+            int i = 0;
+            while (true) {
+                if (i >= inputLength) {
+                    break;
+                } else if (topLocale.equals(otherLocales.mList[i])) {
+                    topLocaleIndex = i;
+                    break;
+                } else {
+                    i++;
+                }
+            }
+            int outputLength = (topLocaleIndex == -1 ? 1 : 0) + inputLength;
+            Locale[] localeList = new Locale[outputLength];
+            localeList[0] = (Locale) topLocale.clone();
+            if (topLocaleIndex == -1) {
+                for (int i2 = 0; i2 < inputLength; i2++) {
+                    localeList[i2 + 1] = (Locale) otherLocales.mList[i2].clone();
+                }
             } else {
-                i++;
+                for (int i3 = 0; i3 < topLocaleIndex; i3++) {
+                    localeList[i3 + 1] = (Locale) otherLocales.mList[i3].clone();
+                }
+                for (int i4 = topLocaleIndex + 1; i4 < inputLength; i4++) {
+                    localeList[i4] = (Locale) otherLocales.mList[i4].clone();
+                }
             }
+            StringBuilder sb = new StringBuilder();
+            for (int i5 = 0; i5 < outputLength; i5++) {
+                sb.append(LocaleHelper.toLanguageTag(localeList[i5]));
+                if (i5 < outputLength - 1) {
+                    sb.append(',');
+                }
+            }
+            this.mList = localeList;
+            this.mStringRepresentation = sb.toString();
+            return;
         }
-        int outputLength = (topLocaleIndex == -1 ? 1 : 0) + inputLength;
-        Locale[] localeList = new Locale[outputLength];
-        localeList[0] = (Locale) topLocale.clone();
-        if (topLocaleIndex == -1) {
-            for (int i2 = 0; i2 < inputLength; i2++) {
-                localeList[i2 + 1] = (Locale) otherLocales.mList[i2].clone();
-            }
-        } else {
-            for (int i3 = 0; i3 < topLocaleIndex; i3++) {
-                localeList[i3 + 1] = (Locale) otherLocales.mList[i3].clone();
-            }
-            for (int i4 = topLocaleIndex + 1; i4 < inputLength; i4++) {
-                localeList[i4] = (Locale) otherLocales.mList[i4].clone();
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i5 = 0; i5 < outputLength; i5++) {
-            sb.append(LocaleHelper.toLanguageTag(localeList[i5]));
-            if (i5 < outputLength - 1) {
-                sb.append(',');
-            }
-        }
-        this.mList = localeList;
-        this.mStringRepresentation = sb.toString();
+        throw new NullPointerException("topLocale is null");
     }
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
@@ -206,7 +208,7 @@ final class LocaleListHelper {
         if (list == null || list.isEmpty()) {
             return getEmptyLocaleList();
         }
-        String[] tags = list.split(",", -1);
+        String[] tags = list.split(SmsManager.REGEX_PREFIX_DELIMITER);
         Locale[] localeArray = new Locale[tags.length];
         for (int i = 0; i < localeArray.length; i++) {
             localeArray[i] = LocaleHelper.forLanguageTag(tags[i]);
@@ -216,13 +218,13 @@ final class LocaleListHelper {
 
     private static String getLikelyScript(Locale locale) {
         if (Build.VERSION.SDK_INT < 21) {
-            return BuildConfig.FLAVOR;
+            return "";
         }
         String script = locale.getScript();
         if (!script.isEmpty()) {
             return script;
         }
-        return BuildConfig.FLAVOR;
+        return "";
     }
 
     private static boolean isPseudoLocale(String locale) {
@@ -258,7 +260,7 @@ final class LocaleListHelper {
                 return idx;
             }
         }
-        return ActivityChooserView.ActivityChooserViewAdapter.MAX_ACTIVITY_COUNT_UNLIMITED;
+        return Integer.MAX_VALUE;
     }
 
     private int computeFirstMatchIndex(Collection<String> supportedLocales, boolean assumeEnglishIsSupported) {
@@ -268,7 +270,7 @@ final class LocaleListHelper {
         if (this.mList.length == 0) {
             return -1;
         }
-        int bestIndex = ActivityChooserView.ActivityChooserViewAdapter.MAX_ACTIVITY_COUNT_UNLIMITED;
+        int bestIndex = Integer.MAX_VALUE;
         if (assumeEnglishIsSupported) {
             int idx = findFirstMatchIndex(EN_LATN);
             if (idx == 0) {
@@ -390,9 +392,7 @@ final class LocaleListHelper {
     static void setDefault(@Size(min = 1) @NonNull LocaleListHelper locales, int localeIndex) {
         if (locales == null) {
             throw new NullPointerException("locales is null");
-        } else if (locales.isEmpty()) {
-            throw new IllegalArgumentException("locales is empty");
-        } else {
+        } else if (!locales.isEmpty()) {
             synchronized (sLock) {
                 sLastDefaultLocale = locales.get(localeIndex);
                 Locale.setDefault(sLastDefaultLocale);
@@ -404,6 +404,8 @@ final class LocaleListHelper {
                     sDefaultAdjustedLocaleList = new LocaleListHelper(sLastDefaultLocale, sDefaultLocaleList);
                 }
             }
+        } else {
+            throw new IllegalArgumentException("locales is empty");
         }
     }
 }

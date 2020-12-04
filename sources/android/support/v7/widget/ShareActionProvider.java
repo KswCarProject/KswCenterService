@@ -22,7 +22,7 @@ public class ShareActionProvider extends ActionProvider {
     private ActivityChooserModel.OnChooseActivityListener mOnChooseActivityListener;
     private final ShareMenuItemOnMenuItemClickListener mOnMenuItemClickListener = new ShareMenuItemOnMenuItemClickListener();
     OnShareTargetSelectedListener mOnShareTargetSelectedListener;
-    String mShareHistoryFileName = DEFAULT_SHARE_HISTORY_FILE_NAME;
+    String mShareHistoryFileName = "share_history.xml";
 
     public interface OnShareTargetSelectedListener {
         boolean onShareTargetSelected(ShareActionProvider shareActionProvider, Intent intent);
@@ -67,7 +67,7 @@ public class ShareActionProvider extends ActionProvider {
             subMenu.add(0, i, i, activity.loadLabel(packageManager)).setIcon(activity.loadIcon(packageManager)).setOnMenuItemClickListener(this.mOnMenuItemClickListener);
         }
         if (collapsedActivityCount < expandedActivityCount) {
-            SubMenu expandedSubMenu = subMenu.addSubMenu(0, collapsedActivityCount, collapsedActivityCount, this.mContext.getString(R.string.abc_activity_chooser_view_see_all));
+            SubMenu expandedSubMenu = subMenu.addSubMenu(0, collapsedActivityCount, collapsedActivityCount, (CharSequence) this.mContext.getString(R.string.abc_activity_chooser_view_see_all));
             for (int i2 = 0; i2 < expandedActivityCount; i2++) {
                 ResolveInfo activity2 = dataModel.getActivity(i2);
                 expandedSubMenu.add(0, i2, i2, activity2.loadLabel(packageManager)).setIcon(activity2.loadIcon(packageManager)).setOnMenuItemClickListener(this.mOnMenuItemClickListener);
@@ -83,7 +83,7 @@ public class ShareActionProvider extends ActionProvider {
     public void setShareIntent(Intent shareIntent) {
         if (shareIntent != null) {
             String action = shareIntent.getAction();
-            if ("android.intent.action.SEND".equals(action) || "android.intent.action.SEND_MULTIPLE".equals(action)) {
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 updateIntent(shareIntent);
             }
         }
@@ -100,7 +100,7 @@ public class ShareActionProvider extends ActionProvider {
                 return true;
             }
             String action = launchIntent.getAction();
-            if ("android.intent.action.SEND".equals(action) || "android.intent.action.SEND_MULTIPLE".equals(action)) {
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 ShareActionProvider.this.updateIntent(launchIntent);
             }
             ShareActionProvider.this.mContext.startActivity(launchIntent);

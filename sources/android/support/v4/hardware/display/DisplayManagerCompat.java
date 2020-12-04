@@ -3,62 +3,82 @@ package android.support.v4.hardware.display;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.view.Display;
 import android.view.WindowManager;
 import java.util.WeakHashMap;
 
-public final class DisplayManagerCompat {
+public abstract class DisplayManagerCompat {
     public static final String DISPLAY_CATEGORY_PRESENTATION = "android.hardware.display.category.PRESENTATION";
     private static final WeakHashMap<Context, DisplayManagerCompat> sInstances = new WeakHashMap<>();
-    private final Context mContext;
 
-    private DisplayManagerCompat(Context context) {
-        this.mContext = context;
+    public abstract Display getDisplay(int i);
+
+    public abstract Display[] getDisplays();
+
+    public abstract Display[] getDisplays(String str);
+
+    DisplayManagerCompat() {
     }
 
-    @NonNull
-    public static DisplayManagerCompat getInstance(@NonNull Context context) {
+    public static DisplayManagerCompat getInstance(Context context) {
         DisplayManagerCompat instance;
         synchronized (sInstances) {
             instance = sInstances.get(context);
             if (instance == null) {
-                instance = new DisplayManagerCompat(context);
+                if (Build.VERSION.SDK_INT >= 17) {
+                    instance = new DisplayManagerCompatApi17Impl(context);
+                } else {
+                    instance = new DisplayManagerCompatApi14Impl(context);
+                }
                 sInstances.put(context, instance);
             }
         }
         return instance;
     }
 
-    @Nullable
-    public Display getDisplay(int displayId) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return ((DisplayManager) this.mContext.getSystemService("display")).getDisplay(displayId);
+    private static class DisplayManagerCompatApi14Impl extends DisplayManagerCompat {
+        private final WindowManager mWindowManager;
+
+        DisplayManagerCompatApi14Impl(Context context) {
+            this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         }
-        Display display = ((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay();
-        if (display.getDisplayId() == displayId) {
-            return display;
+
+        public Display getDisplay(int displayId) {
+            Display display = this.mWindowManager.getDefaultDisplay();
+            if (display.getDisplayId() == displayId) {
+                return display;
+            }
+            return null;
         }
-        return null;
+
+        public Display[] getDisplays() {
+            return new Display[]{this.mWindowManager.getDefaultDisplay()};
+        }
+
+        public Display[] getDisplays(String category) {
+            return category == null ? getDisplays() : new Display[0];
+        }
     }
 
-    @NonNull
-    public Display[] getDisplays() {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return ((DisplayManager) this.mContext.getSystemService("display")).getDisplays();
-        }
-        return new Display[]{((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay()};
-    }
+    @RequiresApi(17)
+    private static class DisplayManagerCompatApi17Impl extends DisplayManagerCompat {
+        private final DisplayManager mDisplayManager;
 
-    @NonNull
-    public Display[] getDisplays(@Nullable String category) {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return ((DisplayManager) this.mContext.getSystemService("display")).getDisplays(category);
+        DisplayManagerCompatApi17Impl(Context context) {
+            this.mDisplayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
         }
-        if (category == null) {
-            return new Display[0];
+
+        public Display getDisplay(int displayId) {
+            return this.mDisplayManager.getDisplay(displayId);
         }
-        return new Display[]{((WindowManager) this.mContext.getSystemService("window")).getDefaultDisplay()};
+
+        public Display[] getDisplays() {
+            return this.mDisplayManager.getDisplays();
+        }
+
+        public Display[] getDisplays(String category) {
+            return this.mDisplayManager.getDisplays(category);
+        }
     }
 }

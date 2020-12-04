@@ -1,287 +1,25 @@
 package android.support.v7.widget;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.appcompat.R;
-import android.support.v7.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import java.lang.reflect.Field;
 
-class DropDownListView extends ListView {
-    public static final int INVALID_POSITION = -1;
-    public static final int NO_POSITION = -1;
+class DropDownListView extends ListViewCompat {
     private ViewPropertyAnimatorCompat mClickAnimation;
     private boolean mDrawsInPressedState;
     private boolean mHijackFocus;
-    private Field mIsChildViewEnabled;
     private boolean mListSelectionHidden;
-    private int mMotionPosition;
-    ResolveHoverRunnable mResolveHoverRunnable;
     private ListViewAutoScrollHelper mScrollHelper;
-    private int mSelectionBottomPadding = 0;
-    private int mSelectionLeftPadding = 0;
-    private int mSelectionRightPadding = 0;
-    private int mSelectionTopPadding = 0;
-    private GateKeeperDrawable mSelector;
-    private final Rect mSelectorRect = new Rect();
 
-    DropDownListView(Context context, boolean hijackFocus) {
+    public DropDownListView(Context context, boolean hijackFocus) {
         super(context, (AttributeSet) null, R.attr.dropDownListViewStyle);
         this.mHijackFocus = hijackFocus;
         setCacheColorHint(0);
-        try {
-            this.mIsChildViewEnabled = AbsListView.class.getDeclaredField("mIsChildViewEnabled");
-            this.mIsChildViewEnabled.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public boolean isInTouchMode() {
-        return (this.mHijackFocus && this.mListSelectionHidden) || super.isInTouchMode();
-    }
-
-    public boolean hasWindowFocus() {
-        return this.mHijackFocus || super.hasWindowFocus();
-    }
-
-    public boolean isFocused() {
-        return this.mHijackFocus || super.isFocused();
-    }
-
-    public boolean hasFocus() {
-        return this.mHijackFocus || super.hasFocus();
-    }
-
-    public void setSelector(Drawable sel) {
-        this.mSelector = sel != null ? new GateKeeperDrawable(sel) : null;
-        super.setSelector(this.mSelector);
-        Rect padding = new Rect();
-        if (sel != null) {
-            sel.getPadding(padding);
-        }
-        this.mSelectionLeftPadding = padding.left;
-        this.mSelectionTopPadding = padding.top;
-        this.mSelectionRightPadding = padding.right;
-        this.mSelectionBottomPadding = padding.bottom;
-    }
-
-    /* access modifiers changed from: protected */
-    public void drawableStateChanged() {
-        if (this.mResolveHoverRunnable == null) {
-            super.drawableStateChanged();
-            setSelectorEnabled(true);
-            updateSelectorStateCompat();
-        }
-    }
-
-    /* access modifiers changed from: protected */
-    public void dispatchDraw(Canvas canvas) {
-        drawSelectorCompat(canvas);
-        super.dispatchDraw(canvas);
-    }
-
-    public boolean onTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == 0) {
-            this.mMotionPosition = pointToPosition((int) ev.getX(), (int) ev.getY());
-        }
-        if (this.mResolveHoverRunnable != null) {
-            this.mResolveHoverRunnable.cancel();
-        }
-        return super.onTouchEvent(ev);
-    }
-
-    public int lookForSelectablePosition(int position, boolean lookDown) {
-        int position2;
-        ListAdapter adapter = getAdapter();
-        if (adapter == null || isInTouchMode()) {
-            return -1;
-        }
-        int count = adapter.getCount();
-        if (!getAdapter().areAllItemsEnabled()) {
-            if (lookDown) {
-                position2 = Math.max(0, position);
-                while (position2 < count && !adapter.isEnabled(position2)) {
-                    position2++;
-                }
-            } else {
-                int position3 = Math.min(position, count - 1);
-                while (position2 >= 0 && !adapter.isEnabled(position2)) {
-                    position3 = position2 - 1;
-                }
-            }
-            if (position2 < 0 || position2 >= count) {
-                return -1;
-            }
-            return position2;
-        } else if (position < 0 || position >= count) {
-            return -1;
-        } else {
-            return position;
-        }
-    }
-
-    public int measureHeightOfChildrenCompat(int widthMeasureSpec, int startPosition, int endPosition, int maxHeight, int disallowPartialChildPosition) {
-        int paddingBottom;
-        ViewGroup.LayoutParams childLp;
-        int heightMeasureSpec;
-        int i = maxHeight;
-        int i2 = disallowPartialChildPosition;
-        int paddingTop = getListPaddingTop();
-        int paddingBottom2 = getListPaddingBottom();
-        int listPaddingLeft = getListPaddingLeft();
-        int listPaddingRight = getListPaddingRight();
-        int reportedDividerHeight = getDividerHeight();
-        Drawable divider = getDivider();
-        ListAdapter adapter = getAdapter();
-        if (adapter == null) {
-            return paddingTop + paddingBottom2;
-        }
-        int returnedHeight = paddingTop + paddingBottom2;
-        int dividerHeight = (reportedDividerHeight <= 0 || divider == null) ? 0 : reportedDividerHeight;
-        View child = null;
-        int viewType = 0;
-        int count = adapter.getCount();
-        int prevHeightWithoutPartialChild = 0;
-        int returnedHeight2 = returnedHeight;
-        int i3 = 0;
-        while (i3 < count) {
-            int newType = adapter.getItemViewType(i3);
-            if (newType != viewType) {
-                child = null;
-                viewType = newType;
-            }
-            int paddingTop2 = paddingTop;
-            child = adapter.getView(i3, child, this);
-            ViewGroup.LayoutParams childLp2 = child.getLayoutParams();
-            if (childLp2 == null) {
-                paddingBottom = paddingBottom2;
-                childLp = generateDefaultLayoutParams();
-                child.setLayoutParams(childLp);
-            } else {
-                paddingBottom = paddingBottom2;
-                childLp = childLp2;
-            }
-            if (childLp.height > 0) {
-                ViewGroup.LayoutParams layoutParams = childLp;
-                heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(childLp.height, 1073741824);
-            } else {
-                heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, 0);
-            }
-            child.measure(widthMeasureSpec, heightMeasureSpec);
-            child.forceLayout();
-            if (i3 > 0) {
-                returnedHeight2 += dividerHeight;
-            }
-            returnedHeight2 += child.getMeasuredHeight();
-            if (returnedHeight2 >= i) {
-                return (i2 < 0 || i3 <= i2 || prevHeightWithoutPartialChild <= 0 || returnedHeight2 == i) ? i : prevHeightWithoutPartialChild;
-            }
-            if (i2 >= 0 && i3 >= i2) {
-                prevHeightWithoutPartialChild = returnedHeight2;
-            }
-            i3++;
-            paddingTop = paddingTop2;
-            paddingBottom2 = paddingBottom;
-        }
-        int i4 = paddingBottom2;
-        int paddingTop3 = widthMeasureSpec;
-        return returnedHeight2;
-    }
-
-    private void setSelectorEnabled(boolean enabled) {
-        if (this.mSelector != null) {
-            this.mSelector.setEnabled(enabled);
-        }
-    }
-
-    private static class GateKeeperDrawable extends DrawableWrapper {
-        private boolean mEnabled = true;
-
-        GateKeeperDrawable(Drawable drawable) {
-            super(drawable);
-        }
-
-        /* access modifiers changed from: package-private */
-        public void setEnabled(boolean enabled) {
-            this.mEnabled = enabled;
-        }
-
-        public boolean setState(int[] stateSet) {
-            if (this.mEnabled) {
-                return super.setState(stateSet);
-            }
-            return false;
-        }
-
-        public void draw(Canvas canvas) {
-            if (this.mEnabled) {
-                super.draw(canvas);
-            }
-        }
-
-        public void setHotspot(float x, float y) {
-            if (this.mEnabled) {
-                super.setHotspot(x, y);
-            }
-        }
-
-        public void setHotspotBounds(int left, int top, int right, int bottom) {
-            if (this.mEnabled) {
-                super.setHotspotBounds(left, top, right, bottom);
-            }
-        }
-
-        public boolean setVisible(boolean visible, boolean restart) {
-            if (this.mEnabled) {
-                return super.setVisible(visible, restart);
-            }
-            return false;
-        }
-    }
-
-    public boolean onHoverEvent(@NonNull MotionEvent ev) {
-        if (Build.VERSION.SDK_INT < 26) {
-            return super.onHoverEvent(ev);
-        }
-        int action = ev.getActionMasked();
-        if (action == 10 && this.mResolveHoverRunnable == null) {
-            this.mResolveHoverRunnable = new ResolveHoverRunnable();
-            this.mResolveHoverRunnable.post();
-        }
-        boolean handled = super.onHoverEvent(ev);
-        if (action == 9 || action == 7) {
-            int position = pointToPosition((int) ev.getX(), (int) ev.getY());
-            if (!(position == -1 || position == getSelectedItemPosition())) {
-                View hoveredItem = getChildAt(position - getFirstVisiblePosition());
-                if (hoveredItem.isEnabled()) {
-                    setSelectionFromTop(position, hoveredItem.getTop() - getTop());
-                }
-                updateSelectorStateCompat();
-            }
-        } else {
-            setSelection(-1);
-        }
-        return handled;
-    }
-
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
-        this.mResolveHoverRunnable = null;
-        super.onDetachedFromWindow();
     }
 
     public boolean onForwardedEvent(MotionEvent event, int activePointerId) {
@@ -340,69 +78,6 @@ class DropDownListView extends ListView {
         this.mListSelectionHidden = hideListSelection;
     }
 
-    private void updateSelectorStateCompat() {
-        Drawable selector = getSelector();
-        if (selector != null && touchModeDrawsInPressedStateCompat() && isPressed()) {
-            selector.setState(getDrawableState());
-        }
-    }
-
-    private void drawSelectorCompat(Canvas canvas) {
-        Drawable selector;
-        if (!this.mSelectorRect.isEmpty() && (selector = getSelector()) != null) {
-            selector.setBounds(this.mSelectorRect);
-            selector.draw(canvas);
-        }
-    }
-
-    private void positionSelectorLikeTouchCompat(int position, View sel, float x, float y) {
-        positionSelectorLikeFocusCompat(position, sel);
-        Drawable selector = getSelector();
-        if (selector != null && position != -1) {
-            DrawableCompat.setHotspot(selector, x, y);
-        }
-    }
-
-    private void positionSelectorLikeFocusCompat(int position, View sel) {
-        Drawable selector = getSelector();
-        boolean z = true;
-        boolean manageState = (selector == null || position == -1) ? false : true;
-        if (manageState) {
-            selector.setVisible(false, false);
-        }
-        positionSelectorCompat(position, sel);
-        if (manageState) {
-            Rect bounds = this.mSelectorRect;
-            float x = bounds.exactCenterX();
-            float y = bounds.exactCenterY();
-            if (getVisibility() != 0) {
-                z = false;
-            }
-            selector.setVisible(z, false);
-            DrawableCompat.setHotspot(selector, x, y);
-        }
-    }
-
-    private void positionSelectorCompat(int position, View sel) {
-        Rect selectorRect = this.mSelectorRect;
-        selectorRect.set(sel.getLeft(), sel.getTop(), sel.getRight(), sel.getBottom());
-        selectorRect.left -= this.mSelectionLeftPadding;
-        selectorRect.top -= this.mSelectionTopPadding;
-        selectorRect.right += this.mSelectionRightPadding;
-        selectorRect.bottom += this.mSelectionBottomPadding;
-        try {
-            boolean isChildViewEnabled = this.mIsChildViewEnabled.getBoolean(this);
-            if (sel.isEnabled() != isChildViewEnabled) {
-                this.mIsChildViewEnabled.set(this, Boolean.valueOf(!isChildViewEnabled));
-                if (position != -1) {
-                    refreshDrawableState();
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void clearPressedItem() {
         this.mDrawsInPressedState = false;
         setPressed(false);
@@ -444,26 +119,24 @@ class DropDownListView extends ListView {
         refreshDrawableState();
     }
 
-    private boolean touchModeDrawsInPressedStateCompat() {
-        return this.mDrawsInPressedState;
+    /* access modifiers changed from: protected */
+    public boolean touchModeDrawsInPressedStateCompat() {
+        return this.mDrawsInPressedState || super.touchModeDrawsInPressedStateCompat();
     }
 
-    private class ResolveHoverRunnable implements Runnable {
-        ResolveHoverRunnable() {
-        }
+    public boolean isInTouchMode() {
+        return (this.mHijackFocus && this.mListSelectionHidden) || super.isInTouchMode();
+    }
 
-        public void run() {
-            DropDownListView.this.mResolveHoverRunnable = null;
-            DropDownListView.this.drawableStateChanged();
-        }
+    public boolean hasWindowFocus() {
+        return this.mHijackFocus || super.hasWindowFocus();
+    }
 
-        public void cancel() {
-            DropDownListView.this.mResolveHoverRunnable = null;
-            DropDownListView.this.removeCallbacks(this);
-        }
+    public boolean isFocused() {
+        return this.mHijackFocus || super.isFocused();
+    }
 
-        public void post() {
-            DropDownListView.this.post(this);
-        }
+    public boolean hasFocus() {
+        return this.mHijackFocus || super.hasFocus();
     }
 }

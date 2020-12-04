@@ -1,6 +1,7 @@
 package android.support.v7.view.menu;
 
 import android.support.annotation.RestrictTo;
+import android.support.v7.appcompat.R;
 import android.support.v7.view.menu.MenuView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,18 +11,17 @@ import java.util.ArrayList;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
 public class MenuAdapter extends BaseAdapter {
+    static final int ITEM_LAYOUT = R.layout.abc_popup_menu_item_layout;
     MenuBuilder mAdapterMenu;
     private int mExpandedIndex = -1;
     private boolean mForceShowIcon;
     private final LayoutInflater mInflater;
-    private final int mItemLayoutRes;
     private final boolean mOverflowOnly;
 
-    public MenuAdapter(MenuBuilder menu, LayoutInflater inflater, boolean overflowOnly, int itemLayoutRes) {
+    public MenuAdapter(MenuBuilder menu, LayoutInflater inflater, boolean overflowOnly) {
         this.mOverflowOnly = overflowOnly;
         this.mInflater = inflater;
         this.mAdapterMenu = menu;
-        this.mItemLayoutRes = itemLayoutRes;
         findExpandedIndex();
     }
 
@@ -59,10 +59,8 @@ public class MenuAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = this.mInflater.inflate(this.mItemLayoutRes, parent, false);
+            convertView = this.mInflater.inflate(ITEM_LAYOUT, parent, false);
         }
-        int currGroupId = getItem(position).getGroupId();
-        ((ListMenuItemView) convertView).setGroupDividerEnabled(this.mAdapterMenu.isGroupDividerEnabled() && currGroupId != (position + -1 >= 0 ? getItem(position + -1).getGroupId() : currGroupId));
         MenuView.ItemView itemView = (MenuView.ItemView) convertView;
         if (this.mForceShowIcon) {
             ((ListMenuItemView) convertView).setForceShowIcon(true);

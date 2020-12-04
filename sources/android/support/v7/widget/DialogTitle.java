@@ -3,11 +3,9 @@ package android.support.v7.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.RestrictTo;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.appcompat.R;
 import android.text.Layout;
 import android.util.AttributeSet;
-import android.view.ActionMode;
 import android.widget.TextView;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
@@ -40,9 +38,5 @@ public class DialogTitle extends TextView {
             a.recycle();
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-    }
-
-    public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
-        super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, actionModeCallback));
     }
 }

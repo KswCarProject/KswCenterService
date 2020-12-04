@@ -6,16 +6,18 @@ import android.graphics.Typeface;
 import android.os.CancellationSignal;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.v4.content.res.FontResourcesParserCompat;
+import android.support.v4.graphics.TypefaceCompat;
 import android.support.v4.provider.FontsContractCompat;
-import com.wits.pms.statuscontrol.WitsCommand;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+@RequiresApi(14)
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-class TypefaceCompatBaseImpl {
+class TypefaceCompatBaseImpl implements TypefaceCompat.TypefaceCompatImpl {
     private static final String CACHE_FILE_PREFIX = "cached_font_";
     private static final String TAG = "TypefaceCompatBaseImpl";
 
@@ -29,7 +31,7 @@ class TypefaceCompatBaseImpl {
     }
 
     private static <T> T findBestFont(T[] fonts, int style, StyleExtractor<T> extractor) {
-        int targetWeight = (style & 1) == 0 ? 400 : WitsCommand.SystemCommand.MCU_UPDATE;
+        int targetWeight = (style & 1) == 0 ? 400 : 700;
         boolean isTargetItalic = (style & 2) != 0;
         int bestScore = Integer.MAX_VALUE;
         T best = null;

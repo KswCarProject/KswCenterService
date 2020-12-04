@@ -3,10 +3,10 @@ package android.support.v7.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.RestrictTo;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.appcompat.R;
-import android.support.v7.widget.ActivityChooserView;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.MotionEvent;
@@ -33,7 +33,7 @@ public class ActionBarContainer extends FrameLayout {
 
     public ActionBarContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ViewCompat.setBackground(this, new ActionBarBackgroundDrawable(this));
+        ViewCompat.setBackground(this, Build.VERSION.SDK_INT >= 21 ? new ActionBarBackgroundDrawableV21(this) : new ActionBarBackgroundDrawable(this));
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
         this.mBackground = a.getDrawable(R.styleable.ActionBar_background);
         this.mStackedBackground = a.getDrawable(R.styleable.ActionBar_backgroundStacked);
@@ -235,7 +235,7 @@ public class ActionBarContainer extends FrameLayout {
                 } else {
                     topMarginForTabs = 0;
                 }
-                setMeasuredDimension(getMeasuredWidth(), Math.min(getMeasuredHeightWithMargins(this.mTabContainer) + topMarginForTabs, mode == Integer.MIN_VALUE ? View.MeasureSpec.getSize(heightMeasureSpec) : ActivityChooserView.ActivityChooserViewAdapter.MAX_ACTIVITY_COUNT_UNLIMITED));
+                setMeasuredDimension(getMeasuredWidth(), Math.min(getMeasuredHeightWithMargins(this.mTabContainer) + topMarginForTabs, mode == Integer.MIN_VALUE ? View.MeasureSpec.getSize(heightMeasureSpec) : Integer.MAX_VALUE));
             }
         }
     }

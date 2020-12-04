@@ -23,7 +23,6 @@
     </style>
     <style name="Base.AlertDialog.AppCompat">
         <item name="android:layout">@layout/abc_alert_dialog_material</item>
-        <item name="buttonIconDimen">@dimen/abc_alert_dialog_button_dimen</item>
         <item name="listItemLayout">@layout/select_dialog_item_material</item>
         <item name="listLayout">@layout/abc_select_dialog_material</item>
         <item name="multiChoiceItemLayout">@layout/select_dialog_multichoice_material</item>
@@ -40,8 +39,8 @@
         <item name="android:windowExitAnimation">@anim/abc_shrink_fade_out_from_bottom</item>
     </style>
     <style name="Base.Animation.AppCompat.Tooltip">
-        <item name="android:windowEnterAnimation">@anim/abc_tooltip_enter</item>
-        <item name="android:windowExitAnimation">@anim/abc_tooltip_exit</item>
+        <item name="android:windowEnterAnimation">@anim/tooltip_enter</item>
+        <item name="android:windowExitAnimation">@anim/tooltip_exit</item>
     </style>
     <style name="Base.DialogWindowTitle.AppCompat">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
@@ -123,8 +122,6 @@
         <item name="android:textSize">14sp</item>
     </style>
     <style name="Base.TextAppearance.AppCompat.Widget.ActionBar.Menu">
-        <item name="android:textColor">?attr/actionMenuTextColor</item>
-        <item name="textAllCaps">@bool/abc_config_actionMenuItemAllCaps</item>
     </style>
     <style name="Base.TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
     </style>
@@ -141,13 +138,10 @@
     <style name="Base.TextAppearance.AppCompat.Widget.Button">
     </style>
     <style name="Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
-        <item name="android:textColor">@color/abc_btn_colored_borderless_text_material</item>
     </style>
     <style name="Base.TextAppearance.AppCompat.Widget.Button.Colored">
-        <item name="android:textColor">@color/abc_btn_colored_text_material</item>
     </style>
     <style name="Base.TextAppearance.AppCompat.Widget.Button.Inverse">
-        <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
     </style>
     <style name="Base.TextAppearance.AppCompat.Widget.DropDownItem">
         <item name="android:textColor">?android:attr/textColorPrimaryDisableOnly</item>
@@ -288,6 +282,27 @@
         <item name="colorSwitchThumbNormal">@color/switch_thumb_material_light</item>
         <item name="isLightTheme">true</item>
     </style>
+    <style name="Base.V11.Theme.AppCompat.Dialog">
+        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+        <item name="android:windowCloseOnTouchOutside">@bool/abc_config_closeDialogWhenTouchOutside</item>
+    </style>
+    <style name="Base.V11.Theme.AppCompat.Light.Dialog">
+        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+        <item name="android:windowCloseOnTouchOutside">@bool/abc_config_closeDialogWhenTouchOutside</item>
+    </style>
+    <style name="Base.V11.ThemeOverlay.AppCompat.Dialog">
+        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
+        <item name="android:windowCloseOnTouchOutside">@bool/abc_config_closeDialogWhenTouchOutside</item>
+    </style>
+    <style name="Base.V12.Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>
+    </style>
+    <style name="Base.V12.Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>
+    </style>
     <style name="Base.V21.Theme.AppCompat">
         <item name="android:colorControlNormal">?attr/colorControlNormal</item>
         <item name="android:colorControlActivated">?attr/colorControlActivated</item>
@@ -367,6 +382,40 @@
     <style name="Base.V21.ThemeOverlay.AppCompat.Dialog">
         <item name="android:windowElevation">@dimen/abc_floating_window_z</item>
     </style>
+    <style name="Base.V22.Theme.AppCompat">
+        <item name="actionModeShareDrawable">?android:attr/actionModeShareDrawable</item>
+        <item name="editTextBackground">?android:attr/editTextBackground</item>
+    </style>
+    <style name="Base.V22.Theme.AppCompat.Light">
+        <item name="actionModeShareDrawable">?android:attr/actionModeShareDrawable</item>
+        <item name="editTextBackground">?android:attr/editTextBackground</item>
+    </style>
+    <style name="Base.V23.Theme.AppCompat">
+        <item name="actionBarItemBackground">?android:attr/actionBarItemBackground</item>
+        <item name="actionMenuTextAppearance">?android:attr/actionMenuTextAppearance</item>
+        <item name="actionMenuTextColor">?android:attr/actionMenuTextColor</item>
+        <item name="controlBackground">@drawable/abc_control_background_material</item>
+        <item name="ratingBarStyleIndicator">?android:attr/ratingBarStyleIndicator</item>
+        <item name="ratingBarStyleSmall">?android:attr/ratingBarStyleSmall</item>
+    </style>
+    <style name="Base.V23.Theme.AppCompat.Light">
+        <item name="actionBarItemBackground">?android:attr/actionBarItemBackground</item>
+        <item name="actionMenuTextAppearance">?android:attr/actionMenuTextAppearance</item>
+        <item name="actionMenuTextColor">?android:attr/actionMenuTextColor</item>
+        <item name="controlBackground">@drawable/abc_control_background_material</item>
+        <item name="ratingBarStyleIndicator">?android:attr/ratingBarStyleIndicator</item>
+        <item name="ratingBarStyleSmall">?android:attr/ratingBarStyleSmall</item>
+    </style>
+    <style name="Base.V26.Theme.AppCompat">
+        <item name="colorError">?unknown_attr_ref: 1010543</item>
+    </style>
+    <style name="Base.V26.Theme.AppCompat.Light">
+        <item name="colorError">?unknown_attr_ref: 1010543</item>
+    </style>
+    <style name="Base.V26.Widget.AppCompat.Toolbar">
+        <item name="android:touchscreenBlocksFocus">true</item>
+        <item name="?0x1010540">true</item>
+    </style>
     <style name="Base.V7.Theme.AppCompat">
         <item name="android:panelBackground">@android:color/transparent</item>
         <item name="android:dropDownListViewStyle">@style/Widget.AppCompat.ListView.DropDown</item>
@@ -420,12 +469,11 @@
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/ripple_material_dark</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
-        <item name="colorError">@color/error_color_material_dark</item>
+        <item name="colorError">@color/error_color_material</item>
         <item name="colorPrimary">@color/primary_material_dark</item>
         <item name="colorPrimaryDark">@color/primary_dark_material_dark</item>
         <item name="colorSwitchThumbNormal">@color/switch_thumb_material_dark</item>
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
-        <item name="dialogCornerRadius">@dimen/abc_dialog_corner_radius_material</item>
         <item name="dialogPreferredPadding">@dimen/abc_dialog_padding_material</item>
         <item name="dialogTheme">@style/ThemeOverlay.AppCompat.Dialog</item>
         <item name="dividerHorizontal">@drawable/abc_list_divider_mtrl_alpha</item>
@@ -477,7 +525,6 @@
         <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
         <item name="tooltipForegroundColor">@color/foreground_material_light</item>
         <item name="tooltipFrameBackground">@drawable/tooltip_frame_light</item>
-        <item name="viewInflaterClass">android.support.v7.app.AppCompatViewInflater</item>
         <item name="windowActionBar">true</item>
         <item name="windowActionBarOverlay">false</item>
         <item name="windowActionModeOverlay">false</item>
@@ -500,9 +547,6 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowSoftInputMode">adjustUnspecified|stateVisible|adjustResize</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="listPreferredItemPaddingLeft">24dp</item>
         <item name="listPreferredItemPaddingRight">24dp</item>
         <item name="windowActionBar">false</item>
@@ -561,12 +605,11 @@
         <item name="colorControlActivated">?attr/colorAccent</item>
         <item name="colorControlHighlight">@color/ripple_material_light</item>
         <item name="colorControlNormal">?android:attr/textColorSecondary</item>
-        <item name="colorError">@color/error_color_material_light</item>
+        <item name="colorError">@color/error_color_material</item>
         <item name="colorPrimary">@color/primary_material_light</item>
         <item name="colorPrimaryDark">@color/primary_dark_material_light</item>
         <item name="colorSwitchThumbNormal">@color/switch_thumb_material_light</item>
         <item name="controlBackground">?attr/selectableItemBackgroundBorderless</item>
-        <item name="dialogCornerRadius">@dimen/abc_dialog_corner_radius_material</item>
         <item name="dialogPreferredPadding">@dimen/abc_dialog_padding_material</item>
         <item name="dialogTheme">@style/ThemeOverlay.AppCompat.Dialog</item>
         <item name="dividerHorizontal">@drawable/abc_list_divider_mtrl_alpha</item>
@@ -618,7 +661,6 @@
         <item name="toolbarStyle">@style/Widget.AppCompat.Toolbar</item>
         <item name="tooltipForegroundColor">@color/foreground_material_dark</item>
         <item name="tooltipFrameBackground">@drawable/tooltip_frame_dark</item>
-        <item name="viewInflaterClass">android.support.v7.app.AppCompatViewInflater</item>
         <item name="windowActionBar">true</item>
         <item name="windowActionBarOverlay">false</item>
         <item name="windowActionModeOverlay">false</item>
@@ -641,9 +683,6 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowSoftInputMode">adjustUnspecified|stateVisible|adjustResize</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="listPreferredItemPaddingLeft">24dp</item>
         <item name="listPreferredItemPaddingRight">24dp</item>
         <item name="windowActionBar">false</item>
@@ -662,9 +701,6 @@
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowSoftInputMode">adjustUnspecified|stateVisible|adjustResize</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:borderlessButtonStyle">@style/Widget.AppCompat.Button.Borderless</item>
-        <item name="android:buttonBarStyle">@style/Widget.AppCompat.ButtonBar.AlertDialog</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
         <item name="listPreferredItemPaddingLeft">24dp</item>
         <item name="listPreferredItemPaddingRight">24dp</item>
         <item name="windowActionBar">false</item>
@@ -680,13 +716,11 @@
         <item name="android:background">?attr/editTextBackground</item>
         <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
         <item name="android:popupBackground">@drawable/abc_popup_background_mtrl_mult</item>
-        <item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>
     </style>
     <style name="Base.V7.Widget.AppCompat.EditText">
         <item name="android:textAppearance">?android:attr/textAppearanceMediumInverse</item>
         <item name="android:textColor">?attr/editTextColor</item>
         <item name="android:background">?attr/editTextBackground</item>
-        <item name="android:textCursorDrawable">@drawable/abc_text_cursor_material</item>
     </style>
     <style name="Base.V7.Widget.AppCompat.Toolbar">
         <item name="android:paddingLeft">@dimen/abc_action_bar_default_padding_start_material</item>
@@ -764,15 +798,12 @@
     <style name="Base.Widget.AppCompat.Button.Borderless">
     </style>
     <style name="Base.Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/abc_btn_colored_borderless_text_material</item>
     </style>
     <style name="Base.Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:minWidth">64dp</item>
         <item name="android:minHeight">@dimen/abc_alert_dialog_button_bar_height</item>
     </style>
     <style name="Base.Widget.AppCompat.Button.Colored">
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Widget.Button.Colored</item>
-        <item name="android:background">@drawable/abc_btn_colored_material</item>
     </style>
     <style name="Base.Widget.AppCompat.Button.Small">
     </style>
@@ -862,20 +893,8 @@
     <style name="Base.Widget.AppCompat.RatingBar">
     </style>
     <style name="Base.Widget.AppCompat.RatingBar.Indicator">
-        <item name="android:maxHeight">36dp</item>
-        <item name="android:indeterminateDrawable">@drawable/abc_ratingbar_indicator_material</item>
-        <item name="android:progressDrawable">@drawable/abc_ratingbar_indicator_material</item>
-        <item name="android:minHeight">36dp</item>
-        <item name="android:thumb">@null</item>
-        <item name="android:isIndicator">true</item>
     </style>
     <style name="Base.Widget.AppCompat.RatingBar.Small">
-        <item name="android:maxHeight">16dp</item>
-        <item name="android:indeterminateDrawable">@drawable/abc_ratingbar_small_material</item>
-        <item name="android:progressDrawable">@drawable/abc_ratingbar_small_material</item>
-        <item name="android:minHeight">16dp</item>
-        <item name="android:thumb">@null</item>
-        <item name="android:isIndicator">true</item>
     </style>
     <style name="Base.Widget.AppCompat.SearchView">
         <item name="closeIcon">@drawable/abc_ic_clear_material</item>
@@ -903,7 +922,6 @@
     <style name="Base.Widget.AppCompat.Spinner">
     </style>
     <style name="Base.Widget.AppCompat.Spinner.Underlined">
-        <item name="android:background">@drawable/abc_spinner_textfield_background_material</item>
     </style>
     <style name="Base.Widget.AppCompat.TextView.SpinnerItem">
     </style>
@@ -932,6 +950,105 @@
     </style>
     <style name="Platform.ThemeOverlay.AppCompat.Light">
     </style>
+    <style name="Platform.V11.AppCompat">
+        <item name="android:colorForeground">@color/foreground_material_dark</item>
+        <item name="android:colorBackground">@color/background_material_dark</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:disabledAlpha">@dimen/abc_disabled_alpha_material_dark</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+        <item name="android:textAppearanceInverse">@style/TextAppearance.AppCompat.Inverse</item>
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/abc_primary_text_disable_only_material_dark</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item>
+        <item name="android:textColorSecondaryInverse">@color/abc_secondary_text_material_light</item>
+        <item name="android:textColorHintInverse">@color/abc_hint_foreground_material_light</item>
+        <item name="android:textAppearanceLarge">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textAppearanceLargeInverse">@style/TextAppearance.AppCompat.Large.Inverse</item>
+        <item name="android:textAppearanceMediumInverse">@style/TextAppearance.AppCompat.Medium.Inverse</item>
+        <item name="android:textAppearanceSmallInverse">@style/TextAppearance.AppCompat.Small.Inverse</item>
+        <item name="android:windowBackground">@color/background_material_dark</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textColorHighlight">@color/highlighted_text_material_dark</item>
+        <item name="android:textColorHint">@color/abc_hint_foreground_material_dark</item>
+        <item name="android:textColorLink">?attr/colorAccent</item>
+        <item name="android:colorForegroundInverse">@color/foreground_material_light</item>
+        <item name="android:textColorTertiary">@color/abc_secondary_text_material_dark</item>
+        <item name="android:textColorTertiaryInverse">@color/abc_secondary_text_material_light</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/abc_btn_radio_material</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/abc_btn_check_material</item>
+        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_dark</item>
+        <item name="android:textSelectHandleLeft">@drawable/abc_text_select_handle_left_mtrl_dark</item>
+        <item name="android:textSelectHandleRight">@drawable/abc_text_select_handle_right_mtrl_dark</item>
+        <item name="android:textSelectHandle">@drawable/abc_text_select_handle_middle_mtrl_dark</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:textColorAlertDialogListItem">@color/abc_primary_text_material_dark</item>
+        <item name="android:actionModeCutDrawable">?attr/actionModeCutDrawable</item>
+        <item name="android:actionModeCopyDrawable">?attr/actionModeCopyDrawable</item>
+        <item name="android:actionModePasteDrawable">?attr/actionModePasteDrawable</item>
+        <item name="android:borderlessButtonStyle">?attr/borderlessButtonStyle</item>
+        <item name="android:buttonBarStyle">?attr/buttonBarStyle</item>
+        <item name="android:buttonBarButtonStyle">?attr/buttonBarButtonStyle</item>
+        <item name="android:textColorHighlightInverse">@color/highlighted_text_material_light</item>
+        <item name="android:textColorLinkInverse">?attr/colorAccent</item>
+    </style>
+    <style name="Platform.V11.AppCompat.Light">
+        <item name="android:colorForeground">@color/foreground_material_light</item>
+        <item name="android:colorBackground">@color/background_material_light</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <item name="android:disabledAlpha">@dimen/abc_disabled_alpha_material_light</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+        <item name="android:textAppearanceInverse">@style/TextAppearance.AppCompat.Inverse</item>
+        <item name="android:textColorPrimary">@color/abc_primary_text_material_light</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/abc_primary_text_disable_only_material_light</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
+        <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_dark</item>
+        <item name="android:textColorSecondaryInverse">@color/abc_secondary_text_material_dark</item>
+        <item name="android:textColorHintInverse">@color/abc_hint_foreground_material_dark</item>
+        <item name="android:textAppearanceLarge">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.AppCompat.Small</item>
+        <item name="android:textAppearanceLargeInverse">@style/TextAppearance.AppCompat.Large.Inverse</item>
+        <item name="android:textAppearanceMediumInverse">@style/TextAppearance.AppCompat.Medium.Inverse</item>
+        <item name="android:textAppearanceSmallInverse">@style/TextAppearance.AppCompat.Small.Inverse</item>
+        <item name="android:windowBackground">@color/background_material_light</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textColorHighlight">@color/highlighted_text_material_light</item>
+        <item name="android:textColorHint">@color/abc_hint_foreground_material_light</item>
+        <item name="android:textColorLink">?attr/colorAccent</item>
+        <item name="android:colorForegroundInverse">@color/foreground_material_dark</item>
+        <item name="android:textColorTertiary">@color/abc_secondary_text_material_light</item>
+        <item name="android:textColorTertiaryInverse">@color/abc_secondary_text_material_dark</item>
+        <item name="android:listChoiceIndicatorSingle">@drawable/abc_btn_radio_material</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/abc_btn_check_material</item>
+        <item name="android:textColorPrimaryInverseDisableOnly">@color/abc_primary_text_disable_only_material_dark</item>
+        <item name="android:colorBackgroundCacheHint">@color/abc_background_cache_hint_selector_material_light</item>
+        <item name="android:textSelectHandleLeft">@drawable/abc_text_select_handle_left_mtrl_light</item>
+        <item name="android:textSelectHandleRight">@drawable/abc_text_select_handle_right_mtrl_light</item>
+        <item name="android:textSelectHandle">@drawable/abc_text_select_handle_middle_mtrl_light</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:textColorAlertDialogListItem">@color/abc_primary_text_material_light</item>
+        <item name="android:actionModeCutDrawable">?attr/actionModeCutDrawable</item>
+        <item name="android:actionModeCopyDrawable">?attr/actionModeCopyDrawable</item>
+        <item name="android:actionModePasteDrawable">?attr/actionModePasteDrawable</item>
+        <item name="android:borderlessButtonStyle">?attr/borderlessButtonStyle</item>
+        <item name="android:buttonBarStyle">?attr/buttonBarStyle</item>
+        <item name="android:buttonBarButtonStyle">?attr/buttonBarButtonStyle</item>
+        <item name="android:textColorHighlightInverse">@color/highlighted_text_material_dark</item>
+        <item name="android:textColorLinkInverse">?attr/colorAccent</item>
+    </style>
+    <style name="Platform.V14.AppCompat">
+        <item name="android:actionModeSelectAllDrawable">?attr/actionModeSelectAllDrawable</item>
+        <item name="android:listPreferredItemPaddingLeft">@dimen/abc_list_item_padding_horizontal_material</item>
+        <item name="android:listPreferredItemPaddingRight">@dimen/abc_list_item_padding_horizontal_material</item>
+    </style>
+    <style name="Platform.V14.AppCompat.Light">
+        <item name="android:actionModeSelectAllDrawable">?attr/actionModeSelectAllDrawable</item>
+        <item name="android:listPreferredItemPaddingLeft">@dimen/abc_list_item_padding_horizontal_material</item>
+        <item name="android:listPreferredItemPaddingRight">@dimen/abc_list_item_padding_horizontal_material</item>
+    </style>
     <style name="Platform.V21.AppCompat">
         <item name="android:textColorHintInverse">@color/abc_hint_foreground_material_light</item>
         <item name="android:textColorHint">@color/abc_hint_foreground_material_dark</item>
@@ -947,6 +1064,10 @@
         <item name="android:buttonBarStyle">?attr/buttonBarStyle</item>
         <item name="android:buttonBarButtonStyle">?attr/buttonBarButtonStyle</item>
         <item name="android:textColorLinkInverse">?android:attr/colorAccent</item>
+    </style>
+    <style name="Platform.V25.AppCompat">
+    </style>
+    <style name="Platform.V25.AppCompat.Light">
     </style>
     <style name="Platform.Widget.AppCompat.Spinner">
     </style>
@@ -966,20 +1087,9 @@
     <style name="RtlOverlay.Widget.AppCompat.PopupMenuItem.InternalGroup">
         <item name="android:layout_marginStart">16dp</item>
     </style>
-    <style name="RtlOverlay.Widget.AppCompat.PopupMenuItem.Shortcut">
-        <item name="android:textAlignment">viewEnd</item>
-        <item name="android:layout_marginStart">16dp</item>
-    </style>
-    <style name="RtlOverlay.Widget.AppCompat.PopupMenuItem.SubmenuArrow">
-        <item name="android:layout_marginStart">8dp</item>
-    </style>
     <style name="RtlOverlay.Widget.AppCompat.PopupMenuItem.Text">
         <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_alignParentStart">true</item>
-    </style>
-    <style name="RtlOverlay.Widget.AppCompat.PopupMenuItem.Title">
-        <item name="android:textAlignment">viewStart</item>
-        <item name="android:layout_marginStart">16dp</item>
     </style>
     <style name="RtlOverlay.Widget.AppCompat.Search.DropDown">
         <item name="android:paddingStart">@dimen/abc_dropdownitem_text_padding_left</item>
@@ -1049,6 +1159,26 @@
     </style>
     <style name="TextAppearance.AppCompat.Menu">
     </style>
+    <style name="TextAppearance.AppCompat.Notification">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Info">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Info.Media">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Line2">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Line2.Media">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Media">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Time">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Time.Media">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Title">
+    </style>
+    <style name="TextAppearance.AppCompat.Notification.Title.Media">
+    </style>
     <style name="TextAppearance.AppCompat.SearchResult.Subtitle">
     </style>
     <style name="TextAppearance.AppCompat.SearchResult.Title">
@@ -1111,11 +1241,21 @@
     </style>
     <style name="TextAppearance.Compat.Notification.Info">
     </style>
+    <style name="TextAppearance.Compat.Notification.Info.Media">
+    </style>
     <style name="TextAppearance.Compat.Notification.Line2">
+    </style>
+    <style name="TextAppearance.Compat.Notification.Line2.Media">
+    </style>
+    <style name="TextAppearance.Compat.Notification.Media">
     </style>
     <style name="TextAppearance.Compat.Notification.Time">
     </style>
+    <style name="TextAppearance.Compat.Notification.Time.Media">
+    </style>
     <style name="TextAppearance.Compat.Notification.Title">
+    </style>
+    <style name="TextAppearance.Compat.Notification.Title.Media">
     </style>
     <style name="TextAppearance.Widget.AppCompat.ExpandedMenu.Item">
     </style>
@@ -1335,8 +1475,5 @@
         <item name="android:textAppearance">?android:attr/textAppearanceButton</item>
         <item name="android:textSize">@dimen/notification_action_text_size</item>
         <item name="android:textColor">@color/secondary_text_default_material_light</item>
-    </style>
-    <style name="Widget.Support.CoordinatorLayout">
-        <item name="statusBarBackground">#000000</item>
     </style>
 </resources>

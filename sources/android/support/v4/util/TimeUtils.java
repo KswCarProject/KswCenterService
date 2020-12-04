@@ -102,34 +102,34 @@ public final class TimeUtils {
             r6 = 0
             r8 = 0
             r9 = 86400(0x15180, float:1.21072E-40)
-            if (r4 <= r9) goto L_0x004c
+            if (r4 <= r9) goto L_0x004b
             int r5 = r4 / r9
             int r9 = r9 * r5
             int r4 = r4 - r9
-        L_0x004c:
+        L_0x004b:
             r12 = r5
             r5 = 3600(0xe10, float:5.045E-42)
-            if (r4 <= r5) goto L_0x0058
+            if (r4 <= r5) goto L_0x0057
             int r5 = r4 / 3600
             int r6 = r5 * 3600
             int r4 = r4 - r6
             r13 = r5
-            goto L_0x0059
-        L_0x0058:
+            goto L_0x0058
+        L_0x0057:
             r13 = r6
-        L_0x0059:
+        L_0x0058:
             r5 = 60
-            if (r4 <= r5) goto L_0x0065
+            if (r4 <= r5) goto L_0x0064
             int r5 = r4 / 60
             int r6 = r5 * 60
             int r4 = r4 - r6
             r15 = r4
             r14 = r5
-            goto L_0x0067
-        L_0x0065:
+            goto L_0x0066
+        L_0x0064:
             r15 = r4
             r14 = r8
-        L_0x0067:
+        L_0x0066:
             r4 = 0
             r16 = 3
             r9 = 2
@@ -137,29 +137,29 @@ public final class TimeUtils {
             r6 = 1
             if (r2 == 0) goto L_0x00a4
             int r5 = accumField(r12, r6, r8, r8)
-            if (r5 <= 0) goto L_0x0077
-            r8 = 1
-        L_0x0077:
+            if (r5 <= 0) goto L_0x0076
+            r8 = r6
+        L_0x0076:
             int r8 = accumField(r13, r6, r8, r9)
             int r5 = r5 + r8
-            if (r5 <= 0) goto L_0x0080
-            r8 = 1
-            goto L_0x0081
-        L_0x0080:
+            if (r5 <= 0) goto L_0x007f
+            r8 = r6
+            goto L_0x0080
+        L_0x007f:
             r8 = 0
-        L_0x0081:
+        L_0x0080:
             int r8 = accumField(r14, r6, r8, r9)
             int r5 = r5 + r8
-            if (r5 <= 0) goto L_0x008a
-            r8 = 1
-            goto L_0x008b
-        L_0x008a:
+            if (r5 <= 0) goto L_0x0089
+            r8 = r6
+            goto L_0x008a
+        L_0x0089:
             r8 = 0
-        L_0x008b:
+        L_0x008a:
             int r8 = accumField(r15, r6, r8, r9)
             int r5 = r5 + r8
             if (r5 <= 0) goto L_0x0094
-            r8 = 3
+            r8 = r16
             goto L_0x0095
         L_0x0094:
             r8 = 0
@@ -178,7 +178,7 @@ public final class TimeUtils {
             int r18 = r4 + 1
             r8 = r18
             if (r2 == 0) goto L_0x00ae
-            r4 = 1
+            r4 = r6
             goto L_0x00af
         L_0x00ae:
             r4 = 0
@@ -189,28 +189,28 @@ public final class TimeUtils {
             r21 = 0
             r4 = r3
             r5 = r12
-            r22 = 1
+            r22 = r6
             r6 = r7
             r7 = r18
             r23 = r8
             r17 = 0
             r8 = r20
-            r20 = 2
+            r20 = r9
             r9 = r21
             int r9 = printField(r4, r5, r6, r7, r8, r9)
             r6 = 104(0x68, float:1.46E-43)
             r8 = r23
             if (r9 == r8) goto L_0x00d5
-            r18 = 1
+            r18 = r22
             goto L_0x00d7
         L_0x00d5:
-            r18 = 0
+            r18 = r17
         L_0x00d7:
             if (r19 == 0) goto L_0x00dc
-            r21 = 2
+            r21 = r20
             goto L_0x00de
         L_0x00dc:
-            r21 = 0
+            r21 = r17
         L_0x00de:
             r4 = r3
             r5 = r13
@@ -223,16 +223,16 @@ public final class TimeUtils {
             r6 = 109(0x6d, float:1.53E-43)
             r8 = r24
             if (r9 == r8) goto L_0x00f6
-            r18 = 1
+            r18 = r22
             goto L_0x00f8
         L_0x00f6:
-            r18 = 0
+            r18 = r17
         L_0x00f8:
             if (r19 == 0) goto L_0x00fd
-            r21 = 2
+            r21 = r20
             goto L_0x00ff
         L_0x00fd:
-            r21 = 0
+            r21 = r17
         L_0x00ff:
             r4 = r3
             r5 = r14
@@ -247,12 +247,12 @@ public final class TimeUtils {
             if (r9 == r8) goto L_0x0115
             goto L_0x0117
         L_0x0115:
-            r22 = 0
+            r22 = r17
         L_0x0117:
             if (r19 == 0) goto L_0x011a
             goto L_0x011c
         L_0x011a:
-            r20 = 0
+            r20 = r17
         L_0x011c:
             r4 = r3
             r5 = r15
@@ -271,7 +271,7 @@ public final class TimeUtils {
         L_0x0135:
             r7 = r26
         L_0x0137:
-            r16 = 0
+            r16 = r17
         L_0x0139:
             r4 = r3
             r5 = r11

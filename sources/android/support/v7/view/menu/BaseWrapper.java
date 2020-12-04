@@ -4,10 +4,11 @@ class BaseWrapper<T> {
     final T mWrappedObject;
 
     BaseWrapper(T object) {
-        if (object == null) {
-            throw new IllegalArgumentException("Wrapped Object can not be null.");
+        if (object != null) {
+            this.mWrappedObject = object;
+            return;
         }
-        this.mWrappedObject = object;
+        throw new IllegalArgumentException("Wrapped Object can not be null.");
     }
 
     public T getWrappedObject() {

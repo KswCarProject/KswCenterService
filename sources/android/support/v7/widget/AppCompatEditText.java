@@ -4,18 +4,12 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.RestrictTo;
 import android.support.v4.view.TintableBackgroundView;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.appcompat.R;
-import android.text.Editable;
 import android.util.AttributeSet;
-import android.view.ActionMode;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 
 public class AppCompatEditText extends EditText implements TintableBackgroundView {
@@ -34,17 +28,9 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         super(TintContextWrapper.wrap(context), attrs, defStyleAttr);
         this.mBackgroundTintHelper = new AppCompatBackgroundHelper(this);
         this.mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
-        this.mTextHelper = new AppCompatTextHelper(this);
+        this.mTextHelper = AppCompatTextHelper.create(this);
         this.mTextHelper.loadFromAttributes(attrs, defStyleAttr);
         this.mTextHelper.applyCompoundDrawablesTints();
-    }
-
-    @Nullable
-    public Editable getText() {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return super.getText();
-        }
-        return super.getEditableText();
     }
 
     public void setBackgroundResource(@DrawableRes int resId) {
@@ -109,13 +95,5 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         if (this.mTextHelper != null) {
             this.mTextHelper.onSetTextAppearance(context, resId);
         }
-    }
-
-    public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        return AppCompatHintHelper.onCreateInputConnection(super.onCreateInputConnection(outAttrs), outAttrs, this);
-    }
-
-    public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
-        super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, actionModeCallback));
     }
 }

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
@@ -108,18 +109,18 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
         if (findViewById(16908307) == null) {
             LinearLayout ll = new LinearLayout(context);
             ll.setOrientation(1);
-            addView(ll, new FrameLayout.LayoutParams(-1, -1));
+            addView((View) ll, (ViewGroup.LayoutParams) new FrameLayout.LayoutParams(-1, -1));
             TabWidget tw = new TabWidget(context);
             tw.setId(16908307);
             tw.setOrientation(0);
-            ll.addView(tw, new LinearLayout.LayoutParams(-1, -2, 0.0f));
+            ll.addView((View) tw, (ViewGroup.LayoutParams) new LinearLayout.LayoutParams(-1, -2, 0.0f));
             FrameLayout fl = new FrameLayout(context);
             fl.setId(16908305);
-            ll.addView(fl, new LinearLayout.LayoutParams(0, 0, 0.0f));
+            ll.addView((View) fl, (ViewGroup.LayoutParams) new LinearLayout.LayoutParams(0, 0, 0.0f));
             FrameLayout fl2 = new FrameLayout(context);
             this.mRealTabContent = fl2;
             this.mRealTabContent.setId(this.mContainerId);
-            ll.addView(fl2, new LinearLayout.LayoutParams(-1, 0, 1.0f));
+            ll.addView((View) fl2, (ViewGroup.LayoutParams) new LinearLayout.LayoutParams(-1, 0, 1.0f));
         }
     }
 
@@ -163,7 +164,7 @@ public class FragmentTabHost extends TabHost implements TabHost.OnTabChangeListe
     }
 
     public void addTab(@NonNull TabHost.TabSpec tabSpec, @NonNull Class<?> clss, @Nullable Bundle args) {
-        tabSpec.setContent(new DummyTabFactory(this.mContext));
+        tabSpec.setContent((TabHost.TabContentFactory) new DummyTabFactory(this.mContext));
         String tag = tabSpec.getTag();
         TabInfo info = new TabInfo(tag, clss, args);
         if (this.mAttached) {

@@ -16,7 +16,7 @@ public abstract class ResourceCursorAdapter extends CursorAdapter {
         super(context, c);
         this.mDropDownLayout = layout;
         this.mLayout = layout;
-        this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Deprecated
@@ -24,14 +24,14 @@ public abstract class ResourceCursorAdapter extends CursorAdapter {
         super(context, c, autoRequery);
         this.mDropDownLayout = layout;
         this.mLayout = layout;
-        this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public ResourceCursorAdapter(Context context, int layout, Cursor c, int flags) {
         super(context, c, flags);
         this.mDropDownLayout = layout;
         this.mLayout = layout;
-        this.mInflater = (LayoutInflater) context.getSystemService("layout_inflater");
+        this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public View newView(Context context, Cursor cursor, ViewGroup parent) {

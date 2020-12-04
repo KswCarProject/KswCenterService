@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.v4.internal.view.SupportMenuItem;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import java.lang.reflect.Method;
 
+@RequiresApi(14)
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
 public class MenuItemWrapperICS extends BaseMenuWrapper<SupportMenuItem> implements MenuItem {
     static final String LOG_TAG = "MenuItemWrapper";

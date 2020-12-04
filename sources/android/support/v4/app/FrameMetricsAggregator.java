@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.util.SparseIntArray;
+import android.util.TimeUtils;
 import android.view.FrameMetrics;
 import android.view.Window;
 import java.lang.annotation.Retention;
@@ -84,7 +85,7 @@ public class FrameMetricsAggregator {
     }
 
     private static class FrameMetricsBaseImpl {
-        FrameMetricsBaseImpl() {
+        private FrameMetricsBaseImpl() {
         }
 
         public void add(Activity activity) {
@@ -145,17 +146,20 @@ public class FrameMetricsAggregator {
                 }
             }
         };
-        SparseIntArray[] mMetrics = new SparseIntArray[9];
-        int mTrackingFlags;
+        /* access modifiers changed from: private */
+        public SparseIntArray[] mMetrics = new SparseIntArray[9];
+        /* access modifiers changed from: private */
+        public int mTrackingFlags;
 
         FrameMetricsApi24Impl(int trackingFlags) {
+            super();
             this.mTrackingFlags = trackingFlags;
         }
 
         /* access modifiers changed from: package-private */
         public void addDurationItem(SparseIntArray buckets, long duration) {
             if (buckets != null) {
-                int durationMs = (int) ((500000 + duration) / 1000000);
+                int durationMs = (int) ((500000 + duration) / TimeUtils.NANOS_PER_MS);
                 if (duration >= 0) {
                     buckets.put(durationMs, buckets.get(durationMs) + 1);
                 }

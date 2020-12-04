@@ -4,7 +4,6 @@ import com.google.gson.internal.C$Gson$Preconditions;
 import com.google.gson.internal.Excluder;
 import com.google.gson.internal.bind.TypeAdapters;
 import com.google.gson.reflect.TypeToken;
-import com.wits.pms.BuildConfig;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -172,7 +171,7 @@ public final class GsonBuilder {
 
     private void addTypeAdaptersForDate(String datePattern2, int dateStyle2, int timeStyle2, List<TypeAdapterFactory> factories2) {
         DefaultDateTypeAdapter dateTypeAdapter;
-        if (datePattern2 != null && !BuildConfig.FLAVOR.equals(datePattern2.trim())) {
+        if (datePattern2 != null && !"".equals(datePattern2.trim())) {
             dateTypeAdapter = new DefaultDateTypeAdapter(datePattern2);
         } else if (dateStyle2 != 2 && timeStyle2 != 2) {
             dateTypeAdapter = new DefaultDateTypeAdapter(dateStyle2, timeStyle2);

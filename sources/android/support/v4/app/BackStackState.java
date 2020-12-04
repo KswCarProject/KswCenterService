@@ -34,38 +34,39 @@ final class BackStackState implements Parcelable {
     public BackStackState(BackStackRecord bse) {
         int numOps = bse.mOps.size();
         this.mOps = new int[(numOps * 6)];
-        if (!bse.mAddToBackStack) {
-            throw new IllegalStateException("Not on back stack");
+        if (bse.mAddToBackStack) {
+            int pos = 0;
+            int opNum = 0;
+            while (opNum < numOps) {
+                BackStackRecord.Op op = bse.mOps.get(opNum);
+                int pos2 = pos + 1;
+                this.mOps[pos] = op.cmd;
+                int pos3 = pos2 + 1;
+                this.mOps[pos2] = op.fragment != null ? op.fragment.mIndex : -1;
+                int pos4 = pos3 + 1;
+                this.mOps[pos3] = op.enterAnim;
+                int pos5 = pos4 + 1;
+                this.mOps[pos4] = op.exitAnim;
+                int pos6 = pos5 + 1;
+                this.mOps[pos5] = op.popEnterAnim;
+                this.mOps[pos6] = op.popExitAnim;
+                opNum++;
+                pos = pos6 + 1;
+            }
+            this.mTransition = bse.mTransition;
+            this.mTransitionStyle = bse.mTransitionStyle;
+            this.mName = bse.mName;
+            this.mIndex = bse.mIndex;
+            this.mBreadCrumbTitleRes = bse.mBreadCrumbTitleRes;
+            this.mBreadCrumbTitleText = bse.mBreadCrumbTitleText;
+            this.mBreadCrumbShortTitleRes = bse.mBreadCrumbShortTitleRes;
+            this.mBreadCrumbShortTitleText = bse.mBreadCrumbShortTitleText;
+            this.mSharedElementSourceNames = bse.mSharedElementSourceNames;
+            this.mSharedElementTargetNames = bse.mSharedElementTargetNames;
+            this.mReorderingAllowed = bse.mReorderingAllowed;
+            return;
         }
-        int pos = 0;
-        int opNum = 0;
-        while (opNum < numOps) {
-            BackStackRecord.Op op = bse.mOps.get(opNum);
-            int pos2 = pos + 1;
-            this.mOps[pos] = op.cmd;
-            int pos3 = pos2 + 1;
-            this.mOps[pos2] = op.fragment != null ? op.fragment.mIndex : -1;
-            int pos4 = pos3 + 1;
-            this.mOps[pos3] = op.enterAnim;
-            int pos5 = pos4 + 1;
-            this.mOps[pos4] = op.exitAnim;
-            int pos6 = pos5 + 1;
-            this.mOps[pos5] = op.popEnterAnim;
-            this.mOps[pos6] = op.popExitAnim;
-            opNum++;
-            pos = pos6 + 1;
-        }
-        this.mTransition = bse.mTransition;
-        this.mTransitionStyle = bse.mTransitionStyle;
-        this.mName = bse.mName;
-        this.mIndex = bse.mIndex;
-        this.mBreadCrumbTitleRes = bse.mBreadCrumbTitleRes;
-        this.mBreadCrumbTitleText = bse.mBreadCrumbTitleText;
-        this.mBreadCrumbShortTitleRes = bse.mBreadCrumbShortTitleRes;
-        this.mBreadCrumbShortTitleText = bse.mBreadCrumbShortTitleText;
-        this.mSharedElementSourceNames = bse.mSharedElementSourceNames;
-        this.mSharedElementTargetNames = bse.mSharedElementTargetNames;
-        this.mReorderingAllowed = bse.mReorderingAllowed;
+        throw new IllegalStateException("Not on back stack");
     }
 
     public BackStackState(Parcel in) {
@@ -75,9 +76,9 @@ final class BackStackState implements Parcelable {
         this.mName = in.readString();
         this.mIndex = in.readInt();
         this.mBreadCrumbTitleRes = in.readInt();
-        this.mBreadCrumbTitleText = (CharSequence) TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
+        this.mBreadCrumbTitleText = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
         this.mBreadCrumbShortTitleRes = in.readInt();
-        this.mBreadCrumbShortTitleText = (CharSequence) TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
+        this.mBreadCrumbShortTitleText = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
         this.mSharedElementSourceNames = in.createStringArrayList();
         this.mSharedElementTargetNames = in.createStringArrayList();
         this.mReorderingAllowed = in.readInt() != 0;

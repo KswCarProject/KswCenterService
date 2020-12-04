@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ActionProvider;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.ActionBarPolicy;
 import android.support.v7.view.menu.ActionMenuItemView;
@@ -214,7 +213,7 @@ class ActionMenuPresenter extends BaseMenuPresenter implements ActionProvider.Su
                     parent.removeView(this.mOverflowButton);
                 }
                 ActionMenuView menuView = (ActionMenuView) this.mMenuView;
-                menuView.addView(this.mOverflowButton, menuView.generateOverflowButtonLayoutParams());
+                menuView.addView((View) this.mOverflowButton, (ViewGroup.LayoutParams) menuView.generateOverflowButtonLayoutParams());
             }
         } else if (this.mOverflowButton != null && this.mOverflowButton.getParent() == this.mMenuView) {
             ((ViewGroup) this.mMenuView).removeView(this.mOverflowButton);
@@ -358,8 +357,8 @@ class ActionMenuPresenter extends BaseMenuPresenter implements ActionProvider.Su
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean flagActionItems() {
         /*
-            r26 = this;
-            r0 = r26
+            r25 = this;
+            r0 = r25
             android.support.v7.view.menu.MenuBuilder r1 = r0.mMenu
             r2 = 0
             if (r1 == 0) goto L_0x0012
@@ -369,7 +368,7 @@ class ActionMenuPresenter extends BaseMenuPresenter implements ActionProvider.Su
             goto L_0x0014
         L_0x0012:
             r1 = 0
-            r3 = 0
+            r3 = r2
         L_0x0014:
             int r4 = r0.mMaxItems
             int r5 = r0.mActionItemWidthLimit
@@ -381,7 +380,7 @@ class ActionMenuPresenter extends BaseMenuPresenter implements ActionProvider.Su
             r10 = 0
             r11 = 0
             r12 = r4
-            r4 = 0
+            r4 = r2
         L_0x0026:
             if (r4 >= r3) goto L_0x004f
             java.lang.Object r13 = r1.get(r4)
@@ -588,7 +587,7 @@ class ActionMenuPresenter extends BaseMenuPresenter implements ActionProvider.Su
             r9.setIsActionButton(r0)
         L_0x0174:
             int r7 = r7 + 1
-            r0 = r26
+            r0 = r25
             goto L_0x015a
         L_0x0179:
             if (r6 == 0) goto L_0x017d
@@ -609,7 +608,7 @@ class ActionMenuPresenter extends BaseMenuPresenter implements ActionProvider.Su
             r9 = r21
             r7 = r23
             r6 = r24
-            r0 = r26
+            r0 = r25
             goto L_0x0076
         L_0x019c:
             r17 = r3
@@ -756,7 +755,7 @@ class ActionMenuPresenter extends BaseMenuPresenter implements ActionProvider.Su
     private class OverflowPopup extends MenuPopupHelper {
         public OverflowPopup(Context context, MenuBuilder menu, View anchorView, boolean overflowOnly) {
             super(context, menu, anchorView, overflowOnly, R.attr.actionOverflowMenuStyle);
-            setGravity(GravityCompat.END);
+            setGravity(8388613);
             setPresenterCallback(ActionMenuPresenter.this.mPopupPresenterCallback);
         }
 

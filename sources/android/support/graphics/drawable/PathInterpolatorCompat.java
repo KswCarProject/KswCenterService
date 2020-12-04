@@ -8,6 +8,7 @@ import android.graphics.PathMeasure;
 import android.support.annotation.RestrictTo;
 import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v4.graphics.PathParser;
+import android.telephony.SmsManager;
 import android.util.AttributeSet;
 import android.view.InflateException;
 import android.view.animation.Interpolator;
@@ -35,15 +36,14 @@ public class PathInterpolatorCompat implements Interpolator {
         if (TypedArrayUtils.hasAttribute(parser, "pathData")) {
             String pathData = TypedArrayUtils.getNamedString(a, parser, "pathData", 4);
             Path path = PathParser.createPathFromPathData(pathData);
-            if (path == null) {
-                throw new InflateException("The path is null, which is created from " + pathData);
+            if (path != null) {
+                initPath(path);
+                return;
             }
-            initPath(path);
+            throw new InflateException("The path is null, which is created from " + pathData);
         } else if (!TypedArrayUtils.hasAttribute(parser, "controlX1")) {
             throw new InflateException("pathInterpolator requires the controlX1 attribute");
-        } else if (!TypedArrayUtils.hasAttribute(parser, "controlY1")) {
-            throw new InflateException("pathInterpolator requires the controlY1 attribute");
-        } else {
+        } else if (TypedArrayUtils.hasAttribute(parser, "controlY1")) {
             float x1 = TypedArrayUtils.getNamedFloat(a, parser, "controlX1", 0, 0.0f);
             float y1 = TypedArrayUtils.getNamedFloat(a, parser, "controlY1", 1, 0.0f);
             boolean hasX2 = TypedArrayUtils.hasAttribute(parser, "controlX2");
@@ -54,6 +54,8 @@ public class PathInterpolatorCompat implements Interpolator {
             } else {
                 initCubic(x1, y1, TypedArrayUtils.getNamedFloat(a, parser, "controlX2", 2, 0.0f), TypedArrayUtils.getNamedFloat(a, parser, "controlY2", 3, 0.0f));
             }
+        } else {
+            throw new InflateException("pathInterpolator requires the controlY1 attribute");
         }
     }
 
@@ -76,36 +78,38 @@ public class PathInterpolatorCompat implements Interpolator {
         PathMeasure pathMeasure = new PathMeasure(path, false);
         float pathLength = pathMeasure.getLength();
         int numPoints = Math.min(MAX_NUM_POINTS, ((int) (pathLength / PRECISION)) + 1);
-        if (numPoints <= 0) {
-            throw new IllegalArgumentException("The Path has a invalid length " + pathLength);
-        }
-        this.mX = new float[numPoints];
-        this.mY = new float[numPoints];
-        float[] position = new float[2];
-        for (int i2 = 0; i2 < numPoints; i2++) {
-            pathMeasure.getPosTan((((float) i2) * pathLength) / ((float) (numPoints - 1)), position, (float[]) null);
-            this.mX[i2] = position[0];
-            this.mY[i2] = position[1];
-        }
-        if (((double) Math.abs(this.mX[0])) > 1.0E-5d || ((double) Math.abs(this.mY[0])) > 1.0E-5d || ((double) Math.abs(this.mX[numPoints - 1] - 1.0f)) > 1.0E-5d || ((double) Math.abs(this.mY[numPoints - 1] - 1.0f)) > 1.0E-5d) {
-            throw new IllegalArgumentException("The Path must start at (0,0) and end at (1,1) start: " + this.mX[0] + "," + this.mY[0] + " end:" + this.mX[numPoints - 1] + "," + this.mY[numPoints - 1]);
-        }
-        float prevX = 0.0f;
-        int componentIndex = 0;
-        while (i < numPoints) {
-            int componentIndex2 = componentIndex + 1;
-            float x = this.mX[componentIndex];
-            if (x < prevX) {
-                throw new IllegalArgumentException("The Path cannot loop back on itself, x :" + x);
+        if (numPoints > 0) {
+            this.mX = new float[numPoints];
+            this.mY = new float[numPoints];
+            float[] position = new float[2];
+            for (int i2 = 0; i2 < numPoints; i2++) {
+                pathMeasure.getPosTan((((float) i2) * pathLength) / ((float) (numPoints - 1)), position, (float[]) null);
+                this.mX[i2] = position[0];
+                this.mY[i2] = position[1];
             }
-            this.mX[i] = x;
-            prevX = x;
-            i++;
-            componentIndex = componentIndex2;
+            if (((double) Math.abs(this.mX[0])) > 1.0E-5d || ((double) Math.abs(this.mY[0])) > 1.0E-5d || ((double) Math.abs(this.mX[numPoints - 1] - 1.0f)) > 1.0E-5d || ((double) Math.abs(this.mY[numPoints - 1] - 1.0f)) > 1.0E-5d) {
+                throw new IllegalArgumentException("The Path must start at (0,0) and end at (1,1) start: " + this.mX[0] + SmsManager.REGEX_PREFIX_DELIMITER + this.mY[0] + " end:" + this.mX[numPoints - 1] + SmsManager.REGEX_PREFIX_DELIMITER + this.mY[numPoints - 1]);
+            }
+            float prevX = 0.0f;
+            int componentIndex = 0;
+            while (i < numPoints) {
+                int componentIndex2 = componentIndex + 1;
+                float x = this.mX[componentIndex];
+                if (x >= prevX) {
+                    this.mX[i] = x;
+                    prevX = x;
+                    i++;
+                    componentIndex = componentIndex2;
+                } else {
+                    throw new IllegalArgumentException("The Path cannot loop back on itself, x :" + x);
+                }
+            }
+            if (pathMeasure.nextContour() != 0) {
+                throw new IllegalArgumentException("The Path should be continuous, can't have 2+ contours");
+            }
+            return;
         }
-        if (pathMeasure.nextContour() != 0) {
-            throw new IllegalArgumentException("The Path should be continuous, can't have 2+ contours");
-        }
+        throw new IllegalArgumentException("The Path has a invalid length " + pathLength);
     }
 
     public float getInterpolation(float t) {

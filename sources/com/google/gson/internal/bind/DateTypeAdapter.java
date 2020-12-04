@@ -1,5 +1,6 @@
 package com.google.gson.internal.bind;
 
+import android.text.format.Time;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
@@ -31,7 +32,7 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
 
     private static DateFormat buildIso8601Format() {
         DateFormat iso8601Format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        iso8601Format2.setTimeZone(TimeZone.getTimeZone("UTC"));
+        iso8601Format2.setTimeZone(TimeZone.getTimeZone(Time.TIMEZONE_UTC));
         return iso8601Format2;
     }
 

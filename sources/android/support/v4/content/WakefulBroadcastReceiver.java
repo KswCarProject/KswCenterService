@@ -26,7 +26,7 @@ public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
             if (comp == null) {
                 return null;
             }
-            PowerManager.WakeLock wl = ((PowerManager) context.getSystemService("power")).newWakeLock(1, "androidx.core:wake:" + comp.flattenToShortString());
+            PowerManager.WakeLock wl = ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).newWakeLock(1, "wake:" + comp.flattenToShortString());
             wl.setReferenceCounted(false);
             wl.acquire(60000);
             sActiveWakeLocks.put(id, wl);

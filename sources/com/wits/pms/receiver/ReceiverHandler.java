@@ -4,17 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.RemoteException;
 import android.util.Log;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.bean.AutoKitMessage;
 import com.wits.pms.bean.EcarMessage;
 import com.wits.pms.bean.TxzMessage;
 import com.wits.pms.bean.ZlinkMessage;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.mcu.custom.KswMcuSender;
-import com.wits.pms.statuscontrol.PowerManagerApp;
-import com.wits.pms.statuscontrol.WitsCommand;
 
 public class ReceiverHandler {
     public static void init(Context context) {
@@ -28,12 +24,6 @@ public class ReceiverHandler {
                 }
                 if (TxzReceiver.TXZ_DIMISS_ACTION.equals(intent.getAction())) {
                     KswMcuSender.getSender().sendMessage(105, new byte[]{19, 0, 2});
-                    try {
-                        if (PowerManagerApp.getStatusString("topApp").equals("com.wits.ksw.bt")) {
-                            WitsCommand.sendCommand(3, 114, BuildConfig.FLAVOR);
-                        }
-                    } catch (RemoteException e) {
-                    }
                 }
             }
         }, intentFilter);

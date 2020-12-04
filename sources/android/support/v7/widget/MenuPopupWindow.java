@@ -2,7 +2,6 @@ package android.support.v7.widget;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
@@ -105,24 +104,8 @@ public class MenuPopupWindow extends ListPopupWindow implements MenuItemHoverLis
             return super.isInTouchMode();
         }
 
-        public /* bridge */ /* synthetic */ int lookForSelectablePosition(int i, boolean z) {
-            return super.lookForSelectablePosition(i, z);
-        }
-
-        public /* bridge */ /* synthetic */ int measureHeightOfChildrenCompat(int i, int i2, int i3, int i4, int i5) {
-            return super.measureHeightOfChildrenCompat(i, i2, i3, i4, i5);
-        }
-
         public /* bridge */ /* synthetic */ boolean onForwardedEvent(MotionEvent motionEvent, int i) {
             return super.onForwardedEvent(motionEvent, i);
-        }
-
-        public /* bridge */ /* synthetic */ boolean onTouchEvent(MotionEvent motionEvent) {
-            return super.onTouchEvent(motionEvent);
-        }
-
-        public /* bridge */ /* synthetic */ void setSelector(Drawable drawable) {
-            super.setSelector(drawable);
         }
 
         public MenuDropDownListView(Context context, boolean hijackFocus) {

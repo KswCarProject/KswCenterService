@@ -1,7 +1,6 @@
 package com.wits.pms.mcu.custom.utils;
 
 import android.util.Log;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.utils.SystemProperties;
 
 public class SymlinkHelper {
@@ -15,7 +14,7 @@ public class SymlinkHelper {
     }
 
     public static void cleanUp() {
-        SystemProperties.set("persist.current.sd.path", BuildConfig.FLAVOR);
+        SystemProperties.set("persist.current.sd.path", "");
         SystemProperties.set("persist.ln.sdcard", "0");
         Log.i("SymlinkHelper", "ln cleanup complete");
     }

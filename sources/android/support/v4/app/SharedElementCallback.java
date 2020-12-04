@@ -19,7 +19,7 @@ public abstract class SharedElementCallback {
     private static final String BUNDLE_SNAPSHOT_BITMAP = "sharedElement:snapshot:bitmap";
     private static final String BUNDLE_SNAPSHOT_IMAGE_MATRIX = "sharedElement:snapshot:imageMatrix";
     private static final String BUNDLE_SNAPSHOT_IMAGE_SCALETYPE = "sharedElement:snapshot:imageScaleType";
-    private static final int MAX_IMAGE_SIZE = 1048576;
+    private static int MAX_IMAGE_SIZE = 1048576;
     private Matrix mTempMatrix;
 
     public interface OnSharedElementsReadyListener {
@@ -61,7 +61,7 @@ public abstract class SharedElementCallback {
         if (bitmapWidth <= 0 || bitmapHeight <= 0) {
             return null;
         }
-        float scale = Math.min(1.0f, 1048576.0f / ((float) (bitmapWidth * bitmapHeight)));
+        float scale = Math.min(1.0f, ((float) MAX_IMAGE_SIZE) / ((float) (bitmapWidth * bitmapHeight)));
         int bitmapWidth2 = (int) (((float) bitmapWidth) * scale);
         int bitmapHeight2 = (int) (((float) bitmapHeight) * scale);
         if (this.mTempMatrix == null) {
@@ -83,7 +83,7 @@ public abstract class SharedElementCallback {
         if (width <= 0 || height <= 0) {
             return null;
         }
-        float scale = Math.min(1.0f, 1048576.0f / ((float) (width * height)));
+        float scale = Math.min(1.0f, ((float) MAX_IMAGE_SIZE) / ((float) (width * height)));
         if ((drawable instanceof BitmapDrawable) && scale == 1.0f) {
             return ((BitmapDrawable) drawable).getBitmap();
         }

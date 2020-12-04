@@ -2,8 +2,9 @@ package com.wits.pms.mcu.custom.utils;
 
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.SmsManager;
 import android.util.Log;
-import com.wits.pms.BuildConfig;
+import com.android.internal.os.BatteryStatsHistory;
 import com.wits.pms.mcu.custom.KswMcuSender;
 import com.wits.pms.mcu.custom.KswMessage;
 import java.io.ByteArrayOutputStream;
@@ -26,7 +27,7 @@ public class UpdateHelper {
     public byte[] mcuFile;
     private KswMcuSender mcuSender;
     /* access modifiers changed from: private */
-    public Handler msgHandler = new Handler(new Handler.Callback() {
+    public Handler msgHandler = new Handler((Handler.Callback) new Handler.Callback() {
         public boolean handleMessage(Message msg) {
             int number = msg.what;
             Log.i(UpdateHelper.TAG, "-----0xE1-dataNumber" + number);
@@ -38,7 +39,7 @@ public class UpdateHelper {
             } else {
                 System.arraycopy(UpdateHelper.this.mcuFile, number * 128, bytes, 2, UpdateHelper.this.mcuFile.length - (number * 128));
             }
-            UpdateHelper.this.send(KswMessage.FRAMEHEAD, 160, 234, bytes);
+            UpdateHelper.this.send(242, 160, 234, bytes);
             Handler access$200 = UpdateHelper.this.msgHandler;
             int i = msg.what + 1;
             msg.what = i;
@@ -78,7 +79,7 @@ public class UpdateHelper {
     }
 
     public void sendUpdateMessage(File file) {
-        if (file.exists() && file.getName().endsWith(".bin")) {
+        if (file.exists() && file.getName().endsWith(BatteryStatsHistory.FILE_SUFFIX)) {
             this.mMcuUpdatePatch = file;
             if (sendUpdateRequestMsg()) {
             }
@@ -102,7 +103,7 @@ public class UpdateHelper {
                 this.mNewFileSum += checkCode[i] & 255;
             }
             int sum = 0;
-            String dataHead = BuildConfig.FLAVOR;
+            String dataHead = "";
             int i2 = 0;
             while (true) {
                 z = true;
@@ -132,7 +133,7 @@ public class UpdateHelper {
             }
             boolean result = z;
             if (result) {
-                send(KswMessage.FRAMEHEAD, 160, 232, checkCode);
+                send(242, 160, 232, checkCode);
             }
             fis.close();
             return result;
@@ -174,13 +175,13 @@ public class UpdateHelper {
                 datas[6] = (byte) (i >> 8);
                 datas[7] = (byte) i;
                 if (!onlyCheck) {
-                    send(KswMessage.FRAMEHEAD, 160, 233, datas);
+                    send(242, 160, 233, datas);
                 }
                 fis.close();
                 return true;
             }
             Log.e(TAG, "update failed cause checkSum error sum:" + Integer.toHexString(i) + " - fileSum" + Integer.toHexString(this.mNewFileSum));
-            callUpdateFailed(KswMessage.FRAMEHEAD);
+            callUpdateFailed(242);
             return false;
         } catch (IOException e) {
             Log.e(TAG, "sendUpdateFileCheck error ", e);
@@ -224,7 +225,7 @@ public class UpdateHelper {
                     bytes[0] = 0;
                     bytes[1] = 0;
                     System.arraycopy(buf, 0, bytes, 2, buf.length);
-                    send(KswMessage.FRAMEHEAD, 160, 234, bytes);
+                    send(242, 160, 234, bytes);
                 }
                 baos.write(buf, 0, len);
                 count++;
@@ -295,7 +296,7 @@ public class UpdateHelper {
                     }
                     System.arraycopy(this.mcuFile, number * 128, bytes, 2, this.mcuFile.length - (number * 128));
                 }
-                send(KswMessage.FRAMEHEAD, 160, 234, bytes);
+                send(242, 160, 234, bytes);
             }
         } else if (message.getCmdType() == 227 && message.getData()[0] != 1 && this.updateListener != null) {
             this.updateListener.failed(-1);
@@ -317,10 +318,10 @@ public class UpdateHelper {
                 }
                 sb.append("0x");
                 sb.append(hex.toUpperCase());
-                sb.append(",");
+                sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
                 i = i2 + 1;
             } else {
-                sb.replace(sb.length() - 1, sb.length(), BuildConfig.FLAVOR);
+                sb.replace(sb.length() - 1, sb.length(), "");
                 sb.append("]\n");
                 Log.v(TAG, sb.toString());
                 return;

@@ -89,7 +89,7 @@ public abstract class JobIntentService extends Service {
         CompatWorkEnqueuer(Context context, ComponentName cn) {
             super(context, cn);
             this.mContext = context.getApplicationContext();
-            PowerManager pm = (PowerManager) context.getSystemService("power");
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             this.mLaunchWakeLock = pm.newWakeLock(1, cn.getClassName() + ":launch");
             this.mLaunchWakeLock.setReferenceCounted(false);
             this.mRunWakeLock = pm.newWakeLock(1, cn.getClassName() + ":run");
@@ -254,7 +254,7 @@ public abstract class JobIntentService extends Service {
             super(context, cn);
             ensureJobId(jobId);
             this.mJobInfo = new JobInfo.Builder(jobId, this.mComponentName).setOverrideDeadline(0).build();
-            this.mJobScheduler = (JobScheduler) context.getApplicationContext().getSystemService("jobscheduler");
+            this.mJobScheduler = (JobScheduler) context.getApplicationContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
         }
 
         /* access modifiers changed from: package-private */
@@ -325,7 +325,7 @@ public abstract class JobIntentService extends Service {
             return;
         }
         this.mJobImpl = null;
-        this.mCompatWorkEnqueuer = getWorkEnqueuer(this, new ComponentName(this, getClass()), false, 0);
+        this.mCompatWorkEnqueuer = getWorkEnqueuer(this, new ComponentName((Context) this, getClass()), false, 0);
     }
 
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -358,18 +358,19 @@ public abstract class JobIntentService extends Service {
     }
 
     public static void enqueueWork(@NonNull Context context, @NonNull Class cls, int jobId, @NonNull Intent work) {
-        enqueueWork(context, new ComponentName(context, cls), jobId, work);
+        enqueueWork(context, new ComponentName(context, (Class<?>) cls), jobId, work);
     }
 
     public static void enqueueWork(@NonNull Context context, @NonNull ComponentName component, int jobId, @NonNull Intent work) {
-        if (work == null) {
-            throw new IllegalArgumentException("work must not be null");
+        if (work != null) {
+            synchronized (sLock) {
+                WorkEnqueuer we = getWorkEnqueuer(context, component, true, jobId);
+                we.ensureJobId(jobId);
+                we.enqueueWork(work);
+            }
+            return;
         }
-        synchronized (sLock) {
-            WorkEnqueuer we = getWorkEnqueuer(context, component, true, jobId);
-            we.ensureJobId(jobId);
-            we.enqueueWork(work);
-        }
+        throw new IllegalArgumentException("work must not be null");
     }
 
     static WorkEnqueuer getWorkEnqueuer(Context context, ComponentName cn, boolean hasJobId, int jobId) {
@@ -377,10 +378,10 @@ public abstract class JobIntentService extends Service {
         if (we == null) {
             if (Build.VERSION.SDK_INT < 26) {
                 we = new CompatWorkEnqueuer(context, cn);
-            } else if (!hasJobId) {
-                throw new IllegalArgumentException("Can't be here without a job id");
-            } else {
+            } else if (hasJobId) {
                 we = new JobWorkEnqueuer(context, cn, jobId);
+            } else {
+                throw new IllegalArgumentException("Can't be here without a job id");
             }
             sClassWorkEnqueuer.put(cn, we);
         }

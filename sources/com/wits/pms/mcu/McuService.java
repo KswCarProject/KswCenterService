@@ -3,11 +3,12 @@ package com.wits.pms.mcu;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.telephony.SmsManager;
 import android.util.Log;
-import com.wits.pms.BuildConfig;
 import com.wits.pms.custom.McuUpdateService;
 import com.wits.pms.mcu.custom.KswMcuSender;
 import com.wits.pms.utils.ServiceManager;
@@ -22,6 +23,7 @@ public class McuService extends Service implements McuSender {
     private static OnReceiveData listener;
     public static Context mContext;
     private static ReadThread mReadThread;
+    private static String version = Build.DISPLAY;
     private Handler mHandler;
     /* access modifiers changed from: private */
     public InputStream mInputStream;
@@ -43,9 +45,11 @@ public class McuService extends Service implements McuSender {
 
     public void onCreate() {
         try {
+            String serial = version.contains("8937") ? "/dev/ttyHSL1" : "/dev/ttyMSM1";
+            Log.d(TAG, "open port   serial = " + serial + "  version = " + version);
             this.mHandler = new Handler(getMainLooper());
-            this.mSerialPort = new SerialPort(new File("/dev/ttyMSM1"), 115200, 0);
-            Log.d(TAG, "open port\t" + this.mSerialPort);
+            this.mSerialPort = new SerialPort(new File(serial), 115200, 0);
+            Log.d(TAG, "open port\t" + this.mSerialPort + "   serial = " + serial);
             this.mOutputStream = this.mSerialPort.getOutputStream();
             this.mInputStream = this.mSerialPort.getInputStream();
             mReadThread = new ReadThread();
@@ -127,9 +131,9 @@ public class McuService extends Service implements McuSender {
             }
             sb.append("0x");
             sb.append(hex.toUpperCase());
-            sb.append(",");
+            sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
         }
-        sb.replace(sb.length() - 1, sb.length(), BuildConfig.FLAVOR);
+        sb.replace(sb.length() - 1, sb.length(), "");
         sb.append("]\n");
         Log.v(TAG, sb.toString());
     }
@@ -145,9 +149,9 @@ public class McuService extends Service implements McuSender {
             }
             sb.append("0x");
             sb.append(hex.toUpperCase());
-            sb.append(",");
+            sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
         }
-        sb.replace(sb.length() - 1, sb.length(), BuildConfig.FLAVOR);
+        sb.replace(sb.length() - 1, sb.length(), "");
         sb.append("]\n");
         Log.v(TAG, sb.toString());
     }

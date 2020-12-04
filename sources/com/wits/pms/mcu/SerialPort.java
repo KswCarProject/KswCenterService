@@ -22,12 +22,13 @@ public class SerialPort {
     public SerialPort(File device, int baudrate, int flags) throws SecurityException, IOException {
         Log.d("SerialPortService", "==" + device.canRead() + "==" + device.canWrite());
         this.mFd = open(device.getAbsolutePath(), baudrate, flags);
-        if (this.mFd == null) {
-            Log.e(TAG, "native open returns null");
-            throw new IOException();
+        if (this.mFd != null) {
+            this.mFileInputStream = new FileInputStream(this.mFd);
+            this.mFileOutputStream = new FileOutputStream(this.mFd);
+            return;
         }
-        this.mFileInputStream = new FileInputStream(this.mFd);
-        this.mFileOutputStream = new FileOutputStream(this.mFd);
+        Log.e(TAG, "native open returns null");
+        throw new IOException();
     }
 
     public InputStream getInputStream() {

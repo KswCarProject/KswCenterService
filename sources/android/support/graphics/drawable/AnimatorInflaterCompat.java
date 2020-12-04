@@ -24,7 +24,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.util.Xml;
 import android.view.InflateException;
-import com.wits.pms.BuildConfig;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
@@ -81,7 +80,7 @@ public class AnimatorInflaterCompat {
     private static class PathDataEvaluator implements TypeEvaluator<PathParser.PathDataNode[]> {
         private PathParser.PathDataNode[] mNodeArray;
 
-        PathDataEvaluator() {
+        private PathDataEvaluator() {
         }
 
         PathDataEvaluator(PathParser.PathDataNode[] nodeArray) {
@@ -89,30 +88,30 @@ public class AnimatorInflaterCompat {
         }
 
         public PathParser.PathDataNode[] evaluate(float fraction, PathParser.PathDataNode[] startPathData, PathParser.PathDataNode[] endPathData) {
-            if (!PathParser.canMorph(startPathData, endPathData)) {
-                throw new IllegalArgumentException("Can't interpolate between two incompatible pathData");
+            if (PathParser.canMorph(startPathData, endPathData)) {
+                if (this.mNodeArray == null || !PathParser.canMorph(this.mNodeArray, startPathData)) {
+                    this.mNodeArray = PathParser.deepCopyNodes(startPathData);
+                }
+                for (int i = 0; i < startPathData.length; i++) {
+                    this.mNodeArray[i].interpolatePathDataNode(startPathData[i], endPathData[i], fraction);
+                }
+                return this.mNodeArray;
             }
-            if (this.mNodeArray == null || !PathParser.canMorph(this.mNodeArray, startPathData)) {
-                this.mNodeArray = PathParser.deepCopyNodes(startPathData);
-            }
-            for (int i = 0; i < startPathData.length; i++) {
-                this.mNodeArray[i].interpolatePathDataNode(startPathData[i], endPathData[i], fraction);
-            }
-            return this.mNodeArray;
+            throw new IllegalArgumentException("Can't interpolate between two incompatible pathData");
         }
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v7, resolved type: java.lang.Object[]} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r9v8, resolved type: java.lang.Object[]} */
     /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v6, resolved type: java.lang.Object[]} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r2v9, resolved type: java.lang.Object[]} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r14v25, resolved type: java.lang.Object[]} */
     /* JADX WARNING: Multi-variable type inference failed */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private static android.animation.PropertyValuesHolder getPVH(android.content.res.TypedArray r21, int r22, int r23, int r24, java.lang.String r25) {
+    private static android.animation.PropertyValuesHolder getPVH(android.content.res.TypedArray r22, int r23, int r24, int r25, java.lang.String r26) {
         /*
-            r0 = r21
-            r1 = r23
-            r2 = r24
-            r3 = r25
+            r0 = r22
+            r1 = r24
+            r2 = r25
+            r3 = r26
             android.util.TypedValue r4 = r0.peekValue(r1)
             if (r4 == 0) goto L_0x0010
             r7 = 1
@@ -140,7 +139,7 @@ public class AnimatorInflaterCompat {
             r11 = 0
         L_0x0026:
             r12 = 4
-            r13 = r22
+            r13 = r23
             if (r13 != r12) goto L_0x003f
             if (r7 == 0) goto L_0x0033
             boolean r12 = isColorType(r8)
@@ -151,11 +150,10 @@ public class AnimatorInflaterCompat {
             if (r12 == 0) goto L_0x003d
         L_0x003b:
             r12 = 3
-        L_0x003c:
             goto L_0x0040
         L_0x003d:
             r12 = 0
-            goto L_0x003c
+            goto L_0x0040
         L_0x003f:
             r12 = r13
         L_0x0040:
@@ -167,33 +165,45 @@ public class AnimatorInflaterCompat {
         L_0x0045:
             r14 = 0
             r15 = 2
-            if (r12 != r15) goto L_0x00e0
+            if (r12 != r15) goto L_0x00de
             java.lang.String r5 = r0.getString(r1)
             java.lang.String r6 = r0.getString(r2)
             android.support.v4.graphics.PathParser$PathDataNode[] r15 = android.support.v4.graphics.PathParser.createNodesFromPathData(r5)
-            r16 = r4
+            r18 = r4
             android.support.v4.graphics.PathParser$PathDataNode[] r4 = android.support.v4.graphics.PathParser.createNodesFromPathData(r6)
             if (r15 != 0) goto L_0x006a
             if (r4 == 0) goto L_0x0062
             goto L_0x006a
         L_0x0062:
-            r17 = r9
-            r20 = r11
-            r19 = r14
-            goto L_0x00d8
+            r19 = r9
+            r21 = r11
+            r20 = r14
+            goto L_0x00d6
         L_0x006a:
+            r19 = r9
+            r9 = 0
             if (r15 == 0) goto L_0x00c0
-            r17 = r9
-            android.support.graphics.drawable.AnimatorInflaterCompat$PathDataEvaluator r9 = new android.support.graphics.drawable.AnimatorInflaterCompat$PathDataEvaluator
-            r9.<init>()
-            if (r4 == 0) goto L_0x00b0
-            boolean r18 = android.support.v4.graphics.PathParser.canMorph(r15, r4)
-            if (r18 != 0) goto L_0x009e
-            r19 = r14
+            r20 = r14
+            android.support.graphics.drawable.AnimatorInflaterCompat$PathDataEvaluator r14 = new android.support.graphics.drawable.AnimatorInflaterCompat$PathDataEvaluator
+            r14.<init>()
+            r9 = r14
+            if (r4 == 0) goto L_0x00b2
+            boolean r14 = android.support.v4.graphics.PathParser.canMorph(r15, r4)
+            if (r14 == 0) goto L_0x0091
+            r14 = 2
+            java.lang.Object[] r14 = new java.lang.Object[r14]
+            r17 = 0
+            r14[r17] = r15
+            r16 = 1
+            r14[r16] = r4
+            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofObject((java.lang.String) r3, (android.animation.TypeEvaluator) r9, (java.lang.Object[]) r14)
+            r21 = r11
+            goto L_0x00bf
+        L_0x0091:
             android.view.InflateException r14 = new android.view.InflateException
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
             r2.<init>()
-            r20 = r11
+            r21 = r11
             java.lang.String r11 = " Can't morph from "
             r2.append(r11)
             r2.append(r5)
@@ -201,197 +211,183 @@ public class AnimatorInflaterCompat {
             r2.append(r11)
             r2.append(r6)
             java.lang.String r2 = r2.toString()
-            r14.<init>(r2)
+            r14.<init>((java.lang.String) r2)
             throw r14
-        L_0x009e:
-            r20 = r11
-            r19 = r14
-            r2 = 2
+        L_0x00b2:
+            r21 = r11
+            r2 = 1
             java.lang.Object[] r2 = new java.lang.Object[r2]
             r11 = 0
             r2[r11] = r15
-            r14 = 1
-            r2[r14] = r4
-            android.animation.PropertyValuesHolder r2 = android.animation.PropertyValuesHolder.ofObject(r3, r9, r2)
-            goto L_0x00be
-        L_0x00b0:
-            r20 = r11
-            r19 = r14
-            r11 = 0
-            r14 = 1
-            java.lang.Object[] r2 = new java.lang.Object[r14]
-            r2[r11] = r15
-            android.animation.PropertyValuesHolder r2 = android.animation.PropertyValuesHolder.ofObject(r3, r9, r2)
-        L_0x00be:
+            android.animation.PropertyValuesHolder r2 = android.animation.PropertyValuesHolder.ofObject((java.lang.String) r3, (android.animation.TypeEvaluator) r9, (java.lang.Object[]) r2)
             r14 = r2
-            goto L_0x00da
+        L_0x00bf:
+            goto L_0x00d8
         L_0x00c0:
-            r17 = r9
-            r20 = r11
-            r19 = r14
-            if (r4 == 0) goto L_0x00d8
+            r21 = r11
+            r20 = r14
+            if (r4 == 0) goto L_0x00d6
             android.support.graphics.drawable.AnimatorInflaterCompat$PathDataEvaluator r2 = new android.support.graphics.drawable.AnimatorInflaterCompat$PathDataEvaluator
             r2.<init>()
             r9 = 1
             java.lang.Object[] r9 = new java.lang.Object[r9]
             r11 = 0
             r9[r11] = r4
-            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofObject(r3, r2, r9)
-            goto L_0x00da
+            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofObject((java.lang.String) r3, (android.animation.TypeEvaluator) r2, (java.lang.Object[]) r9)
+            goto L_0x00d8
+        L_0x00d6:
+            r14 = r20
         L_0x00d8:
-            r14 = r19
-        L_0x00da:
-            r9 = r20
-            r11 = r24
-            goto L_0x01d4
-        L_0x00e0:
-            r16 = r4
-            r17 = r9
-            r20 = r11
-            r19 = r14
+            r9 = r21
+            r11 = r25
+            goto L_0x01d2
+        L_0x00de:
+            r18 = r4
+            r19 = r9
+            r21 = r11
+            r20 = r14
             r2 = 0
             r4 = 3
-            if (r12 != r4) goto L_0x00f0
+            if (r12 != r4) goto L_0x00ee
             android.support.graphics.drawable.ArgbEvaluator r2 = android.support.graphics.drawable.ArgbEvaluator.getInstance()
-        L_0x00f0:
+        L_0x00ee:
             r4 = 5
             r5 = 0
-            if (r13 == 0) goto L_0x014e
-            if (r7 == 0) goto L_0x0132
-            if (r8 != r4) goto L_0x00fd
+            if (r13 == 0) goto L_0x014c
+            if (r7 == 0) goto L_0x0130
+            if (r8 != r4) goto L_0x00fb
             float r6 = r0.getDimension(r1, r5)
-            goto L_0x0101
-        L_0x00fd:
+            goto L_0x00ff
+        L_0x00fb:
             float r6 = r0.getFloat(r1, r5)
-        L_0x0101:
-            if (r10 == 0) goto L_0x0123
-            r9 = r20
-            if (r9 != r4) goto L_0x010e
-            r11 = r24
+        L_0x00ff:
+            if (r10 == 0) goto L_0x0121
+            r9 = r21
+            if (r9 != r4) goto L_0x010c
+            r11 = r25
             float r4 = r0.getDimension(r11, r5)
-            goto L_0x0114
-        L_0x010e:
-            r11 = r24
+            goto L_0x0112
+        L_0x010c:
+            r11 = r25
             float r4 = r0.getFloat(r11, r5)
-        L_0x0114:
+        L_0x0112:
             r5 = 2
             float[] r5 = new float[r5]
             r14 = 0
             r5[r14] = r6
             r15 = 1
             r5[r15] = r4
-            android.animation.PropertyValuesHolder r5 = android.animation.PropertyValuesHolder.ofFloat(r3, r5)
+            android.animation.PropertyValuesHolder r5 = android.animation.PropertyValuesHolder.ofFloat((java.lang.String) r3, (float[]) r5)
             r14 = r5
-            goto L_0x014c
-        L_0x0123:
-            r9 = r20
-            r11 = r24
+            goto L_0x014a
+        L_0x0121:
+            r9 = r21
+            r11 = r25
             r14 = 0
             r15 = 1
             float[] r4 = new float[r15]
             r4[r14] = r6
-            android.animation.PropertyValuesHolder r4 = android.animation.PropertyValuesHolder.ofFloat(r3, r4)
-            goto L_0x014b
-        L_0x0132:
-            r9 = r20
-            r11 = r24
-            if (r9 != r4) goto L_0x013d
+            android.animation.PropertyValuesHolder r4 = android.animation.PropertyValuesHolder.ofFloat((java.lang.String) r3, (float[]) r4)
+            goto L_0x0149
+        L_0x0130:
+            r9 = r21
+            r11 = r25
+            if (r9 != r4) goto L_0x013b
             float r4 = r0.getDimension(r11, r5)
-            goto L_0x0141
-        L_0x013d:
+            goto L_0x013f
+        L_0x013b:
             float r4 = r0.getFloat(r11, r5)
-        L_0x0141:
+        L_0x013f:
             r5 = 1
             float[] r5 = new float[r5]
             r6 = 0
             r5[r6] = r4
-            android.animation.PropertyValuesHolder r4 = android.animation.PropertyValuesHolder.ofFloat(r3, r5)
-        L_0x014b:
+            android.animation.PropertyValuesHolder r4 = android.animation.PropertyValuesHolder.ofFloat((java.lang.String) r3, (float[]) r5)
+        L_0x0149:
             r14 = r4
+        L_0x014a:
+            goto L_0x01cb
         L_0x014c:
-            goto L_0x01cd
-        L_0x014e:
-            r9 = r20
-            r11 = r24
-            if (r7 == 0) goto L_0x01a4
-            if (r8 != r4) goto L_0x015d
+            r9 = r21
+            r11 = r25
+            if (r7 == 0) goto L_0x01a2
+            if (r8 != r4) goto L_0x015b
             float r6 = r0.getDimension(r1, r5)
             int r6 = (int) r6
             r14 = r6
-            goto L_0x016e
-        L_0x015d:
+            goto L_0x016c
+        L_0x015b:
             boolean r6 = isColorType(r8)
-            if (r6 == 0) goto L_0x0169
+            if (r6 == 0) goto L_0x0167
             r6 = 0
             int r14 = r0.getColor(r1, r6)
-            goto L_0x016e
-        L_0x0169:
+            goto L_0x016c
+        L_0x0167:
             r6 = 0
             int r14 = r0.getInt(r1, r6)
-        L_0x016e:
+        L_0x016c:
             r6 = r14
-            if (r10 == 0) goto L_0x0199
-            if (r9 != r4) goto L_0x017b
+            if (r10 == 0) goto L_0x0197
+            if (r9 != r4) goto L_0x0179
             float r4 = r0.getDimension(r11, r5)
             int r4 = (int) r4
             r5 = r4
             r4 = 0
-            goto L_0x018c
-        L_0x017b:
+            goto L_0x018a
+        L_0x0179:
             boolean r4 = isColorType(r9)
-            if (r4 == 0) goto L_0x0187
+            if (r4 == 0) goto L_0x0185
             r4 = 0
             int r5 = r0.getColor(r11, r4)
-            goto L_0x018c
-        L_0x0187:
+            goto L_0x018a
+        L_0x0185:
             r4 = 0
             int r5 = r0.getInt(r11, r4)
-        L_0x018c:
+        L_0x018a:
             r14 = 2
             int[] r14 = new int[r14]
             r14[r4] = r6
             r15 = 1
             r14[r15] = r5
-            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofInt(r3, r14)
-            goto L_0x01a3
-        L_0x0199:
+            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofInt((java.lang.String) r3, (int[]) r14)
+            goto L_0x01cb
+        L_0x0197:
             r4 = 0
             r15 = 1
             int[] r5 = new int[r15]
             r5[r4] = r6
-            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofInt(r3, r5)
-        L_0x01a3:
-            goto L_0x01cd
-        L_0x01a4:
-            if (r10 == 0) goto L_0x01cb
-            if (r9 != r4) goto L_0x01b0
+            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofInt((java.lang.String) r3, (int[]) r5)
+            goto L_0x01cb
+        L_0x01a2:
+            if (r10 == 0) goto L_0x01c9
+            if (r9 != r4) goto L_0x01ae
             float r4 = r0.getDimension(r11, r5)
             int r4 = (int) r4
             r5 = r4
             r4 = 0
-            goto L_0x01c1
-        L_0x01b0:
+            goto L_0x01bf
+        L_0x01ae:
             boolean r4 = isColorType(r9)
-            if (r4 == 0) goto L_0x01bc
+            if (r4 == 0) goto L_0x01ba
             r4 = 0
             int r5 = r0.getColor(r11, r4)
-            goto L_0x01c1
-        L_0x01bc:
+            goto L_0x01bf
+        L_0x01ba:
             r4 = 0
             int r5 = r0.getInt(r11, r4)
-        L_0x01c1:
+        L_0x01bf:
             r6 = 1
             int[] r6 = new int[r6]
             r6[r4] = r5
-            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofInt(r3, r6)
-            goto L_0x01cd
+            android.animation.PropertyValuesHolder r14 = android.animation.PropertyValuesHolder.ofInt((java.lang.String) r3, (int[]) r6)
+            goto L_0x01cb
+        L_0x01c9:
+            r14 = r20
         L_0x01cb:
-            r14 = r19
-        L_0x01cd:
-            if (r14 == 0) goto L_0x01d4
-            if (r2 == 0) goto L_0x01d4
+            if (r14 == 0) goto L_0x01d2
+            if (r2 == 0) goto L_0x01d2
             r14.setEvaluator(r2)
-        L_0x01d4:
+        L_0x01d2:
             return r14
         */
         throw new UnsupportedOperationException("Method not decompiled: android.support.graphics.drawable.AnimatorInflaterCompat.getPVH(android.content.res.TypedArray, int, int, int, java.lang.String):android.animation.PropertyValuesHolder");
@@ -405,9 +401,9 @@ public class AnimatorInflaterCompat {
             if (valueType == 4) {
                 valueType = inferValueTypeFromValues(arrayAnimator, 5, 6);
             }
-            PropertyValuesHolder pvh = getPVH(arrayAnimator, valueType, 5, 6, BuildConfig.FLAVOR);
+            PropertyValuesHolder pvh = getPVH(arrayAnimator, valueType, 5, 6, "");
             if (pvh != null) {
-                anim.setValues(new PropertyValuesHolder[]{pvh});
+                anim.setValues(pvh);
             }
         }
         anim.setDuration(duration);
@@ -445,10 +441,14 @@ public class AnimatorInflaterCompat {
         float totalLength = 0.0f;
         ArrayList<Float> contourLengths = new ArrayList<>();
         contourLengths.add(Float.valueOf(0.0f));
-        do {
+        while (true) {
             totalLength += measureForTotalLength.getLength();
             contourLengths.add(Float.valueOf(totalLength));
-        } while (measureForTotalLength.nextContour());
+            if (!measureForTotalLength.nextContour()) {
+                break;
+            }
+            path2 = path;
+        }
         PathMeasure pathMeasure = new PathMeasure(path2, false);
         int numPoints = Math.min(100, ((int) (totalLength / precision)) + 1);
         float[] mX = new float[numPoints];
@@ -463,12 +463,14 @@ public class AnimatorInflaterCompat {
             if (i >= numPoints) {
                 break;
             }
-            PathMeasure measureForTotalLength2 = measureForTotalLength;
-            pathMeasure.getPosTan(currentDistance - contourLengths.get(contourIndex).floatValue(), position, (float[]) null);
+            pathMeasure.getPosTan(currentDistance, position, (float[]) null);
+            pathMeasure.getPosTan(currentDistance, position, (float[]) null);
             mX[i] = position[0];
             mY[i] = position[1];
             currentDistance += step;
+            PathMeasure measureForTotalLength2 = measureForTotalLength;
             if (contourIndex + 1 < contourLengths.size() && currentDistance > contourLengths.get(contourIndex + 1).floatValue()) {
+                currentDistance -= contourLengths.get(contourIndex + 1).floatValue();
                 contourIndex++;
                 pathMeasure.nextContour();
             }
@@ -485,11 +487,11 @@ public class AnimatorInflaterCompat {
             y = PropertyValuesHolder.ofFloat(str2, mY);
         }
         if (x == null) {
-            objectAnimator.setValues(new PropertyValuesHolder[]{y});
+            objectAnimator.setValues(y);
         } else if (y == null) {
-            objectAnimator.setValues(new PropertyValuesHolder[]{x});
+            objectAnimator.setValues(x);
         } else {
-            objectAnimator.setValues(new PropertyValuesHolder[]{x, y});
+            objectAnimator.setValues(x, y);
         }
     }
 
@@ -497,7 +499,7 @@ public class AnimatorInflaterCompat {
         return createAnimatorFromXml(context, res, theme, parser, Xml.asAttributeSet(parser), (AnimatorSet) null, 0, pixelSize);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:33:0x00cf  */
+    /* JADX WARNING: Removed duplicated region for block: B:33:0x00d6  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private static android.animation.Animator createAnimatorFromXml(android.content.Context r20, android.content.res.Resources r21, android.content.res.Resources.Theme r22, org.xmlpull.v1.XmlPullParser r23, android.util.AttributeSet r24, android.animation.AnimatorSet r25, int r26, float r27) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
         /*
@@ -515,56 +517,55 @@ public class AnimatorInflaterCompat {
             int r0 = r23.next()
             r14 = r0
             r1 = 3
-            if (r0 != r1) goto L_0x0026
+            if (r0 != r1) goto L_0x0024
             int r0 = r23.getDepth()
             if (r0 <= r13) goto L_0x0020
-            goto L_0x0026
+            goto L_0x0024
         L_0x0020:
             r1 = r20
-            r19 = r13
             goto L_0x00fe
-        L_0x0026:
+        L_0x0024:
             r0 = 1
-            if (r14 == r0) goto L_0x00fa
+            if (r14 == r0) goto L_0x0020
             r0 = 2
-            if (r14 == r0) goto L_0x002f
+            if (r14 == r0) goto L_0x002d
+        L_0x002b:
             r2 = r13
             goto L_0x0010
-        L_0x002f:
+        L_0x002d:
             java.lang.String r15 = r23.getName()
             r16 = 0
             java.lang.String r0 = "objectAnimator"
             boolean r0 = r15.equals(r0)
             if (r0 == 0) goto L_0x0051
             r0 = r20
-            r1 = r8
-            r2 = r9
+            r1 = r21
+            r2 = r22
             r3 = r24
             r4 = r27
-            r5 = r10
+            r5 = r23
             android.animation.ObjectAnimator r0 = loadObjectAnimator(r0, r1, r2, r3, r4, r5)
-        L_0x004a:
+        L_0x004c:
             r1 = r20
             r7 = r0
-            r19 = r13
-            goto L_0x00c9
+            goto L_0x00d0
         L_0x0051:
             java.lang.String r0 = "animator"
             boolean r0 = r15.equals(r0)
-            if (r0 == 0) goto L_0x0068
+            if (r0 == 0) goto L_0x006b
             r4 = 0
             r0 = r20
-            r1 = r8
-            r2 = r9
+            r1 = r21
+            r2 = r22
             r3 = r24
             r5 = r27
-            r6 = r10
+            r6 = r23
             android.animation.ValueAnimator r0 = loadAnimator(r0, r1, r2, r3, r4, r5, r6)
-            goto L_0x004a
-        L_0x0068:
+            goto L_0x004c
+        L_0x006b:
             java.lang.String r0 = "set"
             boolean r0 = r15.equals(r0)
-            if (r0 == 0) goto L_0x00a3
+            if (r0 == 0) goto L_0x00ab
             android.animation.AnimatorSet r0 = new android.animation.AnimatorSet
             r0.<init>()
             r17 = r0
@@ -577,49 +578,46 @@ public class AnimatorInflaterCompat {
             r5 = r17
             android.animation.AnimatorSet r5 = (android.animation.AnimatorSet) r5
             r0 = r20
-            r1 = r8
-            r2 = r9
-            r3 = r10
-            r4 = r7
-            r19 = r13
-            r13 = r6
+            r1 = r21
+            r2 = r22
+            r3 = r23
+            r4 = r24
+            r19 = r6
             r6 = r18
             r7 = r27
             createAnimatorFromXml(r0, r1, r2, r3, r4, r5, r6, r7)
-            r13.recycle()
+            r19.recycle()
             r1 = r20
             r7 = r17
-            goto L_0x00c9
-        L_0x00a3:
-            r19 = r13
+            goto L_0x00d0
+        L_0x00ab:
             java.lang.String r0 = "propertyValuesHolder"
             boolean r0 = r15.equals(r0)
-            if (r0 == 0) goto L_0x00dd
+            if (r0 == 0) goto L_0x00e1
             android.util.AttributeSet r0 = android.util.Xml.asAttributeSet(r23)
             r1 = r20
             android.animation.PropertyValuesHolder[] r0 = loadValues(r1, r8, r9, r10, r0)
-            if (r0 == 0) goto L_0x00c6
-            if (r7 == 0) goto L_0x00c6
+            if (r0 == 0) goto L_0x00cd
+            if (r7 == 0) goto L_0x00cd
             boolean r2 = r7 instanceof android.animation.ValueAnimator
-            if (r2 == 0) goto L_0x00c6
+            if (r2 == 0) goto L_0x00cd
             r2 = r7
             android.animation.ValueAnimator r2 = (android.animation.ValueAnimator) r2
             r2.setValues(r0)
-        L_0x00c6:
+        L_0x00cd:
             r16 = 1
-        L_0x00c9:
-            if (r11 == 0) goto L_0x00d8
-            if (r16 != 0) goto L_0x00d8
-            if (r12 != 0) goto L_0x00d5
+        L_0x00d0:
+            if (r11 == 0) goto L_0x00df
+            if (r16 != 0) goto L_0x00df
+            if (r12 != 0) goto L_0x00dc
             java.util.ArrayList r0 = new java.util.ArrayList
             r0.<init>()
             r12 = r0
-        L_0x00d5:
+        L_0x00dc:
             r12.add(r7)
-        L_0x00d8:
-            r2 = r19
-            goto L_0x0010
-        L_0x00dd:
+        L_0x00df:
+            goto L_0x002b
+        L_0x00e1:
             r1 = r20
             java.lang.RuntimeException r0 = new java.lang.RuntimeException
             java.lang.StringBuilder r2 = new java.lang.StringBuilder
@@ -631,9 +629,6 @@ public class AnimatorInflaterCompat {
             java.lang.String r2 = r2.toString()
             r0.<init>(r2)
             throw r0
-        L_0x00fa:
-            r1 = r20
-            r19 = r13
         L_0x00fe:
             if (r11 == 0) goto L_0x0129
             if (r12 == 0) goto L_0x0129
@@ -652,10 +647,10 @@ public class AnimatorInflaterCompat {
             goto L_0x010d
         L_0x0120:
             if (r26 != 0) goto L_0x0126
-            r11.playTogether(r0)
+            r11.playTogether((android.animation.Animator[]) r0)
             goto L_0x0129
         L_0x0126:
-            r11.playSequentially(r0)
+            r11.playSequentially((android.animation.Animator[]) r0)
         L_0x0129:
             return r7
         */
@@ -680,17 +675,13 @@ public class AnimatorInflaterCompat {
                 values2 = values;
             } else {
                 if (parser.getName().equals("propertyValuesHolder")) {
-                    Resources resources2 = res;
-                    Resources.Theme theme3 = theme;
-                    TypedArray a = TypedArrayUtils.obtainAttributes(resources2, theme3, attrs, AndroidResources.STYLEABLE_PROPERTY_VALUES_HOLDER);
+                    TypedArray a = TypedArrayUtils.obtainAttributes(res, theme, attrs, AndroidResources.STYLEABLE_PROPERTY_VALUES_HOLDER);
                     String propertyName = TypedArrayUtils.getNamedString(a, xmlPullParser, "propertyName", 3);
                     int valueType = TypedArrayUtils.getNamedInt(a, xmlPullParser, "valueType", 2, 4);
                     String propertyName2 = propertyName;
-                    PropertyValuesHolder pvh = loadPvh(context, resources2, theme3, xmlPullParser, propertyName, valueType);
+                    PropertyValuesHolder pvh = loadPvh(context, res, theme, parser, propertyName, valueType);
                     if (pvh == null) {
                         pvh = getPVH(a, valueType, 0, 1, propertyName2);
-                    } else {
-                        int i = valueType;
                     }
                     if (pvh != null) {
                         if (values == null) {
@@ -700,23 +691,23 @@ public class AnimatorInflaterCompat {
                     }
                     a.recycle();
                 } else {
-                    Resources resources3 = res;
-                    Resources.Theme theme4 = theme;
+                    Resources resources2 = res;
+                    Resources.Theme theme3 = theme;
                     AttributeSet attributeSet2 = attrs;
                 }
                 values2 = values;
                 parser.next();
             }
         }
-        Resources resources4 = res;
+        Resources resources3 = res;
         Resources.Theme theme22 = theme;
         AttributeSet attributeSet3 = attrs;
         PropertyValuesHolder[] valuesArray2 = null;
         if (values != null) {
             int count = values.size();
             valuesArray2 = new PropertyValuesHolder[count];
-            for (int i2 = 0; i2 < count; i2++) {
-                valuesArray2[i2] = values.get(i2);
+            for (int i = 0; i < count; i++) {
+                valuesArray2[i] = values.get(i);
             }
         }
         return valuesArray2;
@@ -769,35 +760,30 @@ public class AnimatorInflaterCompat {
     }
 
     private static PropertyValuesHolder loadPvh(Context context, Resources res, Resources.Theme theme, XmlPullParser parser, String propertyName, int valueType) throws XmlPullParserException, IOException {
+        int j;
         int type;
-        int type2;
         ArrayList<Keyframe> keyframes;
         PropertyValuesHolder value;
-        XmlPullParser xmlPullParser;
-        Resources.Theme theme2;
-        Resources resources;
+        float f;
         PropertyValuesHolder value2 = null;
         ArrayList<Keyframe> keyframes2 = null;
         int valueType2 = valueType;
         while (true) {
             int next = parser.next();
-            type = next;
-            if (next == 3 || type == 1) {
-                Resources resources2 = res;
-                Resources.Theme theme3 = theme;
-                XmlPullParser xmlPullParser2 = parser;
+            j = next;
+            if (next == 3 || j == 1) {
+                Resources resources = res;
+                Resources.Theme theme2 = theme;
+                XmlPullParser xmlPullParser = parser;
             } else if (parser.getName().equals("keyframe")) {
                 if (valueType2 == 4) {
-                    resources = res;
-                    theme2 = theme;
-                    xmlPullParser = parser;
-                    valueType2 = inferValueTypeOfKeyframe(resources, theme2, Xml.asAttributeSet(parser), xmlPullParser);
+                    valueType2 = inferValueTypeOfKeyframe(res, theme, Xml.asAttributeSet(parser), parser);
                 } else {
-                    resources = res;
-                    theme2 = theme;
-                    xmlPullParser = parser;
+                    Resources resources2 = res;
+                    Resources.Theme theme3 = theme;
+                    XmlPullParser xmlPullParser2 = parser;
                 }
-                Keyframe keyframe = loadKeyframe(context, resources, theme2, Xml.asAttributeSet(parser), valueType2, xmlPullParser);
+                Keyframe keyframe = loadKeyframe(context, res, theme, Xml.asAttributeSet(parser), valueType2, parser);
                 if (keyframe != null) {
                     if (keyframes2 == null) {
                         keyframes2 = new ArrayList<>();
@@ -811,9 +797,9 @@ public class AnimatorInflaterCompat {
                 XmlPullParser xmlPullParser3 = parser;
             }
         }
-        Resources resources22 = res;
-        Resources.Theme theme32 = theme;
-        XmlPullParser xmlPullParser22 = parser;
+        Resources resources4 = res;
+        Resources.Theme theme22 = theme;
+        XmlPullParser xmlPullParser4 = parser;
         if (keyframes2 != null) {
             int size = keyframes2.size();
             int count = size;
@@ -822,7 +808,7 @@ public class AnimatorInflaterCompat {
                 Keyframe firstKeyframe = keyframes2.get(0);
                 Keyframe lastKeyframe = keyframes2.get(count - 1);
                 float endFraction = lastKeyframe.getFraction();
-                float f = 0.0f;
+                float f2 = 0.0f;
                 if (endFraction < 1.0f) {
                     if (endFraction < 0.0f) {
                         lastKeyframe.setFraction(1.0f);
@@ -844,49 +830,55 @@ public class AnimatorInflaterCompat {
                 keyframes2.toArray(keyframeArray);
                 while (i < count) {
                     Keyframe keyframe2 = keyframeArray[i];
-                    if (keyframe2.getFraction() < f) {
-                        if (i == 0) {
-                            keyframe2.setFraction(f);
-                        } else if (i == count - 1) {
-                            keyframe2.setFraction(1.0f);
-                        } else {
-                            int startIndex = i;
-                            int j = startIndex + 1;
-                            value = value2;
-                            int endIndex = i;
-                            while (true) {
-                                keyframes = keyframes2;
-                                type2 = type;
-                                int j2 = j;
-                                if (j2 >= count - 1) {
-                                    break;
-                                } else if (keyframeArray[j2].getFraction() >= 0.0f) {
-                                    break;
-                                } else {
-                                    endIndex = j2;
-                                    j = j2 + 1;
-                                    keyframes2 = keyframes;
-                                    type = type2;
-                                }
-                            }
-                            distributeKeyframes(keyframeArray, keyframeArray[endIndex + 1].getFraction() - keyframeArray[startIndex - 1].getFraction(), startIndex, endIndex);
-                        }
+                    if (keyframe2.getFraction() >= f2) {
                         value = value2;
                         keyframes = keyframes2;
-                        type2 = type;
+                        type = j;
+                        f = f2;
+                    } else if (i == 0) {
+                        keyframe2.setFraction(f2);
+                        value = value2;
+                        keyframes = keyframes2;
+                        type = j;
+                        f = f2;
+                    } else if (i == count - 1) {
+                        keyframe2.setFraction(1.0f);
+                        value = value2;
+                        keyframes = keyframes2;
+                        type = j;
+                        f = 0.0f;
                     } else {
+                        int startIndex = i;
+                        int j2 = startIndex + 1;
                         value = value2;
-                        keyframes = keyframes2;
-                        type2 = type;
+                        int endIndex = i;
+                        while (true) {
+                            keyframes = keyframes2;
+                            type = j;
+                            int type2 = j2;
+                            if (type2 >= count - 1) {
+                                f = 0.0f;
+                                break;
+                            }
+                            f = 0.0f;
+                            if (keyframeArray[type2].getFraction() >= 0.0f) {
+                                break;
+                            }
+                            endIndex = type2;
+                            j2 = type2 + 1;
+                            keyframes2 = keyframes;
+                            j = type;
+                        }
+                        distributeKeyframes(keyframeArray, keyframeArray[endIndex + 1].getFraction() - keyframeArray[startIndex - 1].getFraction(), startIndex, endIndex);
                     }
                     i++;
+                    f2 = f;
                     value2 = value;
                     keyframes2 = keyframes;
-                    type = type2;
-                    f = 0.0f;
+                    j = type;
                 }
                 ArrayList<Keyframe> arrayList = keyframes2;
-                int i2 = type;
+                int i2 = j;
                 PropertyValuesHolder value3 = PropertyValuesHolder.ofKeyframe(propertyName, keyframeArray);
                 if (valueType2 != 3) {
                     return value3;
@@ -896,7 +888,7 @@ public class AnimatorInflaterCompat {
             }
         }
         ArrayList<Keyframe> arrayList2 = keyframes2;
-        int i3 = type;
+        int i3 = j;
         String str = propertyName;
         return null;
     }
@@ -985,8 +977,5 @@ public class AnimatorInflaterCompat {
 
     private static boolean isColorType(int type) {
         return type >= 28 && type <= 31;
-    }
-
-    private AnimatorInflaterCompat() {
     }
 }

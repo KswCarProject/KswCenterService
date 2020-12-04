@@ -1,5 +1,6 @@
 package com.google.gson;
 
+import android.text.format.Time;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -34,7 +35,7 @@ final class DefaultDateTypeAdapter implements JsonSerializer<Date>, JsonDeserial
         this.enUsFormat = enUsFormat2;
         this.localFormat = localFormat2;
         this.iso8601Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
-        this.iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        this.iso8601Format.setTimeZone(TimeZone.getTimeZone(Time.TIMEZONE_UTC));
     }
 
     public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
@@ -46,20 +47,20 @@ final class DefaultDateTypeAdapter implements JsonSerializer<Date>, JsonDeserial
     }
 
     public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        if (!(json instanceof JsonPrimitive)) {
-            throw new JsonParseException("The date should be a string value");
+        if (json instanceof JsonPrimitive) {
+            Date date = deserializeToDate(json);
+            if (typeOfT == Date.class) {
+                return date;
+            }
+            if (typeOfT == Timestamp.class) {
+                return new Timestamp(date.getTime());
+            }
+            if (typeOfT == java.sql.Date.class) {
+                return new java.sql.Date(date.getTime());
+            }
+            throw new IllegalArgumentException(getClass() + " cannot deserialize to " + typeOfT);
         }
-        Date date = deserializeToDate(json);
-        if (typeOfT == Date.class) {
-            return date;
-        }
-        if (typeOfT == Timestamp.class) {
-            return new Timestamp(date.getTime());
-        }
-        if (typeOfT == java.sql.Date.class) {
-            return new java.sql.Date(date.getTime());
-        }
-        throw new IllegalArgumentException(getClass() + " cannot deserialize to " + typeOfT);
+        throw new JsonParseException("The date should be a string value");
     }
 
     private Date deserializeToDate(JsonElement json) {

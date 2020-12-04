@@ -14,6 +14,7 @@ public class BtPhoneStatus {
     public static final int VOICE_CUSTOM_PHONE_VOICE = 1;
     public boolean btSwitch;
     public int callStatus;
+    public String connectedAddr;
     public String devAddr;
     public boolean isConnected;
     public boolean isPlayingMusic;
@@ -67,6 +68,14 @@ public class BtPhoneStatus {
         this.voiceStatus = voiceStatus2;
     }
 
+    public String getConnectedAddr() {
+        return this.connectedAddr;
+    }
+
+    public void setConnectedAddr(String connectedAddr2) {
+        this.connectedAddr = connectedAddr2;
+    }
+
     public BtPhoneStatus(boolean isConnected2, boolean isPlayingMusic2, String devAddr2, int callStatus2, int voiceStatus2, boolean btSwitch2) {
         this.isConnected = isConnected2;
         this.isPlayingMusic = isPlayingMusic2;
@@ -74,6 +83,7 @@ public class BtPhoneStatus {
         this.callStatus = callStatus2;
         this.voiceStatus = voiceStatus2;
         this.btSwitch = btSwitch2;
+        this.connectedAddr = "";
     }
 
     public BtPhoneStatus() {
@@ -102,6 +112,9 @@ public class BtPhoneStatus {
         }
         if (this.voiceStatus != btPhoneStatus.voiceStatus) {
             keys.add("voiceStatus");
+        }
+        if (this.connectedAddr != null && !this.connectedAddr.equals(btPhoneStatus.connectedAddr)) {
+            keys.add("connectedAddr");
         }
         return keys;
     }

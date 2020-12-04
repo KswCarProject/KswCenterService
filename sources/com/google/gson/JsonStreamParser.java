@@ -26,17 +26,18 @@ public final class JsonStreamParser implements Iterator<JsonElement> {
     }
 
     public JsonElement next() throws JsonParseException {
-        if (!hasNext()) {
+        if (hasNext()) {
+            try {
+                return Streams.parse(this.parser);
+            } catch (StackOverflowError e) {
+                throw new JsonParseException("Failed parsing JSON source to Json", e);
+            } catch (OutOfMemoryError e2) {
+                throw new JsonParseException("Failed parsing JSON source to Json", e2);
+            } catch (JsonParseException e3) {
+                throw (e3.getCause() instanceof EOFException ? new NoSuchElementException() : e3);
+            }
+        } else {
             throw new NoSuchElementException();
-        }
-        try {
-            return Streams.parse(this.parser);
-        } catch (StackOverflowError e) {
-            throw new JsonParseException("Failed parsing JSON source to Json", e);
-        } catch (OutOfMemoryError e2) {
-            throw new JsonParseException("Failed parsing JSON source to Json", e2);
-        } catch (JsonParseException e3) {
-            throw (e3.getCause() instanceof EOFException ? new NoSuchElementException() : e3);
         }
     }
 

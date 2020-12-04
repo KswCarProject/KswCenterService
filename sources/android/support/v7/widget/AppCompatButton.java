@@ -4,16 +4,16 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.RestrictTo;
 import android.support.v4.view.TintableBackgroundView;
 import android.support.v4.widget.AutoSizeableTextView;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.appcompat.R;
 import android.util.AttributeSet;
-import android.view.ActionMode;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
@@ -34,7 +34,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
         super(TintContextWrapper.wrap(context), attrs, defStyleAttr);
         this.mBackgroundTintHelper = new AppCompatBackgroundHelper(this);
         this.mBackgroundTintHelper.loadFromAttributes(attrs, defStyleAttr);
-        this.mTextHelper = new AppCompatTextHelper(this);
+        this.mTextHelper = AppCompatTextHelper.create(this);
         this.mTextHelper.loadFromAttributes(attrs, defStyleAttr);
         this.mTextHelper.applyCompoundDrawablesTints();
     }
@@ -108,6 +108,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
         event.setClassName(Button.class.getName());
     }
 
+    @RequiresApi(14)
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
         info.setClassName(Button.class.getName());
@@ -122,7 +123,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
     }
 
     public void setTextSize(int unit, float size) {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             super.setTextSize(unit, size);
         } else if (this.mTextHelper != null) {
             this.mTextHelper.setTextSize(unit, size);
@@ -132,14 +133,14 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
     /* access modifiers changed from: protected */
     public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        if (this.mTextHelper != null && !PLATFORM_SUPPORTS_AUTOSIZE && this.mTextHelper.isAutoSizeEnabled()) {
+        if (this.mTextHelper != null && Build.VERSION.SDK_INT < 26 && this.mTextHelper.isAutoSizeEnabled()) {
             this.mTextHelper.autoSizeText();
         }
     }
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public void setAutoSizeTextTypeWithDefaults(int autoSizeTextType) {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             super.setAutoSizeTextTypeWithDefaults(autoSizeTextType);
         } else if (this.mTextHelper != null) {
             this.mTextHelper.setAutoSizeTextTypeWithDefaults(autoSizeTextType);
@@ -148,7 +149,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public void setAutoSizeTextTypeUniformWithConfiguration(int autoSizeMinTextSize, int autoSizeMaxTextSize, int autoSizeStepGranularity, int unit) throws IllegalArgumentException {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             super.setAutoSizeTextTypeUniformWithConfiguration(autoSizeMinTextSize, autoSizeMaxTextSize, autoSizeStepGranularity, unit);
         } else if (this.mTextHelper != null) {
             this.mTextHelper.setAutoSizeTextTypeUniformWithConfiguration(autoSizeMinTextSize, autoSizeMaxTextSize, autoSizeStepGranularity, unit);
@@ -157,7 +158,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public void setAutoSizeTextTypeUniformWithPresetSizes(@NonNull int[] presetSizes, int unit) throws IllegalArgumentException {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             super.setAutoSizeTextTypeUniformWithPresetSizes(presetSizes, unit);
         } else if (this.mTextHelper != null) {
             this.mTextHelper.setAutoSizeTextTypeUniformWithPresetSizes(presetSizes, unit);
@@ -166,7 +167,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public int getAutoSizeTextType() {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             if (super.getAutoSizeTextType() == 1) {
                 return 1;
             }
@@ -180,7 +181,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public int getAutoSizeStepGranularity() {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             return super.getAutoSizeStepGranularity();
         }
         if (this.mTextHelper != null) {
@@ -191,7 +192,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public int getAutoSizeMinTextSize() {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             return super.getAutoSizeMinTextSize();
         }
         if (this.mTextHelper != null) {
@@ -202,7 +203,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public int getAutoSizeMaxTextSize() {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             return super.getAutoSizeMaxTextSize();
         }
         if (this.mTextHelper != null) {
@@ -213,7 +214,7 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public int[] getAutoSizeTextAvailableSizes() {
-        if (PLATFORM_SUPPORTS_AUTOSIZE) {
+        if (Build.VERSION.SDK_INT >= 26) {
             return super.getAutoSizeTextAvailableSizes();
         }
         if (this.mTextHelper != null) {
@@ -226,9 +227,5 @@ public class AppCompatButton extends Button implements TintableBackgroundView, A
         if (this.mTextHelper != null) {
             this.mTextHelper.setAllCaps(allCaps);
         }
-    }
-
-    public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
-        super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, actionModeCallback));
     }
 }

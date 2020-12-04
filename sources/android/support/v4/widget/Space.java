@@ -3,33 +3,26 @@ package android.support.v4.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-@Deprecated
 public class Space extends View {
-    @Deprecated
-    public Space(@NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public Space(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         if (getVisibility() == 0) {
             setVisibility(4);
         }
     }
 
-    @Deprecated
-    public Space(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public Space(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    @Deprecated
-    public Space(@NonNull Context context) {
+    public Space(Context context) {
         this(context, (AttributeSet) null);
     }
 
     @SuppressLint({"MissingSuperCall"})
-    @Deprecated
     public void draw(Canvas canvas) {
     }
 
@@ -50,7 +43,6 @@ public class Space extends View {
     }
 
     /* access modifiers changed from: protected */
-    @Deprecated
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         setMeasuredDimension(getDefaultSize2(getSuggestedMinimumWidth(), widthMeasureSpec), getDefaultSize2(getSuggestedMinimumHeight(), heightMeasureSpec));
     }

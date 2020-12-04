@@ -43,7 +43,7 @@ public interface ISystemKeyService extends IInterface {
                     case 1:
                         data.enforceInterface(DESCRIPTOR);
                         if (data.readInt() != 0) {
-                            _arg0 = (KeyEvent) KeyEvent.CREATOR.createFromParcel(data);
+                            _arg0 = KeyEvent.CREATOR.createFromParcel(data);
                         }
                         onKeyEvent(_arg0);
                         reply.writeNoException();
@@ -51,7 +51,7 @@ public interface ISystemKeyService extends IInterface {
                     case 2:
                         data.enforceInterface(DESCRIPTOR);
                         if (data.readInt() != 0) {
-                            _arg0 = (KeyEvent) KeyEvent.CREATOR.createFromParcel(data);
+                            _arg0 = KeyEvent.CREATOR.createFromParcel(data);
                         }
                         boolean _result = keyControl(_arg0);
                         reply.writeNoException();

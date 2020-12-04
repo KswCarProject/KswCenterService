@@ -1,15 +1,11 @@
 package android.support.v4.util;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 public final class Pools {
 
     public interface Pool<T> {
-        @Nullable
         T acquire();
 
-        boolean release(@NonNull T t);
+        boolean release(T t);
     }
 
     private Pools() {
@@ -20,10 +16,11 @@ public final class Pools {
         private int mPoolSize;
 
         public SimplePool(int maxPoolSize) {
-            if (maxPoolSize <= 0) {
-                throw new IllegalArgumentException("The max pool size must be > 0");
+            if (maxPoolSize > 0) {
+                this.mPool = new Object[maxPoolSize];
+                return;
             }
-            this.mPool = new Object[maxPoolSize];
+            throw new IllegalArgumentException("The max pool size must be > 0");
         }
 
         public T acquire() {
@@ -37,7 +34,7 @@ public final class Pools {
             return instance;
         }
 
-        public boolean release(@NonNull T instance) {
+        public boolean release(T instance) {
             if (isInPool(instance)) {
                 throw new IllegalStateException("Already in the pool!");
             } else if (this.mPoolSize >= this.mPool.length) {
@@ -49,7 +46,7 @@ public final class Pools {
             }
         }
 
-        private boolean isInPool(@NonNull T instance) {
+        private boolean isInPool(T instance) {
             for (int i = 0; i < this.mPoolSize; i++) {
                 if (this.mPool[i] == instance) {
                     return true;
@@ -74,7 +71,7 @@ public final class Pools {
             return acquire;
         }
 
-        public boolean release(@NonNull T element) {
+        public boolean release(T element) {
             boolean release;
             synchronized (this.mLock) {
                 release = super.release(element);

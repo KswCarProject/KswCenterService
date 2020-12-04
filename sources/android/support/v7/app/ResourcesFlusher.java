@@ -20,20 +20,24 @@ class ResourcesFlusher {
     private static Field sThemedResourceCache_mUnthemedEntriesField;
     private static boolean sThemedResourceCache_mUnthemedEntriesFieldFetched;
 
-    static void flush(@NonNull Resources resources) {
-        if (Build.VERSION.SDK_INT < 28) {
-            if (Build.VERSION.SDK_INT >= 24) {
-                flushNougats(resources);
-            } else if (Build.VERSION.SDK_INT >= 23) {
-                flushMarshmallows(resources);
-            } else if (Build.VERSION.SDK_INT >= 21) {
-                flushLollipops(resources);
-            }
+    ResourcesFlusher() {
+    }
+
+    static boolean flush(@NonNull Resources resources) {
+        if (Build.VERSION.SDK_INT >= 24) {
+            return flushNougats(resources);
         }
+        if (Build.VERSION.SDK_INT >= 23) {
+            return flushMarshmallows(resources);
+        }
+        if (Build.VERSION.SDK_INT >= 21) {
+            return flushLollipops(resources);
+        }
+        return false;
     }
 
     @RequiresApi(21)
-    private static void flushLollipops(@NonNull Resources resources) {
+    private static boolean flushLollipops(@NonNull Resources resources) {
         if (!sDrawableCacheFieldFetched) {
             try {
                 sDrawableCacheField = Resources.class.getDeclaredField("mDrawableCache");
@@ -43,21 +47,24 @@ class ResourcesFlusher {
             }
             sDrawableCacheFieldFetched = true;
         }
-        if (sDrawableCacheField != null) {
-            Map drawableCache = null;
-            try {
-                drawableCache = (Map) sDrawableCacheField.get(resources);
-            } catch (IllegalAccessException e2) {
-                Log.e(TAG, "Could not retrieve value from Resources#mDrawableCache", e2);
-            }
-            if (drawableCache != null) {
-                drawableCache.clear();
-            }
+        if (sDrawableCacheField == null) {
+            return false;
         }
+        Map drawableCache = null;
+        try {
+            drawableCache = (Map) sDrawableCacheField.get(resources);
+        } catch (IllegalAccessException e2) {
+            Log.e(TAG, "Could not retrieve value from Resources#mDrawableCache", e2);
+        }
+        if (drawableCache == null) {
+            return false;
+        }
+        drawableCache.clear();
+        return true;
     }
 
     @RequiresApi(23)
-    private static void flushMarshmallows(@NonNull Resources resources) {
+    private static boolean flushMarshmallows(@NonNull Resources resources) {
         if (!sDrawableCacheFieldFetched) {
             try {
                 sDrawableCacheField = Resources.class.getDeclaredField("mDrawableCache");
@@ -75,13 +82,17 @@ class ResourcesFlusher {
                 Log.e(TAG, "Could not retrieve value from Resources#mDrawableCache", e2);
             }
         }
-        if (drawableCache != null) {
-            flushThemedResourcesCache(drawableCache);
+        if (drawableCache == null) {
+            return false;
         }
+        if (drawableCache == null || !flushThemedResourcesCache(drawableCache)) {
+            return false;
+        }
+        return true;
     }
 
     @RequiresApi(24)
-    private static void flushNougats(@NonNull Resources resources) {
+    private static boolean flushNougats(@NonNull Resources resources) {
         if (!sResourcesImplFieldFetched) {
             try {
                 sResourcesImplField = Resources.class.getDeclaredField("mResourcesImpl");
@@ -91,40 +102,43 @@ class ResourcesFlusher {
             }
             sResourcesImplFieldFetched = true;
         }
-        if (sResourcesImplField != null) {
-            Object resourcesImpl = null;
+        if (sResourcesImplField == null) {
+            return false;
+        }
+        Object resourcesImpl = null;
+        try {
+            resourcesImpl = sResourcesImplField.get(resources);
+        } catch (IllegalAccessException e2) {
+            Log.e(TAG, "Could not retrieve value from Resources#mResourcesImpl", e2);
+        }
+        if (resourcesImpl == null) {
+            return false;
+        }
+        if (!sDrawableCacheFieldFetched) {
             try {
-                resourcesImpl = sResourcesImplField.get(resources);
-            } catch (IllegalAccessException e2) {
-                Log.e(TAG, "Could not retrieve value from Resources#mResourcesImpl", e2);
+                sDrawableCacheField = resourcesImpl.getClass().getDeclaredField("mDrawableCache");
+                sDrawableCacheField.setAccessible(true);
+            } catch (NoSuchFieldException e3) {
+                Log.e(TAG, "Could not retrieve ResourcesImpl#mDrawableCache field", e3);
             }
-            if (resourcesImpl != null) {
-                if (!sDrawableCacheFieldFetched) {
-                    try {
-                        sDrawableCacheField = resourcesImpl.getClass().getDeclaredField("mDrawableCache");
-                        sDrawableCacheField.setAccessible(true);
-                    } catch (NoSuchFieldException e3) {
-                        Log.e(TAG, "Could not retrieve ResourcesImpl#mDrawableCache field", e3);
-                    }
-                    sDrawableCacheFieldFetched = true;
-                }
-                Object drawableCache = null;
-                if (sDrawableCacheField != null) {
-                    try {
-                        drawableCache = sDrawableCacheField.get(resourcesImpl);
-                    } catch (IllegalAccessException e4) {
-                        Log.e(TAG, "Could not retrieve value from ResourcesImpl#mDrawableCache", e4);
-                    }
-                }
-                if (drawableCache != null) {
-                    flushThemedResourcesCache(drawableCache);
-                }
+            sDrawableCacheFieldFetched = true;
+        }
+        Object drawableCache = null;
+        if (sDrawableCacheField != null) {
+            try {
+                drawableCache = sDrawableCacheField.get(resourcesImpl);
+            } catch (IllegalAccessException e4) {
+                Log.e(TAG, "Could not retrieve value from ResourcesImpl#mDrawableCache", e4);
             }
         }
+        if (drawableCache == null || !flushThemedResourcesCache(drawableCache)) {
+            return false;
+        }
+        return true;
     }
 
     @RequiresApi(16)
-    private static void flushThemedResourcesCache(@NonNull Object cache) {
+    private static boolean flushThemedResourcesCache(@NonNull Object cache) {
         if (!sThemedResourceCacheClazzFetched) {
             try {
                 sThemedResourceCacheClazz = Class.forName("android.content.res.ThemedResourceCache");
@@ -133,30 +147,31 @@ class ResourcesFlusher {
             }
             sThemedResourceCacheClazzFetched = true;
         }
-        if (sThemedResourceCacheClazz != null) {
-            if (!sThemedResourceCache_mUnthemedEntriesFieldFetched) {
-                try {
-                    sThemedResourceCache_mUnthemedEntriesField = sThemedResourceCacheClazz.getDeclaredField("mUnthemedEntries");
-                    sThemedResourceCache_mUnthemedEntriesField.setAccessible(true);
-                } catch (NoSuchFieldException ee) {
-                    Log.e(TAG, "Could not retrieve ThemedResourceCache#mUnthemedEntries field", ee);
-                }
-                sThemedResourceCache_mUnthemedEntriesFieldFetched = true;
-            }
-            if (sThemedResourceCache_mUnthemedEntriesField != null) {
-                LongSparseArray unthemedEntries = null;
-                try {
-                    unthemedEntries = (LongSparseArray) sThemedResourceCache_mUnthemedEntriesField.get(cache);
-                } catch (IllegalAccessException e2) {
-                    Log.e(TAG, "Could not retrieve value from ThemedResourceCache#mUnthemedEntries", e2);
-                }
-                if (unthemedEntries != null) {
-                    unthemedEntries.clear();
-                }
-            }
+        if (sThemedResourceCacheClazz == null) {
+            return false;
         }
-    }
-
-    private ResourcesFlusher() {
+        if (!sThemedResourceCache_mUnthemedEntriesFieldFetched) {
+            try {
+                sThemedResourceCache_mUnthemedEntriesField = sThemedResourceCacheClazz.getDeclaredField("mUnthemedEntries");
+                sThemedResourceCache_mUnthemedEntriesField.setAccessible(true);
+            } catch (NoSuchFieldException ee) {
+                Log.e(TAG, "Could not retrieve ThemedResourceCache#mUnthemedEntries field", ee);
+            }
+            sThemedResourceCache_mUnthemedEntriesFieldFetched = true;
+        }
+        if (sThemedResourceCache_mUnthemedEntriesField == null) {
+            return false;
+        }
+        LongSparseArray unthemedEntries = null;
+        try {
+            unthemedEntries = (LongSparseArray) sThemedResourceCache_mUnthemedEntriesField.get(cache);
+        } catch (IllegalAccessException e2) {
+            Log.e(TAG, "Could not retrieve value from ThemedResourceCache#mUnthemedEntries", e2);
+        }
+        if (unthemedEntries == null) {
+            return false;
+        }
+        unthemedEntries.clear();
+        return true;
     }
 }

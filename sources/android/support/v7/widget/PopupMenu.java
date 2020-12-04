@@ -5,7 +5,6 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RestrictTo;
 import android.support.annotation.StyleRes;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.SupportMenuInflater;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 
 public class PopupMenu {
@@ -130,14 +128,5 @@ public class PopupMenu {
 
     public void setOnDismissListener(@Nullable OnDismissListener listener) {
         this.mOnDismissListener = listener;
-    }
-
-    /* access modifiers changed from: package-private */
-    @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-    public ListView getMenuListView() {
-        if (!this.mPopup.isShowing()) {
-            return null;
-        }
-        return this.mPopup.getListView();
     }
 }

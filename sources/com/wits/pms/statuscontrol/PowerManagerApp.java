@@ -32,10 +32,8 @@ public class PowerManagerApp {
                 if (PowerManagerApp.cmdListener != null) {
                     PowerManagerApp.registerICmdListener(PowerManagerApp.cmdListener);
                 }
-                synchronized (PowerManagerApp.maps) {
-                    for (String key : PowerManagerApp.maps.keySet()) {
-                        PowerManagerApp.registerIContentObserver(key, (IContentObserver) PowerManagerApp.maps.get(key));
-                    }
+                for (String key : PowerManagerApp.maps.keySet()) {
+                    PowerManagerApp.registerIContentObserver(key, (IContentObserver) PowerManagerApp.maps.get(key));
                 }
             }
         });
@@ -56,10 +54,8 @@ public class PowerManagerApp {
     }
 
     public static void registerIContentObserver(String key, IContentObserver contentObserver) {
+        Log.i("IPowerManagerService registerIContentObserver", contentObserver.getClass().getName());
         try {
-            synchronized (maps) {
-                maps.put(key, contentObserver);
-            }
             if (getManager() != null) {
                 getManager().registerObserver(key, contentObserver);
             }
@@ -69,21 +65,11 @@ public class PowerManagerApp {
 
     public static void unRegisterIContentObserver(IContentObserver contentObserver) {
         try {
-            synchronized (maps) {
-                for (String key : maps.keySet()) {
-                    if (maps.get(key) == contentObserver) {
-                        maps.remove(key, contentObserver);
-                    }
-                }
-            }
+            Log.i("IPowerManagerService unRegisterIContentObserver", contentObserver.getClass().getName());
             if (getManager() != null) {
                 getManager().unregisterObserver(contentObserver);
             }
-        } catch (Exception e) {
-            try {
-                maps.remove(contentObserver);
-            } catch (Exception e2) {
-            }
+        } catch (RemoteException e) {
         }
     }
 
@@ -122,6 +108,18 @@ public class PowerManagerApp {
         }.getType());
     }
 
+    public static void setBooleanStatus(String key, boolean value) throws RemoteException {
+        getManager().addBooleanStatus(key, value);
+    }
+
+    public static void setStatusString(String key, String value) throws RemoteException {
+        getManager().addStringStatus(key, value);
+    }
+
+    public static void setStatusInt(String key, int value) throws RemoteException {
+        getManager().addIntStatus(key, value);
+    }
+
     public static boolean getStatusBoolean(String key) throws RemoteException {
         return getManager().getStatusBoolean(key);
     }
@@ -148,5 +146,13 @@ public class PowerManagerApp {
 
     public static void setSettingsString(String key, String value) throws RemoteException {
         getManager().setSettingsString(key, value);
+    }
+
+    public static boolean getStatusBoolean(String key, boolean defaultValue) {
+        try {
+            return getManager().getStatusBoolean(key);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 }

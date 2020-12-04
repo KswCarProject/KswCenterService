@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 
 public class WitsCommand {
     public static final int BT_TYPE = 3;
+    public static final int HICAR_TYPE = 7;
     public static final int MCU_TYPE = 5;
     public static final int MEDIA_TYPE = 2;
     public static final int SYSTEM_TYPE = 1;
@@ -31,6 +32,14 @@ public class WitsCommand {
         public static final int VOICE_TO_SYSTEM = 111;
     }
 
+    public static final class HiCarSubCommand {
+        public static final int HICAR_ANSWER = 111;
+        public static final int HICAR_APP = 101;
+        public static final int HICAR_HANDUP = 112;
+        public static final int HICAR_TEL = 113;
+        public static final int HICAR_VOICE = 102;
+    }
+
     public static final class MediaSubCommand {
         public static final int CLOSE_MUSIC = 106;
         public static final int CLOSE_PIP = 118;
@@ -39,12 +48,16 @@ public class WitsCommand {
 
     public static final class SystemCommand {
         public static final int ACCEPT_PHONE = 116;
+        public static final int AIRCON_CONTROL = 612;
+        public static final int AIR_DATA_REQ = 613;
         public static final int ANDROID_MODE = 602;
         public static final int BACK = 115;
         public static final int BENZ_CONTROL = 801;
         public static final int CALL_BUTTON = 123;
         public static final int CAR_MODE = 601;
+        public static final int CHECK_CAN_BOX = 611;
         public static final int CLEAR_MEMORY = 300;
+        public static final int DISMISS_INSTALL_APP_DIALOG = 127;
         public static final int DORMANT = 118;
         public static final int FLASH_SPLASH = 124;
         public static final int HANDUP_PHONE = 117;
@@ -73,6 +86,7 @@ public class WitsCommand {
         public static final int SAVECONFIG_AND_REBOOT = 125;
         public static final int SCREEN_OFF = 113;
         public static final int SCREEN_ON = 112;
+        public static final int SHOW_INSTALL_APP_DIALOG = 126;
         public static final int SOURCE_CHANGE = 107;
         public static final int UPDATE_CONFIG = 200;
         public static final int USB_HOST = 122;
@@ -144,11 +158,29 @@ public class WitsCommand {
         }
     }
 
+    public static void sendCommand(int command2, int subCommand2) {
+        try {
+            PowerManagerApp.getManager().sendCommand(new Gson().toJson((Object) new WitsCommand(command2, subCommand2, "")));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean isNeedResult() {
         return this.needResult;
     }
 
     public void setNeedResult(boolean needResult2) {
         this.needResult = needResult2;
+    }
+
+    public static boolean sendCommandWithBack(int command2, int subCommand2, String arg) {
+        try {
+            PowerManagerApp.getManager().sendCommand(new Gson().toJson((Object) new WitsCommand(command2, subCommand2, arg)));
+            return false;
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

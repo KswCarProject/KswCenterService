@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -13,7 +12,6 @@ import android.support.annotation.RestrictTo;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.internal.view.SupportMenuItem;
 import android.support.v4.view.ActionProvider;
-import android.support.v7.appcompat.R;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.view.menu.MenuView;
 import android.util.Log;
@@ -23,10 +21,9 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewDebug;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.wits.pms.BuildConfig;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
 public final class MenuItemImpl implements SupportMenuItem {
@@ -39,6 +36,10 @@ public final class MenuItemImpl implements SupportMenuItem {
     static final int NO_ICON = 0;
     private static final int SHOW_AS_ACTION_MASK = 3;
     private static final String TAG = "MenuItemImpl";
+    private static String sDeleteShortcutLabel;
+    private static String sEnterShortcutLabel;
+    private static String sPrependShortcutLabel;
+    private static String sSpaceShortcutLabel;
     private ActionProvider mActionProvider;
     private View mActionView;
     private final int mCategoryOrder;
@@ -232,36 +233,19 @@ public final class MenuItemImpl implements SupportMenuItem {
     public String getShortcutLabel() {
         char shortcut = getShortcut();
         if (shortcut == 0) {
-            return BuildConfig.FLAVOR;
+            return "";
         }
-        Resources res = this.mMenu.getContext().getResources();
-        StringBuilder sb = new StringBuilder();
-        if (ViewConfiguration.get(this.mMenu.getContext()).hasPermanentMenuKey()) {
-            sb.append(res.getString(R.string.abc_prepend_shortcut_label));
-        }
-        int modifiers = this.mMenu.isQwertyMode() ? this.mShortcutAlphabeticModifiers : this.mShortcutNumericModifiers;
-        appendModifier(sb, modifiers, 65536, res.getString(R.string.abc_menu_meta_shortcut_label));
-        appendModifier(sb, modifiers, 4096, res.getString(R.string.abc_menu_ctrl_shortcut_label));
-        appendModifier(sb, modifiers, 2, res.getString(R.string.abc_menu_alt_shortcut_label));
-        appendModifier(sb, modifiers, 1, res.getString(R.string.abc_menu_shift_shortcut_label));
-        appendModifier(sb, modifiers, 4, res.getString(R.string.abc_menu_sym_shortcut_label));
-        appendModifier(sb, modifiers, 8, res.getString(R.string.abc_menu_function_shortcut_label));
+        StringBuilder sb = new StringBuilder(sPrependShortcutLabel);
         if (shortcut == 8) {
-            sb.append(res.getString(R.string.abc_menu_delete_shortcut_label));
+            sb.append(sDeleteShortcutLabel);
         } else if (shortcut == 10) {
-            sb.append(res.getString(R.string.abc_menu_enter_shortcut_label));
+            sb.append(sEnterShortcutLabel);
         } else if (shortcut != ' ') {
             sb.append(shortcut);
         } else {
-            sb.append(res.getString(R.string.abc_menu_space_shortcut_label));
+            sb.append(sSpaceShortcutLabel);
         }
         return sb.toString();
-    }
-
-    private static void appendModifier(StringBuilder sb, int modifiers, int flag, String label) {
-        if ((modifiers & flag) == flag) {
-            sb.append(label);
-        }
     }
 
     /* access modifiers changed from: package-private */
@@ -543,7 +527,7 @@ public final class MenuItemImpl implements SupportMenuItem {
 
     public SupportMenuItem setActionView(int resId) {
         Context context = this.mMenu.getContext();
-        setActionView(LayoutInflater.from(context).inflate(resId, new LinearLayout(context), false));
+        setActionView(LayoutInflater.from(context).inflate(resId, (ViewGroup) new LinearLayout(context), false));
         return this;
     }
 

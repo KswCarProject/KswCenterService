@@ -16,7 +16,6 @@ import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.view.menu.MenuPresenter;
-import android.support.v7.widget.ActivityChooserView;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -28,9 +27,9 @@ import android.widget.OverScroller;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
 public class ActionBarOverlayLayout extends ViewGroup implements DecorContentParent, NestedScrollingParent {
-    private static final int ACTION_BAR_ANIMATE_DELAY = 600;
     static final int[] ATTRS = {R.attr.actionBarSize, 16842841};
     private static final String TAG = "ActionBarOverlayLayout";
+    private final int ACTION_BAR_ANIMATE_DELAY;
     private int mActionBarHeight;
     ActionBarContainer mActionBarTop;
     private ActionBarVisibilityCallback mActionBarVisibilityCallback;
@@ -87,6 +86,7 @@ public class ActionBarOverlayLayout extends ViewGroup implements DecorContentPar
         this.mLastBaseInnerInsets = new Rect();
         this.mInnerInsets = new Rect();
         this.mLastInnerInsets = new Rect();
+        this.ACTION_BAR_ANIMATE_DELAY = 600;
         this.mTopAnimatorListener = new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 ActionBarOverlayLayout.this.mCurrentActionBarTopAnimator = null;
@@ -326,9 +326,9 @@ public class ActionBarOverlayLayout extends ViewGroup implements DecorContentPar
                 int height = child.getMeasuredHeight();
                 int childLeft = lp.leftMargin + parentLeft2;
                 count = count2;
-                int count3 = lp.topMargin + parentTop;
+                int childTop = lp.topMargin + parentTop;
                 parentLeft = parentLeft2;
-                child.layout(childLeft, count3, childLeft + width, count3 + height);
+                child.layout(childLeft, childTop, childLeft + width, childTop + height);
             } else {
                 count = count2;
                 parentLeft = parentLeft2;
@@ -487,7 +487,7 @@ public class ActionBarOverlayLayout extends ViewGroup implements DecorContentPar
     }
 
     private boolean shouldHideActionBarOnFling(float velocityX, float velocityY) {
-        this.mFlingEstimator.fling(0, 0, 0, (int) velocityY, 0, 0, Integer.MIN_VALUE, ActivityChooserView.ActivityChooserViewAdapter.MAX_ACTIVITY_COUNT_UNLIMITED);
+        this.mFlingEstimator.fling(0, 0, 0, (int) velocityY, 0, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
         return this.mFlingEstimator.getFinalY() > this.mActionBarTop.getHeight();
     }
 

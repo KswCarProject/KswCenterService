@@ -40,7 +40,7 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
         }
         Type[] keyAndValueTypes = C$Gson$Types.getMapKeyAndValueTypes(type, C$Gson$Types.getRawType(type));
         TypeAdapter<?> keyAdapter = getKeyAdapter(gson2, keyAndValueTypes[0]);
-        return new Adapter<>(gson2, keyAndValueTypes[0], keyAdapter, keyAndValueTypes[1], gson2.getAdapter(TypeToken.get(keyAndValueTypes[1])), this.constructorConstructor.get(typeToken));
+        return new Adapter<>(gson, keyAndValueTypes[0], keyAdapter, keyAndValueTypes[1], gson2.getAdapter(TypeToken.get(keyAndValueTypes[1])), this.constructorConstructor.get(typeToken));
     }
 
     private TypeAdapter<?> getKeyAdapter(Gson context, Type keyType) {
@@ -70,10 +70,11 @@ public final class MapTypeAdapterFactory implements TypeAdapterFactory {
                 while (in.hasNext()) {
                     in.beginArray();
                     K key = this.keyTypeAdapter.read(in);
-                    if (map.put(key, this.valueTypeAdapter.read(in)) != null) {
+                    if (map.put(key, this.valueTypeAdapter.read(in)) == null) {
+                        in.endArray();
+                    } else {
                         throw new JsonSyntaxException("duplicate key: " + key);
                     }
-                    in.endArray();
                 }
                 in.endArray();
             } else {

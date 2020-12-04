@@ -6,6 +6,7 @@ import android.os.Message;
 import android.support.annotation.GuardedBy;
 import android.support.annotation.RestrictTo;
 import android.support.annotation.VisibleForTesting;
+import com.android.internal.location.GpsNetInitiatedHandler;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -105,27 +106,24 @@ public class SelfDestructiveThread {
     }
 
     public <T> T postAndWait(Callable<T> callable, int timeoutMillis) throws InterruptedException {
-        ReentrantLock lock = new ReentrantLock();
+        final ReentrantLock lock = new ReentrantLock();
         Condition cond = lock.newCondition();
-        AtomicReference<T> holder = new AtomicReference<>();
-        AtomicBoolean running = new AtomicBoolean(true);
-        final AtomicReference<T> atomicReference = holder;
+        final AtomicReference<T> holder = new AtomicReference<>();
+        final AtomicBoolean running = new AtomicBoolean(true);
         final Callable<T> callable2 = callable;
-        final ReentrantLock reentrantLock = lock;
-        final AtomicBoolean atomicBoolean = running;
         final Condition condition = cond;
         post(new Runnable() {
             public void run() {
                 try {
-                    atomicReference.set(callable2.call());
+                    holder.set(callable2.call());
                 } catch (Exception e) {
                 }
-                reentrantLock.lock();
+                lock.lock();
                 try {
-                    atomicBoolean.set(false);
+                    running.set(false);
                     condition.signal();
                 } finally {
-                    reentrantLock.unlock();
+                    lock.unlock();
                 }
             }
         });
@@ -146,13 +144,13 @@ public class SelfDestructiveThread {
                     return t;
                 }
             } while (remaining > 0);
-            throw new InterruptedException("timeout");
+            throw new InterruptedException(GpsNetInitiatedHandler.NI_INTENT_KEY_TIMEOUT);
         } finally {
             lock.unlock();
         }
     }
 
-    /* access modifiers changed from: package-private */
+    /* access modifiers changed from: private */
     public void onInvokeRunnable(Runnable runnable) {
         runnable.run();
         synchronized (this.mLock) {
@@ -161,7 +159,7 @@ public class SelfDestructiveThread {
         }
     }
 
-    /* access modifiers changed from: package-private */
+    /* access modifiers changed from: private */
     public void onDestruction() {
         synchronized (this.mLock) {
             if (!this.mHandler.hasMessages(1)) {

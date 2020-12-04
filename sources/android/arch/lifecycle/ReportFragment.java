@@ -23,7 +23,7 @@ public class ReportFragment extends Fragment {
     public static void injectIfNeededIn(Activity activity) {
         FragmentManager manager = activity.getFragmentManager();
         if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
-            manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
+            manager.beginTransaction().add((Fragment) new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
             manager.executePendingTransactions();
         }
     }

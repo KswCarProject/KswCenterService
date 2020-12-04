@@ -1,5 +1,6 @@
 package com.google.gson.stream;
 
+import android.provider.SettingsStringUtil;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
@@ -38,18 +39,19 @@ public class JsonWriter implements Closeable, Flushable {
 
     public JsonWriter(Writer out2) {
         push(6);
-        this.separator = ":";
+        this.separator = SettingsStringUtil.DELIMITER;
         this.serializeNulls = true;
-        if (out2 == null) {
-            throw new NullPointerException("out == null");
+        if (out2 != null) {
+            this.out = out2;
+            return;
         }
-        this.out = out2;
+        throw new NullPointerException("out == null");
     }
 
     public final void setIndent(String indent2) {
         if (indent2.length() == 0) {
             this.indent = null;
-            this.separator = ":";
+            this.separator = SettingsStringUtil.DELIMITER;
             return;
         }
         this.indent = indent2;
@@ -109,15 +111,15 @@ public class JsonWriter implements Closeable, Flushable {
         int context = peek();
         if (context != nonempty && context != empty) {
             throw new IllegalStateException("Nesting problem.");
-        } else if (this.deferredName != null) {
-            throw new IllegalStateException("Dangling name: " + this.deferredName);
-        } else {
+        } else if (this.deferredName == null) {
             this.stackSize--;
             if (context == nonempty) {
                 newline();
             }
             this.out.write(closeBracket);
             return this;
+        } else {
+            throw new IllegalStateException("Dangling name: " + this.deferredName);
         }
     }
 
@@ -149,11 +151,11 @@ public class JsonWriter implements Closeable, Flushable {
             throw new NullPointerException("name == null");
         } else if (this.deferredName != null) {
             throw new IllegalStateException();
-        } else if (this.stackSize == 0) {
-            throw new IllegalStateException("JsonWriter is closed.");
-        } else {
+        } else if (this.stackSize != 0) {
             this.deferredName = name;
             return this;
+        } else {
+            throw new IllegalStateException("JsonWriter is closed.");
         }
     }
 
@@ -228,10 +230,11 @@ public class JsonWriter implements Closeable, Flushable {
     }
 
     public void flush() throws IOException {
-        if (this.stackSize == 0) {
-            throw new IllegalStateException("JsonWriter is closed.");
+        if (this.stackSize != 0) {
+            this.out.flush();
+            return;
         }
-        this.out.flush();
+        throw new IllegalStateException("JsonWriter is closed.");
     }
 
     public void close() throws IOException {

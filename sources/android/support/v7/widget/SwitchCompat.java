@@ -12,9 +12,9 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.appcompat.R;
 import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.text.AllCapsTransformationMethod;
@@ -25,7 +25,6 @@ import android.text.TextUtils;
 import android.text.method.TransformationMethod;
 import android.util.AttributeSet;
 import android.util.Property;
-import android.view.ActionMode;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
@@ -33,6 +32,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.CompoundButton;
 
+@RequiresApi(14)
 public class SwitchCompat extends CompoundButton {
     private static final String ACCESSIBILITY_EVENT_CLASS_NAME = "android.widget.Switch";
     private static final int[] CHECKED_STATE_SET = {16842912};
@@ -77,7 +77,8 @@ public class SwitchCompat extends CompoundButton {
     private CharSequence mTextOn;
     private final TextPaint mTextPaint;
     private Drawable mThumbDrawable;
-    float mThumbPosition;
+    /* access modifiers changed from: private */
+    public float mThumbPosition;
     private int mThumbTextPadding;
     private ColorStateList mThumbTintList;
     private PorterDuff.Mode mThumbTintMode;
@@ -597,7 +598,7 @@ public class SwitchCompat extends CompoundButton {
     }
 
     private void animateThumbToCheckedState(boolean newCheckedState) {
-        this.mPositionAnimator = ObjectAnimator.ofFloat(this, THUMB_POS, new float[]{newCheckedState ? 1.0f : 0.0f});
+        this.mPositionAnimator = ObjectAnimator.ofFloat(this, THUMB_POS, newCheckedState ? 1.0f : 0.0f);
         this.mPositionAnimator.setDuration(250);
         if (Build.VERSION.SDK_INT >= 18) {
             this.mPositionAnimator.setAutoCancel(true);
@@ -875,16 +876,18 @@ public class SwitchCompat extends CompoundButton {
     }
 
     public void jumpDrawablesToCurrentState() {
-        super.jumpDrawablesToCurrentState();
-        if (this.mThumbDrawable != null) {
-            this.mThumbDrawable.jumpToCurrentState();
-        }
-        if (this.mTrackDrawable != null) {
-            this.mTrackDrawable.jumpToCurrentState();
-        }
-        if (this.mPositionAnimator != null && this.mPositionAnimator.isStarted()) {
-            this.mPositionAnimator.end();
-            this.mPositionAnimator = null;
+        if (Build.VERSION.SDK_INT >= 14) {
+            super.jumpDrawablesToCurrentState();
+            if (this.mThumbDrawable != null) {
+                this.mThumbDrawable.jumpToCurrentState();
+            }
+            if (this.mTrackDrawable != null) {
+                this.mTrackDrawable.jumpToCurrentState();
+            }
+            if (this.mPositionAnimator != null && this.mPositionAnimator.isStarted()) {
+                this.mPositionAnimator.end();
+                this.mPositionAnimator = null;
+            }
         }
     }
 
@@ -894,25 +897,23 @@ public class SwitchCompat extends CompoundButton {
     }
 
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
-        super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName(ACCESSIBILITY_EVENT_CLASS_NAME);
-        CharSequence switchText = isChecked() ? this.mTextOn : this.mTextOff;
-        if (!TextUtils.isEmpty(switchText)) {
-            CharSequence oldText = info.getText();
-            if (TextUtils.isEmpty(oldText)) {
-                info.setText(switchText);
-                return;
+        if (Build.VERSION.SDK_INT >= 14) {
+            super.onInitializeAccessibilityNodeInfo(info);
+            info.setClassName(ACCESSIBILITY_EVENT_CLASS_NAME);
+            CharSequence switchText = isChecked() ? this.mTextOn : this.mTextOff;
+            if (!TextUtils.isEmpty(switchText)) {
+                CharSequence oldText = info.getText();
+                if (TextUtils.isEmpty(oldText)) {
+                    info.setText(switchText);
+                    return;
+                }
+                StringBuilder newText = new StringBuilder();
+                newText.append(oldText);
+                newText.append(' ');
+                newText.append(switchText);
+                info.setText(newText);
             }
-            StringBuilder newText = new StringBuilder();
-            newText.append(oldText);
-            newText.append(' ');
-            newText.append(switchText);
-            info.setText(newText);
         }
-    }
-
-    public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
-        super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, actionModeCallback));
     }
 
     private static float constrain(float amount, float low, float high) {

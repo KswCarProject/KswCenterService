@@ -1,5 +1,6 @@
 package android.support.v4.provider;
 
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -27,8 +28,11 @@ import android.support.v4.provider.SelfDestructiveThread;
 import android.support.v4.util.LruCache;
 import android.support.v4.util.Preconditions;
 import android.support.v4.util.SimpleArrayMap;
+import android.widget.TextView;
+import com.android.internal.content.NativeLibraryHelper;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,17 +41,18 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 public class FontsContractCompat {
     private static final int BACKGROUND_THREAD_KEEP_ALIVE_DURATION_MS = 10000;
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public static final String PARCEL_FONT_RESULTS = "font_results";
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-    static final int RESULT_CODE_PROVIDER_NOT_FOUND = -1;
+    public static final int RESULT_CODE_PROVIDER_NOT_FOUND = -1;
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-    static final int RESULT_CODE_WRONG_CERTIFICATES = -2;
+    public static final int RESULT_CODE_WRONG_CERTIFICATES = -2;
     private static final String TAG = "FontsContractCompat";
-    private static final SelfDestructiveThread sBackgroundThread = new SelfDestructiveThread("fonts", 10, BACKGROUND_THREAD_KEEP_ALIVE_DURATION_MS);
+    private static final SelfDestructiveThread sBackgroundThread = new SelfDestructiveThread("fonts", 10, 10000);
     private static final Comparator<byte[]> sByteArrayComparator = new Comparator<byte[]>() {
         public int compare(byte[] l, byte[] r) {
             if (l.length != r.length) {
@@ -61,10 +66,13 @@ public class FontsContractCompat {
             return 0;
         }
     };
-    static final Object sLock = new Object();
+    /* access modifiers changed from: private */
+    public static final Object sLock = new Object();
+    /* access modifiers changed from: private */
     @GuardedBy("sLock")
-    static final SimpleArrayMap<String, ArrayList<SelfDestructiveThread.ReplyCallback<TypefaceResult>>> sPendingReplies = new SimpleArrayMap<>();
-    static final LruCache<String, Typeface> sTypefaceCache = new LruCache<>(16);
+    public static final SimpleArrayMap<String, ArrayList<SelfDestructiveThread.ReplyCallback<Typeface>>> sPendingReplies = new SimpleArrayMap<>();
+    /* access modifiers changed from: private */
+    public static final LruCache<String, Typeface> sTypefaceCache = new LruCache<>(16);
 
     public static final class Columns implements BaseColumns {
         public static final String FILE_ID = "file_id";
@@ -82,142 +90,77 @@ public class FontsContractCompat {
     private FontsContractCompat() {
     }
 
-    @NonNull
-    static TypefaceResult getFontInternal(Context context, FontRequest request, int style) {
+    /* access modifiers changed from: private */
+    public static Typeface getFontInternal(Context context, FontRequest request, int style) {
         try {
             FontFamilyResult result = fetchFonts(context, (CancellationSignal) null, request);
-            int resultCode = -3;
             if (result.getStatusCode() == 0) {
-                Typeface typeface = TypefaceCompat.createFromFontInfo(context, (CancellationSignal) null, result.getFonts(), style);
-                if (typeface != null) {
-                    resultCode = 0;
-                }
-                return new TypefaceResult(typeface, resultCode);
+                return TypefaceCompat.createFromFontInfo(context, (CancellationSignal) null, result.getFonts(), style);
             }
-            if (result.getStatusCode() == 1) {
-                resultCode = -2;
-            }
-            return new TypefaceResult((Typeface) null, resultCode);
+            return null;
         } catch (PackageManager.NameNotFoundException e) {
-            return new TypefaceResult((Typeface) null, -1);
-        }
-    }
-
-    private static final class TypefaceResult {
-        final int mResult;
-        final Typeface mTypeface;
-
-        TypefaceResult(@Nullable Typeface typeface, int result) {
-            this.mTypeface = typeface;
-            this.mResult = result;
+            return null;
         }
     }
 
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-    public static void resetCache() {
-        sTypefaceCache.evictAll();
-    }
-
-    /* JADX WARNING: Code restructure failed: missing block: B:34:0x007c, code lost:
-        return null;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:38:0x008d, code lost:
-        sBackgroundThread.postAndReply(r2, new android.support.v4.provider.FontsContractCompat.AnonymousClass3());
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:39:0x0097, code lost:
-        return null;
-     */
-    @android.support.annotation.RestrictTo({android.support.annotation.RestrictTo.Scope.LIBRARY_GROUP})
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.graphics.Typeface getFontSync(final android.content.Context r8, final android.support.v4.provider.FontRequest r9, @android.support.annotation.Nullable final android.support.v4.content.res.ResourcesCompat.FontCallback r10, @android.support.annotation.Nullable final android.os.Handler r11, boolean r12, int r13, final int r14) {
-        /*
-            java.lang.StringBuilder r0 = new java.lang.StringBuilder
-            r0.<init>()
-            java.lang.String r1 = r9.getIdentifier()
-            r0.append(r1)
-            java.lang.String r1 = "-"
-            r0.append(r1)
-            r0.append(r14)
-            java.lang.String r0 = r0.toString()
-            android.support.v4.util.LruCache<java.lang.String, android.graphics.Typeface> r1 = sTypefaceCache
-            java.lang.Object r1 = r1.get(r0)
-            android.graphics.Typeface r1 = (android.graphics.Typeface) r1
-            if (r1 == 0) goto L_0x0028
-            if (r10 == 0) goto L_0x0027
-            r10.onFontRetrieved(r1)
-        L_0x0027:
-            return r1
-        L_0x0028:
-            if (r12 == 0) goto L_0x0045
-            r2 = -1
-            if (r13 != r2) goto L_0x0045
-            android.support.v4.provider.FontsContractCompat$TypefaceResult r2 = getFontInternal(r8, r9, r14)
-            if (r10 == 0) goto L_0x0042
-            int r3 = r2.mResult
-            if (r3 != 0) goto L_0x003d
-            android.graphics.Typeface r3 = r2.mTypeface
-            r10.callbackSuccessAsync(r3, r11)
-            goto L_0x0042
-        L_0x003d:
-            int r3 = r2.mResult
-            r10.callbackFailAsync(r3, r11)
-        L_0x0042:
-            android.graphics.Typeface r3 = r2.mTypeface
-            return r3
-        L_0x0045:
-            android.support.v4.provider.FontsContractCompat$1 r2 = new android.support.v4.provider.FontsContractCompat$1
-            r2.<init>(r8, r9, r14, r0)
-            r3 = 0
-            if (r12 == 0) goto L_0x005a
-            android.support.v4.provider.SelfDestructiveThread r4 = sBackgroundThread     // Catch:{ InterruptedException -> 0x0058 }
-            java.lang.Object r4 = r4.postAndWait(r2, r13)     // Catch:{ InterruptedException -> 0x0058 }
-            android.support.v4.provider.FontsContractCompat$TypefaceResult r4 = (android.support.v4.provider.FontsContractCompat.TypefaceResult) r4     // Catch:{ InterruptedException -> 0x0058 }
-            android.graphics.Typeface r4 = r4.mTypeface     // Catch:{ InterruptedException -> 0x0058 }
-            return r4
-        L_0x0058:
-            r4 = move-exception
-            return r3
-        L_0x005a:
-            if (r10 != 0) goto L_0x005e
-            r4 = r3
-            goto L_0x0063
-        L_0x005e:
-            android.support.v4.provider.FontsContractCompat$2 r4 = new android.support.v4.provider.FontsContractCompat$2
-            r4.<init>(r10, r11)
-        L_0x0063:
-            java.lang.Object r5 = sLock
-            monitor-enter(r5)
-            android.support.v4.util.SimpleArrayMap<java.lang.String, java.util.ArrayList<android.support.v4.provider.SelfDestructiveThread$ReplyCallback<android.support.v4.provider.FontsContractCompat$TypefaceResult>>> r6 = sPendingReplies     // Catch:{ all -> 0x0098 }
-            boolean r6 = r6.containsKey(r0)     // Catch:{ all -> 0x0098 }
-            if (r6 == 0) goto L_0x007d
-            if (r4 == 0) goto L_0x007b
-            android.support.v4.util.SimpleArrayMap<java.lang.String, java.util.ArrayList<android.support.v4.provider.SelfDestructiveThread$ReplyCallback<android.support.v4.provider.FontsContractCompat$TypefaceResult>>> r6 = sPendingReplies     // Catch:{ all -> 0x0098 }
-            java.lang.Object r6 = r6.get(r0)     // Catch:{ all -> 0x0098 }
-            java.util.ArrayList r6 = (java.util.ArrayList) r6     // Catch:{ all -> 0x0098 }
-            r6.add(r4)     // Catch:{ all -> 0x0098 }
-        L_0x007b:
-            monitor-exit(r5)     // Catch:{ all -> 0x0098 }
-            return r3
-        L_0x007d:
-            if (r4 == 0) goto L_0x008c
-            java.util.ArrayList r6 = new java.util.ArrayList     // Catch:{ all -> 0x0098 }
-            r6.<init>()     // Catch:{ all -> 0x0098 }
-            r6.add(r4)     // Catch:{ all -> 0x0098 }
-            android.support.v4.util.SimpleArrayMap<java.lang.String, java.util.ArrayList<android.support.v4.provider.SelfDestructiveThread$ReplyCallback<android.support.v4.provider.FontsContractCompat$TypefaceResult>>> r7 = sPendingReplies     // Catch:{ all -> 0x0098 }
-            r7.put(r0, r6)     // Catch:{ all -> 0x0098 }
-        L_0x008c:
-            monitor-exit(r5)     // Catch:{ all -> 0x0098 }
-            android.support.v4.provider.SelfDestructiveThread r5 = sBackgroundThread
-            android.support.v4.provider.FontsContractCompat$3 r6 = new android.support.v4.provider.FontsContractCompat$3
-            r6.<init>(r0)
-            r5.postAndReply(r2, r6)
-            return r3
-        L_0x0098:
-            r3 = move-exception
-            monitor-exit(r5)     // Catch:{ all -> 0x0098 }
-            throw r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.support.v4.provider.FontsContractCompat.getFontSync(android.content.Context, android.support.v4.provider.FontRequest, android.support.v4.content.res.ResourcesCompat$FontCallback, android.os.Handler, boolean, int, int):android.graphics.Typeface");
+    public static Typeface getFontSync(final Context context, final FontRequest request, @Nullable final TextView targetView, int strategy, int timeout, final int style) {
+        final String id = request.getIdentifier() + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + style;
+        Typeface cached = sTypefaceCache.get(id);
+        if (cached != null) {
+            return cached;
+        }
+        boolean isBlockingFetch = strategy == 0;
+        if (isBlockingFetch && timeout == -1) {
+            return getFontInternal(context, request, style);
+        }
+        Callable<Typeface> fetcher = new Callable<Typeface>() {
+            public Typeface call() throws Exception {
+                Typeface typeface = FontsContractCompat.getFontInternal(context, request, style);
+                if (typeface != null) {
+                    FontsContractCompat.sTypefaceCache.put(id, typeface);
+                }
+                return typeface;
+            }
+        };
+        if (isBlockingFetch) {
+            try {
+                return (Typeface) sBackgroundThread.postAndWait(fetcher, timeout);
+            } catch (InterruptedException e) {
+                return null;
+            }
+        } else {
+            final WeakReference<TextView> textViewWeak = new WeakReference<>(targetView);
+            SelfDestructiveThread.ReplyCallback<Typeface> reply = new SelfDestructiveThread.ReplyCallback<Typeface>() {
+                public void onReply(Typeface typeface) {
+                    if (((TextView) textViewWeak.get()) != null) {
+                        targetView.setTypeface(typeface, style);
+                    }
+                }
+            };
+            synchronized (sLock) {
+                if (sPendingReplies.containsKey(id)) {
+                    sPendingReplies.get(id).add(reply);
+                    return null;
+                }
+                ArrayList<SelfDestructiveThread.ReplyCallback<Typeface>> pendingReplies = new ArrayList<>();
+                pendingReplies.add(reply);
+                sPendingReplies.put(id, pendingReplies);
+                sBackgroundThread.postAndReply(fetcher, new SelfDestructiveThread.ReplyCallback<Typeface>() {
+                    public void onReply(Typeface typeface) {
+                        ArrayList arrayList;
+                        synchronized (FontsContractCompat.sLock) {
+                            arrayList = (ArrayList) FontsContractCompat.sPendingReplies.get(id);
+                            FontsContractCompat.sPendingReplies.remove(id);
+                        }
+                        for (int i = 0; i < arrayList.size(); i++) {
+                            ((SelfDestructiveThread.ReplyCallback) arrayList.get(i)).onReply(typeface);
+                        }
+                    }
+                });
+                return null;
+            }
+        }
     }
 
     public static class FontInfo {
@@ -268,6 +211,11 @@ public class FontsContractCompat {
         private final int mStatusCode;
 
         @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
+        @Retention(RetentionPolicy.SOURCE)
+        @interface FontResultStatus {
+        }
+
+        @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
         public FontFamilyResult(int statusCode, @Nullable FontInfo[] fonts) {
             this.mStatusCode = statusCode;
             this.mFonts = fonts;
@@ -288,14 +236,11 @@ public class FontsContractCompat {
         public static final int FAIL_REASON_FONT_UNAVAILABLE = 2;
         public static final int FAIL_REASON_MALFORMED_QUERY = 3;
         public static final int FAIL_REASON_PROVIDER_NOT_FOUND = -1;
-        public static final int FAIL_REASON_SECURITY_VIOLATION = -4;
         public static final int FAIL_REASON_WRONG_CERTIFICATES = -2;
-        @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
-        public static final int RESULT_OK = 0;
 
         @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
         @Retention(RetentionPolicy.SOURCE)
-        public @interface FontRequestFailReason {
+        @interface FontRequestFailReason {
         }
 
         public void onTypefaceRetrieved(Typeface typeface) {
@@ -396,7 +341,6 @@ public class FontsContractCompat {
         });
     }
 
-    @Nullable
     public static Typeface buildTypeface(@NonNull Context context, @Nullable CancellationSignal cancellationSignal, @NonNull FontInfo[] fonts) {
         return TypefaceCompat.createFromFontInfo(context, cancellationSignal, fonts, 0);
     }
@@ -433,9 +377,7 @@ public class FontsContractCompat {
         ProviderInfo info = packageManager.resolveContentProvider(providerAuthority, 0);
         if (info == null) {
             throw new PackageManager.NameNotFoundException("No package found for authority: " + providerAuthority);
-        } else if (!info.packageName.equals(request.getProviderPackage())) {
-            throw new PackageManager.NameNotFoundException("Found content provider " + providerAuthority + ", but package was not " + request.getProviderPackage());
-        } else {
+        } else if (info.packageName.equals(request.getProviderPackage())) {
             List<byte[]> signatures = convertToByteArrayList(packageManager.getPackageInfo(info.packageName, 64).signatures);
             Collections.sort(signatures, sByteArrayComparator);
             List<List<byte[]>> requestCertificatesList = getCertificates(request, resources);
@@ -447,6 +389,8 @@ public class FontsContractCompat {
                 }
             }
             return null;
+        } else {
+            throw new PackageManager.NameNotFoundException("Found content provider " + providerAuthority + ", but package was not " + request.getProviderPackage());
         }
     }
 
@@ -477,54 +421,49 @@ public class FontsContractCompat {
         return shas;
     }
 
-    /* JADX INFO: finally extract failed */
     @VisibleForTesting
     @NonNull
     static FontInfo[] getFontFromProvider(Context context, FontRequest request, String authority, CancellationSignal cancellationSignal) {
-        Cursor cursor;
+        Cursor query;
         Uri fileUri;
         String str = authority;
         ArrayList<FontInfo> result = new ArrayList<>();
         Uri uri = new Uri.Builder().scheme("content").authority(str).build();
-        Uri fileBaseUri = new Uri.Builder().scheme("content").authority(str).appendPath("file").build();
-        Cursor cursor2 = null;
+        Uri fileBaseUri = new Uri.Builder().scheme("content").authority(str).appendPath(ContentResolver.SCHEME_FILE).build();
+        Cursor cursor = null;
         try {
+            int i = 0;
             if (Build.VERSION.SDK_INT > 16) {
-                cursor = context.getContentResolver().query(uri, new String[]{"_id", Columns.FILE_ID, Columns.TTC_INDEX, Columns.VARIATION_SETTINGS, Columns.WEIGHT, Columns.ITALIC, Columns.RESULT_CODE}, "query = ?", new String[]{request.getQuery()}, (String) null, cancellationSignal);
+                query = context.getContentResolver().query(uri, new String[]{"_id", "file_id", "font_ttc_index", "font_variation_settings", "font_weight", "font_italic", "result_code"}, "query = ?", new String[]{request.getQuery()}, (String) null, cancellationSignal);
             } else {
-                cursor = context.getContentResolver().query(uri, new String[]{"_id", Columns.FILE_ID, Columns.TTC_INDEX, Columns.VARIATION_SETTINGS, Columns.WEIGHT, Columns.ITALIC, Columns.RESULT_CODE}, "query = ?", new String[]{request.getQuery()}, (String) null);
+                query = context.getContentResolver().query(uri, new String[]{"_id", "file_id", "font_ttc_index", "font_variation_settings", "font_weight", "font_italic", "result_code"}, "query = ?", new String[]{request.getQuery()}, (String) null);
             }
-            Cursor cursor3 = cursor;
-            if (cursor3 != null && cursor3.getCount() > 0) {
-                int resultCodeColumnIndex = cursor3.getColumnIndex(Columns.RESULT_CODE);
+            cursor = query;
+            if (cursor != null && cursor.getCount() > 0) {
+                int resultCodeColumnIndex = cursor.getColumnIndex("result_code");
                 result = new ArrayList<>();
-                int idColumnIndex = cursor3.getColumnIndex("_id");
-                int fileIdColumnIndex = cursor3.getColumnIndex(Columns.FILE_ID);
-                int ttcIndexColumnIndex = cursor3.getColumnIndex(Columns.TTC_INDEX);
-                int weightColumnIndex = cursor3.getColumnIndex(Columns.WEIGHT);
-                int italicColumnIndex = cursor3.getColumnIndex(Columns.ITALIC);
-                while (cursor3.moveToNext()) {
-                    int resultCode = resultCodeColumnIndex != -1 ? cursor3.getInt(resultCodeColumnIndex) : 0;
-                    int ttcIndex = ttcIndexColumnIndex != -1 ? cursor3.getInt(ttcIndexColumnIndex) : 0;
+                int idColumnIndex = cursor.getColumnIndex("_id");
+                int fileIdColumnIndex = cursor.getColumnIndex("file_id");
+                int ttcIndexColumnIndex = cursor.getColumnIndex("font_ttc_index");
+                int weightColumnIndex = cursor.getColumnIndex("font_weight");
+                int italicColumnIndex = cursor.getColumnIndex("font_italic");
+                while (cursor.moveToNext()) {
+                    int resultCode = resultCodeColumnIndex != -1 ? cursor.getInt(resultCodeColumnIndex) : i;
+                    int ttcIndex = ttcIndexColumnIndex != -1 ? cursor.getInt(ttcIndexColumnIndex) : i;
                     if (fileIdColumnIndex == -1) {
-                        fileUri = ContentUris.withAppendedId(uri, cursor3.getLong(idColumnIndex));
+                        fileUri = ContentUris.withAppendedId(uri, cursor.getLong(idColumnIndex));
                     } else {
-                        fileUri = ContentUris.withAppendedId(fileBaseUri, cursor3.getLong(fileIdColumnIndex));
+                        fileUri = ContentUris.withAppendedId(fileBaseUri, cursor.getLong(fileIdColumnIndex));
                     }
-                    result.add(new FontInfo(fileUri, ttcIndex, weightColumnIndex != -1 ? cursor3.getInt(weightColumnIndex) : 400, italicColumnIndex != -1 && cursor3.getInt(italicColumnIndex) == 1, resultCode));
+                    result.add(new FontInfo(fileUri, ttcIndex, weightColumnIndex != -1 ? cursor.getInt(weightColumnIndex) : 400, italicColumnIndex != -1 && cursor.getInt(italicColumnIndex) == 1, resultCode));
+                    i = 0;
                 }
             }
-            if (cursor3 != null) {
-                cursor3.close();
-            }
             return (FontInfo[]) result.toArray(new FontInfo[0]);
-        } catch (Throwable th) {
-            ArrayList<FontInfo> arrayList = result;
-            Throwable th2 = th;
-            if (cursor2 != null) {
-                cursor2.close();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
-            throw th2;
         }
     }
 }

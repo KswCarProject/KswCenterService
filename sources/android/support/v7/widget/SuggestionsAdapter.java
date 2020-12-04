@@ -3,6 +3,7 @@ package android.support.v7.widget;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -24,7 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.wits.pms.BuildConfig;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,7 +77,7 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
     }
 
     public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
-        String query = constraint == null ? BuildConfig.FLAVOR : constraint.toString();
+        String query = constraint == null ? "" : constraint.toString();
         if (this.mSearchView.getVisibility() != 0 || this.mSearchView.getWindowVisibility() != 0) {
             return null;
         }
@@ -110,7 +110,7 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
 
     private void updateSpinnerState(Cursor cursor) {
         Bundle extras = cursor != null ? cursor.getExtras() : null;
-        if (extras != null && !extras.getBoolean("in_progress")) {
+        if (extras != null && !extras.getBoolean(SearchManager.CURSOR_EXTRA_KEY_IN_PROGRESS)) {
         }
     }
 
@@ -126,12 +126,12 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
         try {
             super.changeCursor(c);
             if (c != null) {
-                this.mText1Col = c.getColumnIndex("suggest_text_1");
-                this.mText2Col = c.getColumnIndex("suggest_text_2");
-                this.mText2UrlCol = c.getColumnIndex("suggest_text_2_url");
-                this.mIconName1Col = c.getColumnIndex("suggest_icon_1");
-                this.mIconName2Col = c.getColumnIndex("suggest_icon_2");
-                this.mFlagsCol = c.getColumnIndex("suggest_flags");
+                this.mText1Col = c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1);
+                this.mText2Col = c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_2);
+                this.mText2UrlCol = c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_2_URL);
+                this.mIconName1Col = c.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_1);
+                this.mIconName2Col = c.getColumnIndex(SearchManager.SUGGEST_COLUMN_ICON_2);
+                this.mFlagsCol = c.getColumnIndex(SearchManager.SUGGEST_COLUMN_FLAGS);
             }
         } catch (Exception e) {
             Log.e(LOG_TAG, "error changing cursor and caching columns", e);
@@ -266,14 +266,14 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
         if (cursor == null) {
             return null;
         }
-        String query = getColumnString(cursor, "suggest_intent_query");
+        String query = getColumnString(cursor, SearchManager.SUGGEST_COLUMN_QUERY);
         if (query != null) {
             return query;
         }
-        if (this.mSearchable.shouldRewriteQueryFromData() && (data = getColumnString(cursor, "suggest_intent_data")) != null) {
+        if (this.mSearchable.shouldRewriteQueryFromData() && (data = getColumnString(cursor, SearchManager.SUGGEST_COLUMN_INTENT_DATA)) != null) {
             return data;
         }
-        if (!this.mSearchable.shouldRewriteQueryFromText() || (text1 = getColumnString(cursor, "suggest_text_1")) == null) {
+        if (!this.mSearchable.shouldRewriteQueryFromText() || (text1 = getColumnString(cursor, SearchManager.SUGGEST_COLUMN_TEXT_1)) == null) {
             return null;
         }
         return text1;
@@ -286,7 +286,7 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
             Log.w(LOG_TAG, "Search suggestions cursor threw exception.", e);
             View v = newView(this.mContext, this.mCursor, parent);
             if (v != null) {
-                ((ChildViewCache) v.getTag()).mText1.setText(e.toString());
+                ((ChildViewCache) v.getTag()).mText1.setText((CharSequence) e.toString());
             }
             return v;
         }
@@ -299,7 +299,7 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
             Log.w(LOG_TAG, "Search suggestions cursor threw exception.", e);
             View v = newDropDownView(this.mContext, this.mCursor, parent);
             if (v != null) {
-                ((ChildViewCache) v.getTag()).mText1.setText(e.toString());
+                ((ChildViewCache) v.getTag()).mText1.setText((CharSequence) e.toString());
             }
             return v;
         }
@@ -336,20 +336,20 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
     private Drawable getDrawable(Uri uri) {
         InputStream stream;
         try {
-            if ("android.resource".equals(uri.getScheme())) {
+            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
                 return getDrawableFromResourceUri(uri);
             }
             stream = this.mProviderContext.getContentResolver().openInputStream(uri);
-            if (stream == null) {
-                throw new FileNotFoundException("Failed to open " + uri);
+            if (stream != null) {
+                Drawable createFromStream = Drawable.createFromStream(stream, (String) null);
+                try {
+                    stream.close();
+                } catch (IOException ex) {
+                    Log.e(LOG_TAG, "Error closing icon stream for " + uri, ex);
+                }
+                return createFromStream;
             }
-            Drawable createFromStream = Drawable.createFromStream(stream, (String) null);
-            try {
-                stream.close();
-            } catch (IOException ex) {
-                Log.e(LOG_TAG, "Error closing icon stream for " + uri, ex);
-            }
-            return createFromStream;
+            throw new FileNotFoundException("Failed to open " + uri);
         } catch (Resources.NotFoundException e) {
             throw new FileNotFoundException("Resource does not exist: " + uri);
         } catch (FileNotFoundException fnfe) {
@@ -445,33 +445,34 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
     public Drawable getDrawableFromResourceUri(Uri uri) throws FileNotFoundException {
         int id;
         String authority = uri.getAuthority();
-        if (TextUtils.isEmpty(authority)) {
-            throw new FileNotFoundException("No authority: " + uri);
-        }
-        try {
-            Resources r = this.mContext.getPackageManager().getResourcesForApplication(authority);
-            List<String> path = uri.getPathSegments();
-            if (path == null) {
-                throw new FileNotFoundException("No path: " + uri);
-            }
-            int len = path.size();
-            if (len == 1) {
-                try {
-                    id = Integer.parseInt(path.get(0));
-                } catch (NumberFormatException e) {
-                    throw new FileNotFoundException("Single path segment is not a resource ID: " + uri);
+        if (!TextUtils.isEmpty(authority)) {
+            try {
+                Resources r = this.mContext.getPackageManager().getResourcesForApplication(authority);
+                List<String> path = uri.getPathSegments();
+                if (path != null) {
+                    int len = path.size();
+                    if (len == 1) {
+                        try {
+                            id = Integer.parseInt(path.get(0));
+                        } catch (NumberFormatException e) {
+                            throw new FileNotFoundException("Single path segment is not a resource ID: " + uri);
+                        }
+                    } else if (len == 2) {
+                        id = r.getIdentifier(path.get(1), path.get(0), authority);
+                    } else {
+                        throw new FileNotFoundException("More than two path segments: " + uri);
+                    }
+                    if (id != 0) {
+                        return r.getDrawable(id);
+                    }
+                    throw new FileNotFoundException("No resource found for: " + uri);
                 }
-            } else if (len == 2) {
-                id = r.getIdentifier(path.get(1), path.get(0), authority);
-            } else {
-                throw new FileNotFoundException("More than two path segments: " + uri);
+                throw new FileNotFoundException("No path: " + uri);
+            } catch (PackageManager.NameNotFoundException e2) {
+                throw new FileNotFoundException("No package found for authority: " + uri);
             }
-            if (id != 0) {
-                return r.getDrawable(id);
-            }
-            throw new FileNotFoundException("No resource found for: " + uri);
-        } catch (PackageManager.NameNotFoundException e2) {
-            throw new FileNotFoundException("No package found for authority: " + uri);
+        } else {
+            throw new FileNotFoundException("No authority: " + uri);
         }
     }
 
@@ -481,12 +482,12 @@ class SuggestionsAdapter extends ResourceCursorAdapter implements View.OnClickLi
         if (searchable == null || (authority = searchable.getSuggestAuthority()) == null) {
             return null;
         }
-        Uri.Builder uriBuilder = new Uri.Builder().scheme("content").authority(authority).query(BuildConfig.FLAVOR).fragment(BuildConfig.FLAVOR);
+        Uri.Builder uriBuilder = new Uri.Builder().scheme("content").authority(authority).query("").fragment("");
         String contentPath = searchable.getSuggestPath();
         if (contentPath != null) {
             uriBuilder.appendEncodedPath(contentPath);
         }
-        uriBuilder.appendPath("search_suggest_query");
+        uriBuilder.appendPath(SearchManager.SUGGEST_URI_PATH_QUERY);
         String selection = searchable.getSuggestSelection();
         String[] selArgs = null;
         if (selection != null) {

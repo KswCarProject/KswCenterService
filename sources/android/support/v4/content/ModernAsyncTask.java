@@ -39,14 +39,15 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
             return new Thread(r, "ModernAsyncTask #" + this.mCount.getAndIncrement());
         }
     };
-    final AtomicBoolean mCancelled = new AtomicBoolean();
+    /* access modifiers changed from: private */
+    public final AtomicBoolean mCancelled = new AtomicBoolean();
     private final FutureTask<Result> mFuture = new FutureTask<Result>(this.mWorker) {
         /* access modifiers changed from: protected */
         public void done() {
             try {
                 ModernAsyncTask.this.postResultIfNotInvoked(get());
             } catch (InterruptedException e) {
-                Log.w(ModernAsyncTask.LOG_TAG, e);
+                Log.w(ModernAsyncTask.LOG_TAG, (Throwable) e);
             } catch (ExecutionException e2) {
                 throw new RuntimeException("An error occurred while executing doInBackground()", e2.getCause());
             } catch (CancellationException e3) {
@@ -57,7 +58,8 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
         }
     };
     private volatile Status mStatus = Status.PENDING;
-    final AtomicBoolean mTaskInvoked = new AtomicBoolean();
+    /* access modifiers changed from: private */
+    public final AtomicBoolean mTaskInvoked = new AtomicBoolean();
     private final WorkerRunnable<Params, Result> mWorker = new WorkerRunnable<Params, Result>() {
         public Result call() throws Exception {
             ModernAsyncTask.this.mTaskInvoked.set(true);
@@ -98,9 +100,6 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
     public static void setDefaultExecutor(Executor exec) {
         sDefaultExecutor = exec;
-    }
-
-    ModernAsyncTask() {
     }
 
     /* access modifiers changed from: package-private */
@@ -203,7 +202,7 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     }
 
     private static class InternalHandler extends Handler {
-        InternalHandler() {
+        public InternalHandler() {
             super(Looper.getMainLooper());
         }
 

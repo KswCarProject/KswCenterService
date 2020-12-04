@@ -17,10 +17,12 @@ public final class JsonParser {
         try {
             JsonReader jsonReader = new JsonReader(json);
             JsonElement element = parse(jsonReader);
-            if (element.isJsonNull() || jsonReader.peek() == JsonToken.END_DOCUMENT) {
-                return element;
+            if (!element.isJsonNull()) {
+                if (jsonReader.peek() != JsonToken.END_DOCUMENT) {
+                    throw new JsonSyntaxException("Did not consume the entire document.");
+                }
             }
-            throw new JsonSyntaxException("Did not consume the entire document.");
+            return element;
         } catch (MalformedJsonException e) {
             throw new JsonSyntaxException((Throwable) e);
         } catch (IOException e2) {

@@ -19,6 +19,9 @@ class FocusStrategy {
         int size(T t);
     }
 
+    FocusStrategy() {
+    }
+
     public static <L, T> T findNextFocusInRelativeDirection(@NonNull L focusables, @NonNull CollectionAdapter<L, T> collectionAdapter, @NonNull BoundsAdapter<T> adapter, @Nullable T focused, int direction, boolean isLayoutRtl, boolean wrap) {
         int count = collectionAdapter.size(focusables);
         ArrayList<T> sortedFocusables = new ArrayList<>(count);
@@ -123,10 +126,10 @@ class FocusStrategy {
             bestCandidateRect.offset(0, focusedRect.height() + 1);
         } else if (direction == 66) {
             bestCandidateRect.offset(-(focusedRect.width() + 1), 0);
-        } else if (direction != 130) {
-            throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
-        } else {
+        } else if (direction == 130) {
             bestCandidateRect.offset(0, -(focusedRect.height() + 1));
+        } else {
+            throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
         }
         T closest = null;
         int count = collectionAdapter.size(focusables);
@@ -162,10 +165,13 @@ class FocusStrategy {
         if (beamsOverlap(direction, source, rect2) || !rect1InSrcBeam) {
             return false;
         }
-        if (isToDirectionOf(direction, source, rect2) && direction != 17 && direction != 66 && majorAxisDistance(direction, source, rect1) >= majorAxisDistanceToFarEdge(direction, source, rect2)) {
-            return false;
+        if (!isToDirectionOf(direction, source, rect2) || direction == 17 || direction == 66) {
+            return true;
         }
-        return true;
+        if (majorAxisDistance(direction, source, rect1) < majorAxisDistanceToFarEdge(direction, source, rect2)) {
+            return true;
+        }
+        return false;
     }
 
     private static int getWeightedDistanceFor(int majorAxisDistance, int minorAxisDistance) {
@@ -176,13 +182,10 @@ class FocusStrategy {
         if (direction != 17) {
             if (direction != 33) {
                 if (direction != 66) {
-                    if (direction != 130) {
-                        throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
-                    } else if ((srcRect.top < destRect.top || srcRect.bottom <= destRect.top) && srcRect.bottom < destRect.bottom) {
-                        return true;
-                    } else {
-                        return false;
+                    if (direction == 130) {
+                        return (srcRect.top < destRect.top || srcRect.bottom <= destRect.top) && srcRect.bottom < destRect.bottom;
                     }
+                    throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
                 } else if ((srcRect.left < destRect.left || srcRect.right <= destRect.left) && srcRect.right < destRect.right) {
                     return true;
                 } else {
@@ -300,8 +303,5 @@ class FocusStrategy {
             return Math.abs((source.left + (source.width() / 2)) - (dest.left + (dest.width() / 2)));
         }
         return Math.abs((source.top + (source.height() / 2)) - (dest.top + (dest.height() / 2)));
-    }
-
-    private FocusStrategy() {
     }
 }

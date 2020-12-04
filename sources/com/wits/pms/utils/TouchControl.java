@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import com.wits.pms.utils.TouchControl;
 
 public class TouchControl {
     private static final String TAG = "TouchControl";
@@ -21,7 +22,7 @@ public class TouchControl {
     }
 
     public static void opInterceptView(Context context, boolean intercept, final OnScreenStatusListener listener) {
-        final WindowManager windowManager = (WindowManager) context.getSystemService("window");
+        final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         if (intercept) {
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             lp.type = 2010;
@@ -39,11 +40,21 @@ public class TouchControl {
                 if (listener != null) {
                     mInterceptView.setOnTouchListener(new View.OnTouchListener() {
                         public boolean onTouch(View v, MotionEvent event) {
-                            new Handler(Looper.getMainLooper()).post(new TouchControl$1$$Lambda$0(listener, windowManager));
+                            new Handler(Looper.getMainLooper()).post(new Runnable(windowManager) {
+                                private final /* synthetic */ WindowManager f$1;
+
+                                {
+                                    this.f$1 = r2;
+                                }
+
+                                public final void run() {
+                                    TouchControl.AnonymousClass1.lambda$onTouch$0(TouchControl.OnScreenStatusListener.this, this.f$1);
+                                }
+                            });
                             return false;
                         }
 
-                        static final /* synthetic */ void lambda$onTouch$0$TouchControl$1(OnScreenStatusListener listener, WindowManager windowManager) {
+                        static /* synthetic */ void lambda$onTouch$0(OnScreenStatusListener listener, WindowManager windowManager) {
                             boolean unused = TouchControl.wasAdded = false;
                             try {
                                 listener.openScreen();
@@ -56,16 +67,30 @@ public class TouchControl {
                 }
             }
             try {
-                new Handler(Looper.getMainLooper()).post(new TouchControl$$Lambda$1(windowManager, lp));
+                new Handler(Looper.getMainLooper()).post(new Runnable(lp) {
+                    private final /* synthetic */ WindowManager.LayoutParams f$1;
+
+                    {
+                        this.f$1 = r2;
+                    }
+
+                    public final void run() {
+                        TouchControl.lambda$opInterceptView$1(WindowManager.this, this.f$1);
+                    }
+                });
             } catch (Exception e) {
                 Log.w(TAG, "addObserverListener interceptView failed.", e);
             }
         } else if (mInterceptView != null && wasAdded) {
-            new Handler(Looper.getMainLooper()).post(new TouchControl$$Lambda$0(windowManager));
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                public final void run() {
+                    TouchControl.lambda$opInterceptView$0(WindowManager.this);
+                }
+            });
         }
     }
 
-    static final /* synthetic */ void lambda$opInterceptView$0$TouchControl(WindowManager windowManager) {
+    static /* synthetic */ void lambda$opInterceptView$0(WindowManager windowManager) {
         wasAdded = false;
         try {
             windowManager.removeViewImmediate(mInterceptView);
@@ -74,7 +99,7 @@ public class TouchControl {
         }
     }
 
-    static final /* synthetic */ void lambda$opInterceptView$1$TouchControl(WindowManager windowManager, WindowManager.LayoutParams lp) {
+    static /* synthetic */ void lambda$opInterceptView$1(WindowManager windowManager, WindowManager.LayoutParams lp) {
         if (wasAdded) {
             windowManager.removeViewImmediate(mInterceptView);
         }
