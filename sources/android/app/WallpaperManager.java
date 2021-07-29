@@ -36,6 +36,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.WindowManagerGlobal;
 import com.android.internal.R;
+import com.ibm.icu.text.ArabicShaping;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -1302,7 +1303,7 @@ public class WallpaperManager {
             return cn;
         }
         try {
-            context.getPackageManager().getPackageInfo(cn.getPackageName(), 786432);
+            context.getPackageManager().getPackageInfo(cn.getPackageName(), (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL);
             return cn;
         } catch (PackageManager.NameNotFoundException e) {
             return null;

@@ -4674,10 +4674,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5455,10 +5455,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5482,10 +5482,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5508,10 +5508,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5532,10 +5532,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5737,10 +5737,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -6942,10 +6942,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7519,10 +7519,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7560,10 +7560,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7601,10 +7601,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7749,10 +7749,10 @@ public interface IPackageManager extends IInterface {
                                     if (_reply.readInt() != 0) {
                                         z4 = true;
                                     }
-                                    boolean _status = z4;
+                                    boolean _result = z4;
                                     _reply.recycle();
                                     _data.recycle();
-                                    return _status;
+                                    return _result;
                                 }
                                 boolean performDexOptMode = Stub.getDefaultImpl().performDexOptMode(packageName, checkProfiles, targetCompilerFilter, force, bootComplete, splitName);
                                 _reply.recycle();
@@ -7812,10 +7812,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7836,10 +7836,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7898,10 +7898,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8068,10 +8068,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8220,10 +8220,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8297,10 +8297,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8365,10 +8365,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8388,10 +8388,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8411,10 +8411,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8455,10 +8455,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8478,10 +8478,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8504,10 +8504,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8529,10 +8529,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8575,10 +8575,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8620,10 +8620,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8645,10 +8645,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8940,10 +8940,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9032,10 +9032,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9084,10 +9084,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9109,10 +9109,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9218,10 +9218,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9320,10 +9320,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9532,10 +9532,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9558,10 +9558,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -9697,10 +9697,10 @@ public interface IPackageManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

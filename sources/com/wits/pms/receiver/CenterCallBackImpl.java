@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.Telephony;
+import android.text.TextUtils;
 import android.util.Log;
 import com.wits.pms.IContentObserver;
 import com.wits.pms.bean.TxzMessage;
@@ -14,6 +15,8 @@ public class CenterCallBackImpl {
     static final String TAG = "CenterCallBack";
     private static CenterCallBackImpl centerCall;
     private static Context mContext;
+    /* access modifiers changed from: private */
+    public static String mPreMediaPkgName = null;
 
     public static void init(Context context) {
         if (context != null) {
@@ -45,8 +48,28 @@ public class CenterCallBackImpl {
         });
         PowerManagerApp.registerIContentObserver("topApp", new IContentObserver.Stub() {
             public void onChange() throws RemoteException {
-                if ("com.txznet.music".equals(PowerManagerApp.getStatusString("topApp"))) {
+                String pkgName = PowerManagerApp.getStatusString("topApp");
+                Log.i(CenterCallBackImpl.TAG, "onChange: topApp = " + pkgName);
+                if ("com.txznet.music".equals(pkgName)) {
                     CenterCallBackImpl.this.musicType(1);
+                }
+                if (pkgName.contains("cn.kuwo.kwmusiccar") || pkgName.contains("com.ximalaya.ting.android.car")) {
+                    CenterCallBackImpl.this.appFocus(CenterCallBackImpl.mPreMediaPkgName, pkgName);
+                    if (!TextUtils.equals(pkgName, CenterCallBackImpl.mPreMediaPkgName)) {
+                        String unused = CenterCallBackImpl.mPreMediaPkgName = pkgName;
+                    }
+                }
+            }
+        });
+        PowerManagerApp.registerIContentObserver("currentMediaPkg", new IContentObserver.Stub() {
+            public void onChange() throws RemoteException {
+                String pkgName = PowerManagerApp.getStatusString("currentMediaPkg");
+                if (pkgName.contains("cn.kuwo.kwmusiccar") || pkgName.contains("com.ximalaya.ting.android.car")) {
+                    Log.i(CenterCallBackImpl.TAG, "onChange: currentMediaPkg =" + pkgName);
+                    CenterCallBackImpl.this.appFocus(CenterCallBackImpl.mPreMediaPkgName, pkgName);
+                    if (!TextUtils.equals(pkgName, CenterCallBackImpl.mPreMediaPkgName)) {
+                        String unused = CenterCallBackImpl.mPreMediaPkgName = pkgName;
+                    }
                 }
             }
         });

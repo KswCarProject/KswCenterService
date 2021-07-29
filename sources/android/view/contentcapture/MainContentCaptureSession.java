@@ -14,6 +14,7 @@ import android.view.autofill.AutofillId;
 import android.view.contentcapture.IContentCaptureDirectManager;
 import android.view.contentcapture.ViewNode;
 import com.android.internal.os.IResultReceiver;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public final class MainContentCaptureSession extends ContentCaptureSession {
                     this.mSystemServerInterface.startSession(this.mApplicationToken, component, this.mId, flags, this.mSessionStateReceiver);
                 } catch (RemoteException e) {
                     String str3 = TAG;
-                    Log.w(str3, "Error starting session for " + component.flattenToShortString() + ": " + e);
+                    Log.w(str3, "Error starting session for " + component.flattenToShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                 }
             } else if (ContentCaptureHelper.sDebug) {
                 String str4 = TAG;
@@ -154,7 +155,7 @@ public final class MainContentCaptureSession extends ContentCaptureSession {
                 binder.linkToDeath(this.mDirectServiceVulture, 0);
             } catch (RemoteException e) {
                 String str = TAG;
-                Log.w(str, "Failed to link to death on " + binder + ": " + e);
+                Log.w(str, "Failed to link to death on " + binder + PluralRules.KEYWORD_RULE_SEPARATOR + e);
             }
         }
         if ((resultCode & 4) != 0) {
@@ -373,7 +374,7 @@ public final class MainContentCaptureSession extends ContentCaptureSession {
                     this.mDirectServiceInterface.sendEvents(clearEvents(), reason, this.mManager.mOptions);
                 } catch (RemoteException e) {
                     String str4 = TAG;
-                    Log.w(str4, "Error sending " + numberEvents + " for " + getDebugState() + ": " + e);
+                    Log.w(str4, "Error sending " + numberEvents + " for " + getDebugState() + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                 }
             }
         }
@@ -413,7 +414,7 @@ public final class MainContentCaptureSession extends ContentCaptureSession {
             this.mSystemServerInterface.finishSession(this.mId);
         } catch (RemoteException e) {
             String str2 = TAG;
-            Log.e(str2, "Error destroying system-service session " + this.mId + " for " + getDebugState() + ": " + e);
+            Log.e(str2, "Error destroying system-service session " + this.mId + " for " + getDebugState() + PluralRules.KEYWORD_RULE_SEPARATOR + e);
         }
     }
 
@@ -551,7 +552,7 @@ public final class MainContentCaptureSession extends ContentCaptureSession {
                 for (int i = 0; i < numberEvents; i++) {
                     pw.print(prefix3);
                     pw.print(i);
-                    pw.print(": ");
+                    pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                     this.mEvents.get(i).dump(pw);
                     pw.println();
                 }

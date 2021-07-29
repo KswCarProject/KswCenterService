@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import com.android.internal.util.MessageUtils;
+import com.ibm.icu.text.DateFormat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -121,7 +122,7 @@ public final class ApfProgramEvent implements IpConnectivityLog.Event {
     public String toString() {
         String lifetimeString;
         if (this.lifetime < Long.MAX_VALUE) {
-            lifetimeString = this.lifetime + "s";
+            lifetimeString = this.lifetime + DateFormat.SECOND;
         } else {
             lifetimeString = "forever";
         }

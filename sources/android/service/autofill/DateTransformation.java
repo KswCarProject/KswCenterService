@@ -9,6 +9,7 @@ import android.view.autofill.AutofillValue;
 import android.view.autofill.Helper;
 import android.widget.RemoteViews;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.util.Date;
 
 public final class DateTransformation extends InternalTransformation implements Transformation, Parcelable {
@@ -45,7 +46,7 @@ public final class DateTransformation extends InternalTransformation implements 
                 }
                 parentTemplate.setCharSequence(childViewId, "setText", transformed);
             } catch (Exception e) {
-                Log.w(TAG, "Could not apply " + this.mDateFormat + " to " + value + ": " + e);
+                Log.w(TAG, "Could not apply " + this.mDateFormat + " to " + value + PluralRules.KEYWORD_RULE_SEPARATOR + e);
             }
         }
     }

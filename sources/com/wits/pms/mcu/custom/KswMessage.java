@@ -6,6 +6,8 @@ import com.wits.pms.mcu.McuMessage;
 public class KswMessage extends McuMessage {
     public static final int FRAMEHEAD = 242;
     public static final int NORMAL_DATATYPE = 0;
+    public static final int REQUEST_AIR_DATA_CMD = 10;
+    public static final int REQUEST_MEDIA_DATA_CMD = 11;
     public static final int UPDATE_DATATYPE = 160;
     private int cmdType;
 
@@ -74,5 +76,16 @@ public class KswMessage extends McuMessage {
 
     public byte[] getSourceData() {
         return this.outData;
+    }
+
+    public static KswMessage obtainKswMcuMsg(int type) {
+        switch (type) {
+            case 10:
+                return new KswMessage(104, new byte[]{10, 0});
+            case 11:
+                return new KswMessage(104, new byte[]{11, 0});
+            default:
+                return null;
+        }
     }
 }

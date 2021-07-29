@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.autofill.AutofillManager;
 import android.view.autofill.Helper;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 
 public class Application extends ContextWrapper implements ComponentCallbacks2 {
@@ -503,7 +504,7 @@ public class Application extends ContextWrapper implements ComponentCallbacks2 {
                 i++;
             } else {
                 if (Helper.sVerbose) {
-                    Log.v(TAG, "getAutofillClient(): found activity for " + this + ": " + activity);
+                    Log.v(TAG, "getAutofillClient(): found activity for " + this + PluralRules.KEYWORD_RULE_SEPARATOR + activity);
                 }
                 return activity;
             }

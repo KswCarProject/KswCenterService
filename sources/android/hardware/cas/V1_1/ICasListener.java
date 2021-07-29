@@ -14,10 +14,12 @@ import android.os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.GsmAlphabet;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public interface ICasListener extends android.hardware.cas.V1_0.ICasListener {
     public static final String kInterfaceName = "android.hardware.cas@1.1::ICasListener";
@@ -301,7 +303,7 @@ public interface ICasListener extends android.hardware.cas.V1_0.ICasListener {
         }
 
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{37, 1, 45, 23, 120, -9, 57, 111, -106, 123, -68, 2, 49, 57, 125, 84, 75, -34, 66, GsmAlphabet.GSM_EXTENDED_ESCAPE, -91, -71, -121, 6, -55, -28, -118, -57, MidiConstants.STATUS_NOTE_ON, 97, 38, -125}, new byte[]{-72, BluetoothHidDevice.ERROR_RSP_UNKNOWN, 20, 86, -72, 31, Byte.MIN_VALUE, 3, 45, 13, -25, -53, 69, 101, 42, -63, 90, MidiConstants.STATUS_MIDI_TIME_CODE, 30, 116, 116, -43, 32, -41, 87, 72, 30, -54, -83, 121, 109, -1}, new byte[]{-20, Byte.MAX_VALUE, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{37, 1, 45, 23, 120, -9, 57, 111, -106, 123, -68, 2, 49, 57, Bidi.MAX_EXPLICIT_LEVEL, 84, 75, -34, 66, GsmAlphabet.GSM_EXTENDED_ESCAPE, -91, -71, -121, 6, -55, -28, -118, -57, MidiConstants.STATUS_NOTE_ON, 97, 38, -125}, new byte[]{-72, BluetoothHidDevice.ERROR_RSP_UNKNOWN, 20, 86, -72, 31, Byte.MIN_VALUE, 3, 45, 13, -25, -53, 69, 101, 42, -63, 90, MidiConstants.STATUS_MIDI_TIME_CODE, 30, 116, 116, -43, HebrewProber.SPACE, -41, 87, 72, 30, -54, -83, 121, 109, -1}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
         }
 
         public final void setHALInstrumentation() {

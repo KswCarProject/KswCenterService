@@ -10,8 +10,8 @@ public class BrightnessUtils {
     public static final int convertGammaToLinear(int val, int min, int max) {
         float ret;
         float normalizedVal = MathUtils.norm(0.0f, 1023.0f, (float) val);
-        if (normalizedVal <= R) {
-            ret = MathUtils.sq(normalizedVal / R);
+        if (normalizedVal <= 0.5f) {
+            ret = MathUtils.sq(normalizedVal / 0.5f);
         } else {
             ret = MathUtils.exp((normalizedVal - C) / A) + B;
         }
@@ -22,7 +22,7 @@ public class BrightnessUtils {
         float ret;
         float normalizedVal = MathUtils.norm((float) min, (float) max, (float) val) * 12.0f;
         if (normalizedVal <= 1.0f) {
-            ret = MathUtils.sqrt(normalizedVal) * R;
+            ret = MathUtils.sqrt(normalizedVal) * 0.5f;
         } else {
             ret = C + (MathUtils.log(normalizedVal - B) * A);
         }

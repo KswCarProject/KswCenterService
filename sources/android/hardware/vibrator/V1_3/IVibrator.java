@@ -18,10 +18,12 @@ import android.os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.GsmAlphabet;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public interface IVibrator extends android.hardware.vibrator.V1_2.IVibrator {
     public static final String kInterfaceName = "android.hardware.vibrator@1.3::IVibrator";
@@ -432,7 +434,7 @@ public interface IVibrator extends android.hardware.vibrator.V1_2.IVibrator {
         }
 
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{MidiConstants.STATUS_CHANNEL_MASK, Byte.MAX_VALUE, -9, 55, -109, 84, -115, 81, 84, 1, BluetoothHidDevice.SUBCLASS1_KEYBOARD, 89, -73, MidiConstants.STATUS_PITCH_BEND, -2, -98, -10, 53, 93, 50, 33, -118, -50, 21, 121, 84, MidiConstants.STATUS_CHANNEL_PRESSURE, 32, 85, -11, 36, -117}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, -4, -97, -39, 83, 110, MidiConstants.STATUS_CHANNEL_PRESSURE, -97, 4, -68, -81, 34, 42, 51, 43, -55, 25, MidiConstants.STATUS_MIDI_TIME_CODE, 86, 93, 77, 8, -67, -36, -51, -21, -31, -65, -54, -113, 1, -75}, new byte[]{-7, 90, 30, -123, 97, 47, 45, 13, 97, 110, -84, -46, -21, 99, -59, 45, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, -33, -88, -119, MidiConstants.STATUS_MIDI_TIME_CODE, 101, -33, 87, 105, 124, 48, -31, -12, 123, 71, -123}, new byte[]{6, -22, 100, -52, 53, 101, 119, Byte.MAX_VALUE, 59, 37, -98, BluetoothHidDevice.SUBCLASS1_KEYBOARD, MidiConstants.STATUS_CHANNEL_MASK, -6, 113, 0, MidiConstants.STATUS_CHANNEL_PRESSURE, Byte.MAX_VALUE, 56, 39, -83, -109, 87, MidiConstants.STATUS_CONTROL_CHANGE, -59, -45, -58, 81, 56, 78, 85, 83}, new byte[]{-20, Byte.MAX_VALUE, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{MidiConstants.STATUS_CHANNEL_MASK, Bidi.LEVEL_DEFAULT_RTL, -9, 55, -109, 84, -115, 81, 84, 1, BluetoothHidDevice.SUBCLASS1_KEYBOARD, 89, -73, MidiConstants.STATUS_PITCH_BEND, -2, -98, -10, 53, 93, 50, 33, -118, -50, 21, 121, 84, MidiConstants.STATUS_CHANNEL_PRESSURE, HebrewProber.SPACE, 85, -11, 36, -117}, new byte[]{GsmAlphabet.GSM_EXTENDED_ESCAPE, -4, -97, -39, 83, 110, MidiConstants.STATUS_CHANNEL_PRESSURE, -97, 4, -68, -81, 34, 42, 51, 43, -55, 25, MidiConstants.STATUS_MIDI_TIME_CODE, 86, 93, 77, 8, -67, -36, -51, -21, -31, -65, -54, -113, 1, -75}, new byte[]{-7, 90, 30, -123, 97, 47, 45, 13, 97, 110, -84, -46, -21, 99, -59, 45, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, -33, -88, -119, MidiConstants.STATUS_MIDI_TIME_CODE, 101, -33, 87, 105, 124, 48, -31, -12, 123, 71, -123}, new byte[]{6, -22, 100, -52, 53, 101, 119, Bidi.LEVEL_DEFAULT_RTL, 59, 37, -98, BluetoothHidDevice.SUBCLASS1_KEYBOARD, MidiConstants.STATUS_CHANNEL_MASK, -6, 113, 0, MidiConstants.STATUS_CHANNEL_PRESSURE, Bidi.LEVEL_DEFAULT_RTL, 56, 39, -83, -109, 87, MidiConstants.STATUS_CONTROL_CHANGE, -59, -45, -58, 81, 56, 78, 85, 83}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
         }
 
         public final void setHALInstrumentation() {

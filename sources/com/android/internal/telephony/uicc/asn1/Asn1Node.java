@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public final class Asn1Node {
     private static final List<Asn1Node> EMPTY_NODE_LIST = Collections.emptyList();
@@ -120,7 +121,7 @@ public final class Asn1Node {
 
     /* access modifiers changed from: private */
     public static boolean isConstructedTag(int tag) {
-        return (IccUtils.unsignedIntToBytes(tag)[0] & 32) != 0;
+        return (IccUtils.unsignedIntToBytes(tag)[0] & HebrewProber.SPACE) != 0;
     }
 
     private static int calculateEncodedBytesNumForLength(int length) {

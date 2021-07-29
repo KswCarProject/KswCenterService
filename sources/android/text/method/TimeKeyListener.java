@@ -37,7 +37,7 @@ public class TimeKeyListener extends NumberKeyListener {
 
     public TimeKeyListener(Locale locale) {
         LinkedHashSet<Character> chars = new LinkedHashSet<>();
-        if (NumberKeyListener.addDigits(chars, locale) && NumberKeyListener.addAmPmChars(chars, locale) && NumberKeyListener.addFormatCharsFromSkeleton(chars, locale, SKELETON_12HOUR, SYMBOLS_TO_IGNORE) && NumberKeyListener.addFormatCharsFromSkeleton(chars, locale, SKELETON_24HOUR, SYMBOLS_TO_IGNORE)) {
+        if (NumberKeyListener.addDigits(chars, locale) && NumberKeyListener.addAmPmChars(chars, locale) && NumberKeyListener.addFormatCharsFromSkeleton(chars, locale, SKELETON_12HOUR, SYMBOLS_TO_IGNORE) && NumberKeyListener.addFormatCharsFromSkeleton(chars, locale, "Hms", SYMBOLS_TO_IGNORE)) {
             this.mCharacters = NumberKeyListener.collectionToArray(chars);
             if (locale == null || !"en".equals(locale.getLanguage())) {
                 this.mNeedsAdvancedInput = true ^ ArrayUtils.containsAll(CHARACTERS, this.mCharacters);

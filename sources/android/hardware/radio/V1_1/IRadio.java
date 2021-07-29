@@ -32,6 +32,7 @@ import android.os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.GsmAlphabet;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -2192,7 +2193,7 @@ public interface IRadio extends android.hardware.radio.V1_0.IRadio {
         }
 
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-9, -98, -33, 80, -93, 120, -87, -55, -69, 115, Byte.MAX_VALUE, -109, MidiConstants.STATUS_SONG_POSITION, 5, -38, -71, GsmAlphabet.GSM_EXTENDED_ESCAPE, 76, 99, -22, 73, 114, 58, -4, 111, -123, 108, 19, -126, 3, -22, -127}, new byte[]{-101, 90, -92, -103, -20, 59, 66, 38, MidiConstants.STATUS_MIDI_TIME_CODE, 95, 72, -11, -19, 8, -119, 110, 47, -64, 103, 111, -105, -116, -98, 25, -100, 29, -94, 29, -86, -16, 2, -90}, new byte[]{-20, Byte.MAX_VALUE, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-9, -98, -33, 80, -93, 120, -87, -55, -69, 115, Bidi.LEVEL_DEFAULT_RTL, -109, MidiConstants.STATUS_SONG_POSITION, 5, -38, -71, GsmAlphabet.GSM_EXTENDED_ESCAPE, 76, 99, -22, 73, 114, 58, -4, 111, -123, 108, 19, -126, 3, -22, -127}, new byte[]{-101, 90, -92, -103, -20, 59, 66, 38, MidiConstants.STATUS_MIDI_TIME_CODE, 95, 72, -11, -19, 8, -119, 110, 47, -64, 103, 111, -105, -116, -98, 25, -100, 29, -94, 29, -86, -16, 2, -90}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
         }
 
         public final void setHALInstrumentation() {

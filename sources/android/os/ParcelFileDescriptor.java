@@ -8,6 +8,7 @@ import android.system.Os;
 import android.system.OsConstants;
 import android.system.StructStat;
 import android.util.Log;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.CloseGuard;
 import dalvik.system.VMRuntime;
 import java.io.Closeable;
@@ -683,7 +684,7 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
         }
 
         public String toString() {
-            return "{" + this.status + ": " + this.msg + "}";
+            return "{" + this.status + PluralRules.KEYWORD_RULE_SEPARATOR + this.msg + "}";
         }
     }
 

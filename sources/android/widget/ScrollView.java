@@ -180,7 +180,7 @@ public class ScrollView extends FrameLayout {
     }
 
     public int getMaxScrollAmount() {
-        return (int) (((float) (this.mBottom - this.mTop)) * MAX_SCROLL_FACTOR);
+        return (int) (((float) (this.mBottom - this.mTop)) * 0.5f);
     }
 
     private void initScrollView() {

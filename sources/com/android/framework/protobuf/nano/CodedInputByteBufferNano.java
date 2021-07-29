@@ -2,6 +2,7 @@ package com.android.framework.protobuf.nano;
 
 import android.bluetooth.BluetoothHidDevice;
 import android.net.wifi.WifiScanner;
+import com.ibm.icu.text.Bidi;
 import java.io.IOException;
 
 public final class CodedInputByteBufferNano {
@@ -207,26 +208,27 @@ public final class CodedInputByteBufferNano {
         if (readRawByte >= 0) {
             return result | (tmp2 << 7);
         }
-        int result2 = result | ((tmp2 & Byte.MAX_VALUE) << 7);
+        int result2 = result | ((tmp2 & Bidi.LEVEL_DEFAULT_RTL) << 7);
         byte readRawByte2 = readRawByte();
         byte tmp3 = readRawByte2;
         if (readRawByte2 >= 0) {
             return result2 | (tmp3 << BluetoothHidDevice.ERROR_RSP_UNKNOWN);
         }
-        int result3 = result2 | ((tmp3 & Byte.MAX_VALUE) << BluetoothHidDevice.ERROR_RSP_UNKNOWN);
+        int result3 = result2 | ((tmp3 & Bidi.LEVEL_DEFAULT_RTL) << BluetoothHidDevice.ERROR_RSP_UNKNOWN);
         byte readRawByte3 = readRawByte();
         byte tmp4 = readRawByte3;
         if (readRawByte3 >= 0) {
             return result3 | (tmp4 << 21);
         }
+        int result4 = result3 | ((tmp4 & Bidi.LEVEL_DEFAULT_RTL) << 21);
         byte tmp5 = readRawByte();
-        int result4 = result3 | ((tmp4 & Byte.MAX_VALUE) << 21) | (tmp5 << 28);
+        int result5 = result4 | (tmp5 << 28);
         if (tmp5 >= 0) {
-            return result4;
+            return result5;
         }
         for (int i = 0; i < 5; i++) {
             if (readRawByte() >= 0) {
-                return result4;
+                return result5;
             }
         }
         throw InvalidProtocolBufferNanoException.malformedVarint();
@@ -236,7 +238,7 @@ public final class CodedInputByteBufferNano {
         long result = 0;
         for (int shift = 0; shift < 64; shift += 7) {
             byte b = readRawByte();
-            result |= ((long) (b & Byte.MAX_VALUE)) << shift;
+            result |= ((long) (b & Bidi.LEVEL_DEFAULT_RTL)) << shift;
             if ((b & 128) == 0) {
                 return result;
             }

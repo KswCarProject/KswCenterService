@@ -2,6 +2,7 @@ package android.filterfw.core;
 
 import android.os.SystemClock;
 import android.util.Log;
+import com.ibm.icu.text.PluralRules;
 
 /* compiled from: StopWatchMap */
 class StopWatch {
@@ -33,7 +34,7 @@ class StopWatch {
             this.mNumCalls++;
             this.mStartTime = -1;
             if (this.mNumCalls % this.STOP_WATCH_LOGGING_PERIOD == 0) {
-                Log.i(this.TAG, "AVG ms/call " + this.mName + ": " + String.format("%.1f", new Object[]{Float.valueOf((((float) this.mTotalTime) * 1.0f) / ((float) this.mNumCalls))}));
+                Log.i(this.TAG, "AVG ms/call " + this.mName + PluralRules.KEYWORD_RULE_SEPARATOR + String.format("%.1f", new Object[]{Float.valueOf((((float) this.mTotalTime) * 1.0f) / ((float) this.mNumCalls))}));
                 this.mTotalTime = 0;
                 this.mNumCalls = 0;
                 return;

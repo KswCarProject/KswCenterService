@@ -22,6 +22,7 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
+import com.ibm.icu.text.UTF16;
 import org.ccil.cowan.tagsoup.HTMLSchema;
 import org.ccil.cowan.tagsoup.Parser;
 import org.xml.sax.SAXNotRecognizedException;
@@ -454,7 +455,7 @@ public class Html {
             } else if (c < 56320 && i + 1 < end && (d = text.charAt(i + 1)) >= 56320 && d <= 57343) {
                 i++;
                 out.append("&#");
-                out.append(((c - 55296) << 10) | 65536 | (d - 56320));
+                out.append(((c - 55296) << 10) | 65536 | (d - UTF16.TRAIL_SURROGATE_MIN_VALUE));
                 out.append(";");
             }
             i++;

@@ -612,11 +612,11 @@ public class GridView extends AbsListView {
             int invertedSelection2 = (this.mItemCount - 1) - (selectedPosition - delta);
             oldRowStart = Math.max(0, (((this.mItemCount - 1) - (invertedSelection2 - (invertedSelection2 % numColumns))) - numColumns) + 1);
         }
-        int invertedSelection3 = rowStart - oldRowStart;
+        int rowDelta = rowStart - oldRowStart;
         int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, rowStart);
         int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength, numColumns, rowStart);
         this.mFirstPosition = rowStart;
-        if (invertedSelection3 > 0) {
+        if (rowDelta > 0) {
             int i = fadingEdgeLength;
             View sel2 = makeRow(this.mStackFromBottom ? rowEnd : rowStart, (this.mReferenceViewInSelectedRow == null ? 0 : this.mReferenceViewInSelectedRow.getBottom()) + verticalSpacing, true);
             View referenceView2 = this.mReferenceView;
@@ -625,7 +625,7 @@ public class GridView extends AbsListView {
             referenceView = sel2;
             sel = view;
         } else {
-            if (invertedSelection3 < 0) {
+            if (rowDelta < 0) {
                 referenceView = makeRow(this.mStackFromBottom ? rowEnd : rowStart, (this.mReferenceViewInSelectedRow == null ? 0 : this.mReferenceViewInSelectedRow.getTop()) - verticalSpacing, false);
                 View referenceView3 = this.mReferenceView;
                 adjustForTopFadingEdge(referenceView3, topSelectionPixel, bottomSelectionPixel);

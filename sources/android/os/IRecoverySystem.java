@@ -143,10 +143,10 @@ public interface IRecoverySystem extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -167,10 +167,10 @@ public interface IRecoverySystem extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -190,10 +190,10 @@ public interface IRecoverySystem extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

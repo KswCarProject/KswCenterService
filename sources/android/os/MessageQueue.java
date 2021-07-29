@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.util.Printer;
 import android.util.SparseArray;
 import android.util.proto.ProtoOutputStream;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -793,7 +794,7 @@ public final class MessageQueue {
             int n = 0;
             for (Message msg = this.mMessages; msg != null; msg = msg.next) {
                 if (h == null || h == msg.target) {
-                    pw.println(prefix + "Message " + n + ": " + msg.toString(now));
+                    pw.println(prefix + "Message " + n + PluralRules.KEYWORD_RULE_SEPARATOR + msg.toString(now));
                 }
                 n++;
             }

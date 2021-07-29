@@ -149,8 +149,8 @@ public class FuseAppLoop implements Handler.Callback {
     /* JADX WARNING: type inference failed for: r16v35 */
     /*  JADX ERROR: IndexOutOfBoundsException in pass: RegionMakerVisitor
         java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-        	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
-        	at java.util.ArrayList.get(ArrayList.java:433)
+        	at java.util.ArrayList.rangeCheck(ArrayList.java:659)
+        	at java.util.ArrayList.get(ArrayList.java:435)
         	at jadx.core.dex.nodes.InsnNode.getArg(InsnNode.java:101)
         	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:611)
         	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)

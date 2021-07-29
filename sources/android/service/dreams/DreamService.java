@@ -30,6 +30,7 @@ import android.view.accessibility.AccessibilityEvent;
 import com.android.internal.R;
 import com.android.internal.policy.PhoneWindow;
 import com.android.internal.util.DumpUtils;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
@@ -578,7 +579,7 @@ public class DreamService extends Service implements Window.Callback {
 
     /* access modifiers changed from: protected */
     public void dumpOnHandler(FileDescriptor fd, PrintWriter pw, String[] args) {
-        pw.print(this.TAG + ": ");
+        pw.print(this.TAG + PluralRules.KEYWORD_RULE_SEPARATOR);
         if (this.mWindowToken == null) {
             pw.println("stopped");
         } else {

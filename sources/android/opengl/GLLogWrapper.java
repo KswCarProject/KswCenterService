@@ -7,8 +7,8 @@ import android.net.TrafficStats;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.os.IncidentManager;
 import android.provider.CallLog;
-import android.provider.Telephony;
 import com.android.internal.app.DumpHeapActivity;
+import com.ibm.icu.text.DateFormat;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.Buffer;
@@ -1122,7 +1122,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     private void doElement(StringBuilder builder, int ordinal, int vertexIndex) {
         builder.append(" [" + ordinal + " : " + vertexIndex + "] =");
-        doArrayElement(builder, this.mVertexArrayEnabled, Telephony.BaseMmsColumns.MMS_VERSION, this.mVertexPointer, vertexIndex);
+        doArrayElement(builder, this.mVertexArrayEnabled, "v", this.mVertexPointer, vertexIndex);
         doArrayElement(builder, this.mNormalArrayEnabled, "n", this.mNormalPointer, vertexIndex);
         doArrayElement(builder, this.mColorArrayEnabled, FullBackup.CACHE_TREE_TOKEN, this.mColorPointer, vertexIndex);
         doArrayElement(builder, this.mTextureCoordArrayEnabled, IncidentManager.URI_PARAM_TIMESTAMP, this.mTexCoordPointer, vertexIndex);
@@ -1262,7 +1262,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glClearStencil(int s) {
         begin("glClearStencil");
-        arg("s", s);
+        arg(DateFormat.SECOND, s);
         end();
         this.mgl.glClearStencil(s);
         checkError();
@@ -1355,7 +1355,7 @@ class GLLogWrapper extends GLWrapperBase {
         arg("level", level);
         arg("internalformat", internalformat);
         arg("x", x);
-        arg("y", y);
+        arg(DateFormat.YEAR, y);
         arg("width", width);
         arg("height", height);
         arg("border", border);
@@ -1371,7 +1371,7 @@ class GLLogWrapper extends GLWrapperBase {
         arg("xoffset", xoffset);
         arg("yoffset", yoffset);
         arg("x", x);
-        arg("y", y);
+        arg(DateFormat.YEAR, y);
         arg("width", width);
         arg("height", height);
         end();
@@ -1842,7 +1842,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glLoadMatrixf(float[] m, int offset) {
         begin("glLoadMatrixf");
-        arg("m", 16, m, offset);
+        arg(DateFormat.MINUTE, 16, m, offset);
         arg(CallLog.Calls.OFFSET_PARAM_KEY, offset);
         end();
         this.mgl.glLoadMatrixf(m, offset);
@@ -1851,7 +1851,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glLoadMatrixf(FloatBuffer m) {
         begin("glLoadMatrixf");
-        arg("m", 16, m);
+        arg(DateFormat.MINUTE, 16, m);
         end();
         this.mgl.glLoadMatrixf(m);
         checkError();
@@ -1859,7 +1859,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glLoadMatrixx(int[] m, int offset) {
         begin("glLoadMatrixx");
-        arg("m", 16, m, offset);
+        arg(DateFormat.MINUTE, 16, m, offset);
         arg(CallLog.Calls.OFFSET_PARAM_KEY, offset);
         end();
         this.mgl.glLoadMatrixx(m, offset);
@@ -1868,7 +1868,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glLoadMatrixx(IntBuffer m) {
         begin("glLoadMatrixx");
-        arg("m", 16, m);
+        arg(DateFormat.MINUTE, 16, m);
         end();
         this.mgl.glLoadMatrixx(m);
         checkError();
@@ -1954,7 +1954,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glMultMatrixf(float[] m, int offset) {
         begin("glMultMatrixf");
-        arg("m", 16, m, offset);
+        arg(DateFormat.MINUTE, 16, m, offset);
         arg(CallLog.Calls.OFFSET_PARAM_KEY, offset);
         end();
         this.mgl.glMultMatrixf(m, offset);
@@ -1963,7 +1963,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glMultMatrixf(FloatBuffer m) {
         begin("glMultMatrixf");
-        arg("m", 16, m);
+        arg(DateFormat.MINUTE, 16, m);
         end();
         this.mgl.glMultMatrixf(m);
         checkError();
@@ -1971,7 +1971,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glMultMatrixx(int[] m, int offset) {
         begin("glMultMatrixx");
-        arg("m", 16, m, offset);
+        arg(DateFormat.MINUTE, 16, m, offset);
         arg(CallLog.Calls.OFFSET_PARAM_KEY, offset);
         end();
         this.mgl.glMultMatrixx(m, offset);
@@ -1980,7 +1980,7 @@ class GLLogWrapper extends GLWrapperBase {
 
     public void glMultMatrixx(IntBuffer m) {
         begin("glMultMatrixx");
-        arg("m", 16, m);
+        arg(DateFormat.MINUTE, 16, m);
         end();
         this.mgl.glMultMatrixx(m);
         checkError();
@@ -1989,7 +1989,7 @@ class GLLogWrapper extends GLWrapperBase {
     public void glMultiTexCoord4f(int target, float s, float t, float r, float q) {
         begin("glMultiTexCoord4f");
         arg("target", target);
-        arg("s", s);
+        arg(DateFormat.SECOND, s);
         arg(IncidentManager.URI_PARAM_TIMESTAMP, t);
         arg("r", r);
         arg("q", q);
@@ -2001,7 +2001,7 @@ class GLLogWrapper extends GLWrapperBase {
     public void glMultiTexCoord4x(int target, int s, int t, int r, int q) {
         begin("glMultiTexCoord4x");
         arg("target", target);
-        arg("s", s);
+        arg(DateFormat.SECOND, s);
         arg(IncidentManager.URI_PARAM_TIMESTAMP, t);
         arg("r", r);
         arg("q", q);
@@ -2127,7 +2127,7 @@ class GLLogWrapper extends GLWrapperBase {
     public void glReadPixels(int x, int y, int width, int height, int format, int type, Buffer pixels) {
         begin("glReadPixels");
         arg("x", x);
-        arg("y", y);
+        arg(DateFormat.YEAR, y);
         arg("width", width);
         arg("height", height);
         arg("format", format);
@@ -2142,8 +2142,8 @@ class GLLogWrapper extends GLWrapperBase {
         begin("glRotatef");
         arg("angle", angle);
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         end();
         this.mgl.glRotatef(angle, x, y, z);
         checkError();
@@ -2153,8 +2153,8 @@ class GLLogWrapper extends GLWrapperBase {
         begin("glRotatex");
         arg("angle", angle);
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         end();
         this.mgl.glRotatex(angle, x, y, z);
         checkError();
@@ -2181,8 +2181,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glScalef(float x, float y, float z) {
         begin("glScalef");
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         end();
         this.mgl.glScalef(x, y, z);
         checkError();
@@ -2191,8 +2191,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glScalex(int x, int y, int z) {
         begin("glScalex");
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         end();
         this.mgl.glScalex(x, y, z);
         checkError();
@@ -2201,7 +2201,7 @@ class GLLogWrapper extends GLWrapperBase {
     public void glScissor(int x, int y, int width, int height) {
         begin("glScissor");
         arg("x", x);
-        arg("y", y);
+        arg(DateFormat.YEAR, y);
         arg("width", width);
         arg("height", height);
         end();
@@ -2392,8 +2392,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glTranslatef(float x, float y, float z) {
         begin("glTranslatef");
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         end();
         this.mgl.glTranslatef(x, y, z);
         checkError();
@@ -2402,8 +2402,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glTranslatex(int x, int y, int z) {
         begin("glTranslatex");
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         end();
         this.mgl.glTranslatex(x, y, z);
         checkError();
@@ -2421,7 +2421,7 @@ class GLLogWrapper extends GLWrapperBase {
     public void glViewport(int x, int y, int width, int height) {
         begin("glViewport");
         arg("x", x);
-        arg("y", y);
+        arg(DateFormat.YEAR, y);
         arg("width", width);
         arg("height", height);
         end();
@@ -2470,8 +2470,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glDrawTexfOES(float x, float y, float z, float width, float height) {
         begin("glDrawTexfOES");
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         arg("width", width);
         arg("height", height);
         end();
@@ -2499,8 +2499,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glDrawTexiOES(int x, int y, int z, int width, int height) {
         begin("glDrawTexiOES");
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         arg("width", width);
         arg("height", height);
         end();
@@ -2528,8 +2528,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glDrawTexsOES(short x, short y, short z, short width, short height) {
         begin("glDrawTexsOES");
         arg("x", (int) x);
-        arg("y", (int) y);
-        arg("z", (int) z);
+        arg(DateFormat.YEAR, (int) y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, (int) z);
         arg("width", (int) width);
         arg("height", (int) height);
         end();
@@ -2557,8 +2557,8 @@ class GLLogWrapper extends GLWrapperBase {
     public void glDrawTexxOES(int x, int y, int z, int width, int height) {
         begin("glDrawTexxOES");
         arg("x", x);
-        arg("y", y);
-        arg("z", z);
+        arg(DateFormat.YEAR, y);
+        arg(DateFormat.ABBR_SPECIFIC_TZ, z);
         arg("width", width);
         arg("height", height);
         end();

@@ -673,7 +673,7 @@ public class RequestThreadManager {
     }
 
     private static boolean checkAspectRatiosMatch(Size a, Size b) {
-        return Math.abs((((float) a.getWidth()) / ((float) a.getHeight())) - (((float) b.getWidth()) / ((float) b.getHeight()))) < ASPECT_RATIO_TOLERANCE;
+        return Math.abs((((float) a.getWidth()) / ((float) a.getHeight())) - (((float) b.getWidth()) / ((float) b.getHeight()))) < 0.01f;
     }
 
     private int[] getPhotoPreviewFpsRange(List<int[]> frameRates) {

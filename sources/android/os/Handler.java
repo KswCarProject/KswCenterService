@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.os.IMessenger;
 import android.util.Log;
 import android.util.Printer;
+import com.ibm.icu.text.PluralRules;
 
 public class Handler {
     private static final boolean FIND_POTENTIAL_LEAKS = false;
@@ -105,7 +106,7 @@ public class Handler {
     public String getTraceName(Message message) {
         StringBuilder sb = new StringBuilder();
         sb.append(getClass().getName());
-        sb.append(": ");
+        sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         if (message.callback != null) {
             sb.append(message.callback.getClass().getName());
         } else {

@@ -1140,10 +1140,10 @@ public interface IAccessibilityServiceConnection extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1285,10 +1285,10 @@ public interface IAccessibilityServiceConnection extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1341,10 +1341,10 @@ public interface IAccessibilityServiceConnection extends IInterface {
                                     if (_reply.readInt() != 0) {
                                         z3 = true;
                                     }
-                                    boolean _status = z3;
+                                    boolean _result = z3;
                                     _reply.recycle();
                                     _data.recycle();
-                                    return _status;
+                                    return _result;
                                 }
                                 boolean magnificationScaleAndCenter = Stub.getDefaultImpl().setMagnificationScaleAndCenter(displayId, scale, centerX, centerY, animate);
                                 _reply.recycle();
@@ -1419,10 +1419,10 @@ public interface IAccessibilityServiceConnection extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1480,10 +1480,10 @@ public interface IAccessibilityServiceConnection extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1528,10 +1528,10 @@ public interface IAccessibilityServiceConnection extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

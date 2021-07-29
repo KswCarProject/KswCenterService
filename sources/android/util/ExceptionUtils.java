@@ -2,6 +2,7 @@ package android.util;
 
 import android.os.ParcelableException;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 
 public class ExceptionUtils {
@@ -19,7 +20,7 @@ public class ExceptionUtils {
         StringBuilder builder = new StringBuilder();
         if (msg != null) {
             builder.append(msg);
-            builder.append(": ");
+            builder.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         }
         builder.append(t.getMessage());
         while (true) {
@@ -28,7 +29,7 @@ public class ExceptionUtils {
             if (cause == null) {
                 return builder.toString();
             }
-            builder.append(": ");
+            builder.append(PluralRules.KEYWORD_RULE_SEPARATOR);
             builder.append(t.getMessage());
         }
     }

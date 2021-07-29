@@ -571,11 +571,6 @@ public interface IApplicationThread extends IInterface {
         /* JADX WARNING: type inference failed for: r7v74, types: [android.os.RemoteCallback] */
         /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
             java.lang.NullPointerException
-            	at jadx.core.dex.instructions.args.InsnArg.wrapInstruction(InsnArg.java:118)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.inline(CodeShrinkVisitor.java:146)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkBlock(CodeShrinkVisitor.java:71)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkMethod(CodeShrinkVisitor.java:43)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.visit(CodeShrinkVisitor.java:35)
             */
         /* JADX WARNING: Multi-variable type inference failed */
         public boolean onTransact(int r32, android.os.Parcel r33, android.os.Parcel r34, int r35) throws android.os.RemoteException {

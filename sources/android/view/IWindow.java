@@ -205,11 +205,6 @@ public interface IWindow extends IInterface {
         /* JADX WARNING: type inference failed for: r17v12, types: [android.view.DragEvent] */
         /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
             java.lang.NullPointerException
-            	at jadx.core.dex.instructions.args.InsnArg.wrapInstruction(InsnArg.java:118)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.inline(CodeShrinkVisitor.java:146)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkBlock(CodeShrinkVisitor.java:71)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkMethod(CodeShrinkVisitor.java:43)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.visit(CodeShrinkVisitor.java:35)
             */
         /* JADX WARNING: Multi-variable type inference failed */
         public boolean onTransact(int r20, android.os.Parcel r21, android.os.Parcel r22, int r23) throws android.os.RemoteException {

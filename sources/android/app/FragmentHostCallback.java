@@ -245,10 +245,10 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
             for (int i = N - 1; i >= 0; i--) {
                 loaders[i] = (LoaderManagerImpl) this.mAllLoaderManagers.valueAt(i);
             }
-            int i2 = getRetainLoaders();
-            for (int i3 = 0; i3 < N; i3++) {
-                LoaderManagerImpl lm = loaders[i3];
-                if (!lm.mRetaining && i2 != 0) {
+            boolean doRetainLoaders = getRetainLoaders();
+            for (int i2 = 0; i2 < N; i2++) {
+                LoaderManagerImpl lm = loaders[i2];
+                if (!lm.mRetaining && doRetainLoaders) {
                     if (!lm.mStarted) {
                         lm.doStart();
                     }

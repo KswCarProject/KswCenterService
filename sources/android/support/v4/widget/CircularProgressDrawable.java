@@ -74,7 +74,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
     public void setStyle(int size) {
         if (size == 0) {
-            setSizeParameters(11.0f, STROKE_WIDTH_LARGE, 12.0f, 6.0f);
+            setSizeParameters(11.0f, 3.0f, 12.0f, 6.0f);
         } else {
             setSizeParameters(CENTER_RADIUS, STROKE_WIDTH, 10.0f, 5.0f);
         }
@@ -253,8 +253,8 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
     /* access modifiers changed from: private */
     public void updateRingColor(float interpolatedTime, Ring ring) {
-        if (interpolatedTime > COLOR_CHANGE_OFFSET) {
-            ring.setColor(evaluateColorChange((interpolatedTime - COLOR_CHANGE_OFFSET) / 0.25f, ring.getStartingColor(), ring.getNextColor()));
+        if (interpolatedTime > 0.75f) {
+            ring.setColor(evaluateColorChange((interpolatedTime - 0.75f) / 0.25f, ring.getStartingColor(), ring.getNextColor()));
         } else {
             ring.setColor(ring.getStartingColor());
         }
@@ -262,7 +262,7 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
 
     private void applyFinishTranslation(float interpolatedTime, Ring ring) {
         updateRingColor(interpolatedTime, ring);
-        ring.setStartTrim(ring.getStartingStartTrim() + (((ring.getStartingEndTrim() - MIN_PROGRESS_ARC) - ring.getStartingStartTrim()) * interpolatedTime));
+        ring.setStartTrim(ring.getStartingStartTrim() + (((ring.getStartingEndTrim() - 0.01f) - ring.getStartingStartTrim()) * interpolatedTime));
         ring.setEndTrim(ring.getStartingEndTrim());
         ring.setRotation(ring.getStartingRotation() + ((((float) (Math.floor((double) (ring.getStartingRotation() / MAX_PROGRESS_ARC)) + 1.0d)) - ring.getStartingRotation()) * interpolatedTime));
     }
@@ -275,15 +275,13 @@ public class CircularProgressDrawable extends Drawable implements Animatable {
             applyFinishTranslation(interpolatedTime, ring);
         } else if (interpolatedTime != 1.0f || lastFrame) {
             float startingRotation = ring.getStartingRotation();
-            if (interpolatedTime < SHRINK_OFFSET) {
-                float scaledTime = interpolatedTime / SHRINK_OFFSET;
+            if (interpolatedTime < 0.5f) {
                 float startTrim3 = ring.getStartingStartTrim();
                 startTrim2 = startTrim3;
-                startTrim = (MATERIAL_INTERPOLATOR.getInterpolation(scaledTime) * 0.79f) + MIN_PROGRESS_ARC + startTrim3;
+                startTrim = (MATERIAL_INTERPOLATOR.getInterpolation(interpolatedTime / 0.5f) * 0.79f) + 0.01f + startTrim3;
             } else {
-                float scaledTime2 = (interpolatedTime - SHRINK_OFFSET) / SHRINK_OFFSET;
                 startTrim = ring.getStartingStartTrim() + 0.79f;
-                startTrim2 = startTrim - (((1.0f - MATERIAL_INTERPOLATOR.getInterpolation(scaledTime2)) * 0.79f) + MIN_PROGRESS_ARC);
+                startTrim2 = startTrim - (((1.0f - MATERIAL_INTERPOLATOR.getInterpolation((interpolatedTime - 0.5f) / 0.5f)) * 0.79f) + 0.01f);
             }
             float groupRotation = (this.mRotationCount + interpolatedTime) * GROUP_FULL_ROTATION;
             ring.setStartTrim(startTrim2);

@@ -1,6 +1,7 @@
 package com.android.internal.util;
 
 import android.util.Log;
+import com.ibm.icu.text.PluralRules;
 import java.util.Arrays;
 
 public class ExponentiallyBucketedHistogram {
@@ -39,7 +40,7 @@ public class ExponentiallyBucketedHistogram {
                 builder.append(">=");
                 builder.append(1 << (i - 1));
             }
-            builder.append(": ");
+            builder.append(PluralRules.KEYWORD_RULE_SEPARATOR);
             builder.append(this.mData[i]);
         }
         builder.append("]");

@@ -1,5 +1,7 @@
 package android.util;
 
+import com.ibm.icu.text.PluralRules;
+
 public abstract class Spline {
     public abstract float interpolate(float f);
 
@@ -139,7 +141,7 @@ public abstract class Spline {
                 str.append(this.mX[i]);
                 str.append(", ");
                 str.append(this.mY[i]);
-                str.append(": ");
+                str.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                 str.append(this.mM[i]);
                 str.append(")");
             }
@@ -201,7 +203,7 @@ public abstract class Spline {
                 str.append(", ");
                 str.append(this.mY[i]);
                 if (i < n - 1) {
-                    str.append(": ");
+                    str.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                     str.append(this.mM[i]);
                 }
                 str.append(")");

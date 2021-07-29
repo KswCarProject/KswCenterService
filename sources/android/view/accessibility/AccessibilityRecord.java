@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -502,7 +503,7 @@ public class AccessibilityRecord {
     private StringBuilder appendPropName(StringBuilder builder, String propName) {
         builder.append("; ");
         builder.append(propName);
-        builder.append(": ");
+        builder.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         return builder;
     }
 }

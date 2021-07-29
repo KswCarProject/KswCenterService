@@ -7,6 +7,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.util.DebugUtils;
 import android.support.v4.util.SparseArrayCompat;
 import android.util.Log;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.reflect.Modifier;
@@ -257,7 +258,7 @@ class LoaderManagerImpl extends LoaderManager {
                 }
                 try {
                     if (LoaderManagerImpl.DEBUG) {
-                        Log.v(LoaderManagerImpl.TAG, "  onLoadFinished in " + loader + ": " + loader.dataToString(data));
+                        Log.v(LoaderManagerImpl.TAG, "  onLoadFinished in " + loader + PluralRules.KEYWORD_RULE_SEPARATOR + loader.dataToString(data));
                     }
                     this.mCallbacks.onLoadFinished(loader, data);
                     this.mDeliveredData = true;
@@ -619,7 +620,7 @@ class LoaderManagerImpl extends LoaderManager {
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(this.mLoaders.keyAt(i));
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(li.toString());
                 li.dump(innerPrefix, fd, writer, args);
             }
@@ -633,7 +634,7 @@ class LoaderManagerImpl extends LoaderManager {
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(this.mInactiveLoaders.keyAt(i2));
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(li2.toString());
                 li2.dump(innerPrefix2, fd, writer, args);
             }

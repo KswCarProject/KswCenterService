@@ -11,6 +11,7 @@ import android.util.Log;
 import android.util.LruCache;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.List;
@@ -179,7 +180,7 @@ public class WifiNetworkScoreCache extends INetworkScoreCache.Stub {
             }
             writer.println("  Network scores for latest ScanResults:");
             for (ScanResult scanResult : ((WifiManager) this.mContext.getSystemService("wifi")).getScanResults()) {
-                writer.println("    " + buildNetworkKey(scanResult) + ": " + getNetworkScore(scanResult));
+                writer.println("    " + buildNetworkKey(scanResult) + PluralRules.KEYWORD_RULE_SEPARATOR + getNetworkScore(scanResult));
             }
         }
     }

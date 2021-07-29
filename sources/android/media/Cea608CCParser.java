@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.accessibility.CaptioningManager;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 /* compiled from: ClosedCaptionRenderer */
 class Cea608CCParser {
@@ -285,7 +286,7 @@ class Cea608CCParser {
         final int mRow;
 
         static PAC fromBytes(byte data1, byte data2) {
-            int row = new int[]{11, 1, 3, 12, 14, 5, 7, 9}[data1 & 7] + ((data2 & 32) >> 5);
+            int row = new int[]{11, 1, 3, 12, 14, 5, 7, 9}[data1 & 7] + ((data2 & HebrewProber.SPACE) >> 5);
             int style = 0;
             if ((data2 & 1) != 0) {
                 style = 0 | 2;
@@ -643,7 +644,7 @@ class Cea608CCParser {
             if ((this.mData1 & 112) != 16 || (this.mData2 & BluetoothHidDevice.SUBCLASS1_KEYBOARD) != 64) {
                 return null;
             }
-            if ((this.mData1 & 7) != 0 || (this.mData2 & 32) == 0) {
+            if ((this.mData1 & 7) != 0 || (this.mData2 & HebrewProber.SPACE) == 0) {
                 return PAC.fromBytes(this.mData1, this.mData2);
             }
             return null;
@@ -745,10 +746,10 @@ class Cea608CCParser {
 
         private String getExtendedChar() {
             if ((this.mData1 == 18 || this.mData1 == 26) && this.mData2 >= 32 && this.mData2 <= 63) {
-                return mSpanishCharMap[this.mData2 - 32];
+                return mSpanishCharMap[this.mData2 - HebrewProber.SPACE];
             }
             if ((this.mData1 == 19 || this.mData1 == 27) && this.mData2 >= 32 && this.mData2 <= 63) {
-                return mProtugueseCharMap[this.mData2 - 32];
+                return mProtugueseCharMap[this.mData2 - HebrewProber.SPACE];
             }
             return null;
         }

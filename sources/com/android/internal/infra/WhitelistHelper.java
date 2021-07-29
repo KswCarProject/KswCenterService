@@ -5,6 +5,7 @@ import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -101,7 +102,7 @@ public final class WhitelistHelper {
         int size = this.mWhitelistedPackages.size();
         pw.print(prefix);
         pw.print(message);
-        pw.print(": ");
+        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
         pw.print(size);
         pw.println(" packages");
         for (int i = 0; i < this.mWhitelistedPackages.size(); i++) {
@@ -110,7 +111,7 @@ public final class WhitelistHelper {
             pw.print(i);
             pw.print(".");
             pw.print(this.mWhitelistedPackages.keyAt(i));
-            pw.print(": ");
+            pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             if (components == null) {
                 pw.println("(whole package)");
             } else {

@@ -34,6 +34,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.logging.nano.MetricsProto;
+import com.ibm.icu.text.PluralRules;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -1390,7 +1391,7 @@ public final class MediaStore {
         try {
             list.add(file.getCanonicalFile());
         } catch (IOException e) {
-            Log.w(TAG, "Failed to resolve " + file + ": " + e);
+            Log.w(TAG, "Failed to resolve " + file + PluralRules.KEYWORD_RULE_SEPARATOR + e);
             list.add(file);
         }
     }

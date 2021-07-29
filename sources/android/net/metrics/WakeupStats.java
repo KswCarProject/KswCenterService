@@ -2,6 +2,7 @@ package android.net.metrics;
 
 import android.os.SystemClock;
 import android.util.SparseIntArray;
+import com.ibm.icu.text.DateFormat;
 import java.util.StringJoiner;
 
 public class WakeupStats {
@@ -73,7 +74,7 @@ public class WakeupStats {
         updateDuration();
         StringJoiner j = new StringJoiner(", ", "WakeupStats(", ")");
         j.add(this.iface);
-        j.add("" + this.durationSec + "s");
+        j.add("" + this.durationSec + DateFormat.SECOND);
         StringBuilder sb = new StringBuilder();
         sb.append("total: ");
         sb.append(this.totalWakeups);

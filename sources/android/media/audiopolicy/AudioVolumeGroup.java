@@ -24,10 +24,10 @@ public final class AudioVolumeGroup implements Parcelable {
             for (int index = 0; index < nbAttributes; index++) {
                 audioAttributes[index] = AudioAttributes.CREATOR.createFromParcel(in);
             }
-            int nbStreamTypes = in.readInt();
-            int[] streamTypes = new int[nbStreamTypes];
-            for (int index2 = 0; index2 < nbStreamTypes; index2++) {
-                streamTypes[index2] = in.readInt();
+            int index2 = in.readInt();
+            int[] streamTypes = new int[index2];
+            for (int index3 = 0; index3 < index2; index3++) {
+                streamTypes[index3] = in.readInt();
             }
             return new AudioVolumeGroup(name, id, audioAttributes, streamTypes);
         }

@@ -15,6 +15,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
 import com.android.internal.R;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.util.HashMap;
 import org.xmlpull.v1.XmlPullParser;
@@ -295,7 +296,7 @@ public final class SearchableInfo implements Parcelable {
                             try {
                                 result = new SearchableInfo(activityContext, attr, cName);
                             } catch (IllegalArgumentException ex) {
-                                Log.w(LOG_TAG, "Invalid searchable metadata for " + cName.flattenToShortString() + ": " + ex.getMessage());
+                                Log.w(LOG_TAG, "Invalid searchable metadata for " + cName.flattenToShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + ex.getMessage());
                                 return null;
                             }
                         }
@@ -308,7 +309,7 @@ public final class SearchableInfo implements Parcelable {
                             try {
                                 result.addActionKey(new ActionKeyInfo(activityContext, attr2));
                             } catch (IllegalArgumentException ex2) {
-                                Log.w(LOG_TAG, "Invalid action key for " + cName.flattenToShortString() + ": " + ex2.getMessage());
+                                Log.w(LOG_TAG, "Invalid action key for " + cName.flattenToShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + ex2.getMessage());
                                 return null;
                             }
                         }

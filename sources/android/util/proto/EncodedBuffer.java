@@ -5,6 +5,7 @@ import android.net.wifi.WifiScanner;
 import android.os.BatteryStats;
 import android.util.Log;
 import com.android.internal.midi.MidiConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 
 public final class EncodedBuffer {
@@ -104,7 +105,7 @@ public final class EncodedBuffer {
         long result = 0;
         do {
             byte b = readRawByte();
-            result |= ((long) (b & Byte.MAX_VALUE)) << bits;
+            result |= ((long) (b & Bidi.LEVEL_DEFAULT_RTL)) << bits;
             if ((b & 128) == 0) {
                 return result;
             }

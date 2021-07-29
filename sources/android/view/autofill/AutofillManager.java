@@ -39,6 +39,7 @@ import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.SyncResultReceiver;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
@@ -2765,7 +2766,7 @@ public final class AutofillManager {
             view.getLocationOnScreen(location);
             Rect rect = new Rect(location[0], location[1] - windowVisibleDisplayFrame.top, location[0] + view.getWidth(), (location[1] - windowVisibleDisplayFrame.top) + view.getHeight());
             if (Helper.sVerbose) {
-                Log.v(AutofillManager.TAG, "Coordinates for " + id + ": " + rect);
+                Log.v(AutofillManager.TAG, "Coordinates for " + id + PluralRules.KEYWORD_RULE_SEPARATOR + rect);
             }
             return rect;
         }

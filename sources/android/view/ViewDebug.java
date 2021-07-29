@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewOverlay;
+import com.ibm.icu.text.PluralRules;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -1707,7 +1708,7 @@ public class ViewDebug {
 
     public static void dumpCapturedView(String tag, Object view) {
         Class<?> klass = view.getClass();
-        StringBuilder sb = new StringBuilder(klass.getName() + ": ");
+        StringBuilder sb = new StringBuilder(klass.getName() + PluralRules.KEYWORD_RULE_SEPARATOR);
         sb.append(capturedViewExportFields(view, klass, ""));
         sb.append(capturedViewExportMethods(view, klass, ""));
         Log.d(tag, sb.toString());

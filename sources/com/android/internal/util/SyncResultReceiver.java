@@ -3,6 +3,7 @@ package com.android.internal.util;
 import android.os.Bundle;
 import android.os.Parcelable;
 import com.android.internal.os.IResultReceiver;
+import com.ibm.icu.text.DateFormat;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +22,7 @@ public final class SyncResultReceiver extends IResultReceiver.Stub {
     private void waitResult() throws TimeoutException {
         try {
             if (!this.mLatch.await((long) this.mTimeoutMs, TimeUnit.MILLISECONDS)) {
-                throw new TimeoutException("Not called in " + this.mTimeoutMs + "ms");
+                throw new TimeoutException("Not called in " + this.mTimeoutMs + DateFormat.MINUTE_SECOND);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

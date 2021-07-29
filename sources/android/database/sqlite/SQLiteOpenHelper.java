@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.FileUtils;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.io.File;
 
 public abstract class SQLiteOpenHelper implements AutoCloseable {
@@ -178,7 +179,7 @@ public abstract class SQLiteOpenHelper implements AutoCloseable {
             int version = db.getVersion();
             if (version != this.mNewVersion) {
                 if (db.isReadOnly()) {
-                    throw new SQLiteException("Can't upgrade read-only database from version " + db.getVersion() + " to " + this.mNewVersion + ": " + this.mName);
+                    throw new SQLiteException("Can't upgrade read-only database from version " + db.getVersion() + " to " + this.mNewVersion + PluralRules.KEYWORD_RULE_SEPARATOR + this.mName);
                 } else if (version <= 0 || version >= this.mMinimumSupportedVersion) {
                     db.beginTransaction();
                     if (version == 0) {

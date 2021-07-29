@@ -6,6 +6,7 @@ import android.util.Slog;
 import android.view.autofill.AutofillValue;
 import android.view.autofill.Helper;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,7 @@ public final class TextValueSanitizer extends InternalSanitizer implements Sanit
                 }
                 return null;
             } catch (Exception e) {
-                Slog.w(TAG, "Exception evaluating " + this.mRegex + "/" + this.mSubst + ": " + e);
+                Slog.w(TAG, "Exception evaluating " + this.mRegex + "/" + this.mSubst + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                 return null;
             }
         }

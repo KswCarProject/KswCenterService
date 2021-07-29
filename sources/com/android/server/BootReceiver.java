@@ -26,6 +26,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.util.FastXmlSerializer;
+import com.ibm.icu.text.DateFormat;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -482,7 +483,7 @@ public class BootReceiver extends BroadcastReceiver {
         long duration = 0;
         if (str == null) {
             Slog.e(TAG, "No value received for reboot");
-        } else if (str.equals("y")) {
+        } else if (str.equals(DateFormat.YEAR)) {
             reboot = true;
         } else if (!str.equals("n")) {
             Slog.e(TAG, "Unexpected value for reboot : " + str);

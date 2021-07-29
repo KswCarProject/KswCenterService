@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.autofill.AutofillValue;
 import android.view.autofill.Helper;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.util.Date;
 
 public final class DateValueSanitizer extends InternalSanitizer implements Sanitizer, Parcelable {
@@ -48,7 +49,7 @@ public final class DateValueSanitizer extends InternalSanitizer implements Sanit
                 }
                 return AutofillValue.forDate(sanitized.getTime());
             } catch (Exception e) {
-                Log.w(TAG, "Could not apply " + this.mDateFormat + " to " + value + ": " + e);
+                Log.w(TAG, "Could not apply " + this.mDateFormat + " to " + value + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                 return null;
             }
         }

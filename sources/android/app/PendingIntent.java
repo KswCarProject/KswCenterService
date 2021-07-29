@@ -18,6 +18,7 @@ import android.util.AndroidException;
 import android.util.ArraySet;
 import android.util.proto.ProtoOutputStream;
 import com.android.internal.os.IResultReceiver;
+import com.ibm.icu.text.PluralRules;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -573,7 +574,7 @@ public final class PendingIntent implements Parcelable {
         StringBuilder sb = new StringBuilder(128);
         sb.append("PendingIntent{");
         sb.append(Integer.toHexString(System.identityHashCode(this)));
-        sb.append(": ");
+        sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         sb.append(this.mTarget != null ? this.mTarget.asBinder() : null);
         sb.append('}');
         return sb.toString();

@@ -19,6 +19,7 @@ import android.util.proto.ProtoOutputStream;
 import android.util.proto.ProtoUtils;
 import com.android.internal.app.procstats.ProcessStats;
 import com.android.internal.content.NativeLibraryHelper;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.Comparator;
 
@@ -762,7 +763,7 @@ public final class ProcessState {
                             printedMem = imem;
                         }
                         printWriter.print(DumpUtils.STATE_LABELS[iArr3[ip]]);
-                        printWriter.print(": ");
+                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                         TimeUtils.formatDuration(time, printWriter);
                         printWriter.println(running);
                         totalTime2 += time;
@@ -788,7 +789,7 @@ public final class ProcessState {
                 DumpUtils.printMemLabel(printWriter, i, '/');
             }
             printWriter.print(DumpUtils.STATE_LABEL_TOTAL);
-            printWriter.print(": ");
+            printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             TimeUtils.formatDuration(totalTime, printWriter);
             pw.println();
         }
@@ -839,7 +840,7 @@ public final class ProcessState {
                             printedMem = imem;
                         }
                         printWriter.print(DumpUtils.STATE_LABELS[iArr3[ip]]);
-                        printWriter.print(": ");
+                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                         dumpPssSamples(printWriter, table, bucket2);
                         pw.println();
                     }
@@ -865,7 +866,7 @@ public final class ProcessState {
                 printWriter.print(" (running)");
             }
             if (this.mTotalRunningPss[0] != 0) {
-                printWriter.print(": ");
+                printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 dumpPssSamples(printWriter, this.mTotalRunningPss, 0);
             }
             pw.println();
@@ -925,7 +926,7 @@ public final class ProcessState {
             if (str != null) {
                 printWriter.print("  ");
                 printWriter.print(str);
-                printWriter.print(": ");
+                printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             }
             totals.print(printWriter, j, full);
             if (prefix != null) {
@@ -1035,12 +1036,12 @@ public final class ProcessState {
                             long maxUss3 = maxUss2;
                             processDataCollection.maxUss = maxUss3;
                             long maxUss4 = maxUss3;
-                            long maxUss5 = minRss2;
-                            processDataCollection.minRss = maxUss5;
-                            long minRss3 = maxUss5;
-                            long minRss4 = avgRss;
-                            processDataCollection.avgRss = minRss4;
-                            long avgRss2 = minRss4;
+                            long minRss3 = minRss2;
+                            processDataCollection.minRss = minRss3;
+                            long minRss4 = minRss3;
+                            long minRss5 = avgRss;
+                            processDataCollection.avgRss = minRss5;
+                            long avgRss2 = minRss5;
                             long maxRss3 = maxRss2;
                             processDataCollection.maxRss = maxRss3;
                             long j2 = maxPss;
@@ -1049,12 +1050,12 @@ public final class ProcessState {
                             long j4 = minPss;
                             avgPss = samples2;
                             long j5 = maxUss4;
-                            long j6 = minRss3;
+                            long j6 = minRss4;
                             long j7 = avgRss2;
                             long maxRss4 = avgUss;
                         } else {
-                            long maxUss6 = maxUss2;
-                            long minRss5 = minRss2;
+                            long maxUss5 = maxUss2;
+                            long minRss6 = minRss2;
                             long avgRss3 = avgRss;
                             long maxRss5 = maxRss2;
                             if (minPss < processDataCollection.minPss) {
@@ -1074,17 +1075,17 @@ public final class ProcessState {
                             }
                             long j10 = maxPss;
                             processDataCollection.avgUss = (long) (((((double) processDataCollection.avgUss) * ((double) processDataCollection.numPss)) + (((double) avgUss2) * ((double) avgPss))) / ((double) (processDataCollection.numPss + avgPss)));
-                            if (maxUss6 > processDataCollection.maxUss) {
-                                maxUss = maxUss6;
+                            if (maxUss5 > processDataCollection.maxUss) {
+                                maxUss = maxUss5;
                                 processDataCollection.maxUss = maxUss;
                             } else {
-                                maxUss = maxUss6;
+                                maxUss = maxUss5;
                             }
-                            if (minRss5 < processDataCollection.minRss) {
-                                minRss = minRss5;
+                            if (minRss6 < processDataCollection.minRss) {
+                                minRss = minRss6;
                                 processDataCollection.minRss = minRss;
                             } else {
-                                minRss = minRss5;
+                                minRss = minRss6;
                             }
                             long j11 = maxUss;
                             long j12 = minRss;
@@ -1151,8 +1152,8 @@ public final class ProcessState {
                     int isa2 = 0;
                     while (true) {
                         iss = isa;
-                        int iss2 = isa2;
-                        if (iss2 >= NSA) {
+                        int isa3 = isa2;
+                        if (isa3 >= NSA) {
                             break;
                         }
                         long totalTime2 = totalTime;
@@ -1160,7 +1161,7 @@ public final class ProcessState {
                         while (ima < NMA) {
                             int ipa = 0;
                             while (ipa < NSS2) {
-                                totalTime2 += getDuration(((vsscreen + (sepScreenStates ? 0 : iArr[iss2]) + vsmem + (sepMemStates ? 0 : iArr2[ima])) * 14) + vsproc + (sepProcStates ? 0 : iArr3[ipa]), now);
+                                totalTime2 += getDuration(((vsscreen + (sepScreenStates ? 0 : iArr[isa3]) + vsmem + (sepMemStates ? 0 : iArr2[ima])) * 14) + vsproc + (sepProcStates ? 0 : iArr3[ipa]), now);
                                 ipa++;
                                 iArr = screenStates;
                                 iArr2 = memStates;
@@ -1171,7 +1172,7 @@ public final class ProcessState {
                             iArr2 = memStates;
                         }
                         long j2 = now;
-                        int i = iss2 + 1;
+                        int i = isa3 + 1;
                         totalTime = totalTime2;
                         isa = iss;
                         iArr = screenStates;

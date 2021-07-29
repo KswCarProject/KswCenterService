@@ -49,6 +49,7 @@ import com.android.internal.R;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.BitSet;
@@ -679,7 +680,7 @@ public class TextUtils {
                 int i2 = i;
                 if (i2 < os.length) {
                     Object o = os[i2];
-                    printer.println(prefix + cs.subSequence(sp.getSpanStart(o), sp.getSpanEnd(o)) + ": " + Integer.toHexString(System.identityHashCode(o)) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + o.getClass().getCanonicalName() + " (" + sp.getSpanStart(o) + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + sp.getSpanEnd(o) + ") fl=#" + sp.getSpanFlags(o));
+                    printer.println(prefix + cs.subSequence(sp.getSpanStart(o), sp.getSpanEnd(o)) + PluralRules.KEYWORD_RULE_SEPARATOR + Integer.toHexString(System.identityHashCode(o)) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + o.getClass().getCanonicalName() + " (" + sp.getSpanStart(o) + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + sp.getSpanEnd(o) + ") fl=#" + sp.getSpanFlags(o));
                     i = i2 + 1;
                 } else {
                     return;

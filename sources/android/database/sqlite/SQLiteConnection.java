@@ -12,6 +12,7 @@ import android.security.keymaster.KeymasterDefs;
 import android.util.Log;
 import android.util.LruCache;
 import android.util.Printer;
+import com.ibm.icu.text.DateFormat;
 import dalvik.system.BlockGuard;
 import dalvik.system.CloseGuard;
 import java.io.File;
@@ -1498,7 +1499,7 @@ public final class SQLiteConnection implements CancellationSignal.OnCancelListen
             if (this.mFinished) {
                 msg.append(" took ");
                 msg.append(this.mEndTime - this.mStartTime);
-                msg.append("ms");
+                msg.append(DateFormat.MINUTE_SECOND);
             } else {
                 msg.append(" started ");
                 msg.append(System.currentTimeMillis() - this.mStartWallTime);

@@ -71,6 +71,8 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.FastPrintWriter;
 import com.android.internal.util.FastXmlSerializer;
 import com.android.internal.util.XmlUtils;
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.PluralRules;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8864,11 +8866,11 @@ public class BatteryStatsImpl extends BatteryStats {
             out.startTag((String) null, tag);
             out.attribute((String) null, "n", Integer.toString(steps.mNumStepDurations));
             for (int i = 0; i < steps.mNumStepDurations; i++) {
-                out.startTag((String) null, "s");
+                out.startTag((String) null, DateFormat.SECOND);
                 tmpBuilder.setLength(0);
                 steps.encodeEntryAt(i, tmpBuilder);
-                out.attribute((String) null, Telephony.BaseMmsColumns.MMS_VERSION, tmpBuilder.toString());
-                out.endTag((String) null, "s");
+                out.attribute((String) null, "v", tmpBuilder.toString());
+                out.endTag((String) null, DateFormat.SECOND);
             }
             out.endTag((String) null, tag);
         }
@@ -9103,10 +9105,10 @@ public class BatteryStatsImpl extends BatteryStats {
             if (next == 1 || (type == 3 && parser.getDepth() <= outerDepth)) {
                 steps.mNumStepDurations = i;
             } else if (!(type == 3 || type == 4)) {
-                if (!"s".equals(parser.getName())) {
+                if (!DateFormat.SECOND.equals(parser.getName())) {
                     Slog.w(TAG, "Unknown element under <" + tag + ">: " + parser.getName());
                     XmlUtils.skipCurrentTag(parser);
-                } else if (i < num && (valueAttr = parser.getAttributeValue((String) null, Telephony.BaseMmsColumns.MMS_VERSION)) != null) {
+                } else if (i < num && (valueAttr = parser.getAttributeValue((String) null, "v")) != null) {
                     steps.decodeEntryAt(i, valueAttr);
                     i++;
                 }
@@ -11167,7 +11169,7 @@ public class BatteryStatsImpl extends BatteryStats {
         });
         long elapsedTimeMs = this.mClocks.uptimeMillis() - startTimeMs;
         if (elapsedTimeMs >= 100) {
-            Slog.d(TAG, "Reading cpu stats took " + elapsedTimeMs + "ms");
+            Slog.d(TAG, "Reading cpu stats took " + elapsedTimeMs + DateFormat.MINUTE_SECOND);
         }
         if (numWakelocks > 0) {
             this.mTempTotalCpuUserTimeUs = (this.mTempTotalCpuUserTimeUs * 50) / 100;
@@ -11272,7 +11274,7 @@ public class BatteryStatsImpl extends BatteryStats {
         kernelCpuUidFreqTimeReader.readDelta(r10);
         long elapsedTimeMs2 = this.mClocks.uptimeMillis() - startTimeMs;
         if (elapsedTimeMs2 >= 100) {
-            Slog.d(TAG, "Reading cpu freq times took " + elapsedTimeMs2 + "ms");
+            Slog.d(TAG, "Reading cpu freq times took " + elapsedTimeMs2 + DateFormat.MINUTE_SECOND);
         }
         if (this.mWakeLockAllocationsUs != null) {
             for (int i = 0; i < numWakelocks; i++) {
@@ -11405,7 +11407,7 @@ public class BatteryStatsImpl extends BatteryStats {
         });
         long elapsedTimeMs = this.mClocks.uptimeMillis() - startTimeMs;
         if (elapsedTimeMs >= 100) {
-            Slog.d(TAG, "Reading cpu active times took " + elapsedTimeMs + "ms");
+            Slog.d(TAG, "Reading cpu active times took " + elapsedTimeMs + DateFormat.MINUTE_SECOND);
         }
     }
 
@@ -11438,7 +11440,7 @@ public class BatteryStatsImpl extends BatteryStats {
         });
         long elapsedTimeMs = this.mClocks.uptimeMillis() - startTimeMs;
         if (elapsedTimeMs >= 100) {
-            Slog.d(TAG, "Reading cpu cluster times took " + elapsedTimeMs + "ms");
+            Slog.d(TAG, "Reading cpu cluster times took " + elapsedTimeMs + DateFormat.MINUTE_SECOND);
         }
     }
 
@@ -11962,33 +11964,33 @@ public class BatteryStatsImpl extends BatteryStats {
         int i2 = 0;
         while (true) {
             int which = i;
-            int which2 = i2;
-            if (which2 >= timeInRatMs.length) {
+            int i3 = i2;
+            if (i3 >= timeInRatMs.length) {
                 break;
             }
-            timeInRatMs[which2] = getPhoneDataConnectionTime(which2, rawRealTime, 0) / 1000;
-            i2 = which2 + 1;
+            timeInRatMs[i3] = getPhoneDataConnectionTime(i3, rawRealTime, 0) / 1000;
+            i2 = i3 + 1;
             i = which;
         }
         long[] timeInRxSignalStrengthLevelMs = new long[5];
-        int i3 = 0;
+        int i4 = 0;
         while (true) {
             monitoredRailChargeConsumedMaMs = monitoredRailChargeConsumedMaMs2;
-            int i4 = i3;
-            if (i4 >= timeInRxSignalStrengthLevelMs.length) {
+            int i5 = i4;
+            if (i5 >= timeInRxSignalStrengthLevelMs.length) {
                 break;
             }
-            timeInRxSignalStrengthLevelMs[i4] = getPhoneSignalStrengthTime(i4, rawRealTime, 0) / 1000;
-            i3 = i4 + 1;
+            timeInRxSignalStrengthLevelMs[i5] = getPhoneSignalStrengthTime(i5, rawRealTime, 0) / 1000;
+            i4 = i5 + 1;
             monitoredRailChargeConsumedMaMs2 = monitoredRailChargeConsumedMaMs;
         }
         long[] txTimeMs = new long[Math.min(5, counter.getTxTimeCounters().length)];
         long totalTxTimeMs = 0;
-        int i5 = 0;
-        while (i5 < txTimeMs.length) {
-            txTimeMs[i5] = counter.getTxTimeCounters()[i5].getCountLocked(0);
-            totalTxTimeMs += txTimeMs[i5];
-            i5++;
+        int i6 = 0;
+        while (i6 < txTimeMs.length) {
+            txTimeMs[i6] = counter.getTxTimeCounters()[i6].getCountLocked(0);
+            totalTxTimeMs += txTimeMs[i6];
+            i6++;
             counter = counter;
         }
         s.setLoggingDurationMs(computeBatteryRealtime(rawRealTime, 0) / 1000);
@@ -12526,7 +12528,7 @@ public class BatteryStatsImpl extends BatteryStats {
             Uid uid = this.mUidStats.get(u);
             pw.print("  ");
             pw.print(u);
-            pw.print(": ");
+            pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             pw.print(uid.getUserCpuTimeUs(0) / 1000);
             pw.print(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
             pw.println(uid.getSystemCpuTimeUs(0) / 1000);
@@ -12538,7 +12540,7 @@ public class BatteryStatsImpl extends BatteryStats {
             if (uid2.getCpuActiveTime() > 0) {
                 pw.print("  ");
                 pw.print(u2);
-                pw.print(": ");
+                pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 pw.println(uid2.getCpuActiveTime());
             }
         }
@@ -12549,7 +12551,7 @@ public class BatteryStatsImpl extends BatteryStats {
             if (times != null) {
                 pw.print("  ");
                 pw.print(u3);
-                pw.print(": ");
+                pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 pw.println(Arrays.toString(times));
             }
         }
@@ -12560,7 +12562,7 @@ public class BatteryStatsImpl extends BatteryStats {
             if (times2 != null) {
                 pw.print("  ");
                 pw.print(u4);
-                pw.print(": ");
+                pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 pw.println(Arrays.toString(times2));
             }
         }
@@ -13887,13 +13889,13 @@ public class BatteryStatsImpl extends BatteryStats {
                         int iwa2 = 0;
                         while (true) {
                             NP = iwa;
-                            int iwa3 = iwa2;
-                            if (iwa3 >= NWA) {
+                            int NP3 = iwa2;
+                            if (NP3 >= NWA) {
                                 break;
                             }
-                            parcel.writeString(ps2.mWakeupAlarms.keyAt(iwa3));
-                            ps2.mWakeupAlarms.valueAt(iwa3).writeSummaryFromParcelLocked(parcel);
-                            iwa2 = iwa3 + 1;
+                            parcel.writeString(ps2.mWakeupAlarms.keyAt(NP3));
+                            ps2.mWakeupAlarms.valueAt(NP3).writeSummaryFromParcelLocked(parcel);
+                            iwa2 = NP3 + 1;
                             iwa = NP;
                             it = it;
                         }

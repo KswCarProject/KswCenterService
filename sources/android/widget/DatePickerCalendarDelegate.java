@@ -167,7 +167,7 @@ class DatePickerCalendarDelegate extends DatePicker.AbstractDatePickerDelegate {
         if (this.mHeaderYear != null) {
             this.mMonthDayFormat = DateFormat.getInstanceForSkeleton("EMMMd", locale);
             this.mMonthDayFormat.setContext(DisplayContext.CAPITALIZATION_FOR_STANDALONE);
-            this.mYearFormat = DateFormat.getInstanceForSkeleton("y", locale);
+            this.mYearFormat = DateFormat.getInstanceForSkeleton(com.ibm.icu.text.DateFormat.YEAR, locale);
             onCurrentDateChanged(false);
         }
     }

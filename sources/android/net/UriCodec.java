@@ -1,6 +1,7 @@
 package android.net;
 
 import android.net.wifi.WifiScanner;
+import com.ibm.icu.text.PluralRules;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -34,7 +35,7 @@ public final class UriCodec {
         } else {
             nameString = " in [" + name + "]";
         }
-        return new URISyntaxException(uri, "Unexpected character" + nameString + ": " + unexpected, index);
+        return new URISyntaxException(uri, "Unexpected character" + nameString + PluralRules.KEYWORD_RULE_SEPARATOR + unexpected, index);
     }
 
     private static char getNextCharacter(String uri, int index, int end, String name) throws URISyntaxException {

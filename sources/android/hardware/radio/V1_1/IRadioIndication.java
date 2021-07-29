@@ -27,10 +27,12 @@ import android.os.NativeHandle;
 import android.os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public interface IRadioIndication extends android.hardware.radio.V1_0.IRadioIndication {
     public static final String kInterfaceName = "android.hardware.radio@1.1::IRadioIndication";
@@ -948,7 +950,7 @@ public interface IRadioIndication extends android.hardware.radio.V1_0.IRadioIndi
         }
 
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-4, -59, -56, -56, -117, -123, -87, -10, 63, -70, 103, -39, -26, 116, -38, 70, 108, 114, -87, -116, -94, -121, MidiConstants.STATUS_SONG_SELECT, 67, -5, 87, 33, MidiConstants.STATUS_CHANNEL_PRESSURE, -104, 113, 63, -122}, new byte[]{92, -114, -5, -71, -60, 81, -91, -105, 55, -19, 44, 108, 32, 35, 10, -82, 71, 69, -125, -100, MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH, 29, Byte.MIN_VALUE, -120, -42, -36, -55, 2, BluetoothHidDevice.ERROR_RSP_UNKNOWN, 82, -46, -59}, new byte[]{-20, Byte.MAX_VALUE, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-4, -59, -56, -56, -117, -123, -87, -10, 63, -70, 103, -39, -26, 116, -38, 70, 108, 114, -87, -116, -94, -121, MidiConstants.STATUS_SONG_SELECT, 67, -5, 87, 33, MidiConstants.STATUS_CHANNEL_PRESSURE, -104, 113, 63, -122}, new byte[]{92, -114, -5, -71, -60, 81, -91, -105, 55, -19, 44, 108, HebrewProber.SPACE, 35, 10, -82, 71, 69, -125, -100, MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH, 29, Byte.MIN_VALUE, -120, -42, -36, -55, 2, BluetoothHidDevice.ERROR_RSP_UNKNOWN, 82, -46, -59}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
         }
 
         public final void setHALInstrumentation() {

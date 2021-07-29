@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.StateSet;
 import android.view.KeyEvent;
 import android.widget.TextView;
+import com.ibm.icu.text.DateFormat;
 
 public class NumericTextView extends TextView {
     private static final double LOG_RADIX = Math.log(10.0d);
@@ -101,7 +102,7 @@ public class NumericTextView extends TextView {
     private void updateDisplayedValue() {
         String format;
         if (this.mShowLeadingZeroes) {
-            format = "%0" + this.mMaxCount + "d";
+            format = "%0" + this.mMaxCount + DateFormat.DAY;
         } else {
             format = "%d";
         }
@@ -112,7 +113,7 @@ public class NumericTextView extends TextView {
         CharSequence previousText = getText();
         int maxWidth = 0;
         for (int i = 0; i < this.mMaxValue; i++) {
-            setText((CharSequence) String.format("%0" + this.mMaxCount + "d", new Object[]{Integer.valueOf(i)}));
+            setText((CharSequence) String.format("%0" + this.mMaxCount + DateFormat.DAY, new Object[]{Integer.valueOf(i)}));
             measure(0, 0);
             int width = getMeasuredWidth();
             if (width > maxWidth) {
@@ -162,7 +163,7 @@ public class NumericTextView extends TextView {
             }
         }
         if (this.mCount > 0) {
-            formattedValue = String.format("%0" + this.mCount + "d", new Object[]{Integer.valueOf(this.mValue)});
+            formattedValue = String.format("%0" + this.mCount + DateFormat.DAY, new Object[]{Integer.valueOf(this.mValue)});
         } else {
             formattedValue = "";
         }

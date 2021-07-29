@@ -305,7 +305,7 @@ public class FrameLayout extends ViewGroup {
                 int layoutDirection = getLayoutDirection();
                 int absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection);
                 int i2 = layoutDirection;
-                int layoutDirection2 = gravity & 112;
+                int verticalGravity = gravity & 112;
                 int i3 = absoluteGravity & 7;
                 if (i3 != 1) {
                     childLeft = (i3 == 5 && !forceLeftGravity) ? (parentRight - width) - lp.rightMargin : parentLeft2 + lp.leftMargin;
@@ -313,17 +313,15 @@ public class FrameLayout extends ViewGroup {
                     childLeft = (((((parentRight - parentLeft2) - width) / 2) + parentLeft2) + lp.leftMargin) - lp.rightMargin;
                 }
                 int childLeft2 = childLeft;
-                if (layoutDirection2 == 16) {
-                    int verticalGravity = layoutDirection2;
+                if (verticalGravity == 16) {
                     childTop = (((((parentBottom - parentTop) - height) / 2) + parentTop) + lp.topMargin) - lp.bottomMargin;
-                } else if (layoutDirection2 == 48) {
-                    int verticalGravity2 = layoutDirection2;
+                } else if (verticalGravity == 48) {
                     childTop = parentTop + lp.topMargin;
-                } else if (layoutDirection2 != 80) {
+                } else if (verticalGravity != 80) {
                     childTop = lp.topMargin + parentTop;
-                    int i4 = layoutDirection2;
+                    int i4 = verticalGravity;
                 } else {
-                    int i5 = layoutDirection2;
+                    int i5 = verticalGravity;
                     childTop = (parentBottom - height) - lp.bottomMargin;
                 }
                 int childTop2 = childTop;

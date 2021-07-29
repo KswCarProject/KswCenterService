@@ -14,6 +14,7 @@ import android.os.NativeHandle;
 import android.os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -439,7 +440,7 @@ public interface ICas extends android.hardware.cas.V1_0.ICas {
         }
 
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{68, -56, -119, 84, -77, -62, 1, -78, 111, 100, -4, -37, 111, 39, Byte.MIN_VALUE, 36, -85, 58, -82, -122, 74, -98, 30, -57, BluetoothHidDevice.ERROR_RSP_UNKNOWN, -118, 116, 39, 74, -23, -42, -86}, new byte[]{BluetoothHidDevice.ERROR_RSP_UNKNOWN, 101, 107, -95, -70, -63, 20, 97, -95, 112, -106, -17, 117, 43, 105, -46, 75, 0, 13, -126, BluetoothHidDevice.ERROR_RSP_UNKNOWN, -11, 101, 47, 1, 80, MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH, -7, 115, 29, 84, -62}, new byte[]{-20, Byte.MAX_VALUE, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{68, -56, -119, 84, -77, -62, 1, -78, 111, 100, -4, -37, 111, 39, Byte.MIN_VALUE, 36, -85, 58, -82, -122, 74, -98, 30, -57, BluetoothHidDevice.ERROR_RSP_UNKNOWN, -118, 116, 39, 74, -23, -42, -86}, new byte[]{BluetoothHidDevice.ERROR_RSP_UNKNOWN, 101, 107, -95, -70, -63, 20, 97, -95, 112, -106, -17, 117, 43, 105, -46, 75, 0, 13, -126, BluetoothHidDevice.ERROR_RSP_UNKNOWN, -11, 101, 47, 1, 80, MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH, -7, 115, 29, 84, -62}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
         }
 
         public final void setHALInstrumentation() {

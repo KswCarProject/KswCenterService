@@ -6,7 +6,7 @@ Name: AndroidManifest.xml
 SHA-256-Digest: /RpJSZChf3u9OMDX7iTsWTl8E8ixT+ivCp8kBRNPZAs=
 
 Name: classes.dex
-SHA-256-Digest: tFpi3laYkFpfzR3wlVdKwPkX+OTRiyAR4t0rzX2jwkM=
+SHA-256-Digest: fAg2rXqlcTdglLaRpUM1WpdqUMJ0LpTd3JSMcGc1COI=
 
 Name: classes2.dex
 SHA-256-Digest: +2a0IeiumCohAU6Yo1ePEkqJYJ08JI/XsOjIwdFi4LM=
@@ -15,10 +15,13 @@ Name: classes3.dex
 SHA-256-Digest: bkOuJzeU5uFOXhWVh/BqPjh0SGZhGN3kpOvUaqf+Wzg=
 
 Name: classes4.dex
-SHA-256-Digest: rOUP5xnfmy2X/9wc7WgYzHqATZg8nVJ/thThceAlKkM=
+SHA-256-Digest: qbNhzRmRvDJImxboH3Rd9jxXAtJzNa5A1+j3dxmODTs=
+
+Name: classes5.dex
+SHA-256-Digest: xjRWwT6xGB3/y7hyqqGs3jgP5i5eYvnxCP72yHZsyNU=
 
 Name: lib/arm64-v8a/libserial_port.so
-SHA-256-Digest: idfaxXDQcJ8HTKvE4feP1XOJzuyHkEybVXBWOP14shk=
+SHA-256-Digest: fyTW1RZ0hVVrXSF+GEDK7T5Hm9+SEzzqOFKuUfJOYZs=
 
 Name: res/anim/abc_fade_in.xml
 SHA-256-Digest: HKmvv61b/dCu+BeaMa2gBq1tMidK1sG9PHbgakJAaa8=
@@ -1203,6 +1206,9 @@ SHA-256-Digest: Ug0F+XihW6DM8jAGoaVpGgVKAkeMcMr8Xrr6525gDw0=
 Name: res/mipmap-mdpi-v4/minute.png
 SHA-256-Digest: 9QuBZ+nFttDHqo9CSkFBifEJhlzmzscrv/LXL1N9Fbw=
 
+Name: res/mipmap-mdpi-v4/pointer.png
+SHA-256-Digest: iQbbLpdLo+/skF1Mf/M4VvzDNKxBFIa6njKsQSOXODM=
+
 Name: res/mipmap-mdpi-v4/second.png
 SHA-256-Digest: m1DVDI+m0ZVGV+yl0/bXu/rIm3bZ6/B5im1LgNiI65k=
 
@@ -1225,5 +1231,5 @@ Name: res/mipmap-xxxhdpi-v4/ic_launcher_round.png
 SHA-256-Digest: W6zZehtB5EE8YJLNvYP2URKpEk6CPPqjohnGXidhZHs=
 
 Name: resources.arsc
-SHA-256-Digest: 2+OQOz6xt8xMlIew6VUQ4LlLJOxYFtKgAgTLLqJkjBo=
+SHA-256-Digest: Yo0XxbKl6XkKUoQ9BmiXBjLexJ8EoZ1FT3KcsfFNjEw=
 

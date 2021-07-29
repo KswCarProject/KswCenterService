@@ -6276,7 +6276,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                 int dir2 = this.position >= 0.0f ? 1 : -1;
                 switch (this.step) {
                     case 0:
-                        if (Math.abs(this.position) >= FIRST_MOVEMENT_THRESHOLD) {
+                        if (Math.abs(this.position) >= 0.5f) {
                             movement += dir2;
                             this.nonAccelMovement += dir2;
                             this.step = 1;
@@ -6589,7 +6589,7 @@ public final class ViewRootImpl implements ViewParent, View.AttachInfo.Callbacks
                             yRes = yRange.getRange() / 48.0f;
                         }
                         this.mConfigTickDistance = 12.0f * (xRes + yRes) * 0.5f;
-                        this.mConfigMinFlingVelocity = this.mConfigTickDistance * MIN_FLING_VELOCITY_TICKS_PER_SECOND;
+                        this.mConfigMinFlingVelocity = this.mConfigTickDistance * 6.0f;
                         this.mConfigMaxFlingVelocity = this.mConfigTickDistance * MAX_FLING_VELOCITY_TICKS_PER_SECOND;
                     }
                 }

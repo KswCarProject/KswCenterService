@@ -23,6 +23,7 @@ import android.os.ParcelableException;
 import android.os.RemoteException;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.VMRuntime;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -365,7 +366,7 @@ public final class DocumentsContract {
             return ContentResolver.loadThumbnail(content, documentUri, Point.convert(size), signal, 1);
         } catch (Exception e) {
             if (!(e instanceof OperationCanceledException)) {
-                Log.w(TAG, "Failed to load thumbnail for " + documentUri + ": " + e);
+                Log.w(TAG, "Failed to load thumbnail for " + documentUri + PluralRules.KEYWORD_RULE_SEPARATOR + e);
             }
             rethrowIfNecessary(e);
             return null;

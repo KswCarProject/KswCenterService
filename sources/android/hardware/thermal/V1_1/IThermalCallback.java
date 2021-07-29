@@ -13,6 +13,7 @@ import android.os.NativeHandle;
 import android.os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -281,7 +282,7 @@ public interface IThermalCallback extends IBase {
         }
 
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-56, -68, -123, 53, 70, -35, 85, 88, 70, 17, -34, MidiConstants.STATUS_SONG_POSITION, -87, -6, 29, -103, -10, 87, -29, 54, 108, -105, 109, 47, 96, -2, 107, -118, -90, -46, -53, -121}, new byte[]{-20, Byte.MAX_VALUE, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-56, -68, -123, 53, 70, -35, 85, 88, 70, 17, -34, MidiConstants.STATUS_SONG_POSITION, -87, -6, 29, -103, -10, 87, -29, 54, 108, -105, 109, 47, 96, -2, 107, -118, -90, -46, -53, -121}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
         }
 
         public final void setHALInstrumentation() {

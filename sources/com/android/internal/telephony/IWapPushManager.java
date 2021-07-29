@@ -216,10 +216,10 @@ public interface IWapPushManager extends IInterface {
                                     if (_reply.readInt() != 0) {
                                         z = true;
                                     }
-                                    boolean _status = z;
+                                    boolean _result = z;
                                     _reply.recycle();
                                     _data.recycle();
-                                    return _status;
+                                    return _result;
                                 }
                                 boolean addPackage = Stub.getDefaultImpl().addPackage(x_app_id, content_type, package_name, class_name, app_type, need_signature, further_processing);
                                 _reply.recycle();
@@ -301,10 +301,10 @@ public interface IWapPushManager extends IInterface {
                                     if (_reply.readInt() != 0) {
                                         z = true;
                                     }
-                                    boolean _status = z;
+                                    boolean _result = z;
                                     _reply.recycle();
                                     _data.recycle();
-                                    return _status;
+                                    return _result;
                                 }
                                 boolean updatePackage = Stub.getDefaultImpl().updatePackage(x_app_id, content_type, package_name, class_name, app_type, need_signature, further_processing);
                                 _reply.recycle();
@@ -364,10 +364,10 @@ public interface IWapPushManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

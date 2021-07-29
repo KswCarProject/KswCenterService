@@ -10,13 +10,15 @@ import android.util.TimeUtils;
 import android.util.proto.ProtoOutputStream;
 import com.android.internal.app.DumpHeapActivity;
 import com.android.internal.content.NativeLibraryHelper;
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public final class DumpUtils {
     public static final String[] ADJ_MEM_NAMES_CSV = {"norm", "mod", "low", "crit"};
     static final int[] ADJ_MEM_PROTO_ENUMS = {1, 2, 3, 4};
-    static final String[] ADJ_MEM_TAGS = {"n", "m", "l", FullBackup.CACHE_TREE_TOKEN};
+    static final String[] ADJ_MEM_TAGS = {"n", DateFormat.MINUTE, "l", FullBackup.CACHE_TREE_TOKEN};
     public static final String[] ADJ_SCREEN_NAMES_CSV = {"off", "on"};
     static final int[] ADJ_SCREEN_PROTO_ENUMS = {1, 2};
     static final String[] ADJ_SCREEN_TAGS = {"0", "1"};
@@ -77,7 +79,7 @@ public final class DumpUtils {
         STATE_TAGS[2] = FullBackup.FILES_TREE_TOKEN;
         STATE_TAGS[3] = "b";
         STATE_TAGS[4] = "u";
-        STATE_TAGS[5] = "s";
+        STATE_TAGS[5] = DateFormat.SECOND;
         STATE_TAGS[6] = "x";
         STATE_TAGS[7] = "r";
         STATE_TAGS[8] = "w";
@@ -283,7 +285,7 @@ public final class DumpUtils {
                         printedScreen = iscreen;
                         printMemLabel(printWriter, printedMem != imem ? imem : -1, 0);
                         printedMem = imem;
-                        printWriter.print(": ");
+                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                         TimeUtils.formatDuration(time, printWriter);
                         printWriter.println(running);
                     }

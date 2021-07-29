@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.transition.EpicenterTranslateClipReveal;
+import com.ibm.icu.text.DateFormat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
@@ -1113,7 +1114,7 @@ public interface WindowManager extends ViewManager {
         public void encodeProperties(ViewHierarchyEncoder encoder) {
             super.encodeProperties(encoder);
             encoder.addProperty("x", this.x);
-            encoder.addProperty("y", this.y);
+            encoder.addProperty(DateFormat.YEAR, this.y);
             encoder.addProperty("horizontalWeight", this.horizontalWeight);
             encoder.addProperty("verticalWeight", this.verticalWeight);
             encoder.addProperty("type", this.type);

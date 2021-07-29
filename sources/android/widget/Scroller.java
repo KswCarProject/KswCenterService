@@ -82,14 +82,14 @@ public class Scroller {
                     x_min2 = x;
                 }
             }
-            SPLINE_POSITION[i] = ((((1.0f - x) * START_TENSION) + x) * coef) + (x * x * x);
+            SPLINE_POSITION[i] = ((((1.0f - x) * 0.5f) + x) * coef) + (x * x * x);
             float f3 = coef;
             float y_min3 = y_min2;
             float y_max = 1.0f;
             while (true) {
                 y = ((y_max - y_min3) / f) + y_min3;
                 coef2 = y * f2 * (1.0f - y);
-                float dy = ((((1.0f - y) * START_TENSION) + y) * coef2) + (y * y * y);
+                float dy = ((((1.0f - y) * 0.5f) + y) * coef2) + (y * y * y);
                 y_min = y_min3;
                 if (((double) Math.abs(dy - alpha)) < 1.0E-5d) {
                     break;

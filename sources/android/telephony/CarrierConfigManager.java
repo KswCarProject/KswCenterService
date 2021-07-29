@@ -12,6 +12,7 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import com.android.internal.telephony.ICarrierConfigLoader;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.PluralRules;
 
 public class CarrierConfigManager {
     public static final String ACTION_CARRIER_CONFIG_CHANGED = "android.telephony.action.CARRIER_CONFIG_CHANGED";
@@ -771,7 +772,7 @@ public class CarrierConfigManager {
             Rlog.w(TAG, "Error getting config for subId " + subId + " ICarrierConfigLoader is null");
             return null;
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error getting config for subId " + subId + ": " + ex.toString());
+            Rlog.e(TAG, "Error getting config for subId " + subId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
             return null;
         }
     }
@@ -786,7 +787,7 @@ public class CarrierConfigManager {
             }
             loader.overrideConfig(subscriptionId, overrideValues);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error setting config for subId " + subscriptionId + ": " + ex.toString());
+            Rlog.e(TAG, "Error setting config for subId " + subscriptionId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
         }
     }
 
@@ -807,7 +808,7 @@ public class CarrierConfigManager {
             }
             loader.notifyConfigChangedForSubId(subId);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error reloading config for subId=" + subId + ": " + ex.toString());
+            Rlog.e(TAG, "Error reloading config for subId=" + subId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
         }
     }
 
@@ -821,7 +822,7 @@ public class CarrierConfigManager {
             }
             loader.updateConfigForPhoneId(phoneId, simState);
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "Error updating config for phoneId=" + phoneId + ": " + ex.toString());
+            Rlog.e(TAG, "Error updating config for phoneId=" + phoneId + PluralRules.KEYWORD_RULE_SEPARATOR + ex.toString());
         }
     }
 

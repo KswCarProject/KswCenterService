@@ -73,7 +73,7 @@ public class BackDropperFilter extends Filter {
     @GenerateFieldPort(hasDefault = true, name = "adaptRateFg")
     private float mAdaptRateFg = 0.0f;
     @GenerateFieldPort(hasDefault = true, name = "learningAdaptRate")
-    private float mAdaptRateLearning = DEFAULT_LEARNING_ADAPT_RATE;
+    private float mAdaptRateLearning = 0.2f;
     private GLFrame mAutoWB;
     @GenerateFieldPort(hasDefault = true, name = "autowbToggle")
     private int mAutoWBToggle = 0;
@@ -108,7 +108,7 @@ public class BackDropperFilter extends Filter {
     @GenerateFieldPort(hasDefault = true, name = "hierSmlExp")
     private int mHierarchySmlExp = 0;
     @GenerateFieldPort(hasDefault = true, name = "hierSmlScale")
-    private float mHierarchySmlScale = DEFAULT_HIER_SML_SCALE;
+    private float mHierarchySmlScale = 0.5f;
     @GenerateFieldPort(hasDefault = true, name = "learningDoneListener")
     private LearningDoneListener mLearningDoneListener = null;
     @GenerateFieldPort(hasDefault = true, name = "learningDuration")
@@ -123,7 +123,7 @@ public class BackDropperFilter extends Filter {
     @GenerateFieldPort(hasDefault = true, name = "maskBg")
     private float mMaskBg = DEFAULT_MASK_BLEND_BG;
     @GenerateFieldPort(hasDefault = true, name = "maskFg")
-    private float mMaskFg = DEFAULT_MASK_BLEND_FG;
+    private float mMaskFg = 0.95f;
     private MutableFrameFormat mMaskFormat;
     @GenerateFieldPort(hasDefault = true, name = "maskHeightExp")
     private int mMaskHeightExp = 8;
@@ -497,21 +497,21 @@ public class BackDropperFilter extends Filter {
             switch (this.mBackgroundFitMode) {
                 case 1:
                     if (this.mRelativeAspect <= 1.0f) {
-                        yMin = DEFAULT_HIER_SML_SCALE - (DEFAULT_HIER_SML_SCALE / this.mRelativeAspect);
+                        yMin = 0.5f - (0.5f / this.mRelativeAspect);
                         yWidth = 1.0f / this.mRelativeAspect;
                         break;
                     } else {
-                        xMin = DEFAULT_HIER_SML_SCALE - (this.mRelativeAspect * DEFAULT_HIER_SML_SCALE);
+                        xMin = 0.5f - (this.mRelativeAspect * 0.5f);
                         xWidth = this.mRelativeAspect * 1.0f;
                         break;
                     }
                 case 2:
                     if (this.mRelativeAspect <= 1.0f) {
-                        xMin = DEFAULT_HIER_SML_SCALE - (this.mRelativeAspect * DEFAULT_HIER_SML_SCALE);
+                        xMin = 0.5f - (this.mRelativeAspect * 0.5f);
                         xWidth = this.mRelativeAspect;
                         break;
                     } else {
-                        yMin = DEFAULT_HIER_SML_SCALE - (DEFAULT_HIER_SML_SCALE / this.mRelativeAspect);
+                        yMin = 0.5f - (0.5f / this.mRelativeAspect);
                         yWidth = 1.0f / this.mRelativeAspect;
                         break;
                     }

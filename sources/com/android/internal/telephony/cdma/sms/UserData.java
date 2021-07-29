@@ -6,10 +6,11 @@ import android.util.SparseIntArray;
 import com.android.internal.telephony.SmsHeader;
 import com.android.internal.transition.EpicenterTranslateClipReveal;
 import com.android.internal.util.HexDump;
+import com.ibm.icu.text.SymbolTable;
 
 public class UserData {
     public static final int ASCII_CR_INDEX = 13;
-    public static final char[] ASCII_MAP = {' ', '!', '\"', '#', '$', '%', '&', DateFormat.QUOTE, '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', DateFormat.CAPITAL_AM_PM, 'B', 'C', 'D', DateFormat.DAY, 'F', 'G', 'H', 'I', 'J', 'K', DateFormat.STANDALONE_MONTH, DateFormat.MONTH, PhoneNumberUtils.WILD, 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', DateFormat.AM_PM, 'b', 'c', DateFormat.DATE, 'e', 'f', 'g', DateFormat.HOUR, 'i', 'j', DateFormat.HOUR_OF_DAY, 'l', DateFormat.MINUTE, 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', EpicenterTranslateClipReveal.StateProperty.TARGET_X, 'y', DateFormat.TIME_ZONE, '{', '|', '}', '~'};
+    public static final char[] ASCII_MAP = {' ', '!', '\"', '#', SymbolTable.SYMBOL_REF, '%', '&', DateFormat.QUOTE, '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', DateFormat.CAPITAL_AM_PM, 'B', 'C', 'D', DateFormat.DAY, 'F', 'G', 'H', 'I', 'J', 'K', DateFormat.STANDALONE_MONTH, DateFormat.MONTH, PhoneNumberUtils.WILD, 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\\', ']', '^', '_', '`', DateFormat.AM_PM, 'b', 'c', DateFormat.DATE, 'e', 'f', 'g', DateFormat.HOUR, 'i', 'j', DateFormat.HOUR_OF_DAY, 'l', DateFormat.MINUTE, 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', EpicenterTranslateClipReveal.StateProperty.TARGET_X, 'y', DateFormat.TIME_ZONE, '{', '|', '}', '~'};
     public static final int ASCII_MAP_BASE_INDEX = 32;
     public static final int ASCII_MAP_MAX_INDEX = ((ASCII_MAP.length + 32) - 1);
     public static final int ASCII_NL_INDEX = 10;

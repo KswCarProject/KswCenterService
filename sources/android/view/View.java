@@ -55,7 +55,6 @@ import android.provider.Telephony;
 import android.provider.UserDictionary;
 import android.sysprop.DisplayProperties;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.FloatProperty;
 import android.util.Log;
@@ -108,6 +107,7 @@ import com.android.internal.view.menu.MenuBuilder;
 import com.android.internal.widget.ScrollBarUtils;
 import com.google.android.collect.Lists;
 import com.google.android.collect.Maps;
+import com.ibm.icu.text.DateFormat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
@@ -572,7 +572,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
             return Float.valueOf(object.getX());
         }
     };
-    public static final Property<View, Float> Y = new FloatProperty<View>("y") {
+    public static final Property<View, Float> Y = new FloatProperty<View>(DateFormat.YEAR) {
         public void setValue(View object, float value) {
             object.setY(value);
         }
@@ -581,7 +581,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
             return Float.valueOf(object.getY());
         }
     };
-    public static final Property<View, Float> Z = new FloatProperty<View>("z") {
+    public static final Property<View, Float> Z = new FloatProperty<View>(DateFormat.ABBR_SPECIFIC_TZ) {
         public void setValue(View object, float value) {
             object.setZ(value);
         }
@@ -3363,7 +3363,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
         }
         char c4 = 'F';
         out.append((this.mViewFlags & 1) == 1 ? 'F' : '.');
-        out.append((this.mViewFlags & 32) == 0 ? DateFormat.DAY : '.');
+        out.append((this.mViewFlags & 32) == 0 ? android.text.format.DateFormat.DAY : '.');
         out.append((this.mViewFlags & 128) == 128 ? '.' : 'D');
         char c5 = 'H';
         out.append((this.mViewFlags & 256) != 0 ? 'H' : '.');
@@ -3372,7 +3372,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
         }
         out.append(c2);
         out.append((this.mViewFlags & 16384) != 0 ? 'C' : '.');
-        out.append((this.mViewFlags & 2097152) != 0 ? DateFormat.STANDALONE_MONTH : '.');
+        out.append((this.mViewFlags & 2097152) != 0 ? android.text.format.DateFormat.STANDALONE_MONTH : '.');
         out.append((this.mViewFlags & 8388608) != 0 ? 'X' : '.');
         out.append(' ');
         out.append((this.mPrivateFlags & 8) != 0 ? 'R' : '.');
@@ -3390,7 +3390,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
             c5 = '.';
         }
         out.append(c5);
-        out.append((this.mPrivateFlags & 1073741824) != 0 ? DateFormat.CAPITAL_AM_PM : '.');
+        out.append((this.mPrivateFlags & 1073741824) != 0 ? android.text.format.DateFormat.CAPITAL_AM_PM : '.');
         if ((this.mPrivateFlags & Integer.MIN_VALUE) == 0) {
             c = '.';
         }
@@ -4721,17 +4721,17 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 return false;
             }
         }
-        int importance = getImportantForAutofill();
-        if (importance == 4 || importance == 1) {
+        int parentImportance2 = getImportantForAutofill();
+        if (parentImportance2 == 4 || parentImportance2 == 1) {
             return true;
         }
-        if (importance == 8 || importance == 2) {
+        if (parentImportance2 == 8 || parentImportance2 == 2) {
             if (Log.isLoggable(AUTOFILL_LOG_TAG, 2)) {
-                Log.v(AUTOFILL_LOG_TAG, "View (" + this + ") is not important for autofill because its importance is " + importance);
+                Log.v(AUTOFILL_LOG_TAG, "View (" + this + ") is not important for autofill because its importance is " + parentImportance2);
             }
             return false;
-        } else if (importance != 0) {
-            Log.w(AUTOFILL_LOG_TAG, "invalid autofill importance (" + importance + " on view " + this);
+        } else if (parentImportance2 != 0) {
+            Log.w(AUTOFILL_LOG_TAG, "invalid autofill importance (" + parentImportance2 + " on view " + this);
             return false;
         } else {
             int id = this.mID;
@@ -6400,7 +6400,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
 
     @ViewDebug.ExportedProperty(category = "accessibility", mapping = {@ViewDebug.IntToString(from = 0, to = "auto"), @ViewDebug.IntToString(from = 1, to = "yes"), @ViewDebug.IntToString(from = 2, to = "no"), @ViewDebug.IntToString(from = 4, to = "noHideDescendants")})
     public int getImportantForAccessibility() {
-        return (this.mPrivateFlags2 & PFLAG2_IMPORTANT_FOR_ACCESSIBILITY_MASK) >> 20;
+        return (this.mPrivateFlags2 & 7340032) >> 20;
     }
 
     public void setAccessibilityLiveRegion(int mode) {
@@ -6429,7 +6429,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 oldIncludeForAccessibility = false;
             }
             this.mPrivateFlags2 &= -7340033;
-            this.mPrivateFlags2 |= (mode << 20) & PFLAG2_IMPORTANT_FOR_ACCESSIBILITY_MASK;
+            this.mPrivateFlags2 |= (mode << 20) & 7340032;
             if (!maySkipNotify || oldIncludeForAccessibility != includeForAccessibility()) {
                 notifySubtreeAccessibilityStateChangedIfNeeded();
             } else {
@@ -6451,7 +6451,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
     }
 
     public boolean isImportantForAccessibility() {
-        int mode = (this.mPrivateFlags2 & PFLAG2_IMPORTANT_FOR_ACCESSIBILITY_MASK) >> 20;
+        int mode = (this.mPrivateFlags2 & 7340032) >> 20;
         if (mode == 2 || mode == 4) {
             return false;
         }
@@ -11180,21 +11180,21 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 drawRight = rightFadeStrength * fadeHeight2 > 1.0f;
                 drawLeft = drawLeft2;
             }
-            int saveCount2 = canvas.getSaveCount();
-            int topSaveCount3 = -1;
+            int topSaveCount3 = canvas.getSaveCount();
+            int topSaveCount4 = -1;
             int bottomSaveCount3 = -1;
             int leftSaveCount3 = -1;
             int rightSaveCount3 = -1;
             int solidColor2 = getSolidColor();
             if (solidColor2 == 0) {
                 if (drawTop) {
-                    topSaveCount3 = canvas2.saveUnclippedLayer(left2, top, right4, top + length4);
+                    topSaveCount4 = canvas2.saveUnclippedLayer(left2, top, right4, top + length4);
                 }
                 if (drawBottom) {
-                    topSaveCount2 = topSaveCount3;
+                    topSaveCount2 = topSaveCount4;
                     bottomSaveCount3 = canvas2.saveUnclippedLayer(left2, bottom4 - length4, right4, bottom4);
                 } else {
-                    topSaveCount2 = topSaveCount3;
+                    topSaveCount2 = topSaveCount4;
                 }
                 if (drawLeft) {
                     leftSaveCount3 = canvas2.saveUnclippedLayer(left2, top, left2 + length4, bottom4);
@@ -11202,14 +11202,14 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 if (drawRight) {
                     rightSaveCount3 = canvas2.saveUnclippedLayer(right4 - length4, top, right4, bottom4);
                 }
-                saveCount = saveCount2;
+                saveCount = topSaveCount3;
                 bottomSaveCount = bottomSaveCount3;
                 leftSaveCount = leftSaveCount3;
                 rightSaveCount = rightSaveCount3;
                 topSaveCount = topSaveCount2;
             } else {
                 scrollabilityCache.setFadeColor(solidColor2);
-                saveCount = saveCount2;
+                saveCount = topSaveCount3;
                 bottomSaveCount = -1;
                 leftSaveCount = -1;
                 rightSaveCount = -1;
@@ -11217,7 +11217,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
             }
             onDraw(canvas);
             dispatchDraw(canvas);
-            int topSaveCount4 = topSaveCount;
+            int topSaveCount5 = topSaveCount;
             Paint p = scrollabilityCache.paint;
             int bottomSaveCount4 = bottomSaveCount;
             Matrix matrix = scrollabilityCache.matrix;
@@ -11323,7 +11323,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 fade.setLocalMatrix(matrix);
                 p.setShader(fade);
                 if (solidColor == 0) {
-                    canvas2.restoreUnclippedLayer(topSaveCount4, p);
+                    canvas2.restoreUnclippedLayer(topSaveCount5, p);
                 } else {
                     canvas.drawRect((float) left, (float) rightSaveCount2, (float) leftSaveCount2, (float) (rightSaveCount2 + length), p);
                 }
@@ -13851,7 +13851,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
         int left = -maxOverScrollX2;
         int right = maxOverScrollX2 + scrollRangeX;
         int i = overScrollMode;
-        int overScrollMode2 = -maxOverScrollY2;
+        int top = -maxOverScrollY2;
         boolean z = canScrollHorizontal;
         int bottom = maxOverScrollY2 + scrollRangeY;
         boolean clampedX = false;
@@ -13867,11 +13867,10 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
         if (newScrollY > bottom) {
             newScrollY = bottom;
             clampedY = true;
-        } else if (newScrollY < overScrollMode2) {
-            newScrollY = overScrollMode2;
+        } else if (newScrollY < top) {
+            newScrollY = top;
             clampedY = true;
         }
-        int top = overScrollMode2;
         boolean clampedY2 = clampedY;
         onOverScrolled(newScrollX, newScrollY, clampedX2, clampedY2);
         return clampedX2 || clampedY2;
@@ -14170,7 +14169,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
 
     @ViewDebug.ExportedProperty(category = "text", mapping = {@ViewDebug.IntToString(from = 0, to = "INHERIT"), @ViewDebug.IntToString(from = 1, to = "GRAVITY"), @ViewDebug.IntToString(from = 2, to = "TEXT_START"), @ViewDebug.IntToString(from = 3, to = "TEXT_END"), @ViewDebug.IntToString(from = 4, to = "CENTER"), @ViewDebug.IntToString(from = 5, to = "VIEW_START"), @ViewDebug.IntToString(from = 6, to = "VIEW_END")})
     public int getTextAlignment() {
-        return (this.mPrivateFlags2 & PFLAG2_TEXT_ALIGNMENT_RESOLVED_MASK) >> 17;
+        return (this.mPrivateFlags2 & 917504) >> 17;
     }
 
     public boolean resolveTextAlignment() {

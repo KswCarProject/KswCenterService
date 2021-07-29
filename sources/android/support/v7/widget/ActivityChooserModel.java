@@ -433,7 +433,7 @@ class ActivityChooserModel extends DataSetObservable {
                 ActivityResolveInfo activity2 = componentNameToActivityMap.get(historicalRecord.activity);
                 if (activity2 != null) {
                     activity2.weight += historicalRecord.weight * nextRecordWeight;
-                    nextRecordWeight *= WEIGHT_DECAY_COEFFICIENT;
+                    nextRecordWeight *= 0.95f;
                 }
             }
             Collections.sort(activities);

@@ -1,6 +1,7 @@
 package com.google.gson.stream;
 
 import android.provider.SettingsStringUtil;
+import com.ibm.icu.text.PluralRules;
 import java.io.Closeable;
 import java.io.Flushable;
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class JsonWriter implements Closeable, Flushable {
             return;
         }
         this.indent = indent2;
-        this.separator = ": ";
+        this.separator = PluralRules.KEYWORD_RULE_SEPARATOR;
     }
 
     public final void setLenient(boolean lenient2) {

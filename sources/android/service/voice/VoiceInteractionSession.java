@@ -48,6 +48,7 @@ import com.android.internal.os.HandlerCaller;
 import com.android.internal.os.SomeArgs;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.function.pooled.PooledLambda;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
@@ -332,7 +333,7 @@ public class VoiceInteractionSession implements KeyEvent.Callback, ComponentCall
                             writer.print(prefix);
                             writer.print("      #");
                             writer.print(j);
-                            writer.print(": ");
+                            writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                             writer.println(op.getSynonymAt(j));
                         }
                     }
@@ -1400,7 +1401,7 @@ public class VoiceInteractionSession implements KeyEvent.Callback, ComponentCall
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(i);
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(req);
                 req.dump(innerPrefix, fd, writer, args);
             }

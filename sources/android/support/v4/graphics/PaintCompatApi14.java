@@ -19,7 +19,7 @@ class PaintCompatApi14 {
             return true;
         }
         float missingGlyphWidth = paint.measureText(TOFU_STRING);
-        float emGlyphWidth = paint.measureText(EM_STRING);
+        float emGlyphWidth = paint.measureText("m");
         float width = paint.measureText(string);
         if (width == 0.0f) {
             return false;

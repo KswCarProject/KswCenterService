@@ -2,6 +2,7 @@ package com.android.framework.protobuf;
 
 import android.telecom.Logging.Session;
 import com.android.framework.protobuf.GeneratedMessageLite;
+import com.ibm.icu.text.PluralRules;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -157,7 +158,7 @@ final class MessageLiteToString {
             }
             buffer.append("}");
         } else {
-            buffer.append(": ");
+            buffer.append(PluralRules.KEYWORD_RULE_SEPARATOR);
             buffer.append(object.toString());
         }
     }

@@ -32,10 +32,12 @@ import android.os.NativeHandle;
 import android.os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public interface IRadioIndication extends android.hardware.radio.V1_2.IRadioIndication {
     public static final String kInterfaceName = "android.hardware.radio@1.3::IRadioIndication";
@@ -1017,7 +1019,7 @@ public interface IRadioIndication extends android.hardware.radio.V1_2.IRadioIndi
         }
 
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-23, MidiConstants.STATUS_CHANNEL_PRESSURE, MidiConstants.STATUS_MIDI_TIME_CODE, 26, 82, 113, 95, 90, 41, -40, -98, 45, -114, 46, 33, -37, 30, 22, -92, 49, 116, -81, 107, -99, 81, -90, 45, 112, 92, -38, 20, 85}, new byte[]{-51, -89, 82, -82, -85, -86, -68, 32, 72, 106, -126, -84, 87, -93, -35, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, 119, -123, -64, 6, 9, 74, 52, -101, -59, -30, 36, -24, -86, 34, -95, 124}, new byte[]{-4, -59, -56, -56, -117, -123, -87, -10, 63, -70, 103, -39, -26, 116, -38, 70, 108, 114, -87, -116, -94, -121, MidiConstants.STATUS_SONG_SELECT, 67, -5, 87, 33, MidiConstants.STATUS_CHANNEL_PRESSURE, -104, 113, 63, -122}, new byte[]{92, -114, -5, -71, -60, 81, -91, -105, 55, -19, 44, 108, 32, 35, 10, -82, 71, 69, -125, -100, MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH, 29, Byte.MIN_VALUE, -120, -42, -36, -55, 2, BluetoothHidDevice.ERROR_RSP_UNKNOWN, 82, -46, -59}, new byte[]{-20, Byte.MAX_VALUE, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-23, MidiConstants.STATUS_CHANNEL_PRESSURE, MidiConstants.STATUS_MIDI_TIME_CODE, 26, 82, 113, 95, 90, 41, -40, -98, 45, -114, 46, 33, -37, 30, 22, -92, 49, 116, -81, 107, -99, 81, -90, 45, 112, 92, -38, 20, 85}, new byte[]{-51, -89, 82, -82, -85, -86, -68, HebrewProber.SPACE, 72, 106, -126, -84, 87, -93, -35, WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, 119, -123, -64, 6, 9, 74, 52, -101, -59, -30, 36, -24, -86, 34, -95, 124}, new byte[]{-4, -59, -56, -56, -117, -123, -87, -10, 63, -70, 103, -39, -26, 116, -38, 70, 108, 114, -87, -116, -94, -121, MidiConstants.STATUS_SONG_SELECT, 67, -5, 87, 33, MidiConstants.STATUS_CHANNEL_PRESSURE, -104, 113, 63, -122}, new byte[]{92, -114, -5, -71, -60, 81, -91, -105, 55, -19, 44, 108, HebrewProber.SPACE, 35, 10, -82, 71, 69, -125, -100, MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH, 29, Byte.MIN_VALUE, -120, -42, -36, -55, 2, BluetoothHidDevice.ERROR_RSP_UNKNOWN, 82, -46, -59}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
         }
 
         public final void setHALInstrumentation() {

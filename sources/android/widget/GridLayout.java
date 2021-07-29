@@ -24,6 +24,7 @@ import android.view.inspector.PropertyReader;
 import android.widget.RemoteViews;
 import com.android.internal.R;
 import com.android.internal.content.NativeLibraryHelper;
+import com.ibm.icu.text.DateFormat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Array;
@@ -1180,9 +1181,9 @@ public class GridLayout extends ViewGroup {
                     include(mins, new Interval(i, i + 1), new MutableInt(0));
                 }
             }
-            int i2 = getCount();
-            include(mins, new Interval(0, i2), this.parentMin, false);
-            include(maxs, new Interval(i2, 0), this.parentMax, false);
+            int N = getCount();
+            include(mins, new Interval(0, N), this.parentMin, false);
+            include(maxs, new Interval(N, 0), this.parentMax, false);
             return (Arc[]) GridLayout.append(topologicalSort(mins), topologicalSort(maxs));
         }
 
@@ -1223,7 +1224,7 @@ public class GridLayout extends ViewGroup {
 
         private String arcsToString(List<Arc> arcs2) {
             String str;
-            String var = this.horizontal ? "x" : "y";
+            String var = this.horizontal ? "x" : DateFormat.YEAR;
             StringBuilder result = new StringBuilder();
             boolean first = true;
             for (Arc arc : arcs2) {

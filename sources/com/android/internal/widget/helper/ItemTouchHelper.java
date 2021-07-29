@@ -588,16 +588,16 @@ public class ItemTouchHelper extends RecyclerView.ItemDecoration implements Recy
                             int pos2 = 0;
                             while (true) {
                                 left = j;
-                                int left2 = pos2;
-                                if (left2 >= cnt) {
+                                int j2 = pos2;
+                                if (j2 >= cnt) {
                                     break;
                                 }
                                 int cnt2 = cnt;
-                                if (dist <= this.mDistances.get(left2).intValue()) {
+                                if (dist <= this.mDistances.get(j2).intValue()) {
                                     break;
                                 }
                                 pos++;
-                                pos2 = left2 + 1;
+                                pos2 = j2 + 1;
                                 j = left;
                                 cnt = cnt2;
                             }

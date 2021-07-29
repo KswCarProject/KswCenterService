@@ -11,6 +11,7 @@ import android.util.Slog;
 import android.util.TimeUtils;
 import android.util.proto.ProtoOutputStream;
 import com.android.internal.app.procstats.ProcessStats;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -505,7 +506,7 @@ public final class AssociationState {
                             i = -1;
                             SourceKey sourceKey3 = key;
                             isrc = isrc3;
-                            printWriter.print(": ");
+                            printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                             dumpActiveDurationSummary(pw, src, totalTime, now, dumpAll);
                             pw.println();
                         }
@@ -585,7 +586,7 @@ public final class AssociationState {
                     pw.print(prefix);
                     printWriter.print("  ");
                     printWriter.print(DumpUtils.STATE_LABELS[iprocstate]);
-                    printWriter.print(": ");
+                    printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                     if (dumpAll) {
                         printWriter.print("Duration ");
                         TimeUtils.formatDuration(time, printWriter);
@@ -607,7 +608,7 @@ public final class AssociationState {
             pw.print(prefix);
             printWriter.print("  ");
             printWriter.print(DumpUtils.STATE_LABEL_TOTAL);
-            printWriter.print(": ");
+            printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             if (dumpAll) {
                 printWriter.print("Duration ");
                 TimeUtils.formatDuration(totalTime, printWriter);

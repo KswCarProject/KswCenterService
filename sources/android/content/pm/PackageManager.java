@@ -23,6 +23,8 @@ import android.os.storage.VolumeInfo;
 import android.util.AndroidException;
 import android.util.Log;
 import com.android.internal.util.ArrayUtils;
+import com.ibm.icu.text.ArabicShaping;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.VMRuntime;
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -1086,8 +1088,8 @@ public abstract class PackageManager {
         PackageParser parser = new PackageParser();
         parser.setCallback(new PackageParser.CallbackImpl(this));
         File apkFile = new File(archiveFilePath);
-        if ((flags & 786432) == 0) {
-            flags |= 786432;
+        if ((flags & ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL) == 0) {
+            flags |= ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL;
         }
         try {
             PackageParser.Package pkg = parser.parseMonolithicPackage(apkFile, 0);
@@ -1196,7 +1198,7 @@ public abstract class PackageManager {
         if (msg == null) {
             return str;
         }
-        return str + ": " + msg;
+        return str + PluralRules.KEYWORD_RULE_SEPARATOR + msg;
     }
 
     @UnsupportedAppUsage
@@ -1418,7 +1420,7 @@ public abstract class PackageManager {
         if (msg == null) {
             return str;
         }
-        return str + ": " + msg;
+        return str + PluralRules.KEYWORD_RULE_SEPARATOR + msg;
     }
 
     @UnsupportedAppUsage

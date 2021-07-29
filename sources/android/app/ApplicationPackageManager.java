@@ -77,6 +77,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.os.SomeArgs;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.UserIcons;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.VMRuntime;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -1007,7 +1008,7 @@ public class ApplicationPackageManager extends PackageManager {
             } catch (PackageManager.NameNotFoundException e2) {
                 Log.w("PackageManager", "Failure retrieving resources for " + appInfo.packageName);
             } catch (Resources.NotFoundException e3) {
-                Log.w("PackageManager", "Failure retrieving resources for " + appInfo.packageName + ": " + e3.getMessage());
+                Log.w("PackageManager", "Failure retrieving resources for " + appInfo.packageName + PluralRules.KEYWORD_RULE_SEPARATOR + e3.getMessage());
             } catch (Exception e4) {
                 Log.w("PackageManager", "Failure retrieving icon 0x" + Integer.toHexString(resId) + " in package " + packageName, e4);
             }

@@ -751,7 +751,7 @@ class TimePickerClockDelegate extends TimePicker.AbstractTimePickerDelegate {
     }
 
     private void updateHeaderSeparator() {
-        String separatorText = getHourMinSeparatorFromPattern(DateFormat.getBestDateTimePattern(this.mLocale, this.mIs24Hour ? "Hm" : "hm"));
+        String separatorText = getHourMinSeparatorFromPattern(DateFormat.getBestDateTimePattern(this.mLocale, this.mIs24Hour ? com.ibm.icu.text.DateFormat.HOUR24_MINUTE : "hm"));
         this.mSeparatorView.setText((CharSequence) separatorText);
         this.mTextInputPickerView.updateSeparator(separatorText);
     }

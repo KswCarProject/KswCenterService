@@ -1689,12 +1689,12 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
             canvas.clipRect(this.mPaddingLeft + scrollX, this.mPaddingTop + scrollY, ((this.mRight + scrollX) - this.mLeft) - this.mPaddingRight, ((this.mBottom + scrollY) - this.mTop) - this.mPaddingBottom);
             this.mGroupFlags &= -35;
         }
-        int scrollX2 = this.mDrawSelectorOnTop;
-        if (scrollX2 == 0) {
+        boolean drawSelectorOnTop = this.mDrawSelectorOnTop;
+        if (!drawSelectorOnTop) {
             drawSelector(canvas);
         }
         super.dispatchDraw(canvas);
-        if (scrollX2 != 0) {
+        if (drawSelectorOnTop) {
             drawSelector(canvas);
         }
         if (clipToPadding) {

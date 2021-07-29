@@ -149,6 +149,7 @@ import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.util.FastMath;
 import com.android.internal.util.Preconditions;
 import com.android.internal.widget.EditableInputConnection;
+import com.ibm.icu.text.DateFormat;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -874,7 +875,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
         Paint p = new Paint();
         p.setAntiAlias(true);
         p.setTypeface(Typeface.DEFAULT);
-        p.measureText("H");
+        p.measureText(DateFormat.HOUR24);
     }
 
     public TextView(Context context) {
@@ -10082,14 +10083,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     right = primary;
                 }
                 float f = primary;
-                float primary2 = left + viewportToContentHorizontalOffset;
+                float localLeft = left + viewportToContentHorizontalOffset;
                 float f2 = secondary;
-                float localRight = right + viewportToContentHorizontalOffset;
+                float secondary2 = right + viewportToContentHorizontalOffset;
                 float localTop = top + viewportToContentVerticalOffset;
                 int lineStart2 = lineStart;
                 float localBottom = bottom + viewportToContentVerticalOffset;
-                boolean isTopLeftVisible = isPositionVisible(primary2, localTop);
-                boolean isBottomRightVisible = isPositionVisible(localRight, localBottom);
+                boolean isTopLeftVisible = isPositionVisible(localLeft, localTop);
+                boolean isBottomRightVisible = isPositionVisible(secondary2, localBottom);
                 int characterBoundsFlags = 0;
                 if (isTopLeftVisible || isBottomRightVisible) {
                     characterBoundsFlags = 0 | 1;
@@ -10100,7 +10101,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 if (isRtl) {
                     characterBoundsFlags |= 4;
                 }
-                builder.addCharacterBounds(offset2, primary2, localTop, localRight, localBottom, characterBoundsFlags);
+                builder.addCharacterBounds(offset2, localLeft, localTop, secondary2, localBottom, characterBoundsFlags);
                 offset = offset2 + 1;
                 minLine = minLine2;
                 maxLine = maxLine2;

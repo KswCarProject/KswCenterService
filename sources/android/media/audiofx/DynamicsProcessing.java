@@ -411,7 +411,7 @@ public final class DynamicsProcessing extends AudioEffect {
                     if (i > 1) {
                         freq = (float) Math.pow(10.0d, (double) (DynamicsProcessing.mMinFreqLog + ((((float) b) * (DynamicsProcessing.mMaxFreqLog - DynamicsProcessing.mMinFreqLog)) / ((float) (i - 1)))));
                     }
-                    this.mBands[b] = new MbcBand(true, freq, DynamicsProcessing.MBC_DEFAULT_ATTACK_TIME, DynamicsProcessing.MBC_DEFAULT_RELEASE_TIME, 1.0f, DynamicsProcessing.MBC_DEFAULT_THRESHOLD, 0.0f, DynamicsProcessing.MBC_DEFAULT_NOISE_GATE_THRESHOLD, 1.0f, 0.0f, 0.0f);
+                    this.mBands[b] = new MbcBand(true, freq, 3.0f, DynamicsProcessing.MBC_DEFAULT_RELEASE_TIME, 1.0f, DynamicsProcessing.MBC_DEFAULT_THRESHOLD, 0.0f, DynamicsProcessing.MBC_DEFAULT_NOISE_GATE_THRESHOLD, 1.0f, 0.0f, 0.0f);
                 }
                 return;
             }

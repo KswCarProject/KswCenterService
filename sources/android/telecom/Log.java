@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Slog;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.IndentingPrintWriter;
+import com.ibm.icu.text.PluralRules;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
@@ -358,7 +359,7 @@ public class Log {
         if (TextUtils.isEmpty(sessionName)) {
             sessionPostfix = "";
         } else {
-            sessionPostfix = ": " + sessionName;
+            sessionPostfix = PluralRules.KEYWORD_RULE_SEPARATOR + sessionName;
         }
         if (args != null) {
             try {

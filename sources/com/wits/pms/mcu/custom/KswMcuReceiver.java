@@ -18,7 +18,7 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
 
     public static void main(String... a) {
         PrintStream printStream = System.out;
-        printStream.println("-----" + (((float) (((41 & 255) << 8) + (14 & 255))) / 100.0f));
+        printStream.println("-----" + "hfpcg=123".substring("hfpcg=123".indexOf("=") + 1));
     }
 
     public void reset() {

@@ -293,21 +293,21 @@ final class Utf8 {
                         return Utf8.incompleteStateFor(buffer, byte1, index3, limit - index3);
                     }
                     int index5 = index3 + 1;
-                    byte byte2 = buffer.get(index3);
-                    if (byte2 > -65 || ((byte1 == -32 && byte2 < -96) || ((byte1 == -19 && byte2 >= -96) || buffer.get(index5) > -65))) {
+                    int index6 = buffer.get(index3);
+                    if (index6 > -65 || ((byte1 == -32 && index6 < -96) || ((byte1 == -19 && index6 >= -96) || buffer.get(index5) > -65))) {
                         return -1;
                     }
                     index2 = index5 + 1;
                 } else if (index3 >= limit - 2) {
                     return Utf8.incompleteStateFor(buffer, byte1, index3, limit - index3);
                 } else {
-                    int index6 = index3 + 1;
-                    int byte22 = buffer.get(index3);
-                    if (byte22 <= -65 && (((byte1 << 28) + (byte22 + 112)) >> 30) == 0) {
-                        int index7 = index6 + 1;
-                        if (buffer.get(index6) <= -65) {
-                            index2 = index7 + 1;
-                            if (buffer.get(index7) > -65) {
+                    int index7 = index3 + 1;
+                    int byte2 = buffer.get(index3);
+                    if (byte2 <= -65 && (((byte1 << 28) + (byte2 + 112)) >> 30) == 0) {
+                        int index8 = index7 + 1;
+                        if (buffer.get(index7) <= -65) {
+                            index2 = index8 + 1;
+                            if (buffer.get(index8) > -65) {
                             }
                         }
                     }
@@ -409,9 +409,9 @@ final class Utf8 {
         }
 
         /* access modifiers changed from: package-private */
-        /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r1v8, types: [byte, int] */
-        /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r4v10, types: [byte, int] */
-        /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r4v4, types: [byte, int] */
+        /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r1v8, types: [int, byte] */
+        /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r4v10, types: [int, byte] */
+        /* JADX WARNING: Incorrect type for immutable var: ssa=byte, code=int, for r4v4, types: [int, byte] */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public int partialIsValidUtf8(int r8, byte[] r9, int r10, int r11) {
             /*

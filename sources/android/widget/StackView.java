@@ -439,7 +439,7 @@ public class StackView extends AdapterViewAnimator {
         int newSlideAmount = Math.round(((float) getMeasuredHeight()) * SLIDE_UP_RATIO);
         if (this.mSlideAmount != newSlideAmount) {
             this.mSlideAmount = newSlideAmount;
-            this.mSwipeThreshold = Math.round(((float) newSlideAmount) * SWIPE_THRESHOLD_RATIO);
+            this.mSwipeThreshold = Math.round(((float) newSlideAmount) * 0.2f);
         }
         if (Float.compare(this.mPerspectiveShiftY, this.mNewPerspectiveShiftY) != 0 || Float.compare(this.mPerspectiveShiftX, this.mNewPerspectiveShiftX) != 0) {
             this.mPerspectiveShiftY = this.mNewPerspectiveShiftY;
@@ -734,10 +734,10 @@ public class StackView extends AdapterViewAnimator {
         }
 
         private float rotationInterpolator(float r) {
-            if (r < StackView.SWIPE_THRESHOLD_RATIO) {
+            if (r < 0.2f) {
                 return 0.0f;
             }
-            return (r - StackView.SWIPE_THRESHOLD_RATIO) / (1.0f - StackView.SWIPE_THRESHOLD_RATIO);
+            return (r - 0.2f) / (1.0f - 0.2f);
         }
 
         /* access modifiers changed from: package-private */
@@ -775,13 +775,13 @@ public class StackView extends AdapterViewAnimator {
                         StackView.this.mHighlight.setRotationX(((float) stackDirection) * 90.0f * rotationInterpolator(r2));
                         return;
                     case 1:
-                        float r3 = (1.0f - r2) * StackView.SWIPE_THRESHOLD_RATIO;
+                        float r3 = (1.0f - r2) * 0.2f;
                         viewLp.setVerticalOffset(Math.round(((float) stackDirection) * r3 * ((float) StackView.this.mSlideAmount)));
                         highlightLp.setVerticalOffset(Math.round(((float) stackDirection) * r3 * ((float) StackView.this.mSlideAmount)));
                         StackView.this.mHighlight.setAlpha(highlightAlphaInterpolator(r3));
                         return;
                     case 2:
-                        float r4 = r2 * StackView.SWIPE_THRESHOLD_RATIO;
+                        float r4 = r2 * 0.2f;
                         viewLp.setVerticalOffset(Math.round(((float) (-stackDirection)) * r4 * ((float) StackView.this.mSlideAmount)));
                         highlightLp.setVerticalOffset(Math.round(((float) (-stackDirection)) * r4 * ((float) StackView.this.mSlideAmount)));
                         StackView.this.mHighlight.setAlpha(highlightAlphaInterpolator(r4));
@@ -796,7 +796,7 @@ public class StackView extends AdapterViewAnimator {
             float r2 = Math.max(-2.0f, Math.min(2.0f, r));
             this.mXProgress = r2;
             if (this.mView != null) {
-                float r3 = r2 * StackView.SWIPE_THRESHOLD_RATIO;
+                float r3 = r2 * 0.2f;
                 ((LayoutParams) this.mView.getLayoutParams()).setHorizontalOffset(Math.round(((float) StackView.this.mSlideAmount) * r3));
                 ((LayoutParams) StackView.this.mHighlight.getLayoutParams()).setHorizontalOffset(Math.round(((float) StackView.this.mSlideAmount) * r3));
             }

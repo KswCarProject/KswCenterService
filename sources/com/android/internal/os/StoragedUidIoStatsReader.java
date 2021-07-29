@@ -5,6 +5,7 @@ import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Slog;
 import com.android.internal.annotations.VisibleForTesting;
+import com.ibm.icu.text.PluralRules;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -44,14 +45,14 @@ public class StoragedUidIoStatsReader {
                     String[] fields = TextUtils.split(line, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                     if (fields.length != 11) {
                         String str = TAG;
-                        Slog.e(str, "Malformed entry in " + sUidIoFile + ": " + line);
+                        Slog.e(str, "Malformed entry in " + sUidIoFile + PluralRules.KEYWORD_RULE_SEPARATOR + line);
                     } else {
                         String str2 = fields[0];
                         callback.onUidStorageStats(Integer.parseInt(fields[0], 10), Long.parseLong(fields[1], 10), Long.parseLong(fields[2], 10), Long.parseLong(fields[3], 10), Long.parseLong(fields[4], 10), Long.parseLong(fields[5], 10), Long.parseLong(fields[6], 10), Long.parseLong(fields[7], 10), Long.parseLong(fields[8], 10), Long.parseLong(fields[9], 10), Long.parseLong(fields[10], 10));
                     }
                 } catch (NumberFormatException e) {
                     String str3 = TAG;
-                    Slog.e(str3, "Could not parse entry in " + sUidIoFile + ": " + e.getMessage());
+                    Slog.e(str3, "Could not parse entry in " + sUidIoFile + PluralRules.KEYWORD_RULE_SEPARATOR + e.getMessage());
                 } catch (Throwable th4) {
                     th = th4;
                     throw th;
@@ -63,7 +64,7 @@ public class StoragedUidIoStatsReader {
         } catch (IOException e2) {
             try {
                 String str4 = TAG;
-                Slog.e(str4, "Failed to read " + sUidIoFile + ": " + e2.getMessage());
+                Slog.e(str4, "Failed to read " + sUidIoFile + PluralRules.KEYWORD_RULE_SEPARATOR + e2.getMessage());
             } catch (Throwable th5) {
                 StrictMode.setThreadPolicyMask(oldMask);
                 throw th5;

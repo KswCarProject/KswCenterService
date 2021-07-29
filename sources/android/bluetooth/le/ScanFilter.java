@@ -65,16 +65,16 @@ public final class ScanFilter implements Parcelable {
                     builder.setManufacturerData(manufacturerId, manufacturerData, manufacturerDataMask);
                 }
             }
-            int manufacturerDataLength = in.readInt();
+            int orgId = in.readInt();
             if (in.readInt() == 1) {
                 int tdsFlags = in.readInt();
                 int tdsFlagsMask = in.readInt();
                 if (in.readInt() == 1) {
                     byte[] wifiNanHash = new byte[in.readInt()];
                     in.readByteArray(wifiNanHash);
-                    builder.setTransportDiscoveryData(manufacturerDataLength, tdsFlags, tdsFlagsMask, wifiNanHash);
+                    builder.setTransportDiscoveryData(orgId, tdsFlags, tdsFlagsMask, wifiNanHash);
                 } else {
-                    builder.setTransportDiscoveryData(manufacturerDataLength, tdsFlags, tdsFlagsMask, (byte[]) null);
+                    builder.setTransportDiscoveryData(orgId, tdsFlags, tdsFlagsMask, (byte[]) null);
                 }
             }
             return builder.build();

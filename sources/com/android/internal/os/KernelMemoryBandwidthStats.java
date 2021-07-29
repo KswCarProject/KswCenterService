@@ -7,6 +7,7 @@ import android.util.LongSparseLongArray;
 import android.util.Slog;
 import android.util.TimeUtils;
 import com.android.internal.annotations.VisibleForTesting;
+import com.ibm.icu.text.DateFormat;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -46,7 +47,7 @@ public class KernelMemoryBandwidthStats {
             StrictMode.setThreadPolicy(policy);
             long readTime = SystemClock.uptimeMillis() - startTime;
             if (readTime > 100) {
-                Slog.w(TAG, "Reading memory bandwidth file took " + readTime + "ms");
+                Slog.w(TAG, "Reading memory bandwidth file took " + readTime + DateFormat.MINUTE_SECOND);
                 return;
             }
             return;

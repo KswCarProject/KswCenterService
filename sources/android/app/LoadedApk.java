@@ -37,6 +37,7 @@ import android.util.Slog;
 import android.util.SparseArray;
 import android.view.DisplayAdjustments;
 import com.android.internal.util.ArrayUtils;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.BaseDexClassLoader;
 import dalvik.system.VMRuntime;
 import java.io.File;
@@ -852,7 +853,7 @@ public final class LoadedApk {
         } catch (Exception e) {
             if (!this.mActivityThread.mInstrumentation.onException((Object) null, e)) {
                 Trace.traceEnd(64);
-                throw new RuntimeException("Unable to instantiate application " + appClass + ": " + e.toString(), e);
+                throw new RuntimeException("Unable to instantiate application " + appClass + PluralRules.KEYWORD_RULE_SEPARATOR + e.toString(), e);
             }
         }
         this.mActivityThread.mAllApplications.add(app);
@@ -863,7 +864,7 @@ public final class LoadedApk {
             } catch (Exception e2) {
                 if (!instrumentation.onException(app, e2)) {
                     Trace.traceEnd(64);
-                    throw new RuntimeException("Unable to create application " + app.getClass().getName() + ": " + e2.toString(), e2);
+                    throw new RuntimeException("Unable to create application " + app.getClass().getName() + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
                 }
             }
         }
@@ -1136,46 +1137,46 @@ public final class LoadedApk {
                     	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
                     	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
                     	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1257)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:390)
+                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
+                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
                     	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:482)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
+                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
+                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
                     	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:418)
+                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
                     	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
                     	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
                     	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
                     	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
                     	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1257)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:390)
+                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
+                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
                     	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:482)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
+                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
+                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
                     	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:418)
+                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
                     	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
                     	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
                     	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
                     	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
                     	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
-                    	at java.util.ArrayList.forEach(ArrayList.java:1257)
-                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:390)
+                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+                    	at java.util.ArrayList.forEach(ArrayList.java:1259)
+                    	at java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
                     	at java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:482)
-                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:471)
-                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
-                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+                    	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:483)
+                    	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:472)
+                    	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+                    	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
                     	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:418)
+                    	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:485)
                     	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
                     	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
                     	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)

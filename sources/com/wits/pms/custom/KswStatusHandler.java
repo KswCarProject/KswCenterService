@@ -43,16 +43,18 @@ public class KswStatusHandler extends LogicSystem {
     private void initCustomObs() {
         PowerManagerApp.registerIContentObserver("ccd", new IContentObserver.Stub() {
             public void onChange() throws RemoteException {
-                boolean usingCall = true;
-                if (PowerManagerApp.getStatusInt("ccd") == 1) {
+                boolean usingCall = false;
+                boolean revers = PowerManagerApp.getStatusInt("ccd") == 1;
+                if (revers) {
                     int callStatus = KswStatusHandler.this.mBtPhoneStatus.callStatus;
-                    if (callStatus >= 7 || callStatus < 4) {
-                        usingCall = false;
+                    if (callStatus < 7 && callStatus >= 4) {
+                        usingCall = true;
                     }
                     if (usingCall) {
                         CenterControlImpl.getImpl().switchSoundToCar();
                     }
                 }
+                CenterControlImpl.getImpl().setTxzQuickQuit(revers);
             }
         });
         PowerManagerApp.registerIContentObserver("callStatus", new IContentObserver.Stub() {

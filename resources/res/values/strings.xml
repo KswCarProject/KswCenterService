@@ -47,6 +47,7 @@
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="tp_update_fail">TP update fail!</string>
     <string name="tp_update_success">TP update success!</string>
+    <string name="update_fail">Update Fail!</string>
     <string name="update_mcu">MCU being updated!</string>
     <string name="update_mcu_success">MCU updated success!</string>
     <string name="update_success">Update Success!</string>

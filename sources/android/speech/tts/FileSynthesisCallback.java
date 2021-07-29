@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 class FileSynthesisCallback extends AbstractSynthesisCallback {
     private static final boolean DBG = false;
@@ -204,7 +205,7 @@ class FileSynthesisCallback extends AbstractSynthesisCallback {
         header.put(new byte[]{82, 73, 70, 70});
         header.putInt((dataLength + 44) - 8);
         header.put(new byte[]{87, 65, 86, 69});
-        header.put(new byte[]{102, 109, 116, 32});
+        header.put(new byte[]{102, 109, 116, HebrewProber.SPACE});
         header.putInt(16);
         header.putShort(1);
         header.putShort((short) channelCount);

@@ -163,7 +163,7 @@ public class HorizontalScrollView extends FrameLayout {
     }
 
     public int getMaxScrollAmount() {
-        return (int) (((float) (this.mRight - this.mLeft)) * MAX_SCROLL_FACTOR);
+        return (int) (((float) (this.mRight - this.mLeft)) * 0.5f);
     }
 
     private void initScrollView() {

@@ -14,6 +14,9 @@ public class ZlinkMessage {
     public static final String DISABLE_CARPLAY = "persist.sys.zlink.cp.disa";
     public static final String DISABLE_FOREGROUND_AUDIOFOCUS = "rw.zlink.foreground.donotreqaf";
     public static final String DISABLE_ZLINK_BACKGROUNG_CONNECT = "persist.sys.zlink.bgconn.disa";
+    public static final String ZLINK_AIRPLAY_CONNECT = "vendor.wits.airplay.connected";
+    public static final String ZLINK_ANDROID_AUTO_CONNECT = "vendor.wits.androidAuto.connected";
+    public static final String ZLINK_ANDROID_MIRROR_CONNECT = "vendor.wits.androidMirror.connected";
     public static final String ZLINK_APPLE_MAPS_VOL = "persist.sys.zlink.au.alt.v";
     public static final String ZLINK_AUDIO_VOL = "persist.sys.zlink.au.main.v";
     public static final String ZLINK_BACKCAR_START_ACTION = "com.zjinnova.zlink.action.BACKCAR_START";
@@ -60,6 +63,8 @@ public class ZlinkMessage {
         if (this.bundle != null) {
             txzIntent.putExtras(this.bundle);
         }
+        txzIntent.addFlags(16777216);
+        txzIntent.setPackage(ZLINK_NORMAL_ACTION);
         Log.v("ZlinkMessage", "action: " + txzIntent.getAction() + " command = " + txzIntent.getStringExtra("command"));
         context.sendBroadcastAsUser(txzIntent, UserHandle.getUserHandleForUid(context.getApplicationInfo().uid));
     }

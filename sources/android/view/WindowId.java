@@ -8,6 +8,7 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.view.IWindowFocusObserver;
 import android.view.IWindowId;
+import com.ibm.icu.text.PluralRules;
 import java.util.HashMap;
 
 public class WindowId implements Parcelable {
@@ -129,7 +130,7 @@ public class WindowId implements Parcelable {
         StringBuilder sb = new StringBuilder(128);
         sb.append("IntentSender{");
         sb.append(Integer.toHexString(System.identityHashCode(this)));
-        sb.append(": ");
+        sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         sb.append(this.mToken.asBinder());
         sb.append('}');
         return sb.toString();

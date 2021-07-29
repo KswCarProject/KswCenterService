@@ -9,6 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Vibrator;
 import android.provider.MediaStore;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -377,7 +378,7 @@ public final class InputDevice implements Parcelable {
         StringBuilder description = new StringBuilder();
         description.append("Input Device ");
         description.append(this.mId);
-        description.append(": ");
+        description.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         description.append(this.mName);
         description.append("\n");
         description.append("  Descriptor: ");

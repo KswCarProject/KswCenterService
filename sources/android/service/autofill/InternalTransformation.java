@@ -5,6 +5,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.autofill.Helper;
 import android.widget.RemoteViews;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 
 public abstract class InternalTransformation implements Transformation, Parcelable {
@@ -24,13 +25,13 @@ public abstract class InternalTransformation implements Transformation, Parcelab
             int id = ((Integer) pair.first).intValue();
             InternalTransformation transformation = (InternalTransformation) pair.second;
             if (Helper.sDebug) {
-                Log.d(TAG, "#" + i + ": " + transformation);
+                Log.d(TAG, "#" + i + PluralRules.KEYWORD_RULE_SEPARATOR + transformation);
             }
             try {
                 transformation.apply(finder, template, id);
                 i++;
             } catch (Exception e) {
-                Log.e(TAG, "Could not apply transformation " + transformation + ": " + e.getClass());
+                Log.e(TAG, "Could not apply transformation " + transformation + PluralRules.KEYWORD_RULE_SEPARATOR + e.getClass());
                 return false;
             }
         }

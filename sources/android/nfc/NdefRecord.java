@@ -311,7 +311,7 @@ public final class NdefRecord implements Parcelable {
                 boolean il = true;
                 boolean mb = (flag & Byte.MIN_VALUE) != 0;
                 boolean me3 = (flag & 64) != 0;
-                boolean cf = (flag & FLAG_CF) != 0;
+                boolean cf = (flag & 32) != 0;
                 boolean sr = (flag & 16) != 0;
                 if ((flag & 8) == 0) {
                     il = false;

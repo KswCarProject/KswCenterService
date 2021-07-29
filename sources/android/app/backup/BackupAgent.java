@@ -96,11 +96,6 @@ public abstract class BackupAgent extends ContextWrapper {
 
     /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
         java.lang.NullPointerException
-        	at jadx.core.dex.instructions.args.InsnArg.wrapInstruction(InsnArg.java:118)
-        	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.inline(CodeShrinkVisitor.java:146)
-        	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkBlock(CodeShrinkVisitor.java:71)
-        	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkMethod(CodeShrinkVisitor.java:43)
-        	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.visit(CodeShrinkVisitor.java:35)
         */
     public void onFullBackup(android.app.backup.FullBackupDataOutput r36) throws java.io.IOException {
         /*

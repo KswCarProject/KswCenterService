@@ -460,31 +460,31 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             int r0 = r0 - r9
             r13.mGapLength = r0
             int r0 = r13.mGapLength
-            if (r0 >= r7) goto L_0x0111
+            if (r0 >= r7) goto L_0x0110
             java.lang.Exception r0 = new java.lang.Exception
             java.lang.String r1 = "mGapLength < 1"
             r0.<init>(r1)
             r0.printStackTrace()
-        L_0x0111:
+        L_0x0110:
             char[] r0 = r13.mText
             android.text.TextUtils.getChars(r12, r11, r10, r0, r14)
-            if (r16 <= 0) goto L_0x0183
+            if (r16 <= 0) goto L_0x0182
             int r0 = r13.mGapStart
             int r1 = r13.mGapLength
             int r0 = r0 + r1
             char[] r1 = r13.mText
             int r1 = r1.length
-            if (r0 != r1) goto L_0x0124
+            if (r0 != r1) goto L_0x0123
             r5 = r7
-            goto L_0x0126
-        L_0x0124:
+            goto L_0x0125
+        L_0x0123:
             r5 = r19
-        L_0x0126:
+        L_0x0125:
             r0 = r19
-        L_0x0128:
+        L_0x0127:
             r7 = r0
             int r0 = r13.mSpanCount
-            if (r7 >= r0) goto L_0x0178
+            if (r7 >= r0) goto L_0x0177
             int[] r0 = r13.mSpanFlags
             r0 = r0[r7]
             r0 = r0 & 240(0xf0, float:3.36E-43)
@@ -526,47 +526,47 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             r12 = r15
             r8 = r21
             r15 = r27
-            goto L_0x0128
-        L_0x0178:
+            goto L_0x0127
+        L_0x0177:
             r21 = r8
             r22 = r9
             r4 = r10
             r2 = r11
             r15 = r12
             r25.restoreInvariants()
-            goto L_0x018a
-        L_0x0183:
+            goto L_0x0189
+        L_0x0182:
             r21 = r8
             r22 = r9
             r4 = r10
             r2 = r11
             r15 = r12
-        L_0x018a:
+        L_0x0189:
             boolean r0 = r15 instanceof android.text.Spanned
-            if (r0 == 0) goto L_0x01e8
+            if (r0 == 0) goto L_0x01e7
             r7 = r15
             android.text.Spanned r7 = (android.text.Spanned) r7
             java.lang.Class<java.lang.Object> r0 = java.lang.Object.class
             java.lang.Object[] r8 = r7.getSpans(r2, r4, r0)
-        L_0x0198:
+        L_0x0197:
             r9 = r19
             int r0 = r8.length
-            if (r9 >= r0) goto L_0x01e5
+            if (r9 >= r0) goto L_0x01e4
             r0 = r8[r9]
             int r0 = r7.getSpanStart(r0)
             r1 = r8[r9]
             int r1 = r7.getSpanEnd(r1)
-            if (r0 >= r2) goto L_0x01ad
+            if (r0 >= r2) goto L_0x01ac
             r0 = r29
-        L_0x01ad:
+        L_0x01ac:
             r10 = r0
-            if (r1 <= r4) goto L_0x01b2
+            if (r1 <= r4) goto L_0x01b1
             r1 = r30
-        L_0x01b2:
+        L_0x01b1:
             r11 = r1
             r0 = r8[r9]
             int r0 = r13.getSpanStart(r0)
-            if (r0 >= 0) goto L_0x01de
+            if (r0 >= 0) goto L_0x01dd
             int r0 = r10 - r2
             int r12 = r0 + r14
             int r0 = r11 - r2
@@ -585,14 +585,14 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             r23 = r6
             r6 = r20
             r0.setSpan(r1, r2, r3, r4, r5, r6)
-        L_0x01de:
+        L_0x01dd:
             int r19 = r9 + 1
             r2 = r29
             r4 = r30
-            goto L_0x0198
-        L_0x01e5:
+            goto L_0x0197
+        L_0x01e4:
             r25.restoreInvariants()
-        L_0x01e8:
+        L_0x01e7:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: android.text.SpannableStringBuilder.change(int, int, java.lang.CharSequence, int, int):void");
@@ -688,7 +688,7 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             selectionEnd2 = Selection.getSelectionEnd(this);
         }
         int i5 = filtercount;
-        int filtercount2 = selectionEnd2;
+        int selectionEnd3 = selectionEnd2;
         CharSequence charSequence = tb2;
         CharSequence charSequence2 = tb2;
         int selectionStart2 = selectionStart;
@@ -709,14 +709,14 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
                 setSpan(false, Selection.SELECTION_START, selectionStart4, selectionStart4, 34, true);
                 changed = true;
             }
-            if (filtercount2 <= i || filtercount2 >= i2) {
-                selectionEnd = filtercount2;
-            } else {
-                long diff2 = (long) (filtercount2 - i);
-                int selectionEnd3 = i + Math.toIntExact((((long) newLen) * diff2) / ((long) origLen));
+            if (selectionEnd3 <= i || selectionEnd3 >= i2) {
                 selectionEnd = selectionEnd3;
+            } else {
+                long diff2 = (long) (selectionEnd3 - i);
+                int selectionEnd4 = i + Math.toIntExact((((long) newLen) * diff2) / ((long) origLen));
+                selectionEnd = selectionEnd4;
                 long j2 = diff2;
-                setSpan(false, Selection.SELECTION_END, selectionEnd, selectionEnd3, 34, true);
+                setSpan(false, Selection.SELECTION_END, selectionEnd, selectionEnd4, 34, true);
                 changed = true;
             }
             if (changed) {

@@ -32,6 +32,7 @@ import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.DateFormat;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -558,7 +559,7 @@ public class AppOpsManager {
         }
         switch (flag) {
             case 1:
-                return "s";
+                return DateFormat.SECOND;
             case 2:
                 return "tp";
             default:

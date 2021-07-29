@@ -11,6 +11,7 @@ import android.os.IncidentManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.ArrayMap;
+import com.ibm.icu.text.DateFormat;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.time.Duration;
@@ -336,7 +337,7 @@ public final class UsageStatsManager {
         StringBuilder sb = new StringBuilder();
         int i = 65280 & standbyReason;
         if (i == 256) {
-            sb.append("d");
+            sb.append(DateFormat.DAY);
         } else if (i != 512) {
             if (i == 768) {
                 sb.append("u");

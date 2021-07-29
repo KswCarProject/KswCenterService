@@ -15,6 +15,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 import com.android.internal.telephony.PhoneConstants;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.VMRuntime;
 import java.io.BufferedReader;
 import java.io.File;
@@ -117,7 +118,7 @@ public class GraphicsEnvironment {
             Log.v(TAG, "ANGLE whitelist includes " + packageName);
         }
         if (requested) {
-            Log.v(TAG, "ANGLE developer option for " + packageName + ": " + devOptIn);
+            Log.v(TAG, "ANGLE developer option for " + packageName + PluralRules.KEYWORD_RULE_SEPARATOR + devOptIn);
         }
         return true;
     }

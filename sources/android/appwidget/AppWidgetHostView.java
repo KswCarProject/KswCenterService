@@ -31,6 +31,7 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsAdapter;
 import android.widget.TextView;
 import com.android.internal.R;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -423,7 +424,7 @@ public class AppWidgetHostView extends FrameLayout {
             exception = e;
         }
         if (exception != null) {
-            Log.w(TAG, "Error inflating AppWidget " + this.mInfo + ": " + exception.toString());
+            Log.w(TAG, "Error inflating AppWidget " + this.mInfo + PluralRules.KEYWORD_RULE_SEPARATOR + exception.toString());
         }
         if (defaultView == null) {
             return getErrorView();

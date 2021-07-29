@@ -1,8 +1,8 @@
 package com.google.android.util;
 
 import android.app.backup.FullBackup;
-import android.provider.Telephony;
 import android.view.ThreadedRenderer;
+import com.ibm.icu.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -496,8 +496,8 @@ public abstract class AbstractMessageParser {
             LINK("l"),
             SMILEY("e"),
             ACRONYM(FullBackup.APK_TREE_TOKEN),
-            MUSIC("m"),
-            GOOGLE_VIDEO(Telephony.BaseMmsColumns.MMS_VERSION),
+            MUSIC(DateFormat.MINUTE),
+            GOOGLE_VIDEO("v"),
             YOUTUBE_VIDEO("yt"),
             PHOTO(TtmlUtils.TAG_P),
             FLICKR(FullBackup.FILES_TREE_TOKEN);
@@ -1254,17 +1254,17 @@ public abstract class AbstractMessageParser {
 
         public String getType(boolean isSend) {
             StringBuilder sb = new StringBuilder();
-            sb.append(isSend ? "s" : "r");
+            sb.append(isSend ? DateFormat.SECOND : "r");
             sb.append(getPartType());
             return sb.toString();
         }
 
         private String getPartType() {
             if (isMedia()) {
-                return "d";
+                return DateFormat.DAY;
             }
             if (this.meText != null) {
-                return "m";
+                return DateFormat.MINUTE;
             }
             return "";
         }

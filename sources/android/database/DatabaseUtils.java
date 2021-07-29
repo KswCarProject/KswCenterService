@@ -175,12 +175,12 @@ public class DatabaseUtils {
         StringBuilder res = new StringBuilder(len);
         int i = 0;
         while (i < len) {
-            int start = i + 1;
+            int i2 = i + 1;
             char c2 = selection.charAt(i);
             if (c2 == '?') {
                 char after = ' ';
                 char c3 = c2;
-                i = start;
+                i = i2;
                 while (true) {
                     if (i < len) {
                         c = selection.charAt(i);
@@ -192,8 +192,8 @@ public class DatabaseUtils {
                     }
                 }
                 after = c;
-                if (start != i) {
-                    argIndex = Integer.parseInt(selection.substring(start, i)) - 1;
+                if (i2 != i) {
+                    argIndex = Integer.parseInt(selection.substring(i2, i)) - 1;
                 }
                 int argIndex2 = argIndex + 1;
                 Boolean bool = selectionArgs[argIndex];
@@ -233,7 +233,7 @@ public class DatabaseUtils {
             } else {
                 res.append(c2);
                 before = c2;
-                i = start;
+                i = i2;
             }
         }
         return res.toString();

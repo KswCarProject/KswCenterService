@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.AndroidException;
+import com.ibm.icu.text.PluralRules;
 
 public class IntentSender implements Parcelable {
     public static final Parcelable.Creator<IntentSender> CREATOR = new Parcelable.Creator<IntentSender>() {
@@ -169,7 +170,7 @@ public class IntentSender implements Parcelable {
         StringBuilder sb = new StringBuilder(128);
         sb.append("IntentSender{");
         sb.append(Integer.toHexString(System.identityHashCode(this)));
-        sb.append(": ");
+        sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         sb.append(this.mTarget != null ? this.mTarget.asBinder() : null);
         sb.append('}');
         return sb.toString();

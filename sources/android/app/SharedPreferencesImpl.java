@@ -13,6 +13,7 @@ import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.ExponentiallyBucketedHistogram;
 import com.android.internal.util.XmlUtils;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.BlockGuard;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -974,7 +975,7 @@ final class SharedPreferencesImpl implements SharedPreferences {
             this.mSyncTimes.add((int) fsyncDuration);
             this.mNumSync++;
             if (this.mNumSync % 1024 == 0 || fsyncDuration > 256) {
-                this.mSyncTimes.log(TAG, "Time required to fsync " + this.mFile + ": ");
+                this.mSyncTimes.log(TAG, "Time required to fsync " + this.mFile + PluralRules.KEYWORD_RULE_SEPARATOR);
             }
         } catch (XmlPullParserException e2) {
             Log.w(TAG, "writeToFile: Got exception:", e2);

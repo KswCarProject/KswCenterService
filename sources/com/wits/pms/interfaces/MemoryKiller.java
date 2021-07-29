@@ -42,8 +42,8 @@ public abstract class MemoryKiller {
         this.DEBUG = false;
         this.mAppList = new ArrayList();
         this.mWhiteList = new ArrayList();
-        this.DEFAULT_MEMORY_LIMIT = 40;
-        this.memoryKillPercent = 40;
+        this.DEFAULT_MEMORY_LIMIT = 20;
+        this.memoryKillPercent = 20;
         this.topAppList = new ArrayList();
         this.mImportantProcess = new ArrayList<String>() {
             {

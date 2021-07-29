@@ -6,6 +6,7 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.os.BinderInternal;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -229,7 +230,7 @@ public final class BinderProxy implements IBinder {
             InterfaceCount[] sorted = getSortedInterfaceCounts(10);
             Log.v("Binder", "BinderProxy descriptor histogram (top " + Integer.toString(10) + "):");
             for (int i = 0; i < sorted.length; i++) {
-                Log.v("Binder", " #" + (i + 1) + ": " + sorted[i]);
+                Log.v("Binder", " #" + (i + 1) + PluralRules.KEYWORD_RULE_SEPARATOR + sorted[i]);
             }
         }
 

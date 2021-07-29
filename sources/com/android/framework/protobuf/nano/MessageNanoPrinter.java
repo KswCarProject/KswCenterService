@@ -2,6 +2,7 @@ package com.android.framework.protobuf.nano;
 
 import android.content.IntentFilter;
 import android.telecom.Logging.Session;
+import com.ibm.icu.text.PluralRules;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -147,7 +148,7 @@ public final class MessageNanoPrinter {
                 String identifier3 = deCamelCaseify(identifier);
                 stringBuffer2.append(stringBuffer);
                 stringBuffer2.append(identifier3);
-                stringBuffer2.append(": ");
+                stringBuffer2.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                 if (obj instanceof String) {
                     String stringMessage = sanitizeString((String) obj);
                     stringBuffer2.append("\"");

@@ -469,7 +469,7 @@ public class Editor {
         }
         if (this.mErrorPopup == null) {
             float scale = this.mTextView.getResources().getDisplayMetrics().density;
-            this.mErrorPopup = new ErrorPopup((TextView) LayoutInflater.from(this.mTextView.getContext()).inflate((int) R.layout.textview_hint, (ViewGroup) null), (int) ((200.0f * scale) + LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS), (int) ((50.0f * scale) + LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS));
+            this.mErrorPopup = new ErrorPopup((TextView) LayoutInflater.from(this.mTextView.getContext()).inflate((int) R.layout.textview_hint, (ViewGroup) null), (int) ((200.0f * scale) + 0.5f), (int) ((50.0f * scale) + 0.5f));
             this.mErrorPopup.setFocusable(false);
             this.mErrorPopup.setInputMethodMode(1);
         }
@@ -529,12 +529,12 @@ public class Editor {
             if (dr != null) {
                 i = dr.mDrawableSizeRight;
             }
-            return ((this.mTextView.getWidth() - this.mErrorPopup.getWidth()) - this.mTextView.getPaddingRight()) + ((-i) / 2) + ((int) ((25.0f * scale) + LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS));
+            return ((this.mTextView.getWidth() - this.mErrorPopup.getWidth()) - this.mTextView.getPaddingRight()) + ((-i) / 2) + ((int) ((25.0f * scale) + 0.5f));
         }
         if (dr != null) {
             i = dr.mDrawableSizeLeft;
         }
-        return this.mTextView.getPaddingLeft() + ((i / 2) - ((int) ((25.0f * scale) + LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS)));
+        return this.mTextView.getPaddingLeft() + ((i / 2) - ((int) ((25.0f * scale) + 0.5f)));
     }
 
     private int getErrorY() {
@@ -549,7 +549,7 @@ public class Editor {
         } else if (dr != null) {
             height = dr.mDrawableHeightLeft;
         }
-        return (((((vspace - height) / 2) + compoundPaddingTop) + height) - this.mTextView.getHeight()) - ((int) ((2.0f * this.mTextView.getResources().getDisplayMetrics().density) + LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS));
+        return (((((vspace - height) / 2) + compoundPaddingTop) + height) - this.mTextView.getHeight()) - ((int) ((2.0f * this.mTextView.getResources().getDisplayMetrics().density) + 0.5f));
     }
 
     /* access modifiers changed from: package-private */
@@ -1677,7 +1677,7 @@ public class Editor {
                     max = Math.max(max, layout2.getLineRight(line));
                 }
                 int left2 = (int) min;
-                right = (int) (LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS + max);
+                right = (int) (0.5f + max);
                 left = left2;
             } else {
                 left = 0;
@@ -2139,7 +2139,7 @@ public class Editor {
 
     /* access modifiers changed from: private */
     public int clampHorizontalPosition(Drawable drawable, float horizontal) {
-        float horizontal2 = Math.max(LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS, horizontal - LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS);
+        float horizontal2 = Math.max(0.5f, horizontal - 0.5f);
         if (this.mTempRect == null) {
             this.mTempRect = new Rect();
         }
@@ -3992,7 +3992,7 @@ public class Editor {
 
         /* access modifiers changed from: package-private */
         public int getCursorHorizontalPosition(Layout layout, int offset) {
-            return (int) (getHorizontal(layout, offset) - Editor.LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS);
+            return (int) (getHorizontal(layout, offset) - 0.5f);
         }
 
         public void updatePosition(int parentPositionX, int parentPositionY, boolean parentPositionChanged, boolean parentScrolled) {
@@ -5213,7 +5213,7 @@ public class Editor {
         }
         float verticalOffset = (float) this.mTextView.viewportToContentVerticalOffset();
         int lineCount = layout.getLineCount();
-        float slop = ((float) this.mTextView.getLineHeight()) * LINE_SLOP_MULTIPLIER_FOR_HANDLEVIEWS;
+        float slop = ((float) this.mTextView.getLineHeight()) * 0.5f;
         float yTopBound = Math.max((((float) layout.getLineTop(prevLine)) + verticalOffset) - slop, ((float) layout.getLineTop(0)) + verticalOffset + slop);
         float yBottomBound = Math.min(((float) layout.getLineBottom(prevLine)) + verticalOffset + slop, (((float) layout.getLineBottom(lineCount - 1)) + verticalOffset) - slop);
         if (y <= yTopBound) {

@@ -9,6 +9,7 @@ import android.support.v4.util.LogWriter;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.reflect.Modifier;
@@ -177,7 +178,7 @@ final class BackStackRecord extends FragmentTransaction implements FragmentManag
                 writer.print(prefix);
                 writer.print("  Op #");
                 writer.print(opNum);
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.print(cmdStr);
                 writer.print(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                 writer.println(op.fragment);

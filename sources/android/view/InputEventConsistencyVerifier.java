@@ -3,6 +3,7 @@ package android.view;
 import android.annotation.UnsupportedAppUsage;
 import android.os.Build;
 import android.util.Log;
+import com.ibm.icu.text.PluralRules;
 
 public final class InputEventConsistencyVerifier {
     private static final String EVENT_TYPE_GENERIC_MOTION = "GenericMotionEvent";
@@ -501,7 +502,7 @@ public final class InputEventConsistencyVerifier {
         if (this.mViolationMessage.length() == 0) {
             StringBuilder sb = this.mViolationMessage;
             sb.append(this.mCurrentEventType);
-            sb.append(": ");
+            sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
         } else {
             this.mViolationMessage.append("\n  ");
         }

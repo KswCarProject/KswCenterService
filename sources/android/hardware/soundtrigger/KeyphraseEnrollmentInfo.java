@@ -10,6 +10,7 @@ import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Slog;
+import com.ibm.icu.text.PluralRules;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -53,7 +54,7 @@ public class KeyphraseEnrollmentInfo {
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 String error = "error parsing voice enrollment meta-data for " + ri.activityInfo.packageName;
-                parseErrors.add(error + ": " + e);
+                parseErrors.add(error + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                 Slog.w(TAG, error, e);
             }
         }

@@ -1132,7 +1132,7 @@ public class GradientDrawable extends Drawable {
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 124050917)
         public int mInnerRadius = -1;
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 124050917)
-        public float mInnerRadiusRatio = GradientDrawable.DEFAULT_INNER_RADIUS_RATIO;
+        public float mInnerRadiusRatio = 3.0f;
         boolean mOpaqueOverBounds;
         boolean mOpaqueOverShape;
         public Insets mOpticalInsets = Insets.NONE;

@@ -2,7 +2,6 @@ package com.wits.pms.listener;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import com.wits.pms.ICmdListener;
 import com.wits.pms.bean.ZlinkMessage;
@@ -211,6 +211,20 @@ public class CenterListener {
                 CenterControlImpl.getImpl().kuWoMusicPlay(false);
             }
         }
+        if (packageName.equals("com.qiyi.video")) {
+            WitsCommand.sendCommand(2, 118, "");
+        }
+        if (packageName.contains("cloudmusic")) {
+            CenterControlImpl.getImpl().openSourceMode(13);
+        }
+        String musicPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_APP_MUSIC_PKG");
+        String videoPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_APP_VIDEO_PKG");
+        if (!TextUtils.isEmpty(musicPkg) && musicPkg.equals(packageName)) {
+            CenterControlImpl.getImpl().openSourceMode(1);
+        }
+        if (!TextUtils.isEmpty(videoPkg) && videoPkg.equals(packageName)) {
+            CenterControlImpl.getImpl().openSourceMode(2);
+        }
     }
 
     private void observeActivity() {
@@ -228,7 +242,7 @@ public class CenterListener {
                         Thread.sleep(500);
                     } catch (InterruptedException e2) {
                     }
-                    int i = 1;
+                    boolean btSwitch = true;
                     List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
                     if (runningTasks.size() > 0) {
                         String packageName2 = runningTasks.get(0).topActivity.getPackageName();
@@ -239,15 +253,19 @@ public class CenterListener {
                             Settings.System.putString(CenterListener.this.mContext.getContentResolver(), "currentPkg", packageName2);
                         }
                         try {
-                            int btSwitch = Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "btSwitch", 1);
-                            if (btSwitch == Integer.parseInt(SystemProperties.get(ZlinkMessage.ZLINK_CONNECT))) {
-                                ContentResolver contentResolver = CenterListener.this.mContext.getContentResolver();
-                                if (btSwitch == 1) {
-                                    i = 0;
-                                }
-                                Settings.System.putInt(contentResolver, "btSwitch", i);
+                            if (Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "btSwitch", 1) != 1) {
+                                btSwitch = false;
+                            }
+                            boolean zlinkConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_CONNECT));
+                            boolean hicarConnected = "true".equals(SystemProperties.get("persist.sys.hicar_connect"));
+                            boolean airplayConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_AIRPLAY_CONNECT));
+                            Log.d(CenterListener.TAG, "zlinkConnected = " + zlinkConnected + "   hicarConnected = " + hicarConnected + "   airplayConnected = " + airplayConnected + "  btSwitch = " + btSwitch);
+                            if ((zlinkConnected || hicarConnected || airplayConnected) && btSwitch) {
+                                Settings.System.putInt(CenterListener.this.mContext.getContentResolver(), "btSwitch", 0);
                             }
                         } catch (Exception e3) {
+                            Log.e(CenterListener.TAG, "error");
+                            e3.printStackTrace();
                         }
                         CenterListener.this.checkMemory();
                     }

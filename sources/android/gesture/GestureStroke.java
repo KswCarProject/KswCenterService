@@ -91,7 +91,7 @@ public class GestureStroke {
             } else {
                 float dx = Math.abs(x - mX);
                 float dy = Math.abs(y - mY);
-                if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+                if (dx >= 3.0f || dy >= 3.0f) {
                     path.quadTo(mX, mY, (x + mX) / 2.0f, (y + mY) / 2.0f);
                     mX = x;
                     mY = y;
@@ -125,7 +125,7 @@ public class GestureStroke {
             } else {
                 float dx = Math.abs(x - mX);
                 float dy = Math.abs(y - mY);
-                if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+                if (dx >= 3.0f || dy >= 3.0f) {
                     path.quadTo(mX, mY, (x + mX) / 2.0f, (y + mY) / 2.0f);
                     mX = x;
                     mY = y;

@@ -368,6 +368,6 @@ public class DateFormat {
 
     private static String zeroPad(int inValue, int inMinDigits) {
         Locale locale = Locale.getDefault();
-        return String.format(locale, "%0" + inMinDigits + "d", new Object[]{Integer.valueOf(inValue)});
+        return String.format(locale, "%0" + inMinDigits + com.ibm.icu.text.DateFormat.DAY, new Object[]{Integer.valueOf(inValue)});
     }
 }

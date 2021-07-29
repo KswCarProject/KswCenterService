@@ -11,6 +11,7 @@ import android.security.keystore.KeyProperties;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.util.ArrayUtils;
 import com.android.org.bouncycastle.x509.X509V3CertificateGenerator;
+import com.ibm.icu.text.PluralRules;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -409,7 +410,7 @@ public abstract class AndroidKeyStoreKeyPairGeneratorSpi extends KeyPairGenerato
                 if (this.mKeySizeBits == -1) {
                     this.mKeySizeBits = rsaSpec.getKeysize();
                 } else if (this.mKeySizeBits != rsaSpec.getKeysize()) {
-                    throw new InvalidAlgorithmParameterException("RSA key size must match  between " + this.mSpec + " and " + algSpecificSpec + ": " + this.mKeySizeBits + " vs " + rsaSpec.getKeysize());
+                    throw new InvalidAlgorithmParameterException("RSA key size must match  between " + this.mSpec + " and " + algSpecificSpec + PluralRules.KEYWORD_RULE_SEPARATOR + this.mKeySizeBits + " vs " + rsaSpec.getKeysize());
                 }
                 publicExponent = rsaSpec.getPublicExponent();
             } else if (algSpecificSpec != null) {
@@ -435,7 +436,7 @@ public abstract class AndroidKeyStoreKeyPairGeneratorSpi extends KeyPairGenerato
             } else if (this.mKeySizeBits == -1) {
                 this.mKeySizeBits = ecSpecKeySizeBits.intValue();
             } else if (this.mKeySizeBits != ecSpecKeySizeBits.intValue()) {
-                throw new InvalidAlgorithmParameterException("EC key size must match  between " + this.mSpec + " and " + algSpecificSpec + ": " + this.mKeySizeBits + " vs " + ecSpecKeySizeBits);
+                throw new InvalidAlgorithmParameterException("EC key size must match  between " + this.mSpec + " and " + algSpecificSpec + PluralRules.KEYWORD_RULE_SEPARATOR + this.mKeySizeBits + " vs " + ecSpecKeySizeBits);
             }
         } else if (algSpecificSpec != null) {
             throw new InvalidAlgorithmParameterException("EC may only use ECGenParameterSpec");

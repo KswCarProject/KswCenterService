@@ -21,6 +21,7 @@ import android.view.WindowId;
 import android.view.animation.AnimationUtils;
 import android.widget.ListView;
 import com.android.internal.R;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -1249,7 +1250,7 @@ public abstract class Transition implements Cloneable {
 
     /* access modifiers changed from: package-private */
     public String toString(String indent) {
-        String result = indent + getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + ": ";
+        String result = indent + getClass().getSimpleName() + "@" + Integer.toHexString(hashCode()) + PluralRules.KEYWORD_RULE_SEPARATOR;
         if (this.mDuration != -1) {
             result = result + "dur(" + this.mDuration + ") ";
         }

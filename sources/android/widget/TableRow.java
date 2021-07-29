@@ -225,15 +225,15 @@ public class TableRow extends LinearLayout {
             for (int i = 0; i < span; i++) {
                 columnWidth += constrainedColumnWidths[childIndex + i];
             }
-            int i2 = lp.gravity;
-            boolean isHorizontalGravity = Gravity.isHorizontal(i2);
+            int gravity = lp.gravity;
+            boolean isHorizontalGravity = Gravity.isHorizontal(gravity);
             if (isHorizontalGravity) {
                 measureMode = Integer.MIN_VALUE;
             }
             child.measure(View.MeasureSpec.makeMeasureSpec(Math.max(0, (columnWidth - lp.leftMargin) - lp.rightMargin), measureMode), getChildMeasureSpec(heightMeasureSpec, this.mPaddingTop + this.mPaddingBottom + lp.topMargin + lp.bottomMargin + totalHeight, lp.height));
             if (isHorizontalGravity) {
                 lp.mOffset[1] = columnWidth - child.getMeasuredWidth();
-                int absoluteGravity = Gravity.getAbsoluteGravity(i2, getLayoutDirection()) & 7;
+                int absoluteGravity = Gravity.getAbsoluteGravity(gravity, getLayoutDirection()) & 7;
                 if (absoluteGravity == 1) {
                     lp.mOffset[0] = lp.mOffset[1] / 2;
                 } else if (absoluteGravity != 3 && absoluteGravity == 5) {
@@ -246,7 +246,7 @@ public class TableRow extends LinearLayout {
             }
         } else {
             View view = child;
-            int i3 = heightMeasureSpec;
+            int i2 = heightMeasureSpec;
             super.measureChildBeforeLayout(child, childIndex, widthMeasureSpec, totalWidth, heightMeasureSpec, totalHeight);
         }
     }

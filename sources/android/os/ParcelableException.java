@@ -1,6 +1,7 @@
 package android.os;
 
 import android.os.Parcelable;
+import com.ibm.icu.text.PluralRules;
 
 public final class ParcelableException extends RuntimeException implements Parcelable {
     public static final Parcelable.Creator<ParcelableException> CREATOR = new Parcelable.Creator<ParcelableException>() {
@@ -33,7 +34,7 @@ public final class ParcelableException extends RuntimeException implements Parce
             }
         } catch (ReflectiveOperationException e) {
         }
-        return new RuntimeException(name + ": " + msg);
+        return new RuntimeException(name + PluralRules.KEYWORD_RULE_SEPARATOR + msg);
     }
 
     public static void writeToParcel(Parcel out, Throwable t) {

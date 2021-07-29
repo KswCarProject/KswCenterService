@@ -16,7 +16,6 @@ import android.util.Log;
 import android.util.Slog;
 import com.android.internal.logging.AndroidConfig;
 import com.android.server.NetworkManagementSocketTagger;
-import com.wits.pms.BuildConfig;
 import dalvik.system.RuntimeHooks;
 import dalvik.system.VMRuntime;
 import java.lang.Thread;
@@ -136,7 +135,7 @@ public class RuntimeInit {
         result.append(System.getProperty("java.vm.version"));
         result.append(" (Linux; U; Android ");
         String version = Build.VERSION.RELEASE;
-        result.append(version.length() > 0 ? version : BuildConfig.VERSION_NAME);
+        result.append(version.length() > 0 ? version : "1.0");
         if ("REL".equals(Build.VERSION.CODENAME)) {
             String model = Build.MODEL;
             if (model.length() > 0) {

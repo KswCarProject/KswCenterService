@@ -2,6 +2,7 @@ package android.transition;
 
 import android.util.ArrayMap;
 import android.view.View;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class TransitionValues {
     public String toString() {
         String returnValue = (("TransitionValues@" + Integer.toHexString(hashCode()) + ":\n") + "    view = " + this.view + "\n") + "    values:";
         for (String s : this.values.keySet()) {
-            returnValue = returnValue + "    " + s + ": " + this.values.get(s) + "\n";
+            returnValue = returnValue + "    " + s + PluralRules.KEYWORD_RULE_SEPARATOR + this.values.get(s) + "\n";
         }
         return returnValue;
     }

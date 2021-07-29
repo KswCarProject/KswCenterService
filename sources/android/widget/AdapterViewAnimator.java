@@ -373,9 +373,9 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
                         newWindowStartUnbounded2 = newWindowEnd3;
                     } else {
                         rangeEnd = rangeEnd2;
-                        int adapterPosition = modulo(i8, newWindowStart);
-                        View newView = this.mAdapter.getView(adapterPosition, (View) null, this);
-                        long itemId = this.mAdapter.getItemId(adapterPosition);
+                        int rangeEnd3 = modulo(i8, newWindowStart);
+                        View newView = this.mAdapter.getView(rangeEnd3, (View) null, this);
+                        long itemId = this.mAdapter.getItemId(rangeEnd3);
                         FrameLayout fl = getFrameForChild();
                         if (newView != null) {
                             fl.addView(newView);
@@ -390,7 +390,7 @@ public abstract class AdapterViewAnimator extends AdapterView<Adapter> implement
                         newWindowStartUnbounded = newWindowEnd;
                         adapterCount2 = newWindowStart3;
                         newWindowStartUnbounded2 = newWindowEnd3;
-                        this.mViewsMap.put(Integer.valueOf(index2), new ViewAndMetaData(fl2, newRelativeIndex2, adapterPosition, itemId));
+                        this.mViewsMap.put(Integer.valueOf(index2), new ViewAndMetaData(fl2, newRelativeIndex2, rangeEnd3, itemId));
                         FrameLayout fl3 = fl2;
                         addChild(fl3);
                         int newRelativeIndex3 = newRelativeIndex2;

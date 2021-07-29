@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.LocaleList;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.Telephony;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -1629,7 +1628,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             }
             parts.add(width + "x" + height);
         }
-        parts.add(Telephony.BaseMmsColumns.MMS_VERSION + Build.VERSION.RESOURCES_SDK_INT);
+        parts.add("v" + Build.VERSION.RESOURCES_SDK_INT);
         return TextUtils.join((CharSequence) NativeLibraryHelper.CLEAR_ABI_OVERRIDE, (Iterable) parts);
     }
 

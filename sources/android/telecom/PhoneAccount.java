@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import com.ibm.icu.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -458,7 +459,7 @@ public final class PhoneAccount implements Parcelable {
             sb.append("B");
         }
         if (hasAudioRoutes(1)) {
-            sb.append("E");
+            sb.append(DateFormat.ABBR_WEEKDAY);
         }
         if (hasAudioRoutes(8)) {
             sb.append("S");

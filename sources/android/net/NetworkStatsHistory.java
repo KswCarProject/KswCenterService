@@ -8,6 +8,7 @@ import android.util.MathUtils;
 import android.util.proto.ProtoOutputStream;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.IndentingPrintWriter;
+import com.ibm.icu.text.Bidi;
 import java.io.CharArrayWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -335,10 +336,10 @@ public class NetworkStatsHistory implements Parcelable {
                         addLong(this.txBytes, i, curStart);
                         txBytes2 -= curStart;
                         long j8 = fracRxBytes;
-                        long fracRxBytes2 = fracTxPackets;
-                        addLong(this.txPackets, i, fracRxBytes2);
-                        txPackets2 = txPackets4 - fracRxBytes2;
-                        long j9 = fracRxBytes2;
+                        long fracTxPackets2 = fracTxPackets;
+                        addLong(this.txPackets, i, fracTxPackets2);
+                        txPackets2 = txPackets4 - fracTxPackets2;
+                        long j9 = fracTxPackets2;
                         long fracOperations = (operations2 * overlap) / duration;
                         addLong(this.operations, i, fracOperations);
                         duration -= overlap;
@@ -795,7 +796,7 @@ public class NetworkStatsHistory implements Parcelable {
             long result = 0;
             for (int shift = 0; shift < 64; shift += 7) {
                 byte b = in.readByte();
-                result |= ((long) (b & Byte.MAX_VALUE)) << shift;
+                result |= ((long) (b & Bidi.LEVEL_DEFAULT_RTL)) << shift;
                 if ((b & 128) == 0) {
                     return result;
                 }

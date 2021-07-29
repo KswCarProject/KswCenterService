@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import com.android.internal.telephony.IccCardConstants;
+import com.ibm.icu.text.PluralRules;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -468,7 +469,7 @@ public final class Display {
         synchronized (this) {
             updateDisplayInfoLocked();
             this.mDisplayInfo.getAppMetrics(this.mTempMetrics, getDisplayAdjustments());
-            str = "Display id " + this.mDisplayId + ": " + this.mDisplayInfo + ", " + this.mTempMetrics + ", isValid=" + this.mIsValid;
+            str = "Display id " + this.mDisplayId + PluralRules.KEYWORD_RULE_SEPARATOR + this.mDisplayInfo + ", " + this.mTempMetrics + ", isValid=" + this.mIsValid;
         }
         return str;
     }

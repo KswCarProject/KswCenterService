@@ -645,7 +645,7 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
         }
         this.mProgress.setStartEndTrim(0.0f, Math.min(MAX_PROGRESS_ANGLE, adjustedPercent * MAX_PROGRESS_ANGLE));
         this.mProgress.setArrowScale(Math.min(1.0f, adjustedPercent));
-        this.mProgress.setProgressRotation((((0.4f * adjustedPercent) - 16.0f) + (DECELERATE_INTERPOLATION_FACTOR * tensionPercent)) * DRAG_RATE);
+        this.mProgress.setProgressRotation((((0.4f * adjustedPercent) - 16.0f) + (DECELERATE_INTERPOLATION_FACTOR * tensionPercent)) * 0.5f);
         setTargetOffsetTopAndBottom(targetY - this.mCurrentTargetOffsetTop);
     }
 
@@ -696,9 +696,8 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
                     return false;
                 }
                 if (this.mIsBeingDragged) {
-                    float overscrollTop = (ev.getY(pointerIndex) - this.mInitialMotionY) * DRAG_RATE;
                     this.mIsBeingDragged = false;
-                    finishSpinner(overscrollTop);
+                    finishSpinner((ev.getY(pointerIndex) - this.mInitialMotionY) * 0.5f);
                 }
                 this.mActivePointerId = -1;
                 return false;
@@ -713,11 +712,11 @@ public class SwipeRefreshLayout extends ViewGroup implements NestedScrollingPare
                 if (!this.mIsBeingDragged) {
                     return true;
                 }
-                float overscrollTop2 = (y - this.mInitialMotionY) * DRAG_RATE;
-                if (overscrollTop2 <= 0.0f) {
+                float overscrollTop = (y - this.mInitialMotionY) * 0.5f;
+                if (overscrollTop <= 0.0f) {
                     return false;
                 }
-                moveSpinner(overscrollTop2);
+                moveSpinner(overscrollTop);
                 return true;
             case 3:
                 return false;

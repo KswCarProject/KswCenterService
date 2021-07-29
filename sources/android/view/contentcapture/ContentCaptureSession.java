@@ -12,6 +12,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -342,7 +343,7 @@ public abstract class ContentCaptureSession implements AutoCloseable {
                 for (int i = 0; i < numberChildren; i++) {
                     pw.print(prefix);
                     pw.print(i);
-                    pw.println(": ");
+                    pw.println(PluralRules.KEYWORD_RULE_SEPARATOR);
                     this.mChildren.get(i).dump(prefix2, pw);
                 }
             }

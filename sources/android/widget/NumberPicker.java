@@ -889,12 +889,12 @@ public class NumberPicker extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public float getTopFadingEdgeStrength() {
-        return TOP_AND_BOTTOM_FADING_EDGE_STRENGTH;
+        return 0.9f;
     }
 
     /* access modifiers changed from: protected */
     public float getBottomFadingEdgeStrength() {
-        return TOP_AND_BOTTOM_FADING_EDGE_STRENGTH;
+        return 0.9f;
     }
 
     /* access modifiers changed from: protected */

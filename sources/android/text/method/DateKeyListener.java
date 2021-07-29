@@ -2,6 +2,7 @@ package android.text.method;
 
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.ArrayUtils;
+import com.ibm.icu.text.DateFormat;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
@@ -9,7 +10,7 @@ import java.util.Locale;
 public class DateKeyListener extends NumberKeyListener {
     @Deprecated
     public static final char[] CHARACTERS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '/', '-', '.'};
-    private static final String[] SKELETONS = {"yMd", "yM", "Md"};
+    private static final String[] SKELETONS = {DateFormat.YEAR_NUM_MONTH_DAY, DateFormat.YEAR_NUM_MONTH, DateFormat.NUM_MONTH_DAY};
     private static final String SYMBOLS_TO_IGNORE = "yMLd";
     @GuardedBy({"sLock"})
     private static final HashMap<Locale, DateKeyListener> sInstanceCache = new HashMap<>();

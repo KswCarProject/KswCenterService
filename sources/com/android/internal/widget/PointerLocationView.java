@@ -25,6 +25,7 @@ import android.view.WindowManagerGlobal;
 import android.view.WindowManagerPolicyConstants;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.widget.PointerLocationView;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 
 public class PointerLocationView extends View implements InputManager.InputDeviceListener, WindowManagerPolicyConstants.PointerEventListener {
@@ -1003,7 +1004,7 @@ public class PointerLocationView extends View implements InputManager.InputDevic
                 prefix = Integer.toString(action);
                 break;
         }
-        Log.i(TAG, this.mText.clear().append(type).append(" id ").append(id + 1).append(": ").append(prefix).append(" (").append(pointerCoords.x, 3).append(", ").append(pointerCoords.y, 3).append(") Pressure=").append(pointerCoords.pressure, 3).append(" Size=").append(pointerCoords.size, 3).append(" TouchMajor=").append(pointerCoords.touchMajor, 3).append(" TouchMinor=").append(pointerCoords.touchMinor, 3).append(" ToolMajor=").append(pointerCoords.toolMajor, 3).append(" ToolMinor=").append(pointerCoords.toolMinor, 3).append(" Orientation=").append((float) (((double) (pointerCoords.orientation * 180.0f)) / 3.141592653589793d), 1).append("deg").append(" Tilt=").append((float) (((double) (pointerCoords.getAxisValue(25) * 180.0f)) / 3.141592653589793d), 1).append("deg").append(" Distance=").append(pointerCoords.getAxisValue(24), 1).append(" VScroll=").append(pointerCoords.getAxisValue(9), 1).append(" HScroll=").append(pointerCoords.getAxisValue(10), 1).append(" BoundingBox=[(").append(motionEvent.getAxisValue(32), 3).append(", ").append(motionEvent.getAxisValue(33), 3).append(")").append(", (").append(motionEvent.getAxisValue(34), 3).append(", ").append(motionEvent.getAxisValue(35), 3).append(")]").append(" ToolType=").append(MotionEvent.toolTypeToString(toolType)).append(" ButtonState=").append(MotionEvent.buttonStateToString(buttonState)).toString());
+        Log.i(TAG, this.mText.clear().append(type).append(" id ").append(id + 1).append(PluralRules.KEYWORD_RULE_SEPARATOR).append(prefix).append(" (").append(pointerCoords.x, 3).append(", ").append(pointerCoords.y, 3).append(") Pressure=").append(pointerCoords.pressure, 3).append(" Size=").append(pointerCoords.size, 3).append(" TouchMajor=").append(pointerCoords.touchMajor, 3).append(" TouchMinor=").append(pointerCoords.touchMinor, 3).append(" ToolMajor=").append(pointerCoords.toolMajor, 3).append(" ToolMinor=").append(pointerCoords.toolMinor, 3).append(" Orientation=").append((float) (((double) (pointerCoords.orientation * 180.0f)) / 3.141592653589793d), 1).append("deg").append(" Tilt=").append((float) (((double) (pointerCoords.getAxisValue(25) * 180.0f)) / 3.141592653589793d), 1).append("deg").append(" Distance=").append(pointerCoords.getAxisValue(24), 1).append(" VScroll=").append(pointerCoords.getAxisValue(9), 1).append(" HScroll=").append(pointerCoords.getAxisValue(10), 1).append(" BoundingBox=[(").append(motionEvent.getAxisValue(32), 3).append(", ").append(motionEvent.getAxisValue(33), 3).append(")").append(", (").append(motionEvent.getAxisValue(34), 3).append(", ").append(motionEvent.getAxisValue(35), 3).append(")]").append(" ToolType=").append(MotionEvent.toolTypeToString(toolType)).append(" ButtonState=").append(MotionEvent.buttonStateToString(buttonState)).toString());
     }
 
     public void onPointerEvent(MotionEvent event) {
@@ -1211,7 +1212,7 @@ public class PointerLocationView extends View implements InputManager.InputDevic
             Log.i(TAG, "Key Down: " + event);
             return true;
         }
-        Log.i(TAG, "Key Repeat #" + repeatCount + ": " + event);
+        Log.i(TAG, "Key Repeat #" + repeatCount + PluralRules.KEYWORD_RULE_SEPARATOR + event);
         return true;
     }
 
@@ -1293,10 +1294,10 @@ public class PointerLocationView extends View implements InputManager.InputDevic
     private void logInputDeviceState(int deviceId, String state) {
         InputDevice device = this.mIm.getInputDevice(deviceId);
         if (device != null) {
-            Log.i(TAG, state + ": " + device);
+            Log.i(TAG, state + PluralRules.KEYWORD_RULE_SEPARATOR + device);
             return;
         }
-        Log.i(TAG, state + ": " + deviceId);
+        Log.i(TAG, state + PluralRules.KEYWORD_RULE_SEPARATOR + deviceId);
     }
 
     private static boolean shouldShowSystemGestureExclusion() {

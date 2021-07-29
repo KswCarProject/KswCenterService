@@ -781,7 +781,8 @@ public final class R {
         public static final int ic_launcher = 2131361794;
         public static final int ic_launcher_round = 2131361795;
         public static final int minute = 2131361796;
-        public static final int second = 2131361797;
+        public static final int pointer = 2131361797;
+        public static final int second = 2131361798;
     }
 
     public static final class string {
@@ -832,10 +833,11 @@ public final class R {
         public static final int status_bar_notification_info_overflow = 2131427419;
         public static final int tp_update_fail = 2131427420;
         public static final int tp_update_success = 2131427421;
-        public static final int update_mcu = 2131427422;
-        public static final int update_mcu_success = 2131427423;
-        public static final int update_success = 2131427424;
-        public static final int yes_update = 2131427425;
+        public static final int update_fail = 2131427422;
+        public static final int update_mcu = 2131427423;
+        public static final int update_mcu_success = 2131427424;
+        public static final int update_success = 2131427425;
+        public static final int yes_update = 2131427426;
     }
 
     public static final class style {

@@ -243,7 +243,7 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
         try {
             return ((Boolean) this.mFieldMap.get(key)).booleanValue();
         } catch (Exception e) {
-            Log.e(TAG, "cannot cast", e);
+            Log.e(TAG, "cannot cast key :" + key, e);
             return false;
         }
     }

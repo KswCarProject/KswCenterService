@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.util.Pair;
 import com.android.internal.util.Preconditions;
 import com.android.internal.util.XmlUtils;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +116,7 @@ public final class BrightnessConfiguration implements Parcelable {
             sb.append("'" + entry.getKey() + "': " + entry.getValue() + ", ");
         }
         for (Map.Entry<Integer, BrightnessCorrection> entry2 : this.mCorrectionsByCategory.entrySet()) {
-            sb.append(entry2.getKey() + ": " + entry2.getValue() + ", ");
+            sb.append(entry2.getKey() + PluralRules.KEYWORD_RULE_SEPARATOR + entry2.getValue() + ", ");
         }
         sb.append("}, '");
         if (this.mDescription != null) {

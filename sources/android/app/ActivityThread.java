@@ -129,6 +129,7 @@ import com.android.internal.util.Preconditions;
 import com.android.internal.util.function.pooled.PooledLambda;
 import com.android.org.conscrypt.OpenSSLSocketImpl;
 import com.android.org.conscrypt.TrustedCertificateStore;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.CloseGuard;
 import dalvik.system.VMDebug;
 import dalvik.system.VMRuntime;
@@ -1062,10 +1063,10 @@ public final class ActivityThread extends ClientTransactionHandler {
             int globalAssetManagerCount = AssetManager.getGlobalAssetManagerCount();
             int binderLocalObjectCount = Debug.getBinderLocalObjectCount();
             int binderProxyObjectCount = Debug.getBinderProxyObjectCount();
-            int binderDeathObjectCount = Debug.getBinderDeathObjectCount();
+            int binderProxyObjectCount2 = Debug.getBinderDeathObjectCount();
             long parcelSize = Parcel.getGlobalAllocSize();
             long parcelCount = Parcel.getGlobalAllocCount();
-            int binderDeathObjectCount2 = binderDeathObjectCount;
+            int binderDeathObjectCount = binderProxyObjectCount2;
             SQLiteDebug.PagerStats stats = SQLiteDebug.getDatabaseInfo();
             int myPid = Process.myPid();
             String str = ActivityThread.this.mBoundApplication != null ? ActivityThread.this.mBoundApplication.processName : "unknown";
@@ -1080,8 +1081,8 @@ public final class ActivityThread extends ClientTransactionHandler {
             int globalAssetCount2 = globalAssetCount;
             int globalAssetManagerCount2 = globalAssetManagerCount;
             int binderLocalObjectCount2 = binderLocalObjectCount;
-            int binderProxyObjectCount2 = binderProxyObjectCount;
-            int binderDeathObjectCount3 = binderDeathObjectCount2;
+            int binderProxyObjectCount3 = binderProxyObjectCount;
+            int binderDeathObjectCount2 = binderDeathObjectCount;
             PrintWriter printWriter2 = pw;
             ActivityThread.dumpMemInfoTable(pw, memInfo, checkin, dumpFullInfo, dumpDalvik, dumpSummaryOnly, myPid, str, nativeMax, nativeAllocated, nativeFree, dalvikMax, dalvikAllocated, dalvikFree);
             if (checkin) {
@@ -1101,14 +1102,14 @@ public final class ActivityThread extends ClientTransactionHandler {
                 int binderLocalObjectCount3 = binderLocalObjectCount2;
                 printWriter2.print(binderLocalObjectCount3);
                 printWriter2.print(',');
-                int binderProxyObjectCount3 = binderProxyObjectCount2;
-                printWriter2.print(binderProxyObjectCount3);
+                int binderProxyObjectCount4 = binderProxyObjectCount3;
+                printWriter2.print(binderProxyObjectCount4);
                 printWriter2.print(',');
-                int binderDeathObjectCount4 = binderDeathObjectCount3;
-                printWriter2.print(binderDeathObjectCount4);
+                int binderDeathObjectCount3 = binderDeathObjectCount2;
+                printWriter2.print(binderDeathObjectCount3);
                 printWriter2.print(',');
-                int i2 = binderProxyObjectCount3;
-                int i3 = binderDeathObjectCount4;
+                int i2 = binderProxyObjectCount4;
+                int i3 = binderDeathObjectCount3;
                 long openSslSocketCount3 = openSslSocketCount2;
                 printWriter2.print(openSslSocketCount3);
                 printWriter2.print(',');
@@ -1155,9 +1156,9 @@ public final class ActivityThread extends ClientTransactionHandler {
                 ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "Views:", Long.valueOf(viewInstanceCount3), "ViewRootImpl:", Long.valueOf(viewRootInstanceCount2));
                 ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "AppContexts:", Long.valueOf(appContextInstanceCount2), "Activities:", Long.valueOf(activityInstanceCount2));
                 ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "Assets:", Integer.valueOf(globalAssetCount2), "AssetManagers:", Integer.valueOf(globalAssetManagerCount2));
-                ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "Local Binders:", Integer.valueOf(binderLocalObjectCount2), "Proxy Binders:", Integer.valueOf(binderProxyObjectCount2));
+                ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "Local Binders:", Integer.valueOf(binderLocalObjectCount2), "Proxy Binders:", Integer.valueOf(binderProxyObjectCount3));
                 ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "Parcel memory:", Long.valueOf(parcelSize / 1024), "Parcel count:", Long.valueOf(parcelCount));
-                ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "Death Recipients:", Integer.valueOf(binderDeathObjectCount3), "OpenSSL Sockets:", Long.valueOf(openSslSocketCount2));
+                ActivityThread.printRow(printWriter2, ActivityThread.TWO_COUNT_COLUMNS, "Death Recipients:", Integer.valueOf(binderDeathObjectCount2), "OpenSSL Sockets:", Long.valueOf(openSslSocketCount2));
                 ActivityThread.printRow(printWriter2, ActivityThread.ONE_COUNT_COLUMN, "WebViews:", Long.valueOf(webviewInstanceCount));
                 printWriter2.println(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
                 printWriter2.println(" SQL");
@@ -1237,9 +1238,9 @@ public final class ActivityThread extends ClientTransactionHandler {
             int globalAssetManagerCount = AssetManager.getGlobalAssetManagerCount();
             int binderLocalObjectCount = Debug.getBinderLocalObjectCount();
             int binderProxyObjectCount = Debug.getBinderProxyObjectCount();
-            int binderDeathObjectCount = Debug.getBinderDeathObjectCount();
+            int binderProxyObjectCount2 = Debug.getBinderDeathObjectCount();
             long parcelSize = Parcel.getGlobalAllocSize();
-            int binderDeathObjectCount2 = binderDeathObjectCount;
+            int binderDeathObjectCount = binderProxyObjectCount2;
             Class[] classesToCount2 = classesToCount;
             long parcelCount = Parcel.getGlobalAllocCount();
             SQLiteDebug.PagerStats stats = SQLiteDebug.getDatabaseInfo();
@@ -1273,16 +1274,16 @@ public final class ActivityThread extends ClientTransactionHandler {
             int binderLocalObjectCount2 = binderLocalObjectCount;
             protoOutputStream2.write(1120986464263L, binderLocalObjectCount2);
             int i = globalAssetManagerCount2;
-            int globalAssetManagerCount3 = binderProxyObjectCount;
-            protoOutputStream2.write(1120986464264L, globalAssetManagerCount3);
-            int i2 = globalAssetManagerCount3;
+            int binderProxyObjectCount3 = binderProxyObjectCount;
+            protoOutputStream2.write(1120986464264L, binderProxyObjectCount3);
+            int i2 = binderProxyObjectCount3;
             int i3 = binderLocalObjectCount2;
             protoOutputStream2.write(1112396529673L, parcelSize / 1024);
             protoOutputStream2.write(1120986464266L, parcelCount);
             long j2 = viewInstanceCount3;
-            int binderDeathObjectCount3 = binderDeathObjectCount2;
-            protoOutputStream2.write(1120986464267L, binderDeathObjectCount3);
-            int i4 = binderDeathObjectCount3;
+            int binderDeathObjectCount2 = binderDeathObjectCount;
+            protoOutputStream2.write(1120986464267L, binderDeathObjectCount2);
+            int i4 = binderDeathObjectCount2;
             long openSslSocketCount3 = openSslSocketCount2;
             protoOutputStream2.write(1120986464268L, openSslSocketCount3);
             long j3 = openSslSocketCount3;
@@ -4087,7 +4088,7 @@ public final class ActivityThread extends ClientTransactionHandler {
             } catch (Exception e) {
                 data.sendFinished(mgr);
                 if (!this.mInstrumentation.onException(receiver, e)) {
-                    throw new RuntimeException("Unable to start receiver " + component + ": " + e.toString(), e);
+                    throw new RuntimeException("Unable to start receiver " + component + PluralRules.KEYWORD_RULE_SEPARATOR + e.toString(), e);
                 }
             } catch (Throwable th) {
                 sCurrentBroadcastIntent.set((Object) null);
@@ -4099,7 +4100,7 @@ public final class ActivityThread extends ClientTransactionHandler {
             }
         } catch (Exception e2) {
             data.sendFinished(mgr);
-            throw new RuntimeException("Unable to instantiate receiver " + component + ": " + e2.toString(), e2);
+            throw new RuntimeException("Unable to instantiate receiver " + component + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
         }
     }
 
@@ -4146,7 +4147,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                     }
                 }
             } catch (Exception e3) {
-                throw new RuntimeException("Unable to create BackupAgent " + classname + ": " + e3.toString(), e3);
+                throw new RuntimeException("Unable to create BackupAgent " + classname + PluralRules.KEYWORD_RULE_SEPARATOR + e3.toString(), e3);
             }
             ActivityManager.getService().backupAgentCreated(packageName, binder, data.userId);
         } catch (RemoteException e4) {
@@ -4192,7 +4193,7 @@ public final class ActivityThread extends ClientTransactionHandler {
             service = packageInfo.getAppFactory().instantiateService(packageInfo.getClassLoader(), data.info.name, data.intent);
         } catch (Exception e) {
             if (!this.mInstrumentation.onException((Object) null, e)) {
-                throw new RuntimeException("Unable to instantiate service " + data.info.name + ": " + e.toString(), e);
+                throw new RuntimeException("Unable to instantiate service " + data.info.name + PluralRules.KEYWORD_RULE_SEPARATOR + e.toString(), e);
             }
         }
         try {
@@ -4208,7 +4209,7 @@ public final class ActivityThread extends ClientTransactionHandler {
             throw e2.rethrowFromSystemServer();
         } catch (Exception e3) {
             if (!this.mInstrumentation.onException(service, e3)) {
-                throw new RuntimeException("Unable to create service " + data.info.name + ": " + e3.toString(), e3);
+                throw new RuntimeException("Unable to create service " + data.info.name + PluralRules.KEYWORD_RULE_SEPARATOR + e3.toString(), e3);
             }
         }
     }
@@ -4230,7 +4231,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                 throw ex.rethrowFromSystemServer();
             } catch (Exception e) {
                 if (!this.mInstrumentation.onException(s, e)) {
-                    throw new RuntimeException("Unable to bind to service " + s + " with " + data.intent + ": " + e.toString(), e);
+                    throw new RuntimeException("Unable to bind to service " + s + " with " + data.intent + PluralRules.KEYWORD_RULE_SEPARATOR + e.toString(), e);
                 }
             }
         }
@@ -4253,7 +4254,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                 throw ex.rethrowFromSystemServer();
             } catch (Exception e) {
                 if (!this.mInstrumentation.onException(s, e)) {
-                    throw new RuntimeException("Unable to unbind to service " + s + " with " + data.intent + ": " + e.toString(), e);
+                    throw new RuntimeException("Unable to unbind to service " + s + " with " + data.intent + PluralRules.KEYWORD_RULE_SEPARATOR + e.toString(), e);
                 }
             }
         }
@@ -4329,7 +4330,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                 throw e.rethrowFromSystemServer();
             } catch (Exception e2) {
                 if (!this.mInstrumentation.onException(s, e2)) {
-                    throw new RuntimeException("Unable to start service " + s + " with " + data.args + ": " + e2.toString(), e2);
+                    throw new RuntimeException("Unable to start service " + s + " with " + data.args + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
                 }
             }
         }
@@ -4355,7 +4356,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                     Slog.i(TAG, "handleStopService: exception for " + token, e2);
                     return;
                 }
-                throw new RuntimeException("Unable to stop service " + s + ": " + e2.toString(), e2);
+                throw new RuntimeException("Unable to stop service " + s + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
             }
         } else {
             Slog.i(TAG, "handleStopService: token=" + token + " not found.");
@@ -4399,7 +4400,7 @@ public final class ActivityThread extends ClientTransactionHandler {
             reportTopResumedActivityChanged(r, r.isTopResumedActivity, "topWhenResuming");
         } catch (Exception e2) {
             if (!this.mInstrumentation.onException(r.activity, e2)) {
-                throw new RuntimeException("Unable to resume activity " + r.intent.getComponent().toShortString() + ": " + e2.toString(), e2);
+                throw new RuntimeException("Unable to resume activity " + r.intent.getComponent().toShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
             }
         }
         return r;
@@ -4589,7 +4590,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                 throw e;
             } catch (Exception e2) {
                 if (!this.mInstrumentation.onException(r.activity, e2)) {
-                    throw new RuntimeException("Unable to pause activity " + safeToComponentShortString(r.intent) + ": " + e2.toString(), e2);
+                    throw new RuntimeException("Unable to pause activity " + safeToComponentShortString(r.intent) + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
                 }
             }
         }
@@ -4635,7 +4636,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                     info.setDescription(r.activity.onCreateDescription());
                 } catch (Exception e2) {
                     if (!this.mInstrumentation.onException(r.activity, e2)) {
-                        throw new RuntimeException("Unable to save state of activity " + r.intent.getComponent().toShortString() + ": " + e2.toString(), e2);
+                        throw new RuntimeException("Unable to save state of activity " + r.intent.getComponent().toShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
                     }
                 }
             }
@@ -4657,7 +4658,7 @@ public final class ActivityThread extends ClientTransactionHandler {
             throw e;
         } catch (Exception e2) {
             if (!this.mInstrumentation.onException(r.activity, e2)) {
-                throw new RuntimeException("Unable to stop activity " + r.intent.getComponent().toShortString() + ": " + e2.toString(), e2);
+                throw new RuntimeException("Unable to stop activity " + r.intent.getComponent().toShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
             }
         }
         r.setState(5);
@@ -4824,7 +4825,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                 r.activity.dispatchActivityResult(ri.mResultWho, ri.mRequestCode, ri.mResultCode, ri.mData, reason);
             } catch (Exception e) {
                 if (!this.mInstrumentation.onException(r.activity, e)) {
-                    throw new RuntimeException("Failure delivering result " + ri + " to activity " + r.intent.getComponent().toShortString() + ": " + e.toString(), e);
+                    throw new RuntimeException("Failure delivering result " + ri + " to activity " + r.intent.getComponent().toShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + e.toString(), e);
                 }
             }
         }
@@ -4848,7 +4849,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                     throw e;
                 } catch (Exception e2) {
                     if (!this.mInstrumentation.onException(r.activity, e2)) {
-                        throw new RuntimeException("Unable to pause activity " + r.intent.getComponent().toShortString() + ": " + e2.toString(), e2);
+                        throw new RuntimeException("Unable to pause activity " + r.intent.getComponent().toShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + e2.toString(), e2);
                     }
                 }
             }
@@ -4879,7 +4880,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                     r.lastNonConfigurationInstances = r.activity.retainNonConfigurationInstances();
                 } catch (Exception e) {
                     if (!this.mInstrumentation.onException(r.activity, e)) {
-                        throw new RuntimeException("Unable to retain activity " + r.intent.getComponent().toShortString() + ": " + e.toString(), e);
+                        throw new RuntimeException("Unable to retain activity " + r.intent.getComponent().toShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + e.toString(), e);
                     }
                 }
             }
@@ -4898,7 +4899,7 @@ public final class ActivityThread extends ClientTransactionHandler {
                 throw e2;
             } catch (Exception e3) {
                 if (!this.mInstrumentation.onException(r.activity, e3)) {
-                    throw new RuntimeException("Unable to destroy activity " + safeToComponentShortString(r.intent) + ": " + e3.toString(), e3);
+                    throw new RuntimeException("Unable to destroy activity " + safeToComponentShortString(r.intent) + PluralRules.KEYWORD_RULE_SEPARATOR + e3.toString(), e3);
                 }
             }
         }
@@ -5846,8 +5847,8 @@ public final class ActivityThread extends ClientTransactionHandler {
 
     /*  JADX ERROR: IndexOutOfBoundsException in pass: RegionMakerVisitor
         java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-        	at java.util.ArrayList.rangeCheck(ArrayList.java:657)
-        	at java.util.ArrayList.get(ArrayList.java:433)
+        	at java.util.ArrayList.rangeCheck(ArrayList.java:659)
+        	at java.util.ArrayList.get(ArrayList.java:435)
         	at jadx.core.dex.nodes.InsnNode.getArg(InsnNode.java:101)
         	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:611)
         	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)

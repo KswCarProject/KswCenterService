@@ -13,6 +13,7 @@ import android.util.ArraySet;
 import android.util.Log;
 import android.view.autofill.Helper;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -127,7 +128,7 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
                 pw.print(prefix);
                 pw.print(prefix);
                 pw.print(this.mCategoryAlgorithms.keyAt(i2));
-                pw.print(": ");
+                pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 pw.println(Helper.getRedacted(this.mCategoryAlgorithms.valueAt(i2)));
                 pw.print("args=");
                 pw.print(this.mCategoryArgs.get(this.mCategoryAlgorithms.keyAt(i2)));
@@ -140,7 +141,7 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
             pw.print(prefix);
             pw.print(prefix);
             pw.print(i3);
-            pw.print(": ");
+            pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             pw.println(Helper.getRedacted(this.mCategoryIds[i3]));
         }
         pw.print(prefix);
@@ -152,7 +153,7 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
                 pw.print(prefix);
                 pw.print(prefix);
                 pw.print(i4);
-                pw.print(": ");
+                pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 pw.println(Helper.getRedacted(this.mValues[i4]));
                 i = i4 + 1;
             } else {

@@ -27,6 +27,7 @@ import android.webkit.MimeTypeMap;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.widget.MessagingMessage;
+import com.ibm.icu.text.PluralRules;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -86,7 +87,7 @@ public abstract class FileSystemProvider extends DocumentsProvider {
         try {
             return FileUtils.contains(getFileForDocId(parentDocId).getCanonicalFile(), getFileForDocId(docId).getCanonicalFile());
         } catch (IOException e) {
-            throw new IllegalArgumentException("Failed to determine if " + docId + " is child of " + parentDocId + ": " + e);
+            throw new IllegalArgumentException("Failed to determine if " + docId + " is child of " + parentDocId + PluralRules.KEYWORD_RULE_SEPARATOR + e);
         }
     }
 
@@ -184,7 +185,7 @@ public abstract class FileSystemProvider extends DocumentsProvider {
                         throw new IllegalStateException("Failed to touch " + file);
                     }
                 } catch (IOException e) {
-                    throw new IllegalStateException("Failed to touch " + file + ": " + e);
+                    throw new IllegalStateException("Failed to touch " + file + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                 }
             } else if (file.mkdir()) {
                 childId = getDocIdForFile(file);

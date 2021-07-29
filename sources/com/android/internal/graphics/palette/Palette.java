@@ -26,11 +26,11 @@ public final class Palette {
         }
 
         private boolean isBlack(float[] hslColor) {
-            return hslColor[2] <= BLACK_MAX_LIGHTNESS;
+            return hslColor[2] <= 0.05f;
         }
 
         private boolean isWhite(float[] hslColor) {
-            return hslColor[2] >= WHITE_MIN_LIGHTNESS;
+            return hslColor[2] >= 0.95f;
         }
 
         private boolean isNearRedILine(float[] hslColor) {
@@ -307,10 +307,10 @@ public final class Palette {
             int i2;
             if (!this.mGeneratedTextColors) {
                 int lightBodyAlpha = ColorUtils.calculateMinimumAlpha(-1, this.mRgb, Palette.MIN_CONTRAST_BODY_TEXT);
-                int lightTitleAlpha = ColorUtils.calculateMinimumAlpha(-1, this.mRgb, Palette.MIN_CONTRAST_TITLE_TEXT);
+                int lightTitleAlpha = ColorUtils.calculateMinimumAlpha(-1, this.mRgb, 3.0f);
                 if (lightBodyAlpha == -1 || lightTitleAlpha == -1) {
                     int darkBodyAlpha = ColorUtils.calculateMinimumAlpha(-16777216, this.mRgb, Palette.MIN_CONTRAST_BODY_TEXT);
-                    int darkTitleAlpha = ColorUtils.calculateMinimumAlpha(-16777216, this.mRgb, Palette.MIN_CONTRAST_TITLE_TEXT);
+                    int darkTitleAlpha = ColorUtils.calculateMinimumAlpha(-16777216, this.mRgb, 3.0f);
                     if (darkBodyAlpha == -1 || darkTitleAlpha == -1) {
                         if (lightBodyAlpha != -1) {
                             i = ColorUtils.setAlphaComponent(-1, lightBodyAlpha);

@@ -3,6 +3,7 @@ package android.util;
 import android.os.Build;
 import android.os.SystemClock;
 import android.os.Trace;
+import com.ibm.icu.text.DateFormat;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -50,6 +51,6 @@ public class TimingsTraceLog {
 
     public void logDuration(String name, long timeMs) {
         String str = this.mTag;
-        Slog.d(str, name + " took to complete: " + timeMs + "ms");
+        Slog.d(str, name + " took to complete: " + timeMs + DateFormat.MINUTE_SECOND);
     }
 }

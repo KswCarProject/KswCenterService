@@ -9,6 +9,7 @@ import android.os.BatteryStats;
 import android.os.ParcelUuid;
 import android.os.Parcelable;
 import com.android.internal.util.IndentingPrintWriter;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.List;
@@ -81,7 +82,7 @@ public final class AnomalyReporter {
             pw.println("Anomaly Counts:");
             pw.increaseIndent();
             for (UUID event : sEvents.keySet()) {
-                pw.println(event + ": " + sEvents.get(event));
+                pw.println(event + PluralRules.KEYWORD_RULE_SEPARATOR + sEvents.get(event));
             }
             pw.decreaseIndent();
             pw.flush();

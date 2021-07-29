@@ -306,7 +306,7 @@ public class ScaleGestureDetector {
     public float getScaleFactor() {
         if (inAnchoredScaleMode()) {
             boolean scaleUp = (this.mEventBeforeOrAboveStartingGestureEvent && this.mCurrSpan < this.mPrevSpan) || (!this.mEventBeforeOrAboveStartingGestureEvent && this.mCurrSpan > this.mPrevSpan);
-            float spanDiff = Math.abs(1.0f - (this.mCurrSpan / this.mPrevSpan)) * SCALE_FACTOR;
+            float spanDiff = Math.abs(1.0f - (this.mCurrSpan / this.mPrevSpan)) * 0.5f;
             if (this.mPrevSpan <= ((float) this.mSpanSlop)) {
                 return 1.0f;
             }

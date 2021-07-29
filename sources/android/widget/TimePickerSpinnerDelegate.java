@@ -161,7 +161,7 @@ class TimePickerSpinnerDelegate extends TimePicker.AbstractTimePickerDelegate {
     }
 
     private void getHourFormatData() {
-        String bestDateTimePattern = DateFormat.getBestDateTimePattern(this.mLocale, this.mIs24HourView ? "Hm" : "hm");
+        String bestDateTimePattern = DateFormat.getBestDateTimePattern(this.mLocale, this.mIs24HourView ? com.ibm.icu.text.DateFormat.HOUR24_MINUTE : "hm");
         int lengthPattern = bestDateTimePattern.length();
         this.mHourWithTwoDigit = false;
         for (int i = 0; i < lengthPattern; i++) {
@@ -183,7 +183,7 @@ class TimePickerSpinnerDelegate extends TimePicker.AbstractTimePickerDelegate {
 
     private void setDividerText() {
         String separatorText;
-        String bestDateTimePattern = DateFormat.getBestDateTimePattern(this.mLocale, this.mIs24HourView ? "Hm" : "hm");
+        String bestDateTimePattern = DateFormat.getBestDateTimePattern(this.mLocale, this.mIs24HourView ? com.ibm.icu.text.DateFormat.HOUR24_MINUTE : "hm");
         int hourIndex = bestDateTimePattern.lastIndexOf(72);
         if (hourIndex == -1) {
             hourIndex = bestDateTimePattern.lastIndexOf(104);

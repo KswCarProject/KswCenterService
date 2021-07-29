@@ -10,6 +10,7 @@ import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import com.android.internal.util.XmlUtils;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.VMRuntime;
 import java.util.Arrays;
 
@@ -265,7 +266,7 @@ public class TypedArray {
             } else if (type == 2) {
                 TypedValue value2 = this.mValue;
                 getValueAt(index2, value2);
-                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + ": " + value2);
+                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + PluralRules.KEYWORD_RULE_SEPARATOR + value2);
             } else {
                 throw new UnsupportedOperationException("Can't convert value at index " + attrIndex + " to color: type=0x" + Integer.toHexString(type));
             }
@@ -283,7 +284,7 @@ public class TypedArray {
             if (value.type != 2) {
                 return this.mResources.loadComplexColor(value, value.resourceId, this.mTheme);
             }
-            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + ": " + value);
+            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + PluralRules.KEYWORD_RULE_SEPARATOR + value);
         }
         throw new RuntimeException("Cannot make calls to a recycled instance!");
     }
@@ -297,7 +298,7 @@ public class TypedArray {
             if (value.type != 2) {
                 return this.mResources.loadColorStateList(value, value.resourceId, this.mTheme);
             }
-            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + ": " + value);
+            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + PluralRules.KEYWORD_RULE_SEPARATOR + value);
         }
         throw new RuntimeException("Cannot make calls to a recycled instance!");
     }
@@ -317,7 +318,7 @@ public class TypedArray {
             if (type == 2) {
                 TypedValue value = this.mValue;
                 getValueAt(index2, value);
-                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + ": " + value);
+                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + PluralRules.KEYWORD_RULE_SEPARATOR + value);
             }
             throw new UnsupportedOperationException("Can't convert value at index " + attrIndex + " to integer: type=0x" + Integer.toHexString(type));
         }
@@ -339,7 +340,7 @@ public class TypedArray {
             if (type == 2) {
                 TypedValue value = this.mValue;
                 getValueAt(index2, value);
-                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + ": " + value);
+                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + PluralRules.KEYWORD_RULE_SEPARATOR + value);
             }
             throw new UnsupportedOperationException("Can't convert value at index " + attrIndex + " to dimension: type=0x" + Integer.toHexString(type));
         }
@@ -361,7 +362,7 @@ public class TypedArray {
             if (type == 2) {
                 TypedValue value = this.mValue;
                 getValueAt(index2, value);
-                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + ": " + value);
+                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + PluralRules.KEYWORD_RULE_SEPARATOR + value);
             }
             throw new UnsupportedOperationException("Can't convert value at index " + attrIndex + " to dimension: type=0x" + Integer.toHexString(type));
         }
@@ -383,7 +384,7 @@ public class TypedArray {
             if (type == 2) {
                 TypedValue value = this.mValue;
                 getValueAt(index2, value);
-                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + ": " + value);
+                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + PluralRules.KEYWORD_RULE_SEPARATOR + value);
             }
             throw new UnsupportedOperationException("Can't convert value at index " + attrIndex + " to dimension: type=0x" + Integer.toHexString(type));
         }
@@ -405,7 +406,7 @@ public class TypedArray {
             if (type == 2) {
                 TypedValue value = this.mValue;
                 getValueAt(index2, value);
-                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + ": " + value);
+                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + PluralRules.KEYWORD_RULE_SEPARATOR + value);
             }
             throw new UnsupportedOperationException(getPositionDescription() + ": You must supply a " + name + " attribute.");
         }
@@ -443,7 +444,7 @@ public class TypedArray {
             if (type == 2) {
                 TypedValue value = this.mValue;
                 getValueAt(index2, value);
-                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + ": " + value);
+                throw new UnsupportedOperationException("Failed to resolve attribute at index " + attrIndex + PluralRules.KEYWORD_RULE_SEPARATOR + value);
             }
             throw new UnsupportedOperationException("Can't convert value at index " + attrIndex + " to fraction: type=0x" + Integer.toHexString(type));
         }
@@ -491,7 +492,7 @@ public class TypedArray {
                 }
                 return this.mResources.loadDrawable(value, value.resourceId, density, this.mTheme);
             }
-            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + ": " + value);
+            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + PluralRules.KEYWORD_RULE_SEPARATOR + value);
         }
         throw new RuntimeException("Cannot make calls to a recycled instance!");
     }
@@ -505,7 +506,7 @@ public class TypedArray {
             if (value.type != 2) {
                 return this.mResources.getFont(value, value.resourceId);
             }
-            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + ": " + value);
+            throw new UnsupportedOperationException("Failed to resolve attribute at index " + index + PluralRules.KEYWORD_RULE_SEPARATOR + value);
         }
         throw new RuntimeException("Cannot make calls to a recycled instance!");
     }

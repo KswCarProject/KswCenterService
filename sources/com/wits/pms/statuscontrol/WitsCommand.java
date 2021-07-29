@@ -2,6 +2,7 @@ package com.wits.pms.statuscontrol;
 
 import android.os.RemoteException;
 import com.google.gson.Gson;
+import com.wits.pms.statuscontrol.McuStatus;
 
 public class WitsCommand {
     public static final int BT_TYPE = 3;
@@ -62,6 +63,7 @@ public class WitsCommand {
         public static final int FLASH_SPLASH = 124;
         public static final int HANDUP_PHONE = 117;
         public static final int HOME = 114;
+        public static final int KSW_MCU_MSG = 699;
         public static final int MCU_UPDATE = 700;
         public static final int MEDIA_NEXT = 104;
         public static final int MEDIA_PAUSE = 106;
@@ -164,6 +166,10 @@ public class WitsCommand {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void sendMcuCommand(McuStatus.KswMcuMsg mcuMsg) {
+        sendCommand(1, 699, new Gson().toJson((Object) mcuMsg));
     }
 
     public boolean isNeedResult() {

@@ -1524,11 +1524,6 @@ public interface IActivityTaskManager extends IInterface {
         /* JADX WARNING: type inference failed for: r0v385 */
         /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
             java.lang.NullPointerException
-            	at jadx.core.dex.instructions.args.InsnArg.wrapInstruction(InsnArg.java:118)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.inline(CodeShrinkVisitor.java:146)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkBlock(CodeShrinkVisitor.java:71)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkMethod(CodeShrinkVisitor.java:43)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.visit(CodeShrinkVisitor.java:35)
             */
         /* JADX WARNING: Multi-variable type inference failed */
         public boolean onTransact(int r27, android.os.Parcel r28, android.os.Parcel r29, int r30) throws android.os.RemoteException {
@@ -4893,10 +4888,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5184,10 +5179,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5269,10 +5264,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5427,10 +5422,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5491,10 +5486,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5603,10 +5598,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5646,10 +5641,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5671,10 +5666,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -5972,10 +5967,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -6142,10 +6137,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -6267,10 +6262,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7082,10 +7077,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7135,10 +7130,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7389,10 +7384,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7413,10 +7408,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -7668,10 +7663,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -8284,10 +8279,10 @@ public interface IActivityTaskManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

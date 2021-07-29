@@ -2,9 +2,9 @@ package android.text;
 
 import android.annotation.UnsupportedAppUsage;
 import android.icu.lang.UCharacter;
-import android.icu.text.Bidi;
 import android.icu.text.BidiClassifier;
 import com.android.internal.annotations.VisibleForTesting;
+import com.ibm.icu.text.Bidi;
 
 @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
 public class AndroidBidi {
@@ -35,7 +35,7 @@ public class AndroidBidi {
         if (chInfo.length >= length) {
             switch (dir) {
                 case -2:
-                    paraLevel = Byte.MAX_VALUE;
+                    paraLevel = Bidi.LEVEL_DEFAULT_RTL;
                     break;
                 case -1:
                     paraLevel = 1;
@@ -44,13 +44,13 @@ public class AndroidBidi {
                     paraLevel = 0;
                     break;
                 case 2:
-                    paraLevel = 126;
+                    paraLevel = Bidi.LEVEL_DEFAULT_LTR;
                     break;
                 default:
                     paraLevel = 0;
                     break;
             }
-            Bidi icuBidi = new Bidi(length, 0);
+            android.icu.text.Bidi icuBidi = new android.icu.text.Bidi(length, 0);
             icuBidi.setCustomClassifier(sEmojiBidiOverride);
             icuBidi.setPara(chs, paraLevel, (byte[]) null);
             for (int i = 0; i < length; i++) {

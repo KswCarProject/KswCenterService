@@ -9,6 +9,7 @@ import android.view.autofill.AutofillId;
 import android.view.autofill.Helper;
 import android.widget.RemoteViews;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -64,7 +65,7 @@ public final class CharSequenceTransformation extends InternalTransformation imp
                     return;
                 }
             } catch (Exception e) {
-                Log.w(TAG, "Cannot apply " + ((Pattern) field.first).pattern() + Session.SUBSESSION_SEPARATION_CHAR + ((String) field.second) + " to field with autofill id" + id + ": " + e.getClass());
+                Log.w(TAG, "Cannot apply " + ((Pattern) field.first).pattern() + Session.SUBSESSION_SEPARATION_CHAR + ((String) field.second) + " to field with autofill id" + id + PluralRules.KEYWORD_RULE_SEPARATOR + e.getClass());
                 throw e;
             }
         }

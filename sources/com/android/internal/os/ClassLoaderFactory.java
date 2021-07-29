@@ -2,6 +2,7 @@ package com.android.internal.os;
 
 import android.annotation.UnsupportedAppUsage;
 import android.os.Trace;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.DelegateLastClassLoader;
 import dalvik.system.DexClassLoader;
 import dalvik.system.PathClassLoader;
@@ -64,6 +65,6 @@ public class ClassLoaderFactory {
         if (errorMessage == null) {
             return classLoader;
         }
-        throw new UnsatisfiedLinkError("Unable to create namespace for the classloader " + classLoader + ": " + errorMessage);
+        throw new UnsatisfiedLinkError("Unable to create namespace for the classloader " + classLoader + PluralRules.KEYWORD_RULE_SEPARATOR + errorMessage);
     }
 }

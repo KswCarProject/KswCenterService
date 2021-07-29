@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.wifi.WifiManager;
-import android.net.wifi.WifiScanner;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -20,11 +20,13 @@ import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TimedRemoteCaller;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.android.internal.logging.nano.MetricsProto;
+import com.google.gson.Gson;
 import com.wits.pms.ICmdListener;
 import com.wits.pms.R;
 import com.wits.pms.bean.AutoKitMessage;
@@ -38,6 +40,7 @@ import com.wits.pms.interfaces.CenterControl;
 import com.wits.pms.interfaces.LogicSystem;
 import com.wits.pms.interfaces.MemoryKiller;
 import com.wits.pms.mcu.McuSender;
+import com.wits.pms.mcu.custom.KswMcuListener;
 import com.wits.pms.mcu.custom.KswMcuLogic;
 import com.wits.pms.mcu.custom.KswMcuSender;
 import com.wits.pms.mcu.custom.KswMessage;
@@ -55,6 +58,7 @@ import com.wits.pms.utils.AmsUtil;
 import com.wits.pms.utils.KeyUtils;
 import com.wits.pms.utils.SystemProperties;
 import com.wits.pms.utils.Test;
+import com.wits.pms.utils.TouchControl;
 import com.wits.pms.utils.UsbUtil;
 import java.io.File;
 import java.util.Set;
@@ -123,30 +127,39 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* JADX WARNING: Code restructure failed: missing block: B:156:0x02c1, code lost:
-        if (r0.equals("music.prev") != false) goto L_0x02e6;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:48:0x00b2, code lost:
-        if (r0.equals("music.continue") != false) goto L_0x00b6;
+    /* JADX WARNING: Code restructure failed: missing block: B:156:0x02e2, code lost:
+        if (r0.equals("music.prev") != false) goto L_0x0307;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void handle(com.wits.pms.bean.TxzMessage r19) {
+    public void handle(com.wits.pms.bean.TxzMessage r20) {
         /*
-            r18 = this;
-            r1 = r18
-            r2 = r19
+            r19 = this;
+            r1 = r19
+            r2 = r20
             java.lang.String r3 = r2.action
+            java.lang.String r0 = "CenterControl"
+            java.lang.StringBuilder r4 = new java.lang.StringBuilder
+            r4.<init>()
+            java.lang.String r5 = "handle: TxzMessage keyType = "
+            r4.append(r5)
+            int r5 = r2.keyType
+            r4.append(r5)
+            java.lang.String r5 = "  action = "
+            r4.append(r5)
+            r4.append(r3)
+            java.lang.String r4 = r4.toString()
+            android.util.Log.i(r0, r4)
             int r0 = r2.keyType
             r4 = 13
             r5 = 1000(0x3e8, float:1.401E-42)
-            if (r0 == r5) goto L_0x0535
+            if (r0 == r5) goto L_0x0554
             r6 = 1010(0x3f2, float:1.415E-42)
             r7 = 3
             r8 = 0
             r9 = 1
-            if (r0 == r6) goto L_0x04f8
+            if (r0 == r6) goto L_0x0517
             r6 = 1020(0x3fc, float:1.43E-42)
-            if (r0 == r6) goto L_0x047c
+            if (r0 == r6) goto L_0x049d
             r6 = 1030(0x406, float:1.443E-42)
             r10 = 7
             r11 = 5
@@ -154,143 +167,142 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             r13 = 4
             r14 = -1
             r15 = 2
-            if (r0 == r6) goto L_0x03fe
+            if (r0 == r6) goto L_0x041f
             r6 = 1040(0x410, float:1.457E-42)
-            r16 = 9
-            r17 = 8
-            if (r0 == r6) goto L_0x0245
+            r16 = 10
+            r17 = 9
+            r18 = 8
+            if (r0 == r6) goto L_0x0266
             r4 = 1050(0x41a, float:1.471E-42)
-            if (r0 == r4) goto L_0x01ed
+            if (r0 == r4) goto L_0x020e
             r4 = 1091(0x443, float:1.529E-42)
-            if (r0 == r4) goto L_0x00ee
+            if (r0 == r4) goto L_0x010f
             switch(r0) {
-                case 1060: goto L_0x0038;
-                case 1061: goto L_0x0038;
-                default: goto L_0x0036;
+                case 1060: goto L_0x005a;
+                case 1061: goto L_0x005a;
+                default: goto L_0x0058;
             }
-        L_0x0036:
-            goto L_0x0571
-        L_0x0038:
+        L_0x0058:
+            goto L_0x0590
+        L_0x005a:
             java.lang.String r0 = r2.action
             int r4 = r0.hashCode()
             switch(r4) {
-                case -1362146736: goto L_0x00ac;
-                case -825432804: goto L_0x00a2;
-                case -825393037: goto L_0x0098;
-                case -825367203: goto L_0x008e;
-                case -825361316: goto L_0x0084;
-                case -770549500: goto L_0x0079;
-                case -734529399: goto L_0x006e;
-                case 171428079: goto L_0x0064;
-                case 183111917: goto L_0x005a;
-                case 1438537900: goto L_0x004f;
-                case 1461409024: goto L_0x0043;
-                default: goto L_0x0041;
+                case -1362146736: goto L_0x00ce;
+                case -825432804: goto L_0x00c4;
+                case -825393037: goto L_0x00ba;
+                case -825367203: goto L_0x00b0;
+                case -825361316: goto L_0x00a6;
+                case -770549500: goto L_0x009b;
+                case -734529399: goto L_0x0090;
+                case 171428079: goto L_0x0086;
+                case 183111917: goto L_0x007c;
+                case 1438537900: goto L_0x0071;
+                case 1461409024: goto L_0x0065;
+                default: goto L_0x0063;
             }
-        L_0x0041:
-            goto L_0x00b5
-        L_0x0043:
+        L_0x0063:
+            goto L_0x00d7
+        L_0x0065:
             java.lang.String r4 = "music.loop.all"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r17
-            goto L_0x00b6
-        L_0x004f:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r18
+            goto L_0x00d7
+        L_0x0071:
             java.lang.String r4 = "music.random"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r10
-            goto L_0x00b6
-        L_0x005a:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r10
+            goto L_0x00d7
+        L_0x007c:
             java.lang.String r4 = "music.pause"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r13
-            goto L_0x00b6
-        L_0x0064:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r13
+            goto L_0x00d7
+        L_0x0086:
             java.lang.String r4 = "music.close"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r9
-            goto L_0x00b6
-        L_0x006e:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r9
+            goto L_0x00d7
+        L_0x0090:
             java.lang.String r4 = "music.loop.single"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r16
-            goto L_0x00b6
-        L_0x0079:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r17
+            goto L_0x00d7
+        L_0x009b:
             java.lang.String r4 = "music.loop.random"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = 10
-            goto L_0x00b6
-        L_0x0084:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r16
+            goto L_0x00d7
+        L_0x00a6:
             java.lang.String r4 = "music.prev"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r12
-            goto L_0x00b6
-        L_0x008e:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r12
+            goto L_0x00d7
+        L_0x00b0:
             java.lang.String r4 = "music.play"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r15
-            goto L_0x00b6
-        L_0x0098:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r15
+            goto L_0x00d7
+        L_0x00ba:
             java.lang.String r4 = "music.open"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r8
-            goto L_0x00b6
-        L_0x00a2:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r8
+            goto L_0x00d7
+        L_0x00c4:
             java.lang.String r4 = "music.next"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            r7 = r11
-            goto L_0x00b6
-        L_0x00ac:
+            if (r0 == 0) goto L_0x00d7
+            r14 = r11
+            goto L_0x00d7
+        L_0x00ce:
             java.lang.String r4 = "music.continue"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x00b5
-            goto L_0x00b6
-        L_0x00b5:
-            r7 = r14
-        L_0x00b6:
-            switch(r7) {
-                case 0: goto L_0x00e8;
-                case 1: goto L_0x00e4;
-                case 2: goto L_0x00cd;
-                case 3: goto L_0x00c9;
-                case 4: goto L_0x00c5;
-                case 5: goto L_0x00c1;
-                case 6: goto L_0x00bd;
-                case 7: goto L_0x00bc;
-                case 8: goto L_0x00bb;
-                case 9: goto L_0x00ba;
-                default: goto L_0x00b9;
+            if (r0 == 0) goto L_0x00d7
+            r14 = r7
+        L_0x00d7:
+            switch(r14) {
+                case 0: goto L_0x0109;
+                case 1: goto L_0x0105;
+                case 2: goto L_0x00ee;
+                case 3: goto L_0x00ea;
+                case 4: goto L_0x00e6;
+                case 5: goto L_0x00e2;
+                case 6: goto L_0x00de;
+                case 7: goto L_0x00dd;
+                case 8: goto L_0x00dc;
+                case 9: goto L_0x00db;
+                default: goto L_0x00da;
             }
-        L_0x00b9:
-            goto L_0x00ec
-        L_0x00ba:
-            goto L_0x00ec
-        L_0x00bb:
-            goto L_0x00ec
-        L_0x00bc:
-            goto L_0x00ec
-        L_0x00bd:
-            r18.mediaPrevious()
-            goto L_0x00ec
-        L_0x00c1:
-            r18.mediaNext()
-            goto L_0x00ec
-        L_0x00c5:
-            r18.mediaPause()
-            goto L_0x00ec
-        L_0x00c9:
-            r18.mediaPlay()
-            goto L_0x00ec
-        L_0x00cd:
+        L_0x00da:
+            goto L_0x010d
+        L_0x00db:
+            goto L_0x010d
+        L_0x00dc:
+            goto L_0x010d
+        L_0x00dd:
+            goto L_0x010d
+        L_0x00de:
+            r19.mediaPrevious()
+            goto L_0x010d
+        L_0x00e2:
+            r19.mediaNext()
+            goto L_0x010d
+        L_0x00e6:
+            r19.mediaPause()
+            goto L_0x010d
+        L_0x00ea:
+            r19.mediaPlay()
+            goto L_0x010d
+        L_0x00ee:
             android.os.Bundle r0 = new android.os.Bundle
             r0.<init>()
             java.lang.String r4 = "package"
@@ -300,66 +312,66 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             java.lang.String r6 = "app.open"
             r4.<init>(r5, r6, r0)
             r1.handle((com.wits.pms.bean.TxzMessage) r4)
-            goto L_0x00ec
-        L_0x00e4:
-            r18.closeMusic()
-            goto L_0x00ec
-        L_0x00e8:
-            r18.openMusic()
-        L_0x00ec:
-            goto L_0x0571
-        L_0x00ee:
+            goto L_0x010d
+        L_0x0105:
+            r19.closeMusic()
+            goto L_0x010d
+        L_0x0109:
+            r19.openMusic()
+        L_0x010d:
+            goto L_0x0590
+        L_0x010f:
             java.lang.String r0 = "dvr.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0103
+            if (r0 == 0) goto L_0x0124
             com.wits.pms.custom.KswSettings r0 = com.wits.pms.custom.KswSettings.getSettings()
             java.lang.String r4 = "DVRApk_PackageName"
             java.lang.String r0 = r0.getSettingsString(r4)
             r1.openApp(r0)
-        L_0x0103:
+        L_0x0124:
             java.lang.String r0 = "dvr.close"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0118
+            if (r0 == 0) goto L_0x0139
             com.wits.pms.custom.KswSettings r0 = com.wits.pms.custom.KswSettings.getSettings()
             java.lang.String r4 = "DVRApk_PackageName"
             java.lang.String r0 = r0.getSettingsString(r4)
             r1.closeApp(r0)
-        L_0x0118:
+        L_0x0139:
             java.lang.String r0 = "video.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0128
+            if (r0 == 0) goto L_0x0149
             java.lang.String r0 = "com.txznet.music"
             r1.killApp(r0)
-            r18.openVideo()
-        L_0x0128:
+            r19.openVideo()
+        L_0x0149:
             java.lang.String r0 = "video.close"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0133
-            r18.closeVideo()
-        L_0x0133:
+            if (r0 == 0) goto L_0x0154
+            r19.closeVideo()
+        L_0x0154:
             java.lang.String r0 = "tv.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x013e
+            if (r0 == 0) goto L_0x015f
             r1.openDtv(r9)
-        L_0x013e:
+        L_0x015f:
             java.lang.String r0 = "tv.close"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0149
+            if (r0 == 0) goto L_0x016a
             r1.systemModeSwitch(r9)
-        L_0x0149:
+        L_0x016a:
             java.lang.String r0 = "aux.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0154
+            if (r0 == 0) goto L_0x0175
             r1.openAux(r9)
-        L_0x0154:
+        L_0x0175:
             java.lang.String r0 = "aux.close"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x015f
+            if (r0 == 0) goto L_0x0180
             r1.systemModeSwitch(r9)
-        L_0x015f:
+        L_0x0180:
             java.lang.String r0 = "original_car.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0182
+            if (r0 == 0) goto L_0x01a3
             com.wits.pms.mcu.custom.KswMcuSender r0 = com.wits.pms.mcu.custom.KswMcuSender.getSender()
             r4 = 103(0x67, float:1.44E-43)
             byte[] r5 = new byte[r9]
@@ -370,25 +382,25 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             byte[] r5 = new byte[r15]
             r5 = {18, 2} // fill-array
             r0.sendMessage(r4, r5)
-        L_0x0182:
+        L_0x01a3:
             java.lang.String r0 = "mobile_internet.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x018f
+            if (r0 == 0) goto L_0x01b0
             java.lang.String r0 = "net.easyconn"
             r1.openApp(r0)
-        L_0x018f:
+        L_0x01b0:
             java.lang.String r0 = "android.home"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x01a5
+            if (r0 == 0) goto L_0x01c6
             com.wits.pms.mcu.custom.KswMcuSender r0 = com.wits.pms.mcu.custom.KswMcuSender.getSender()
             r4 = 105(0x69, float:1.47E-43)
             byte[] r5 = new byte[r15]
             r5 = {18, 1} // fill-array
             r0.sendMessage(r4, r5)
-        L_0x01a5:
+        L_0x01c6:
             java.lang.String r0 = "music.play.local"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0571
+            if (r0 == 0) goto L_0x0590
             android.os.Bundle r0 = r2.bundle
             java.lang.String r4 = "path"
             java.lang.String r4 = r0.getString(r4)
@@ -409,298 +421,298 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             r5.putExtra((java.lang.String) r0, (boolean) r9)
             java.lang.String r0 = "path"
             r5.putExtra((java.lang.String) r0, (java.lang.String) r4)
-            r1.startAction((android.content.Intent) r5)     // Catch:{ Exception -> 0x01e5 }
-            goto L_0x0571
-        L_0x01e5:
+            r1.startAction((android.content.Intent) r5)     // Catch:{ Exception -> 0x0206 }
+            goto L_0x0590
+        L_0x0206:
             r0 = move-exception
             r6 = r0
             r0 = r6
             r0.printStackTrace()
-            goto L_0x0571
-        L_0x01ed:
+            goto L_0x0590
+        L_0x020e:
             java.lang.String r0 = r2.action
             int r4 = r0.hashCode()
             r5 = -1480935867(0xffffffffa7bab645, float:-5.1822988E-15)
-            if (r4 == r5) goto L_0x0226
+            if (r4 == r5) goto L_0x0247
             r5 = -47450874(0xfffffffffd2bf506, float:-1.4285639E37)
-            if (r4 == r5) goto L_0x021c
+            if (r4 == r5) goto L_0x023d
             r5 = -47411107(0xfffffffffd2c905d, float:-1.433605E37)
-            if (r4 == r5) goto L_0x0212
+            if (r4 == r5) goto L_0x0233
             r5 = -47379386(0xfffffffffd2d0c46, float:-1.4376261E37)
-            if (r4 == r5) goto L_0x0208
-            goto L_0x022f
-        L_0x0208:
+            if (r4 == r5) goto L_0x0229
+            goto L_0x0250
+        L_0x0229:
             java.lang.String r4 = "radio.prev"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x022f
+            if (r0 == 0) goto L_0x0250
             r14 = r15
-            goto L_0x022f
-        L_0x0212:
+            goto L_0x0250
+        L_0x0233:
             java.lang.String r4 = "radio.open"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x022f
+            if (r0 == 0) goto L_0x0250
             r14 = r8
-            goto L_0x022f
-        L_0x021c:
+            goto L_0x0250
+        L_0x023d:
             java.lang.String r4 = "radio.next"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x022f
+            if (r0 == 0) goto L_0x0250
             r14 = r7
-            goto L_0x022f
-        L_0x0226:
+            goto L_0x0250
+        L_0x0247:
             java.lang.String r4 = "radio.close"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x022f
+            if (r0 == 0) goto L_0x0250
             r14 = r9
-        L_0x022f:
+        L_0x0250:
             switch(r14) {
-                case 0: goto L_0x023f;
-                case 1: goto L_0x023b;
-                case 2: goto L_0x0237;
-                case 3: goto L_0x0233;
-                default: goto L_0x0232;
+                case 0: goto L_0x0260;
+                case 1: goto L_0x025c;
+                case 2: goto L_0x0258;
+                case 3: goto L_0x0254;
+                default: goto L_0x0253;
             }
-        L_0x0232:
-            goto L_0x0243
-        L_0x0233:
-            r18.fmNext()
-            goto L_0x0243
-        L_0x0237:
-            r18.fmPrevious()
-            goto L_0x0243
-        L_0x023b:
-            r18.fmClose()
-            goto L_0x0243
-        L_0x023f:
-            r18.fmOpen()
-        L_0x0243:
-            goto L_0x0571
-        L_0x0245:
+        L_0x0253:
+            goto L_0x0264
+        L_0x0254:
+            r19.fmNext()
+            goto L_0x0264
+        L_0x0258:
+            r19.fmPrevious()
+            goto L_0x0264
+        L_0x025c:
+            r19.fmClose()
+            goto L_0x0264
+        L_0x0260:
+            r19.fmOpen()
+        L_0x0264:
+            goto L_0x0590
+        L_0x0266:
             java.lang.String r0 = r2.action
             int r5 = r0.hashCode()
             switch(r5) {
-                case -1362146736: goto L_0x02da;
-                case -825432804: goto L_0x02cf;
-                case -825393037: goto L_0x02c4;
-                case -825361316: goto L_0x02bb;
-                case 19491040: goto L_0x02b1;
-                case 171428079: goto L_0x02a6;
-                case 179334558: goto L_0x029c;
-                case 179706250: goto L_0x0292;
-                case 183111917: goto L_0x0287;
-                case 486135880: goto L_0x027c;
-                case 685022669: goto L_0x0271;
-                case 974886623: goto L_0x0266;
-                case 1017115442: goto L_0x025b;
-                case 1264734904: goto L_0x0250;
-                default: goto L_0x024e;
+                case -1362146736: goto L_0x02fb;
+                case -825432804: goto L_0x02f0;
+                case -825393037: goto L_0x02e5;
+                case -825361316: goto L_0x02dc;
+                case 19491040: goto L_0x02d2;
+                case 171428079: goto L_0x02c7;
+                case 179334558: goto L_0x02bd;
+                case 179706250: goto L_0x02b3;
+                case 183111917: goto L_0x02a8;
+                case 486135880: goto L_0x029d;
+                case 685022669: goto L_0x0292;
+                case 974886623: goto L_0x0287;
+                case 1017115442: goto L_0x027c;
+                case 1264734904: goto L_0x0271;
+                default: goto L_0x026f;
             }
-        L_0x024e:
-            goto L_0x02e5
-        L_0x0250:
+        L_0x026f:
+            goto L_0x0306
+        L_0x0271:
             java.lang.String r4 = "bluetooth.close"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r9
-            goto L_0x02e6
-        L_0x025b:
+            goto L_0x0307
+        L_0x027c:
             java.lang.String r4 = "bluetooth.status"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r12
-            goto L_0x02e6
-        L_0x0266:
+            goto L_0x0307
+        L_0x0287:
             java.lang.String r4 = "bluetooth.reject"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r11
-            goto L_0x02e6
-        L_0x0271:
+            goto L_0x0307
+        L_0x0292:
             java.lang.String r4 = "bluetooth.hangup"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r7
-            goto L_0x02e6
-        L_0x027c:
+            goto L_0x0307
+        L_0x029d:
             java.lang.String r4 = "bluetooth.accept"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r13
-            goto L_0x02e6
-        L_0x0287:
+            goto L_0x0307
+        L_0x02a8:
             java.lang.String r4 = "music.pause"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
-            r4 = 10
-            goto L_0x02e6
-        L_0x0292:
+            if (r0 == 0) goto L_0x0306
+            r4 = r16
+            goto L_0x0307
+        L_0x02b3:
             java.lang.String r4 = "bluetooth.open"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r8
-            goto L_0x02e6
-        L_0x029c:
+            goto L_0x0307
+        L_0x02bd:
             java.lang.String r4 = "bluetooth.call"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r15
-            goto L_0x02e6
-        L_0x02a6:
+            goto L_0x0307
+        L_0x02c7:
             java.lang.String r4 = "music.close"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
-            r4 = r16
-            goto L_0x02e6
-        L_0x02b1:
+            if (r0 == 0) goto L_0x0306
+            r4 = r17
+            goto L_0x0307
+        L_0x02d2:
             java.lang.String r4 = "bluetooth.contact"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = r10
-            goto L_0x02e6
-        L_0x02bb:
+            goto L_0x0307
+        L_0x02dc:
             java.lang.String r5 = "music.prev"
             boolean r0 = r0.equals(r5)
-            if (r0 == 0) goto L_0x02e5
-            goto L_0x02e6
-        L_0x02c4:
+            if (r0 == 0) goto L_0x0306
+            goto L_0x0307
+        L_0x02e5:
             java.lang.String r4 = "music.open"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
-            r4 = r17
-            goto L_0x02e6
-        L_0x02cf:
+            if (r0 == 0) goto L_0x0306
+            r4 = r18
+            goto L_0x0307
+        L_0x02f0:
             java.lang.String r4 = "music.next"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = 12
-            goto L_0x02e6
-        L_0x02da:
+            goto L_0x0307
+        L_0x02fb:
             java.lang.String r4 = "music.continue"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x02e5
+            if (r0 == 0) goto L_0x0306
             r4 = 11
-            goto L_0x02e6
-        L_0x02e5:
+            goto L_0x0307
+        L_0x0306:
             r4 = r14
-        L_0x02e6:
+        L_0x0307:
             switch(r4) {
-                case 0: goto L_0x03f8;
-                case 1: goto L_0x039b;
-                case 2: goto L_0x0387;
-                case 3: goto L_0x0383;
-                case 4: goto L_0x037e;
-                case 5: goto L_0x0379;
-                case 6: goto L_0x0312;
-                case 7: goto L_0x0309;
-                case 8: goto L_0x0304;
-                case 9: goto L_0x02ff;
-                case 10: goto L_0x02fa;
-                case 11: goto L_0x02f5;
-                case 12: goto L_0x02f0;
-                case 13: goto L_0x02eb;
-                default: goto L_0x02e9;
+                case 0: goto L_0x0419;
+                case 1: goto L_0x03bc;
+                case 2: goto L_0x03a8;
+                case 3: goto L_0x03a4;
+                case 4: goto L_0x039f;
+                case 5: goto L_0x039a;
+                case 6: goto L_0x0333;
+                case 7: goto L_0x032a;
+                case 8: goto L_0x0325;
+                case 9: goto L_0x0320;
+                case 10: goto L_0x031b;
+                case 11: goto L_0x0316;
+                case 12: goto L_0x0311;
+                case 13: goto L_0x030c;
+                default: goto L_0x030a;
             }
-        L_0x02e9:
-            goto L_0x03fc
-        L_0x02eb:
-            r18.mediaPrevious()
-            goto L_0x03fc
-        L_0x02f0:
-            r18.mediaNext()
-            goto L_0x03fc
-        L_0x02f5:
-            r18.mediaPlay()
-            goto L_0x03fc
-        L_0x02fa:
-            r18.mediaPause()
-            goto L_0x03fc
-        L_0x02ff:
-            r18.btMusicStop()
-            goto L_0x03fc
-        L_0x0304:
-            r18.btMusicOpen()
-            goto L_0x03fc
-        L_0x0309:
+        L_0x030a:
+            goto L_0x041d
+        L_0x030c:
+            r19.mediaPrevious()
+            goto L_0x041d
+        L_0x0311:
+            r19.mediaNext()
+            goto L_0x041d
+        L_0x0316:
+            r19.mediaPlay()
+            goto L_0x041d
+        L_0x031b:
+            r19.mediaPause()
+            goto L_0x041d
+        L_0x0320:
+            r19.btMusicStop()
+            goto L_0x041d
+        L_0x0325:
+            r19.btMusicOpen()
+            goto L_0x041d
+        L_0x032a:
             r0 = 200(0xc8, float:2.8E-43)
             java.lang.String r4 = ""
             com.wits.pms.statuscontrol.WitsCommand.sendCommand(r7, r0, r4)
-            goto L_0x03fc
-        L_0x0312:
+            goto L_0x041d
+        L_0x0333:
             android.os.Bundle r0 = new android.os.Bundle
             r0.<init>()
             r4 = r0
             r5 = r8
             java.lang.String r0 = "isConnected"
-            boolean r0 = com.wits.pms.statuscontrol.PowerManagerApp.getStatusBoolean(r0)     // Catch:{ RemoteException -> 0x0373 }
+            boolean r0 = com.wits.pms.statuscontrol.PowerManagerApp.getStatusBoolean(r0)     // Catch:{ RemoteException -> 0x0394 }
             r6 = 2040(0x7f8, float:2.859E-42)
-            if (r0 == 0) goto L_0x0360
+            if (r0 == 0) goto L_0x0381
             java.lang.String r7 = "callStatus"
-            int r7 = com.wits.pms.statuscontrol.PowerManagerApp.getStatusInt(r7)     // Catch:{ RemoteException -> 0x0373 }
+            int r7 = com.wits.pms.statuscontrol.PowerManagerApp.getStatusInt(r7)     // Catch:{ RemoteException -> 0x0394 }
             r5 = r7
             switch(r5) {
-                case 4: goto L_0x0348;
-                case 5: goto L_0x0340;
-                case 6: goto L_0x0338;
-                case 7: goto L_0x0330;
-                default: goto L_0x032d;
-            }     // Catch:{ RemoteException -> 0x0373 }
-        L_0x032d:
-            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0373 }
-            goto L_0x0350
-        L_0x0330:
-            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0373 }
+                case 4: goto L_0x0369;
+                case 5: goto L_0x0361;
+                case 6: goto L_0x0359;
+                case 7: goto L_0x0351;
+                default: goto L_0x034e;
+            }     // Catch:{ RemoteException -> 0x0394 }
+        L_0x034e:
+            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0394 }
+            goto L_0x0371
+        L_0x0351:
+            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0394 }
             java.lang.String r8 = "bluetooth.hangup"
-            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0373 }
-            goto L_0x0355
-        L_0x0338:
-            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0373 }
+            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0394 }
+            goto L_0x0376
+        L_0x0359:
+            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0394 }
             java.lang.String r8 = "bluetooth.offhook"
-            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0373 }
-            goto L_0x0355
-        L_0x0340:
-            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0373 }
+            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0394 }
+            goto L_0x0376
+        L_0x0361:
+            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0394 }
             java.lang.String r8 = "bluetooth.incoming"
-            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0373 }
-            goto L_0x0355
-        L_0x0348:
-            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0373 }
+            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0394 }
+            goto L_0x0376
+        L_0x0369:
+            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0394 }
             java.lang.String r8 = "bluetooth.call"
-            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0373 }
-            goto L_0x0355
-        L_0x0350:
+            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0394 }
+            goto L_0x0376
+        L_0x0371:
             java.lang.String r8 = "bluetooth.idle"
-            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0373 }
-        L_0x0355:
-            if (r5 != 0) goto L_0x0367
-            com.wits.pms.bean.TxzMessage r8 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0373 }
+            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0394 }
+        L_0x0376:
+            if (r5 != 0) goto L_0x0388
+            com.wits.pms.bean.TxzMessage r8 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0394 }
             java.lang.String r9 = "bluetooth.connect"
-            r8.<init>(r6, r9, r4)     // Catch:{ RemoteException -> 0x0373 }
+            r8.<init>(r6, r9, r4)     // Catch:{ RemoteException -> 0x0394 }
             r7 = r8
-            goto L_0x0367
-        L_0x0360:
-            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0373 }
+            goto L_0x0388
+        L_0x0381:
+            com.wits.pms.bean.TxzMessage r7 = new com.wits.pms.bean.TxzMessage     // Catch:{ RemoteException -> 0x0394 }
             java.lang.String r8 = "bluetooth.disconnect"
-            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0373 }
-        L_0x0367:
+            r7.<init>(r6, r8, r4)     // Catch:{ RemoteException -> 0x0394 }
+        L_0x0388:
             r6 = r7
-            android.content.Context r7 = r1.mContext     // Catch:{ RemoteException -> 0x0373 }
-            com.wits.pms.receiver.CenterCallBackImpl r7 = com.wits.pms.receiver.CenterCallBackImpl.getImpl(r7)     // Catch:{ RemoteException -> 0x0373 }
-            r7.sendBroadCast(r6)     // Catch:{ RemoteException -> 0x0373 }
-            goto L_0x03fc
-        L_0x0373:
+            android.content.Context r7 = r1.mContext     // Catch:{ RemoteException -> 0x0394 }
+            com.wits.pms.receiver.CenterCallBackImpl r7 = com.wits.pms.receiver.CenterCallBackImpl.getImpl(r7)     // Catch:{ RemoteException -> 0x0394 }
+            r7.sendBroadCast(r6)     // Catch:{ RemoteException -> 0x0394 }
+            goto L_0x041d
+        L_0x0394:
             r0 = move-exception
             r0.printStackTrace()
-            goto L_0x03fc
-        L_0x0379:
-            r18.handUpPhone()
-            goto L_0x03fc
-        L_0x037e:
-            r18.acceptPhone()
-            goto L_0x03fc
-        L_0x0383:
-            r18.handUpPhone()
-            goto L_0x03fc
-        L_0x0387:
+            goto L_0x041d
+        L_0x039a:
+            r19.handUpPhone()
+            goto L_0x041d
+        L_0x039f:
+            r19.acceptPhone()
+            goto L_0x041d
+        L_0x03a4:
+            r19.handUpPhone()
+            goto L_0x041d
+        L_0x03a8:
             android.os.Bundle r0 = r2.bundle
             java.lang.String r4 = "name"
             java.lang.String r0 = r0.getString(r4)
@@ -708,8 +720,8 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             java.lang.String r5 = "number"
             java.lang.String r4 = r4.getString(r5)
             r1.btPhoneCall(r0, r4)
-            goto L_0x03fc
-        L_0x039b:
+            goto L_0x041d
+        L_0x03bc:
             java.lang.String r0 = "CenterControl"
             java.lang.StringBuilder r4 = new java.lang.StringBuilder
             r4.<init>()
@@ -730,172 +742,171 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             java.lang.String r0 = r0.topApp
             java.lang.String r4 = "com.wits.ksw.bt"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x03e1
+            if (r0 == 0) goto L_0x0402
             android.os.Handler r0 = r1.mHandler
             com.wits.pms.core.-$$Lambda$CenterControlImpl$MU0h5QLUe0voNYR_9jssAIq6o_U r4 = new com.wits.pms.core.-$$Lambda$CenterControlImpl$MU0h5QLUe0voNYR_9jssAIq6o_U
             r4.<init>()
             r5 = 800(0x320, double:3.953E-321)
             r0.postDelayed(r4, r5)
-        L_0x03e1:
+        L_0x0402:
             com.wits.pms.interfaces.LogicSystem r0 = r1.mLogicSystem
             com.wits.pms.statuscontrol.BtPhoneStatus r0 = r0.getBtPhoneStatus()
             boolean r0 = r0.isPlayingMusic
-            if (r0 == 0) goto L_0x03fc
+            if (r0 == 0) goto L_0x041d
             android.os.Handler r0 = r1.mHandler
             com.wits.pms.core.-$$Lambda$MnsNT1fc1_cXAfpJhxBta4fOU_k r4 = new com.wits.pms.core.-$$Lambda$MnsNT1fc1_cXAfpJhxBta4fOU_k
             r4.<init>()
             r5 = 0
             r0.postDelayed(r4, r5)
-            goto L_0x03fc
-        L_0x03f8:
+            goto L_0x041d
+        L_0x0419:
             r1.openBluetooth(r9)
-        L_0x03fc:
-            goto L_0x0571
-        L_0x03fe:
+        L_0x041d:
+            goto L_0x0590
+        L_0x041f:
             java.lang.String r0 = r2.action
             int r4 = r0.hashCode()
             switch(r4) {
-                case -2128329265: goto L_0x044e;
-                case -2128329233: goto L_0x0444;
-                case -1553713362: goto L_0x043a;
-                case -1553708278: goto L_0x0430;
-                case -1553704816: goto L_0x0426;
-                case -1553704578: goto L_0x041c;
-                case -920463626: goto L_0x0412;
-                case -920189843: goto L_0x0408;
-                default: goto L_0x0407;
+                case -2128329265: goto L_0x046f;
+                case -2128329233: goto L_0x0465;
+                case -1553713362: goto L_0x045b;
+                case -1553708278: goto L_0x0451;
+                case -1553704816: goto L_0x0447;
+                case -1553704578: goto L_0x043d;
+                case -920463626: goto L_0x0433;
+                case -920189843: goto L_0x0429;
+                default: goto L_0x0428;
             }
-        L_0x0407:
-            goto L_0x0457
-        L_0x0408:
+        L_0x0428:
+            goto L_0x0478
+        L_0x0429:
             java.lang.String r4 = "volume.mute"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r10
-            goto L_0x0457
-        L_0x0412:
+            goto L_0x0478
+        L_0x0433:
             java.lang.String r4 = "volume.down"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r9
-            goto L_0x0457
-        L_0x041c:
+            goto L_0x0478
+        L_0x043d:
             java.lang.String r4 = "volume.min"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r7
-            goto L_0x0457
-        L_0x0426:
+            goto L_0x0478
+        L_0x0447:
             java.lang.String r4 = "volume.max"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r15
-            goto L_0x0457
-        L_0x0430:
+            goto L_0x0478
+        L_0x0451:
             java.lang.String r4 = "volume.inc"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r11
-            goto L_0x0457
-        L_0x043a:
+            goto L_0x0478
+        L_0x045b:
             java.lang.String r4 = "volume.dec"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r12
-            goto L_0x0457
-        L_0x0444:
+            goto L_0x0478
+        L_0x0465:
             java.lang.String r4 = "volume.up"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r8
-            goto L_0x0457
-        L_0x044e:
+            goto L_0x0478
+        L_0x046f:
             java.lang.String r4 = "volume.to"
             boolean r0 = r0.equals(r4)
-            if (r0 == 0) goto L_0x0457
+            if (r0 == 0) goto L_0x0478
             r14 = r13
-        L_0x0457:
+        L_0x0478:
             switch(r14) {
-                case 0: goto L_0x0476;
-                case 1: goto L_0x0472;
-                case 2: goto L_0x046e;
-                case 3: goto L_0x046a;
-                case 4: goto L_0x0469;
-                case 5: goto L_0x0468;
-                case 6: goto L_0x0467;
-                case 7: goto L_0x045b;
-                default: goto L_0x045a;
+                case 0: goto L_0x0497;
+                case 1: goto L_0x0493;
+                case 2: goto L_0x048f;
+                case 3: goto L_0x048b;
+                case 4: goto L_0x048a;
+                case 5: goto L_0x0489;
+                case 6: goto L_0x0488;
+                case 7: goto L_0x047c;
+                default: goto L_0x047b;
             }
-        L_0x045a:
-            goto L_0x047a
-        L_0x045b:
+        L_0x047b:
+            goto L_0x049b
+        L_0x047c:
             android.os.Bundle r0 = r2.bundle
             java.lang.String r4 = "mute"
             boolean r0 = r0.getBoolean(r4)
             r1.muteWithUI(r0)
-            goto L_0x047a
-        L_0x0467:
-            goto L_0x047a
-        L_0x0468:
-            goto L_0x047a
-        L_0x0469:
-            goto L_0x047a
-        L_0x046a:
-            r18.volumeMin()
-            goto L_0x047a
-        L_0x046e:
-            r18.volumeMax()
-            goto L_0x047a
-        L_0x0472:
-            r18.volumeDownBySystem()
-            goto L_0x047a
-        L_0x0476:
-            r18.volumeUpBySystem()
-        L_0x047a:
-            goto L_0x0571
-        L_0x047c:
+            goto L_0x049b
+        L_0x0488:
+            goto L_0x049b
+        L_0x0489:
+            goto L_0x049b
+        L_0x048a:
+            goto L_0x049b
+        L_0x048b:
+            r19.volumeMin()
+            goto L_0x049b
+        L_0x048f:
+            r19.volumeMax()
+            goto L_0x049b
+        L_0x0493:
+            r19.volumeDownBySystem()
+            goto L_0x049b
+        L_0x0497:
+            r19.volumeUpBySystem()
+        L_0x049b:
+            goto L_0x0590
+        L_0x049d:
             android.content.Context r0 = r1.mContext
             android.content.ContentResolver r0 = r0.getContentResolver()
             java.lang.String r4 = "screen_brightness"
             r5 = 30
             int r0 = android.provider.Settings.System.getInt(r0, r4, r5)
-            java.lang.String r4 = "light_up"
+            java.lang.String r4 = "light.up"
             boolean r4 = r4.equals(r3)
-            if (r4 == 0) goto L_0x049f
+            if (r4 == 0) goto L_0x04c0
             int r0 = r0 + 42
             android.content.Context r4 = r1.mContext
             android.content.ContentResolver r4 = r4.getContentResolver()
-            java.lang.String r6 = "screen_brightness"
-            android.provider.Settings.System.putInt(r4, r6, r0)
-        L_0x049f:
-            java.lang.String r4 = "light_down"
+            java.lang.String r5 = "screen_brightness"
+            android.provider.Settings.System.putInt(r4, r5, r0)
+        L_0x04c0:
+            java.lang.String r4 = "light.down"
             boolean r4 = r4.equals(r3)
-            if (r4 == 0) goto L_0x04b4
+            if (r4 == 0) goto L_0x04d5
             int r0 = r0 + -42
             android.content.Context r4 = r1.mContext
             android.content.ContentResolver r4 = r4.getContentResolver()
-            java.lang.String r6 = "screen_brightness"
-            android.provider.Settings.System.putInt(r4, r6, r0)
-        L_0x04b4:
-            java.lang.String r4 = "light_min"
+            java.lang.String r5 = "screen_brightness"
+            android.provider.Settings.System.putInt(r4, r5, r0)
+        L_0x04d5:
+            java.lang.String r4 = "light.min"
             boolean r4 = r4.equals(r3)
-            if (r4 == 0) goto L_0x04c9
-            r0 = 30
+            if (r4 == 0) goto L_0x04ea
+            r0 = 10
             android.content.Context r4 = r1.mContext
             android.content.ContentResolver r4 = r4.getContentResolver()
-            java.lang.String r6 = "screen_brightness"
-            android.provider.Settings.System.putInt(r4, r6, r5)
-        L_0x04c9:
-            java.lang.String r4 = "light_max"
+            java.lang.String r5 = "screen_brightness"
+            android.provider.Settings.System.putInt(r4, r5, r0)
+        L_0x04ea:
+            java.lang.String r4 = "light.max"
             boolean r4 = r4.equals(r3)
-            if (r4 == 0) goto L_0x04e0
+            if (r4 == 0) goto L_0x04ff
             r0 = 255(0xff, float:3.57E-43)
             android.content.Context r4 = r1.mContext
             android.content.ContentResolver r4 = r4.getContentResolver()
             java.lang.String r5 = "screen_brightness"
-            r6 = 255(0xff, float:3.57E-43)
-            android.provider.Settings.System.putInt(r4, r5, r6)
-        L_0x04e0:
+            android.provider.Settings.System.putInt(r4, r5, r0)
+        L_0x04ff:
             java.lang.String r4 = "CenterControl"
             java.lang.StringBuilder r5 = new java.lang.StringBuilder
             r5.<init>()
@@ -904,64 +915,64 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             r5.append(r0)
             java.lang.String r5 = r5.toString()
             android.util.Log.i(r4, r5)
-            goto L_0x0571
-        L_0x04f8:
+            goto L_0x0590
+        L_0x0517:
             java.lang.String r0 = "wifi.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0505
+            if (r0 == 0) goto L_0x0524
             r1.wifiOperation(r9)
-            goto L_0x0571
-        L_0x0505:
+            goto L_0x0590
+        L_0x0524:
             java.lang.String r0 = "wifi.close"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0511
+            if (r0 == 0) goto L_0x0530
             r1.wifiOperation(r8)
-            goto L_0x0571
-        L_0x0511:
+            goto L_0x0590
+        L_0x0530:
             java.lang.String r0 = "go.home"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x051d
+            if (r0 == 0) goto L_0x053c
             com.wits.pms.utils.KeyUtils.pressKey(r7)
-            goto L_0x0571
-        L_0x051d:
+            goto L_0x0590
+        L_0x053c:
             java.lang.String r0 = "screen.close"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0529
+            if (r0 == 0) goto L_0x0548
             r1.displayScreen(r8)
-            goto L_0x0571
-        L_0x0529:
+            goto L_0x0590
+        L_0x0548:
             java.lang.String r0 = "screen.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0571
+            if (r0 == 0) goto L_0x0590
             r1.displayScreen(r9)
-            goto L_0x0571
-        L_0x0535:
+            goto L_0x0590
+        L_0x0554:
             java.lang.String r0 = "app.open"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x055e
+            if (r0 == 0) goto L_0x057d
             android.os.Bundle r0 = r2.bundle
             java.lang.String r5 = "package"
             java.lang.String r0 = r0.getString(r5)
             java.lang.String r5 = "com.txznet.music"
             boolean r5 = r5.equals(r0)
-            if (r5 == 0) goto L_0x0557
+            if (r5 == 0) goto L_0x0576
             boolean r5 = r1.isAppInstalled(r0)
-            if (r5 != 0) goto L_0x0557
-            r18.openMusic()
+            if (r5 != 0) goto L_0x0576
+            r19.openMusic()
             return
-        L_0x0557:
+        L_0x0576:
             r1.openSourceMode(r4)
             r1.openApp(r0)
-            goto L_0x0571
-        L_0x055e:
+            goto L_0x0590
+        L_0x057d:
             java.lang.String r0 = "app.close"
             boolean r0 = r0.equals(r3)
-            if (r0 == 0) goto L_0x0571
+            if (r0 == 0) goto L_0x0590
             android.os.Bundle r0 = r2.bundle
             java.lang.String r4 = "package"
             java.lang.String r0 = r0.getString(r4)
             r1.closeApp(r0)
-        L_0x0571:
+        L_0x0590:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.core.CenterControlImpl.handle(com.wits.pms.bean.TxzMessage):void");
@@ -973,7 +984,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     public boolean isUsingCarPlay() {
-        return SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1");
+        return SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_AIRPLAY_CONNECT).equals("1");
     }
 
     public boolean isUsingUsbCarPlay() {
@@ -981,11 +992,11 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     /* JADX WARNING: Can't fix incorrect switch cases order */
+    /* JADX WARNING: Code restructure failed: missing block: B:122:0x025d, code lost:
+        if (r0.equals("ACTION_ZJ_IPODFOUND") != false) goto L_0x0289;
+     */
     /* JADX WARNING: Code restructure failed: missing block: B:20:0x0050, code lost:
         if (r0.equals("ENTER") != false) goto L_0x007c;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:86:0x01bf, code lost:
-        if (r0.equals("ACTION_ZJ_IPODFOUND") != false) goto L_0x01eb;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void handle(com.wits.pms.bean.ZlinkMessage r9) {
@@ -998,7 +1009,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             r4 = -1
             r5 = 1
             r6 = 0
-            if (r0 == 0) goto L_0x01ab
+            if (r0 == 0) goto L_0x0249
             java.lang.String r0 = r9.status
             int r7 = r0.hashCode()
             switch(r7) {
@@ -1079,7 +1090,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             r1 = r4
         L_0x007c:
             switch(r1) {
-                case 0: goto L_0x0166;
+                case 0: goto L_0x01b6;
                 case 1: goto L_0x011b;
                 case 2: goto L_0x0112;
                 case 3: goto L_0x0109;
@@ -1092,17 +1103,17 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                 default: goto L_0x007f;
             }
         L_0x007f:
-            goto L_0x01a9
+            goto L_0x0247
         L_0x0081:
             java.lang.String r0 = "CenterControl"
             java.lang.String r1 = "handle  SWITCHHUB"
             android.util.Log.d(r0, r1)
-            goto L_0x01a9
+            goto L_0x0247
         L_0x008a:
             java.lang.String r0 = "CenterControl"
             java.lang.String r1 = "handle  SWITCHOTG"
             android.util.Log.d(r0, r1)
-            goto L_0x01a9
+            goto L_0x0247
         L_0x0093:
             java.lang.String r0 = "CenterControl"
             java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ RemoteException -> 0x00c3 }
@@ -1123,11 +1134,11 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             java.lang.String r0 = "vendor.wits.zlink.call"
             java.lang.String r1 = "0"
             com.wits.pms.utils.SystemProperties.set(r0, r1)     // Catch:{ RemoteException -> 0x00c3 }
-            goto L_0x01a9
+            goto L_0x0247
         L_0x00c3:
             r0 = move-exception
             r0.printStackTrace()
-            goto L_0x01a9
+            goto L_0x0247
         L_0x00c9:
             java.lang.String r0 = "systemMode"
             int r0 = com.wits.pms.statuscontrol.PowerManagerApp.getStatusInt(r0)     // Catch:{ RemoteException -> 0x00ea }
@@ -1149,27 +1160,27 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             java.lang.String r0 = "vendor.wits.zlink.call"
             java.lang.String r1 = "1"
             com.wits.pms.utils.SystemProperties.set(r0, r1)
-            goto L_0x01a9
+            goto L_0x0247
         L_0x00f7:
             java.lang.String r0 = "CenterControl"
             java.lang.String r1 = "handle  MAIN_PAGE_HIDDEN"
             android.util.Log.d(r0, r1)
-            goto L_0x01a9
+            goto L_0x0247
         L_0x0100:
             java.lang.String r0 = "CenterControl"
             java.lang.String r1 = "handle  MAIN_PAGE_SHOW"
             android.util.Log.d(r0, r1)
-            goto L_0x01a9
+            goto L_0x0247
         L_0x0109:
             java.lang.String r0 = "CenterControl"
             java.lang.String r1 = "handle  EXIT"
             android.util.Log.d(r0, r1)
-            goto L_0x01a9
+            goto L_0x0247
         L_0x0112:
             java.lang.String r0 = "CenterControl"
             java.lang.String r1 = "handle  ENTER"
             android.util.Log.d(r0, r1)
-            goto L_0x01a9
+            goto L_0x0247
         L_0x011b:
             android.os.Bundle r0 = r9.bundle
             java.lang.String r1 = "phoneMode"
@@ -1191,20 +1202,57 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             com.wits.pms.utils.SystemProperties.set(r1, r2)
             r8.openBluetooth(r6)
         L_0x014d:
+            if (r0 == 0) goto L_0x0169
+            java.lang.String r1 = "airplay_wired"
+            boolean r1 = r0.equals(r1)
+            if (r1 != 0) goto L_0x015f
+            java.lang.String r1 = "airplay_wireless"
+            boolean r1 = r0.equals(r1)
+            if (r1 == 0) goto L_0x0169
+        L_0x015f:
+            java.lang.String r1 = "vendor.wits.airplay.connected"
+            java.lang.String r2 = "0"
+            com.wits.pms.utils.SystemProperties.set(r1, r2)
+            r8.openBluetooth(r6)
+        L_0x0169:
+            if (r0 == 0) goto L_0x0182
+            java.lang.String r1 = "auto_wired"
+            boolean r1 = r0.equals(r1)
+            if (r1 != 0) goto L_0x017b
+            java.lang.String r1 = "auto_wireless"
+            boolean r1 = r0.equals(r1)
+            if (r1 == 0) goto L_0x0182
+        L_0x017b:
+            java.lang.String r1 = "vendor.wits.androidAuto.connected"
+            java.lang.String r2 = "0"
+            com.wits.pms.utils.SystemProperties.set(r1, r2)
+        L_0x0182:
+            if (r0 == 0) goto L_0x019b
+            java.lang.String r1 = "android_mirror_wired"
+            boolean r1 = r0.equals(r1)
+            if (r1 != 0) goto L_0x0194
+            java.lang.String r1 = "android_mirror_wireless"
+            boolean r1 = r0.equals(r1)
+            if (r1 == 0) goto L_0x019b
+        L_0x0194:
+            java.lang.String r1 = "vendor.wits.androidMirror.connected"
+            java.lang.String r2 = "0"
+            com.wits.pms.utils.SystemProperties.set(r1, r2)
+        L_0x019b:
             java.lang.String r1 = "Support_TXZ"
-            int r1 = com.wits.pms.statuscontrol.PowerManagerApp.getSettingsInt(r1)     // Catch:{ Exception -> 0x0161 }
-            if (r1 == 0) goto L_0x0160
+            int r1 = com.wits.pms.statuscontrol.PowerManagerApp.getSettingsInt(r1)     // Catch:{ Exception -> 0x01b0 }
+            if (r1 == 0) goto L_0x01ae
             java.lang.String r2 = "systemMode"
-            int r2 = com.wits.pms.statuscontrol.PowerManagerApp.getStatusInt(r2)     // Catch:{ Exception -> 0x0161 }
-            if (r2 != r5) goto L_0x0160
-            r8.setTxzSleep(r6)     // Catch:{ Exception -> 0x0161 }
-        L_0x0160:
-            goto L_0x01a9
-        L_0x0161:
+            int r2 = com.wits.pms.statuscontrol.PowerManagerApp.getStatusInt(r2)     // Catch:{ Exception -> 0x01b0 }
+            if (r2 != r5) goto L_0x01ae
+            r8.setTxzSleep(r6)     // Catch:{ Exception -> 0x01b0 }
+        L_0x01ae:
+            goto L_0x0247
+        L_0x01b0:
             r1 = move-exception
             r1.printStackTrace()
-            goto L_0x01a9
-        L_0x0166:
+            goto L_0x0247
+        L_0x01b6:
             android.os.Bundle r0 = r9.bundle
             java.lang.String r1 = "phoneMode"
             java.lang.String r0 = r0.getString(r1)
@@ -1216,98 +1264,135 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             r2.append(r0)
             java.lang.String r2 = r2.toString()
             android.util.Log.d(r1, r2)
-            if (r0 == 0) goto L_0x0198
+            if (r0 == 0) goto L_0x01e8
             java.lang.String r1 = "carplay_wireless"
             boolean r1 = r0.equals(r1)
-            if (r1 == 0) goto L_0x0198
+            if (r1 == 0) goto L_0x01e8
             java.lang.String r1 = "vendor.wits.zlink.connected"
             java.lang.String r2 = "1"
             com.wits.pms.utils.SystemProperties.set(r1, r2)
             r8.closeBluetooth()
-        L_0x0198:
+        L_0x01e8:
+            if (r0 == 0) goto L_0x0204
+            java.lang.String r1 = "airplay_wired"
+            boolean r1 = r0.equals(r1)
+            if (r1 != 0) goto L_0x01fa
+            java.lang.String r1 = "airplay_wireless"
+            boolean r1 = r0.equals(r1)
+            if (r1 == 0) goto L_0x0204
+        L_0x01fa:
+            java.lang.String r1 = "vendor.wits.airplay.connected"
+            java.lang.String r2 = "1"
+            com.wits.pms.utils.SystemProperties.set(r1, r2)
+            r8.closeBluetooth()
+        L_0x0204:
+            if (r0 == 0) goto L_0x021d
+            java.lang.String r1 = "auto_wired"
+            boolean r1 = r0.equals(r1)
+            if (r1 != 0) goto L_0x0216
+            java.lang.String r1 = "auto_wireless"
+            boolean r1 = r0.equals(r1)
+            if (r1 == 0) goto L_0x021d
+        L_0x0216:
+            java.lang.String r1 = "vendor.wits.androidAuto.connected"
+            java.lang.String r2 = "1"
+            com.wits.pms.utils.SystemProperties.set(r1, r2)
+        L_0x021d:
+            if (r0 == 0) goto L_0x0236
+            java.lang.String r1 = "android_mirror_wired"
+            boolean r1 = r0.equals(r1)
+            if (r1 != 0) goto L_0x022f
+            java.lang.String r1 = "android_mirror_wireless"
+            boolean r1 = r0.equals(r1)
+            if (r1 == 0) goto L_0x0236
+        L_0x022f:
+            java.lang.String r1 = "vendor.wits.androidMirror.connected"
+            java.lang.String r2 = "1"
+            com.wits.pms.utils.SystemProperties.set(r1, r2)
+        L_0x0236:
             java.lang.String r1 = "Support_TXZ"
-            int r1 = com.wits.pms.statuscontrol.PowerManagerApp.getSettingsInt(r1)     // Catch:{ Exception -> 0x01a4 }
-            if (r1 == 0) goto L_0x01a3
-            r8.setTxzSleep(r5)     // Catch:{ Exception -> 0x01a4 }
-        L_0x01a3:
-            goto L_0x01a9
-        L_0x01a4:
+            int r1 = com.wits.pms.statuscontrol.PowerManagerApp.getSettingsInt(r1)     // Catch:{ Exception -> 0x0242 }
+            if (r1 == 0) goto L_0x0241
+            r8.setTxzSleep(r5)     // Catch:{ Exception -> 0x0242 }
+        L_0x0241:
+            goto L_0x0247
+        L_0x0242:
             r1 = move-exception
             r1.printStackTrace()
-        L_0x01a9:
-            goto L_0x0208
-        L_0x01ab:
+        L_0x0247:
+            goto L_0x02a6
+        L_0x0249:
             java.lang.String r0 = r9.command
-            if (r0 == 0) goto L_0x0208
+            if (r0 == 0) goto L_0x02a6
             java.lang.String r0 = r9.command
             int r7 = r0.hashCode()
             switch(r7) {
-                case -2126047073: goto L_0x01e0;
-                case -1482963131: goto L_0x01d6;
-                case -150661894: goto L_0x01cc;
-                case 871291637: goto L_0x01c2;
-                case 1920379072: goto L_0x01b9;
-                default: goto L_0x01b8;
+                case -2126047073: goto L_0x027e;
+                case -1482963131: goto L_0x0274;
+                case -150661894: goto L_0x026a;
+                case 871291637: goto L_0x0260;
+                case 1920379072: goto L_0x0257;
+                default: goto L_0x0256;
             }
-        L_0x01b8:
-            goto L_0x01ea
-        L_0x01b9:
+        L_0x0256:
+            goto L_0x0288
+        L_0x0257:
             java.lang.String r2 = "ACTION_ZJ_IPODFOUND"
             boolean r0 = r0.equals(r2)
-            if (r0 == 0) goto L_0x01ea
-            goto L_0x01eb
-        L_0x01c2:
+            if (r0 == 0) goto L_0x0288
+            goto L_0x0289
+        L_0x0260:
             java.lang.String r1 = "REQ_OS_AUDIO_FOCUS"
             boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x01ea
+            if (r0 == 0) goto L_0x0288
             r1 = r6
-            goto L_0x01eb
-        L_0x01cc:
+            goto L_0x0289
+        L_0x026a:
             java.lang.String r1 = "ACTION_ZJ_PHONEFOUND"
             boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x01ea
+            if (r0 == 0) goto L_0x0288
             r1 = r5
-            goto L_0x01eb
-        L_0x01d6:
+            goto L_0x0289
+        L_0x0274:
             java.lang.String r1 = "CMD_MIC_START"
             boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x01ea
+            if (r0 == 0) goto L_0x0288
             r1 = r2
-            goto L_0x01eb
-        L_0x01e0:
+            goto L_0x0289
+        L_0x027e:
             java.lang.String r1 = "CMD_MIC_STOP"
             boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x01ea
+            if (r0 == 0) goto L_0x0288
             r1 = r3
-            goto L_0x01eb
-        L_0x01ea:
+            goto L_0x0289
+        L_0x0288:
             r1 = r4
-        L_0x01eb:
+        L_0x0289:
             switch(r1) {
-                case 0: goto L_0x0207;
-                case 1: goto L_0x0206;
-                case 2: goto L_0x0205;
-                case 3: goto L_0x01ef;
-                default: goto L_0x01ee;
+                case 0: goto L_0x02a5;
+                case 1: goto L_0x02a4;
+                case 2: goto L_0x02a3;
+                case 3: goto L_0x028d;
+                default: goto L_0x028c;
             }
-        L_0x01ee:
-            goto L_0x0208
-        L_0x01ef:
+        L_0x028c:
+            goto L_0x02a6
+        L_0x028d:
             java.lang.String r0 = "vendor.wits.zlink.call"
             java.lang.String r0 = com.wits.pms.utils.SystemProperties.get(r0)
             java.lang.String r1 = "1"
             boolean r0 = r0.equals(r1)
-            if (r0 == 0) goto L_0x0208
+            if (r0 == 0) goto L_0x02a6
             java.lang.String r0 = "vendor.wits.zlink.call"
             java.lang.String r1 = "2"
             com.wits.pms.utils.SystemProperties.set(r0, r1)
-            goto L_0x0208
-        L_0x0205:
-            goto L_0x0208
-        L_0x0206:
-            goto L_0x0208
-        L_0x0207:
-        L_0x0208:
+            goto L_0x02a6
+        L_0x02a3:
+            goto L_0x02a6
+        L_0x02a4:
+            goto L_0x02a6
+        L_0x02a5:
+        L_0x02a6:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.core.CenterControlImpl.handle(com.wits.pms.bean.ZlinkMessage):void");
@@ -1547,12 +1632,9 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     public void kuWoMusicPause() {
-        int pid = AmsUtil.getPid("cn.kuwo.kwmusiccar");
-        Log.d(TAG, "kuWoMusicPause  pid = " + pid);
-        if (pid != -1) {
+        if (KswSettings.getSettings().getSettingsString("currentMediaPkg").contains("kwmusiccar")) {
             KeyUtils.pressKey(127);
         }
-        KeyUtils.pressKey(127);
     }
 
     public void txzMusicPlay(boolean coldBoot) {
@@ -1582,6 +1664,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     public void stopMedia() {
+        stopZlinkMusic();
         CenterCallBackImpl.getImpl(this.mContext).sendBroadCast(new TxzMessage(2062, "mcu.open", (Bundle) null));
         this.mContext.sendBroadcast(new Intent("mcu.car_mode.open"));
         this.mContext.sendBroadcast(new Intent("com.android.minwin.clos"));
@@ -1591,12 +1674,18 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     private void stopMusic() {
+        Log.d(TAG, "stopMusic");
         KeyUtils.pressKey(86);
     }
 
     public void stopZlinkMusic() {
         Log.d(TAG, "stopZlinkMusic");
-        if (SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1")) {
+        if (Build.VERSION.RELEASE.equals("11")) {
+            Bundle bundle = new Bundle();
+            bundle.putString("command", "REQ_SPEC_FUNC_CMD");
+            bundle.putInt("specFuncCode", 127);
+            new ZlinkMessage(ZlinkMessage.ZLINK_NORMAL_ACTION, "REQ_SPEC_FUNC_CMD", bundle).sendBroadCast(this.mContext);
+        } else if (SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1")) {
             new ZlinkMessage(ZlinkMessage.ZLINK_POWER_OFF_ACTION).sendBroadCast(this.mContext);
         }
     }
@@ -1679,6 +1768,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     public void backToHome() {
+        Log.d(TAG, "backToHome");
         KeyUtils.pressKey(86);
         try {
             String naviApp = Settings.System.getString(this.mContext.getContentResolver(), "NaviApp");
@@ -1813,11 +1903,8 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             } catch (RemoteException e3) {
             }
         }
-        String topApp = SystemStatusControl.getStatus().topApp;
+        String str = SystemStatusControl.getStatus().topApp;
         openSource(nextMode);
-        if (nextMode != 2 && !topApp.equals("com.suding.speedplay")) {
-            killApp(topApp);
-        }
     }
 
     private void killApp(String pkgName) {
@@ -1913,7 +2000,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     public static /* synthetic */ void lambda$openBluetooth$2(CenterControlImpl centerControlImpl, boolean open) {
-        if (!open || !SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1") || !SystemProperties.get(AutoKitMessage.AUTOBOX_CONNECT).equals("1")) {
+        if (!open || !SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1") || !SystemProperties.get(AutoKitMessage.AUTOBOX_CONNECT).equals("1") || !"true".equals(SystemProperties.get("persist.sys.hicar_connect")) || !SystemProperties.get(ZlinkMessage.ZLINK_AIRPLAY_CONNECT).equals("1")) {
             Settings.System.putInt(centerControlImpl.mContext.getContentResolver(), "btSwitch", 1);
         }
         if (!WitsCommand.sendCommandGetResult(3, 107, open ? "true" : "false")) {
@@ -1992,6 +2079,13 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                 return true;
             } else if (subCommand == 300) {
                 clearMemory();
+            } else if (subCommand == 699) {
+                try {
+                    McuStatus.KswMcuMsg kswMcuMsg = McuStatus.KswMcuMsg.getMsgFormJson(witsCommand.getJsonArg());
+                    KswMcuSender.getSender().sendMessage(kswMcuMsg.cmdType, kswMcuMsg.data);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else if (subCommand == 801) {
                 sendBenzControlData(McuStatus.BenzData.getStatusFromJson(witsCommand.getJsonArg()));
                 return true;
@@ -2117,14 +2211,14 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                                         exitSource(Integer.parseInt(jsonArg));
                                     }
                                     return true;
-                                } catch (Exception e) {
+                                } catch (Exception e2) {
                                     return false;
                                 }
                             case 604:
                                 try {
                                     openSourceMode(Integer.parseInt(witsCommand.getJsonArg()));
                                     return true;
-                                } catch (Exception e2) {
+                                } catch (Exception e3) {
                                     return false;
                                 }
                             case 605:
@@ -2160,12 +2254,13 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                                 try {
                                     String[] data = witsCommand.getJsonArg().split(SmsManager.REGEX_PREFIX_DELIMITER);
                                     sendAirControl(Integer.parseInt(data[0]), Integer.parseInt(data[1]));
-                                } catch (Exception e3) {
-                                    Log.i(TAG, "error AIRCON_CONTROL", e3);
+                                } catch (Exception e4) {
+                                    Log.i(TAG, "error AIRCON_CONTROL", e4);
                                 }
                                 return true;
                             case 613:
                                 KswMcuSender.getSender().sendMessage(104, new byte[]{10, 0});
+                                KswMcuSender.getSender().sendMessage(KswMessage.obtainKswMcuMsg(11));
                                 return true;
                         }
                 }
@@ -2174,12 +2269,21 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             }
         } else if (witsCommand.getCommand() == 5) {
             McuCommandListener.handleCommand(witsCommand);
+        } else if (witsCommand.getCommand() == 100) {
+            final TouchControl touchControl = new TouchControl(this.mContext);
+            new Thread() {
+                public void run() {
+                    touchControl.opPointerEvent(0, 0, 0);
+                    touchControl.opPointerEvent(0, 0, 1);
+                }
+            }.start();
         }
         return false;
     }
 
     private void sendAirControl(int data1, int data2) {
         KswMcuSender.getSender().sendMessage(122, new byte[]{(byte) data1, (byte) data2});
+        KswMcuSender.getSender().sendMessageDelay(122, new byte[]{0, 0}, 200);
     }
 
     public void clearMemory() {
@@ -2311,7 +2415,72 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                     KswMcuLogic.getTestMcu().getListener().onMcuMessage(new KswMessage(31, new byte[]{1, 2, 41, BluetoothHidDevice.ERROR_RSP_UNKNOWN, 4}));
                     return;
                 case 5005:
-                    KswMcuLogic.getTestMcu().getListener().onMcuMessage(new KswMessage(31, new byte[]{WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK, 3, 6, 0, 0, 3, 22}));
+                    final KswMcuListener listener = KswMcuLogic.getTestMcu().getListener();
+                    listener.onMcuMessage(new KswMessage(31, new byte[]{17, 3, 6, 0, 0, 3, 22}));
+                    new Thread() {
+                        public void run() {
+                            try {
+                                Thread.sleep(TimedRemoteCaller.DEFAULT_CALL_TIMEOUT_MILLIS);
+                            } catch (InterruptedException e) {
+                            }
+                            try {
+                                byte[] bytes = "渡口".getBytes();
+                                byte[] bytes1 = "蔡琴".getBytes();
+                                byte[] bytes2 = "惠威试音碟3".getBytes();
+                                byte[] bytes3 = "\\音乐 1/20".getBytes();
+                                byte[] data1 = new byte[(bytes.length + 1)];
+                                byte[] data2 = new byte[(bytes1.length + 1)];
+                                byte[] data3 = new byte[(bytes2.length + 1)];
+                                byte[] data4 = new byte[(bytes3.length + 1)];
+                                data1[0] = 1;
+                                data2[0] = 2;
+                                data3[0] = 3;
+                                data4[0] = 4;
+                                System.arraycopy(bytes, 0, data1, 1, bytes.length);
+                                System.arraycopy(bytes1, 0, data2, 1, bytes.length);
+                                System.arraycopy(bytes2, 0, data3, 1, bytes.length);
+                                System.arraycopy(bytes3, 0, data4, 1, bytes.length);
+                                listener.onMcuMessage(new KswMessage(32, data1));
+                                listener.onMcuMessage(new KswMessage(32, data2));
+                                listener.onMcuMessage(new KswMessage(32, data3));
+                                listener.onMcuMessage(new KswMessage(32, data4));
+                            } catch (Exception e2) {
+                            }
+                        }
+                    }.start();
+                    return;
+                case 5006:
+                    McuStatus.MediaStringInfo mediaStringInfo = new McuStatus.MediaStringInfo();
+                    mediaStringInfo.name = "渡口";
+                    mediaStringInfo.artist = "蔡琴";
+                    mediaStringInfo.album = "惠威试音碟3";
+                    mediaStringInfo.folderName = "\\\\音乐 1/20";
+                    PowerManagerApp.setStatusString("mcuMediaStringInfo", new Gson().toJson((Object) mediaStringInfo));
+                    McuStatus.MediaPlayStatus mediaPlayStatus = new McuStatus.MediaPlayStatus();
+                    mediaPlayStatus.ST = true;
+                    mediaPlayStatus.ALS = true;
+                    mediaPlayStatus.SCAN = true;
+                    mediaPlayStatus.status = "WAIT";
+                    mediaPlayStatus.type = 17;
+                    PowerManagerApp.setStatusString("mcuMediaPlayStatus", new Gson().toJson((Object) mediaPlayStatus));
+                    return;
+                case 5007:
+                    McuStatus.MediaStringInfo mediaStringInfoNew = new McuStatus.MediaStringInfo();
+                    mediaStringInfoNew.name = "渡口1";
+                    mediaStringInfoNew.artist = "蔡琴2";
+                    mediaStringInfoNew.album = "惠威试音碟32";
+                    mediaStringInfoNew.folderName = "\\音乐1 1/220";
+                    PowerManagerApp.setStatusString("mcuMediaStringInfo", new Gson().toJson((Object) mediaStringInfoNew));
+                    McuStatus.MediaPlayStatus mediaPlayStatusNew = new McuStatus.MediaPlayStatus();
+                    mediaPlayStatusNew.status = "PLAY";
+                    mediaPlayStatusNew.type = 17;
+                    PowerManagerApp.setStatusString("mcuMediaPlayStatus", new Gson().toJson((Object) mediaPlayStatusNew));
+                    return;
+                case 5211:
+                    this.mAudioManager.setParameters("hfp_enable=true");
+                    return;
+                case 5212:
+                    this.mAudioManager.setParameters("hfp_enable=false");
                     return;
                 default:
                     return;
@@ -2327,7 +2496,14 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     public void openSourceMode(int i) {
-        getMcuSender().sendMessage(103, new byte[]{(byte) i});
+        try {
+            if (PowerManagerApp.getSettingsInt("car_manufacturer") == 4 && PowerManagerApp.getSettingsInt("OEM_FM") == 1 && i == 0) {
+                i = 14;
+            }
+            getMcuSender().sendMessage(103, new byte[]{(byte) i});
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void usbHost(boolean on) {
@@ -2371,6 +2547,20 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                 getMcuSender().sendMessage(103, new byte[]{6});
             }
         } catch (RemoteException e) {
+        }
+    }
+
+    public void openCarFm() {
+        stopMusic();
+        this.mContext.sendBroadcast(new Intent("mcu.car_mode.open"));
+        this.mContext.sendBroadcast(new Intent("com.android.minwin.clos"));
+        ComponentName componentName = new ComponentName("com.wits.ksw", "com.wits.ksw.launcher.view.lexus.OEMFMActivity");
+        Intent carFmIntent = new Intent();
+        carFmIntent.setComponent(componentName);
+        try {
+            getImpl().startAction(carFmIntent);
+        } catch (Exception e) {
+            Log.e(TAG, "open car fm error", e);
         }
     }
 

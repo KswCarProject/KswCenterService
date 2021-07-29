@@ -10,6 +10,7 @@ import android.util.Xml;
 import android.view.InflateException;
 import android.view.ViewGroup;
 import com.android.internal.R;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +41,7 @@ public class TransitionInflater {
             ex.initCause(e);
             throw ex;
         } catch (IOException e2) {
-            InflateException ex2 = new InflateException(parser.getPositionDescription() + ": " + e2.getMessage());
+            InflateException ex2 = new InflateException(parser.getPositionDescription() + PluralRules.KEYWORD_RULE_SEPARATOR + e2.getMessage());
             ex2.initCause(e2);
             throw ex2;
         } catch (Throwable th) {
@@ -60,7 +61,7 @@ public class TransitionInflater {
             ex.initCause(e);
             throw ex;
         } catch (IOException e2) {
-            InflateException ex2 = new InflateException(parser.getPositionDescription() + ": " + e2.getMessage());
+            InflateException ex2 = new InflateException(parser.getPositionDescription() + PluralRules.KEYWORD_RULE_SEPARATOR + e2.getMessage());
             ex2.initCause(e2);
             throw ex2;
         } catch (Throwable th) {

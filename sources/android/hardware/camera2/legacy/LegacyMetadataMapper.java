@@ -116,7 +116,7 @@ public class LegacyMetadataMapper {
         while (!previewSizes.isEmpty()) {
             int index = previewSizes.size() - 1;
             Camera.Size size = previewSizes.get(index);
-            if (Math.abs(jpegAspectRatio - ((((float) size.width) * 1.0f) / ((float) size.height))) < PREVIEW_ASPECT_RATIO_TOLERANCE) {
+            if (Math.abs(jpegAspectRatio - ((((float) size.width) * 1.0f) / ((float) size.height))) < 0.01f) {
                 break;
             }
             previewSizes.remove(index);

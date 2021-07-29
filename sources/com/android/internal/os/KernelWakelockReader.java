@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import android.util.Slog;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.os.KernelWakelockStats;
+import com.ibm.icu.text.DateFormat;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class KernelWakelockReader {
         StrictMode.setThreadPolicyMask(oldMask);
         long readTime = SystemClock.uptimeMillis() - startTime;
         if (readTime > 100) {
-            Slog.w(TAG, "Reading wakelock stats took " + readTime + "ms");
+            Slog.w(TAG, "Reading wakelock stats took " + readTime + DateFormat.MINUTE_SECOND);
         }
         if (len > 0) {
             if (len >= buffer.length) {

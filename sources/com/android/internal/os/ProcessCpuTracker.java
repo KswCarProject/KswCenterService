@@ -14,6 +14,7 @@ import android.util.Slog;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.os.BatteryStatsImpl;
 import com.android.internal.util.FastPrintWriter;
+import com.ibm.icu.text.PluralRules;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -745,7 +746,7 @@ public class ProcessCpuTracker {
             printWriter.print("/");
         }
         printWriter.print(label);
-        printWriter.print(": ");
+        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
         PrintWriter printWriter2 = pw;
         printRatio(printWriter2, (long) i2, (long) totalTime2);
         printWriter.print("% user + ");

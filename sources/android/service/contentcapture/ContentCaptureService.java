@@ -28,6 +28,7 @@ import android.view.contentcapture.IContentCaptureDirectManager;
 import android.view.contentcapture.MainContentCaptureSession;
 import com.android.internal.os.IResultReceiver;
 import com.android.internal.util.function.pooled.PooledLambda;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.List;
@@ -344,7 +345,7 @@ public abstract class ContentCaptureService extends Service {
         if (this.mSessionUids.indexOfKey(sessionId) < 0) {
             if (ContentCaptureHelper.sVerbose) {
                 String str = TAG;
-                Log.v(str, "handleIsRightCallerFor(" + event + "): no session for " + sessionId + ": " + this.mSessionUids);
+                Log.v(str, "handleIsRightCallerFor(" + event + "): no session for " + sessionId + PluralRules.KEYWORD_RULE_SEPARATOR + this.mSessionUids);
             }
             return false;
         }

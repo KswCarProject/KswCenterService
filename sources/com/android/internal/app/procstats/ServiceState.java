@@ -8,6 +8,7 @@ import android.telephony.SmsManager;
 import android.util.Slog;
 import android.util.TimeUtils;
 import android.util.proto.ProtoOutputStream;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 
 public final class ServiceState {
@@ -449,7 +450,7 @@ public final class ServiceState {
                         int printedScreen3 = iscreen;
                         DumpUtils.printMemLabel(printWriter, printedMem != imem ? imem : -1, 0);
                         printedMem = imem;
-                        printWriter.print(": ");
+                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                         TimeUtils.formatDuration(time, printWriter);
                         printWriter.println(running);
                         printedScreen2 = printedScreen3;

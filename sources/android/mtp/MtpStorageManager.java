@@ -4,7 +4,6 @@ import android.media.MediaFile;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.os.FileObserver;
 import android.os.storage.StorageVolume;
-import android.provider.Telephony;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
 import java.io.IOException;
@@ -1243,7 +1242,7 @@ public class MtpStorageManager {
             sb.append(" | ");
             sb.append(obj.isDir() ? "dir" : "obj");
             sb.append(" | ");
-            sb.append(obj.isVisited() ? Telephony.BaseMmsColumns.MMS_VERSION : "nv");
+            sb.append(obj.isVisited() ? "v" : "nv");
             sb.append(" | ");
             sb.append(obj.getState());
             Log.i(str, sb.toString());

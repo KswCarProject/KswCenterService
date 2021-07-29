@@ -1112,7 +1112,7 @@ public class ZenModeConfig implements Parcelable {
     public static CharSequence getFormattedTime(Context context, long time, boolean isSameDay, int userHandle) {
         StringBuilder sb = new StringBuilder();
         sb.append(!isSameDay ? "EEE " : "");
-        sb.append(DateFormat.is24HourFormat(context, userHandle) ? "Hm" : "hma");
+        sb.append(DateFormat.is24HourFormat(context, userHandle) ? com.ibm.icu.text.DateFormat.HOUR24_MINUTE : "hma");
         return DateFormat.format((CharSequence) DateFormat.getBestDateTimePattern(Locale.getDefault(), sb.toString()), time);
     }
 

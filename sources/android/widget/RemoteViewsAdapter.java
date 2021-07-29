@@ -396,7 +396,7 @@ public class RemoteViewsAdapter extends BaseAdapter implements Handler.Callback 
 
         FixedSizeRemoteViewsCache(int maxCacheSize, Configuration configuration) {
             this.mMaxCount = maxCacheSize;
-            this.mMaxCountSlack = Math.round(((float) (this.mMaxCount / 2)) * sMaxCountSlackPercent);
+            this.mMaxCountSlack = Math.round(((float) (this.mMaxCount / 2)) * 0.75f);
             this.mPreloadLowerBound = 0;
             this.mPreloadUpperBound = -1;
             this.mLastRequestedIndex = -1;

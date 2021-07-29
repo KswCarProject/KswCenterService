@@ -5,6 +5,8 @@ import android.os.SystemClock;
 import android.util.Log;
 import com.android.internal.telephony.GsmAlphabet;
 import com.android.internal.util.TrafficStatsConstants;
+import com.ibm.icu.text.Bidi;
+import com.ibm.icu.text.DateFormat;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -87,7 +89,7 @@ public class SntpClient {
             sb.append(roundTripTime);
             sb.append("ms, clock offset: ");
             sb.append(clockOffset);
-            sb.append("ms");
+            sb.append(DateFormat.MINUTE_SECOND);
             Log.d(TAG, sb.toString());
             this.mNtpTime = responseTime + clockOffset;
             this.mNtpTimeReference = responseTicks;
@@ -151,7 +153,7 @@ public class SntpClient {
         byte b1 = buffer[offset + 1];
         byte b2 = buffer[offset + 2];
         byte b3 = buffer[offset + 3];
-        return (((long) ((b0 & 128) == 128 ? (b0 & Byte.MAX_VALUE) + 128 : b0)) << 24) + (((long) ((b1 & 128) == 128 ? (b1 & Byte.MAX_VALUE) + 128 : b1)) << 16) + (((long) ((b2 & 128) == 128 ? (b2 & Byte.MAX_VALUE) + 128 : b2)) << 8) + ((long) ((b3 & 128) == 128 ? 128 + (b3 & Byte.MAX_VALUE) : b3));
+        return (((long) ((b0 & 128) == 128 ? (b0 & Bidi.LEVEL_DEFAULT_RTL) + 128 : b0)) << 24) + (((long) ((b1 & 128) == 128 ? (b1 & Bidi.LEVEL_DEFAULT_RTL) + 128 : b1)) << 16) + (((long) ((b2 & 128) == 128 ? (b2 & Bidi.LEVEL_DEFAULT_RTL) + 128 : b2)) << 8) + ((long) ((b3 & 128) == 128 ? 128 + (b3 & Bidi.LEVEL_DEFAULT_RTL) : b3));
     }
 
     private long readTimeStamp(byte[] buffer, int offset) {

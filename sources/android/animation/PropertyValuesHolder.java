@@ -9,6 +9,7 @@ import android.util.IntProperty;
 import android.util.Log;
 import android.util.PathParser;
 import android.util.Property;
+import com.ibm.icu.text.PluralRules;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -576,7 +577,7 @@ public class PropertyValuesHolder implements Cloneable {
     }
 
     public String toString() {
-        return this.mPropertyName + ": " + this.mKeyframes.toString();
+        return this.mPropertyName + PluralRules.KEYWORD_RULE_SEPARATOR + this.mKeyframes.toString();
     }
 
     static String getMethodName(String prefix, String propertyName) {

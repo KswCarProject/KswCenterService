@@ -53,6 +53,7 @@ import com.android.internal.os.TransferPipe;
 import com.android.internal.util.FastPrintWriter;
 import com.android.internal.util.MemInfoReader;
 import com.android.server.LocalServices;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -1426,7 +1427,7 @@ public class ActivityManager {
                 sb.append(prefix2);
                 sb.append("taskId=");
                 sb.append(this.taskIds[i]);
-                sb.append(": ");
+                sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                 sb.append(this.taskNames[i]);
                 if (this.taskBounds != null) {
                     sb.append(" bounds=");

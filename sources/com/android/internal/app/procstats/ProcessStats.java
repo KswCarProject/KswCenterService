@@ -22,6 +22,7 @@ import android.util.proto.ProtoOutputStream;
 import com.android.internal.app.ProcessMap;
 import com.android.internal.app.procstats.AssociationState;
 import com.android.internal.content.NativeLibraryHelper;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.VMRuntime;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -999,7 +1000,7 @@ public final class ProcessStats implements Parcelable {
         if (readInt == val) {
             return true;
         }
-        this.mReadError = "bad " + what + ": " + got;
+        this.mReadError = "bad " + what + PluralRules.KEYWORD_RULE_SEPARATOR + got;
         return false;
     }
 
@@ -1580,7 +1581,7 @@ public final class ProcessStats implements Parcelable {
                             ip = ip2;
                             pkgMap2 = pkgMap3;
                         }
-                        boolean onlyAssociations2 = onlyAssociations;
+                        boolean ip3 = onlyAssociations;
                         if (NPROCS2 > 0 || NSRVS4 > 0 || NASCS2 > 0) {
                             if (!printedHeader2) {
                                 if (sepNeeded) {
@@ -1600,7 +1601,7 @@ public final class ProcessStats implements Parcelable {
                         }
                         boolean sepNeeded4 = sepNeeded;
                         boolean printedHeader3 = printedHeader2;
-                        if ((section != false && true) && !onlyAssociations2) {
+                        if ((section != false && true) && !ip3) {
                             if (!dumpSummary) {
                                 sepNeeded2 = sepNeeded4;
                                 NPROCS = NPROCS2;
@@ -1706,7 +1707,7 @@ public final class ProcessStats implements Parcelable {
                             pkgMap = pkgMap2;
                             pkgName = pkgName2;
                         }
-                        if ((section & 4) == 0 || onlyAssociations2) {
+                        if ((section & 4) == 0 || ip3) {
                         } else {
                             int isvc2 = 0;
                             while (true) {
@@ -1752,7 +1753,7 @@ public final class ProcessStats implements Parcelable {
                                     break;
                                 }
                                 AssociationState asc = pkgState.mAssociations.valueAt(iasc4);
-                                if (pkgMatch || str2.equals(asc.getProcessName()) || (onlyAssociations2 && asc.hasProcessOrPackage(str2))) {
+                                if (pkgMatch || str2.equals(asc.getProcessName()) || (ip3 && asc.hasProcessOrPackage(str2))) {
                                     if (!activeOnly || asc.isInUse()) {
                                         if (z2) {
                                             printWriter2.print("      Association ");
@@ -1765,7 +1766,7 @@ public final class ProcessStats implements Parcelable {
                                         printWriter2.println(asc.getProcessName());
                                         iasc = iasc4;
                                         AssociationState associationState = asc;
-                                        asc.dumpStats(pw, "        ", "          ", "    ", now, totalTime, onlyAssociations2 ? str2 : null, dumpDetails, dumpAll);
+                                        asc.dumpStats(pw, "        ", "          ", "    ", now, totalTime, ip3 ? str2 : null, dumpDetails, dumpAll);
                                         iasc3 = iasc + 1;
                                     } else {
                                         printWriter2.print("      (Not active association: ");
@@ -1810,10 +1811,10 @@ public final class ProcessStats implements Parcelable {
             int numShownProcs = 0;
             int numTotalProcs = 0;
             boolean sepNeeded5 = false;
-            int ip3 = 0;
-            while (ip3 < procMap.size()) {
-                String procName = procMap.keyAt(ip3);
-                SparseArray<ProcessState> uids5 = procMap.valueAt(ip3);
+            int ip4 = 0;
+            while (ip4 < procMap.size()) {
+                String procName = procMap.keyAt(ip4);
+                SparseArray<ProcessState> uids5 = procMap.valueAt(ip4);
                 boolean printedHeader4 = sepNeeded5;
                 boolean sepNeeded6 = sepNeeded;
                 int numShownProcs2 = numShownProcs;
@@ -1865,7 +1866,7 @@ public final class ProcessStats implements Parcelable {
                     numTotalProcs = numTotalProcs2;
                     uids5 = uids;
                 }
-                ip3++;
+                ip4++;
                 numShownProcs = numShownProcs2;
                 sepNeeded = sepNeeded6;
                 sepNeeded5 = printedHeader4;
@@ -1896,7 +1897,7 @@ public final class ProcessStats implements Parcelable {
                     AssociationState asc2 = src.getAssociationState();
                     printWriter2.print("  #");
                     printWriter2.print(i5);
-                    printWriter2.print(": ");
+                    printWriter2.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                     printWriter2.print(asc2.getProcessName());
                     printWriter2.print("/");
                     UserHandle.formatUid(printWriter2, asc2.getUid());
@@ -1924,7 +1925,7 @@ public final class ProcessStats implements Parcelable {
                     if (src.mActiveCount > 0) {
                         printWriter2.print("    Active count ");
                         printWriter2.print(src.mActiveCount);
-                        printWriter2.print(": ");
+                        printWriter2.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                         asc2.dumpActiveDurationSummary(pw, src, totalTime, now, dumpAll);
                         pw.println();
                     }
@@ -1993,7 +1994,7 @@ public final class ProcessStats implements Parcelable {
         long mem = (long) ((1024.0d * memWeight) / ((double) totalTime));
         pw.print(prefix);
         pw.print(label);
-        pw.print(": ");
+        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
         DebugUtils.printSizeValue(pw, mem);
         pw.print(" (");
         pw.print(samples);

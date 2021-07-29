@@ -38,6 +38,7 @@ import com.android.internal.R;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.os.RuntimeInit;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.DexFile;
 import dalvik.system.VMRuntime;
 import dalvik.system.ZygoteHooks;
@@ -229,7 +230,7 @@ public class ZygoteInit {
                 ClassNotFoundException classNotFoundException = e;
                 Log.w(TAG, "Class not found for preloading: " + line);
             } catch (UnsatisfiedLinkError e2) {
-                Log.w(TAG, "Problem preloading " + line + ": " + e2);
+                Log.w(TAG, "Problem preloading " + line + PluralRules.KEYWORD_RULE_SEPARATOR + e2);
             } catch (IOException e3) {
                 try {
                     Log.e(TAG, "Error reading /system/etc/preloaded-classes.", e3);

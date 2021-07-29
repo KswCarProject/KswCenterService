@@ -126,7 +126,7 @@ public class AutoText {
         XmlResourceParser parser = r.getXml(R.xml.autotext);
         StringBuilder right = new StringBuilder(RIGHT);
         this.mTrie = new char[14337];
-        this.mTrie[0] = TRIE_NULL;
+        this.mTrie[0] = 65535;
         this.mTrieUsed = 1;
         try {
             XmlUtils.beginDocument(parser, "words");
@@ -189,9 +189,9 @@ public class AutoText {
             if (!found) {
                 this.mTrie[herep2] = newTrieNode();
                 this.mTrie[this.mTrie[herep2] + 0] = c;
-                this.mTrie[this.mTrie[herep2] + 1] = TRIE_NULL;
-                this.mTrie[this.mTrie[herep2] + 3] = TRIE_NULL;
-                this.mTrie[this.mTrie[herep2] + 2] = TRIE_NULL;
+                this.mTrie[this.mTrie[herep2] + 1] = 65535;
+                this.mTrie[this.mTrie[herep2] + 3] = 65535;
+                this.mTrie[this.mTrie[herep2] + 2] = 65535;
                 if (i == slen - 1) {
                     this.mTrie[this.mTrie[herep2] + 1] = off;
                     return;

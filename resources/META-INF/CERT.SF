@@ -1,13 +1,13 @@
 Signature-Version: 1.0
 Created-By: 1.0 (Android SignApk)
-SHA-256-Digest-Manifest: a3wPgXQaIhfwqajtgGSgUA2vUoBDM1TMO8m9TPAUPqc=
+SHA-256-Digest-Manifest: AS1kAJxhn5Tnz86/DX797R1UbNq42KOwoV730H2+NQE=
 X-Android-APK-Signed: 2, 3
 
 Name: AndroidManifest.xml
 SHA-256-Digest: eH0J0BVwLs1EQh64/AavjHJGymx46UQqQ9kXekCGMZc=
 
 Name: classes.dex
-SHA-256-Digest: buU+z+sjK27bLstmeqnuC9nFoba28J8h+NqVsaCtvzo=
+SHA-256-Digest: VWj+qHMkdgIOoxm6at/QU7TfrUp18juxY6jM0bdtneE=
 
 Name: classes2.dex
 SHA-256-Digest: oDp19vSvWvBOC32XnWy63iFUfCyhBcqOcXZVvDnH728=
@@ -16,10 +16,13 @@ Name: classes3.dex
 SHA-256-Digest: O6Fh9qOdVaZK4Fn2fv/eeQZOi8vcRAHCyjPYsJwBCVc=
 
 Name: classes4.dex
-SHA-256-Digest: GTRcG+hkUvEboBU9Wj4uvzzK5NfpUC+defZcd8szes8=
+SHA-256-Digest: hDIRx3Mp2c7GjcJyc7dtGNkk5ddhpZVnL5a2XiXrOcg=
+
+Name: classes5.dex
+SHA-256-Digest: IyWvPTKxolBynwXY6x0QtxYbAKdb93Q6W4P4xfAOsXA=
 
 Name: lib/arm64-v8a/libserial_port.so
-SHA-256-Digest: q3L7pzlJoufJc/BTpoYXaXL/+3nFIKZSMMl7byttS74=
+SHA-256-Digest: LnJ/vX2Dg5fu/0MbRtui9od+EIYgFTr1u2wu6cUtkP0=
 
 Name: res/anim/abc_fade_in.xml
 SHA-256-Digest: bHDC7/Wyy/ImRgYsm3Ne9JvZxe8DECbLe5IHXzIzdNQ=
@@ -1204,6 +1207,9 @@ SHA-256-Digest: ZT+j1pimBcT/IDy/pxsXfw4AukX6at+Mko9oDDOdlBk=
 Name: res/mipmap-mdpi-v4/minute.png
 SHA-256-Digest: 1dCR3Hgf+fkT9AadsmNtRNi5wyEvm6o3ZUUtryk64lI=
 
+Name: res/mipmap-mdpi-v4/pointer.png
+SHA-256-Digest: sSBODT89gdlcMu9qrw0aQdwEGYLoEY99bDhCpmY7U8o=
+
 Name: res/mipmap-mdpi-v4/second.png
 SHA-256-Digest: Dfx354hoxTOFmCE0F0K2k2qEhDpwvNBg2ZzjwSQq/nw=
 
@@ -1226,5 +1232,5 @@ Name: res/mipmap-xxxhdpi-v4/ic_launcher_round.png
 SHA-256-Digest: Zq2BmzxxhzB7TLcc9JHpur1n+GMNCieaorRDXZx8/ys=
 
 Name: resources.arsc
-SHA-256-Digest: X0+Y9MxbVsmIb0VvaDljk9hextZRxu0OkTmlsJMZG7U=
+SHA-256-Digest: 7vsIwiGgtqMg0HyK1i9jTPUPKnlsbCZnhKuySnyZvhc=
 

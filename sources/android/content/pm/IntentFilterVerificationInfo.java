@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 import com.android.internal.util.XmlUtils;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -103,7 +104,7 @@ public final class IntentFilterVerificationInfo implements Parcelable {
         if (value != null) {
             return value;
         }
-        Log.w(TAG, "Missing element under " + TAG + ": " + attribute + " at " + parser.getPositionDescription());
+        Log.w(TAG, "Missing element under " + TAG + PluralRules.KEYWORD_RULE_SEPARATOR + attribute + " at " + parser.getPositionDescription());
         return defaultValue;
     }
 
@@ -113,7 +114,7 @@ public final class IntentFilterVerificationInfo implements Parcelable {
         if (!TextUtils.isEmpty(value)) {
             return Integer.parseInt(value);
         }
-        Log.w(TAG, "Missing element under " + TAG + ": " + attribute + " at " + parser.getPositionDescription());
+        Log.w(TAG, "Missing element under " + TAG + PluralRules.KEYWORD_RULE_SEPARATOR + attribute + " at " + parser.getPositionDescription());
         return defaultValue;
     }
 

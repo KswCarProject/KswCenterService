@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public abstract class ViewGroup extends View implements ViewParent, ViewManager {
     private static final int ARRAY_CAPACITY_INCREMENT = 12;
@@ -427,7 +428,7 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
                     this.bottomMargin = a.getDimensionPixelSize(6, 0);
                 }
                 if (isMarginRelative()) {
-                    this.mMarginFlags = (byte) (this.mMarginFlags | 32);
+                    this.mMarginFlags = (byte) (this.mMarginFlags | HebrewProber.SPACE);
                 }
             }
             boolean hasRtlSupport = c.getApplicationInfo().hasRtlSupport();
@@ -490,7 +491,7 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
             this.mMarginFlags = (byte) (this.mMarginFlags & -5);
             this.mMarginFlags = (byte) (this.mMarginFlags & -9);
             if (isMarginRelative()) {
-                this.mMarginFlags = (byte) (this.mMarginFlags | 32);
+                this.mMarginFlags = (byte) (this.mMarginFlags | HebrewProber.SPACE);
             } else {
                 this.mMarginFlags = (byte) (this.mMarginFlags & -33);
             }
@@ -502,19 +503,19 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
             this.topMargin = top;
             this.endMargin = end;
             this.bottomMargin = bottom;
-            this.mMarginFlags = (byte) (this.mMarginFlags | 32);
+            this.mMarginFlags = (byte) (this.mMarginFlags | HebrewProber.SPACE);
         }
 
         public void setMarginStart(int start) {
             this.startMargin = start;
-            this.mMarginFlags = (byte) (this.mMarginFlags | 32);
+            this.mMarginFlags = (byte) (this.mMarginFlags | HebrewProber.SPACE);
         }
 
         public int getMarginStart() {
             if (this.startMargin != Integer.MIN_VALUE) {
                 return this.startMargin;
             }
-            if ((this.mMarginFlags & 32) == 32) {
+            if ((this.mMarginFlags & HebrewProber.SPACE) == 32) {
                 doResolveMargins();
             }
             if ((this.mMarginFlags & 3) != 1) {
@@ -525,14 +526,14 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
 
         public void setMarginEnd(int end) {
             this.endMargin = end;
-            this.mMarginFlags = (byte) (this.mMarginFlags | 32);
+            this.mMarginFlags = (byte) (this.mMarginFlags | HebrewProber.SPACE);
         }
 
         public int getMarginEnd() {
             if (this.endMargin != Integer.MIN_VALUE) {
                 return this.endMargin;
             }
-            if ((this.mMarginFlags & 32) == 32) {
+            if ((this.mMarginFlags & HebrewProber.SPACE) == 32) {
                 doResolveMargins();
             }
             if ((this.mMarginFlags & 3) != 1) {
@@ -550,7 +551,7 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
                 this.mMarginFlags = (byte) (this.mMarginFlags & -4);
                 this.mMarginFlags = (byte) (this.mMarginFlags | (layoutDirection & 3));
                 if (isMarginRelative()) {
-                    this.mMarginFlags = (byte) (this.mMarginFlags | 32);
+                    this.mMarginFlags = (byte) (this.mMarginFlags | HebrewProber.SPACE);
                 } else {
                     this.mMarginFlags = (byte) (this.mMarginFlags & -33);
                 }
@@ -563,7 +564,7 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
 
         public void resolveLayoutDirection(int layoutDirection) {
             setLayoutDirection(layoutDirection);
-            if (isMarginRelative() && (this.mMarginFlags & 32) == 32) {
+            if (isMarginRelative() && (this.mMarginFlags & HebrewProber.SPACE) == 32) {
                 doResolveMargins();
             }
         }
@@ -1758,11 +1759,11 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
         if (!customOrder) {
             return i;
         }
-        int childIndex = getChildDrawingOrder(childrenCount, i);
-        if (childIndex < childrenCount) {
-            return childIndex;
+        int childIndex1 = getChildDrawingOrder(childrenCount, i);
+        if (childIndex1 < childrenCount) {
+            return childIndex1;
         }
-        throw new IndexOutOfBoundsException("getChildDrawingOrder() returned invalid index " + childIndex + " (child count is " + childrenCount + ")");
+        throw new IndexOutOfBoundsException("getChildDrawingOrder() returned invalid index " + childIndex1 + " (child count is " + childrenCount + ")");
     }
 
     /* access modifiers changed from: protected */
@@ -2925,11 +2926,11 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
         } else {
             throw new IllegalStateException("descendant focusability must be one of FOCUS_BEFORE_DESCENDANTS, FOCUS_AFTER_DESCENDANTS, FOCUS_BLOCK_DESCENDANTS but is " + descendantFocusability);
         }
-        boolean result2 = result;
-        if (result2 && !isLayoutValid() && (this.mPrivateFlags & 1) == 0) {
+        boolean took3 = result;
+        if (took3 && !isLayoutValid() && (this.mPrivateFlags & 1) == 0) {
             this.mPrivateFlags |= 1;
         }
-        return result2;
+        return took3;
     }
 
     /* access modifiers changed from: protected */

@@ -3,6 +3,7 @@ package android.media;
 import android.app.backup.FullBackup;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.os.IncidentManager;
+import com.ibm.icu.text.DateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,11 +62,11 @@ final class TtmlUtils {
             String unit = matcher2.group(2);
             if (unit.equals("h")) {
                 value *= 3.6E9d;
-            } else if (unit.equals("m")) {
+            } else if (unit.equals(DateFormat.MINUTE)) {
                 value *= 6.0E7d;
-            } else if (unit.equals("s")) {
+            } else if (unit.equals(DateFormat.SECOND)) {
                 value *= 1000000.0d;
-            } else if (unit.equals("ms")) {
+            } else if (unit.equals(DateFormat.MINUTE_SECOND)) {
                 value *= 1000.0d;
             } else if (unit.equals(FullBackup.FILES_TREE_TOKEN)) {
                 value = (value / ((double) i)) * 1000000.0d;

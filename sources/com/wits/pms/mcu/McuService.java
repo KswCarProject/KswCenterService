@@ -44,8 +44,15 @@ public class McuService extends Service implements McuSender {
     }
 
     public void onCreate() {
+        String serial;
         try {
-            String serial = version.contains("8937") ? "/dev/ttyHSL1" : "/dev/ttyMSM1";
+            if (Build.VERSION.RELEASE.contains("11")) {
+                serial = "/dev/ttyHS1";
+            } else if (version.contains("8937")) {
+                serial = "/dev/ttyHSL1";
+            } else {
+                serial = "/dev/ttyMSM1";
+            }
             Log.d(TAG, "open port   serial = " + serial + "  version = " + version);
             this.mHandler = new Handler(getMainLooper());
             this.mSerialPort = new SerialPort(new File(serial), 115200, 0);

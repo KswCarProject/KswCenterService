@@ -2340,14 +2340,14 @@ public class ListView extends AbsListView {
             }
             nextSelected = i;
         }
-        int listTop2 = nextSelected;
-        if (listTop2 < 0 || listTop2 >= this.mAdapter.getCount()) {
+        int nextSelected2 = nextSelected;
+        if (nextSelected2 < 0 || nextSelected2 >= this.mAdapter.getCount()) {
             return -1;
         }
         if (direction != 130) {
             z = false;
         }
-        return lookForSelectablePosition(listTop2, z);
+        return lookForSelectablePosition(nextSelected2, z);
     }
 
     private boolean arrowScrollImpl(int direction) {

@@ -8,6 +8,7 @@ import android.view.autofill.AutofillId;
 import android.view.autofill.Helper;
 import android.widget.RemoteViews;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -65,7 +66,7 @@ public final class ImageTransformation extends InternalTransformation implements
             Option option = this.mOptions.get(i);
             try {
                 if (option.pattern.matcher(value).matches()) {
-                    Log.d(TAG, "Found match at " + i + ": " + option);
+                    Log.d(TAG, "Found match at " + i + PluralRules.KEYWORD_RULE_SEPARATOR + option);
                     parentTemplate.setImageViewResource(childViewId, option.resId);
                     if (option.contentDescription != null) {
                         parentTemplate.setContentDescription(childViewId, option.contentDescription);
@@ -75,7 +76,7 @@ public final class ImageTransformation extends InternalTransformation implements
                 }
                 i++;
             } catch (Exception e) {
-                Log.w(TAG, "Error matching regex #" + i + "(" + option.pattern + ") on id " + option.resId + ": " + e.getClass());
+                Log.w(TAG, "Error matching regex #" + i + "(" + option.pattern + ") on id " + option.resId + PluralRules.KEYWORD_RULE_SEPARATOR + e.getClass());
                 throw e;
             }
         }

@@ -121,11 +121,6 @@ public interface IAlarmManager extends IInterface {
         /* JADX WARNING: type inference failed for: r0v7, types: [android.app.AlarmManager$AlarmClockInfo] */
         /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
             java.lang.NullPointerException
-            	at jadx.core.dex.instructions.args.InsnArg.wrapInstruction(InsnArg.java:118)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.inline(CodeShrinkVisitor.java:146)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkBlock(CodeShrinkVisitor.java:71)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.shrinkMethod(CodeShrinkVisitor.java:43)
-            	at jadx.core.dex.visitors.shrink.CodeShrinkVisitor.visit(CodeShrinkVisitor.java:35)
             */
         /* JADX WARNING: Multi-variable type inference failed */
         public boolean onTransact(int r30, android.os.Parcel r31, android.os.Parcel r32, int r33) throws android.os.RemoteException {
@@ -381,10 +376,10 @@ public interface IAlarmManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

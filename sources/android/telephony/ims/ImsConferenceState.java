@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.telecom.Log;
+import com.ibm.icu.text.PluralRules;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -100,7 +101,7 @@ public final class ImsConferenceState implements Parcelable {
             sb.append("<");
             for (Map.Entry<String, Bundle> entry : entries) {
                 sb.append(Log.pii(entry.getKey()));
-                sb.append(": ");
+                sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                 Bundle participantData = entry.getValue();
                 for (String key : participantData.keySet()) {
                     sb.append(key);

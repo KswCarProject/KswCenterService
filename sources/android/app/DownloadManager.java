@@ -24,6 +24,7 @@ import android.provider.Settings;
 import android.provider.SettingsStringUtil;
 import android.text.TextUtils;
 import android.util.Pair;
+import com.ibm.icu.text.PluralRules;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -312,7 +313,7 @@ public class DownloadManager {
         private void encodeHttpHeaders(ContentValues values) {
             int index = 0;
             for (Pair<String, String> header : this.mRequestHeaders) {
-                values.put(Downloads.Impl.RequestHeaders.INSERT_KEY_PREFIX + index, ((String) header.first) + ": " + ((String) header.second));
+                values.put(Downloads.Impl.RequestHeaders.INSERT_KEY_PREFIX + index, ((String) header.first) + PluralRules.KEYWORD_RULE_SEPARATOR + ((String) header.second));
                 index++;
             }
         }

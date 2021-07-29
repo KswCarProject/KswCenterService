@@ -1,6 +1,7 @@
 package com.wits.pms.mcu.custom.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -14,12 +15,21 @@ import java.io.File;
 
 public class SplashFlasher {
     public static void check(final Context context, String path) {
+        File vendorBootanimation;
         for (File subFile : new File(path).listFiles()) {
             if (subFile.getName().toLowerCase().equals("oem") && subFile.isDirectory()) {
-                File file = new File(subFile + "/splash.img");
-                if (file.exists() && file.getName().equals("splash.img")) {
-                    Log.i("SplashFlasher", "Checking splash.img try to flash");
-                    flashLogo(file.getAbsolutePath());
+                if (Build.VERSION.RELEASE.equals("11")) {
+                    File file = new File(subFile + "/imagefv.elf");
+                    if (file.exists() && file.getName().equals("imagefv.elf")) {
+                        Log.i("SplashFlasher", "Checking imagefv.elf try to flash");
+                        flashLogo(file.getAbsolutePath());
+                    }
+                } else {
+                    File file2 = new File(subFile + "/splash.img");
+                    if (file2.exists() && file2.getName().equals("splash.img")) {
+                        Log.i("SplashFlasher", "Checking splash.img try to flash");
+                        flashLogo(file2.getAbsolutePath());
+                    }
                 }
             }
         }
@@ -55,7 +65,11 @@ public class SplashFlasher {
         } else {
             Log.i("SplashFlasher", "Checking bootanimation_clear.zip try to clear");
             File cacheBootanimation = new File("/cache/bootanimation.zip");
-            File vendorBootanimation = new File("/mnt/vendor/persist/bootanimation.zip");
+            if (Build.VERSION.RELEASE.contains("11")) {
+                vendorBootanimation = new File("/mnt/vendor/persist/OEM/bootanimation.zip");
+            } else {
+                vendorBootanimation = new File("/mnt/vendor/persist/bootanimation.zip");
+            }
             if (cacheBootanimation.exists()) {
                 Log.d("SplashFlasher", "cache bootanimation delete = " + cacheBootanimation.delete());
             }
@@ -74,6 +88,13 @@ public class SplashFlasher {
     }
 
     public static void flashLogo(String absolutePath) {
+        if (Build.VERSION.RELEASE.equals("11")) {
+            if (absolutePath.contains("splash")) {
+                return;
+            }
+        } else if (absolutePath.contains("imagefv")) {
+            return;
+        }
         SystemProperties.set("persist.splash.path", absolutePath);
         SystemProperties.set("persist.splash.switch", "0");
         SystemProperties.set("persist.splash.switch", "1");

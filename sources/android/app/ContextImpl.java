@@ -62,6 +62,7 @@ import android.view.autofill.AutofillManager;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.util.Preconditions;
+import com.ibm.icu.text.PluralRules;
 import dalvik.system.BlockGuard;
 import java.io.File;
 import java.io.FileInputStream;
@@ -428,7 +429,7 @@ class ContextImpl extends Context {
                     throw new IOException("Failed to clean up " + sourceFile);
                 }
             } catch (IOException e) {
-                Log.w(TAG, "Failed to migrate " + sourceFile + ": " + e);
+                Log.w(TAG, "Failed to migrate " + sourceFile + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                 res = -1;
             }
         }
@@ -521,7 +522,7 @@ class ContextImpl extends Context {
                 }
             } catch (ErrnoException e) {
                 if (e.errno != OsConstants.EEXIST) {
-                    Log.w(TAG, "Failed to ensure " + file + ": " + e.getMessage());
+                    Log.w(TAG, "Failed to ensure " + file + PluralRules.KEYWORD_RULE_SEPARATOR + e.getMessage());
                 }
             }
             if (xattr != null) {
@@ -530,7 +531,7 @@ class ContextImpl extends Context {
                     Memory.pokeLong(value, 0, Os.stat(file.getAbsolutePath()).st_ino, ByteOrder.nativeOrder());
                     Os.setxattr(file.getParentFile().getAbsolutePath(), xattr, value, 0);
                 } catch (ErrnoException e2) {
-                    Log.w(TAG, "Failed to update " + xattr + ": " + e2.getMessage());
+                    Log.w(TAG, "Failed to update " + xattr + PluralRules.KEYWORD_RULE_SEPARATOR + e2.getMessage());
                 }
             }
         }
@@ -1311,9 +1312,9 @@ class ContextImpl extends Context {
                 if (cn.getPackageName().equals("!")) {
                     throw new SecurityException("Not allowed to start service " + service + " without permission " + cn.getClassName());
                 } else if (cn.getPackageName().equals("!!")) {
-                    throw new SecurityException("Unable to start service " + service + ": " + cn.getClassName());
+                    throw new SecurityException("Unable to start service " + service + PluralRules.KEYWORD_RULE_SEPARATOR + cn.getClassName());
                 } else if (cn.getPackageName().equals("?")) {
-                    throw new IllegalStateException("Not allowed to start service " + service + ": " + cn.getClassName());
+                    throw new IllegalStateException("Not allowed to start service " + service + PluralRules.KEYWORD_RULE_SEPARATOR + cn.getClassName());
                 }
             }
             return cn;
@@ -1543,7 +1544,7 @@ class ContextImpl extends Context {
         if (resultOfCheck != 0) {
             StringBuilder sb = new StringBuilder();
             if (message != null) {
-                str = message + ": ";
+                str = message + PluralRules.KEYWORD_RULE_SEPARATOR;
             } else {
                 str = "";
             }
@@ -1668,7 +1669,7 @@ class ContextImpl extends Context {
         if (resultOfCheck != 0) {
             StringBuilder sb = new StringBuilder();
             if (message != null) {
-                str = message + ": ";
+                str = message + PluralRules.KEYWORD_RULE_SEPARATOR;
             } else {
                 str = "";
             }
@@ -2102,7 +2103,7 @@ class ContextImpl extends Context {
                 try {
                     sm.mkdirs(dir);
                 } catch (Exception e) {
-                    Log.w(TAG, "Failed to ensure " + dir + ": " + e);
+                    Log.w(TAG, "Failed to ensure " + dir + PluralRules.KEYWORD_RULE_SEPARATOR + e);
                     dir = null;
                 }
             }

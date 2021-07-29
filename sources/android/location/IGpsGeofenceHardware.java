@@ -206,10 +206,10 @@ public interface IGpsGeofenceHardware extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -236,10 +236,10 @@ public interface IGpsGeofenceHardware extends IInterface {
                             if (_reply.readInt() != 0) {
                                 z = true;
                             }
-                            boolean _status = z;
+                            boolean _result = z;
                             _reply.recycle();
                             _data.recycle();
-                            return _status;
+                            return _result;
                         }
                         boolean addCircularHardwareGeofence = Stub.getDefaultImpl().addCircularHardwareGeofence(geofenceId, latitude, longitude, radius, lastTransition, monitorTransition, notificationResponsiveness, unknownTimer);
                         _reply.recycle();
@@ -274,10 +274,10 @@ public interface IGpsGeofenceHardware extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -298,10 +298,10 @@ public interface IGpsGeofenceHardware extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -323,10 +323,10 @@ public interface IGpsGeofenceHardware extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _status = z;
+                    boolean _result = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _status;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

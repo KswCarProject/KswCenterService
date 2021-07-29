@@ -15,6 +15,7 @@ import android.service.autofill.IAutofillFieldClassificationService;
 import android.util.Log;
 import android.view.autofill.AutofillValue;
 import com.android.internal.util.function.pooled.PooledLambda;
+import com.ibm.icu.text.PluralRules;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -112,7 +113,7 @@ public abstract class AutofillFieldClassificationService extends Service {
             StringBuilder builder = sb.append("] ");
             for (int i = 0; i < size1; i++) {
                 builder.append(i);
-                builder.append(": ");
+                builder.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                 builder.append(Arrays.toString(this.scores[i]));
                 builder.append(' ');
             }

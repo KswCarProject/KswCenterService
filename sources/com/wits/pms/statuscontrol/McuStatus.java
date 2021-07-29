@@ -2,9 +2,14 @@ package com.wits.pms.statuscontrol;
 
 import android.telephony.SmsManager;
 import com.google.gson.Gson;
+import com.ibm.icu.text.CharsetDetector;
+import com.ibm.icu.text.CharsetMatch;
 import com.wits.pms.mcu.custom.KswMessage;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import org.mozilla.universalchardet.CharsetListener;
+import org.mozilla.universalchardet.UniversalDetector;
 
 public class McuStatus {
     public static final int ANDROID_MODE = 1;
@@ -12,8 +17,14 @@ public class McuStatus {
     public static final int TYPE_MCU_STATUS = 5;
     public ACData acData = new ACData();
     public BenzData benzData = new BenzData();
+    public CarBluetoothStatus bluetoothStatus = new CarBluetoothStatus();
     public CarData carData = new CarData();
+    public DiscStatus discStatus = new DiscStatus();
+    public EqData eqData = new EqData();
     public String mcuVerison;
+    public MediaData mediaData = new MediaData();
+    public MediaPlayStatus mediaPlayStatus = new MediaPlayStatus();
+    public MediaStringInfo mediaStringInfo = new MediaStringInfo();
     public int systemMode;
 
     public static final class MediaType {
@@ -22,6 +33,7 @@ public class McuStatus {
         public static final int SRC_BT = 3;
         public static final int SRC_BT_MUSIC = 4;
         public static final int SRC_CAR = 0;
+        public static final int SRC_CAR_FM = 14;
         public static final int SRC_DTV = 9;
         public static final int SRC_DVD = 8;
         public static final int SRC_DVD_YUV = 12;
@@ -105,6 +117,20 @@ public class McuStatus {
             keys.add("benzData");
         }
         return keys;
+    }
+
+    public static final class KswMcuMsg {
+        public int cmdType;
+        public byte[] data;
+
+        public KswMcuMsg(int cmdType2, byte... data2) {
+            this.cmdType = cmdType2;
+            this.data = data2;
+        }
+
+        public static KswMcuMsg getMsgFormJson(String jsonArg) {
+            return (KswMcuMsg) new Gson().fromJson(jsonArg, KswMcuMsg.class);
+        }
     }
 
     public static class ACData {
@@ -303,28 +329,138 @@ public class McuStatus {
         }
     }
 
-    public static class MediaData {
-        public static final int TYPE_AUX = 48;
+    public static class MediaStringInfo {
+        public String album;
+        public String artist;
+        public String folderName;
+        public int min;
+        public String name;
+        public int sec;
+        public int times;
+
+        public static MediaStringInfo parseInfoFromJson(String json) {
+            return (MediaStringInfo) new Gson().fromJson(json, MediaStringInfo.class);
+        }
+    }
+
+    public static void main(String... arg) throws UnsupportedEncodingException {
+        byte[] data = {2, 121, 65, -106, -122};
+        try {
+            byte[] checkStringBytes = new byte[((data.length - 1) * 20)];
+            byte[] stringBytes = new byte[(data.length - 1)];
+            for (int i = 0; i < 20; i++) {
+                System.arraycopy(data, 1, checkStringBytes, (data.length - 1) * i, stringBytes.length);
+            }
+            System.arraycopy(data, 1, stringBytes, 0, stringBytes.length);
+            CharsetDetector charsetDetector = new CharsetDetector();
+            charsetDetector.setText(checkStringBytes);
+            CharsetMatch charsetMatch = charsetDetector.detect();
+            String charSet = charsetMatch.getName();
+            UniversalDetector detector = new UniversalDetector((CharsetListener) null);
+            detector.handleData(checkStringBytes, 0, checkStringBytes.length);
+            detector.dataEnd();
+            String encoding = detector.getDetectedCharset();
+            if (encoding == null || !encoding.contains("GB")) {
+                if (!charSet.contains("windows") && !charSet.equals("UTF-16LE")) {
+                    if (charsetMatch.getConfidence() >= 10) {
+                        if (charsetMatch.getName().equals("Big5") && charsetMatch.getConfidence() >= 10) {
+                            if (new String(stringBytes, "Unicode").length() < new String(stringBytes, charSet).length()) {
+                                charSet = "Unicode";
+                            }
+                        }
+                        new String(stringBytes, charSet);
+                        return;
+                    }
+                }
+                charSet = "Unicode";
+                new String(stringBytes, charSet);
+                return;
+            }
+            new String(stringBytes, encoding);
+        } catch (Exception e) {
+        }
+    }
+
+    public static class CarBluetoothStatus {
+        public int batteryStatus;
+        public int callSignal;
+        public boolean isCalling;
+        public int min;
+        public String name;
+        public boolean playingMusic;
+        public int sec;
+        public String settingsInfo;
+        public int times;
+
+        public static CarBluetoothStatus parseInfoFromJson(String json) {
+            return (CarBluetoothStatus) new Gson().fromJson(json, CarBluetoothStatus.class);
+        }
+    }
+
+    public static class MediaPlayStatus {
+        public static final int TYPE_AM = 1;
+        public static final int TYPE_AUX = 20;
+        public static final int TYPE_BT_MUSIC = 21;
         public static final int TYPE_DISC = 16;
-        public static final int TYPE_DVD = 33;
+        public static final int TYPE_FM = 0;
+        public static final int TYPE_MP3 = 18;
+        public static final int TYPE_USB = 17;
+        public boolean ALS;
+        public boolean RAND;
+        public boolean RPT;
+        public boolean SCAN;
+        public boolean ST;
+        public String status;
+        public int times;
+        public int type;
+
+        public static MediaPlayStatus parseInfoFromJson(String json) {
+            return (MediaPlayStatus) new Gson().fromJson(json, MediaPlayStatus.class);
+        }
+    }
+
+    public static class DiscStatus {
+        public boolean[] discInsert;
+        public int range;
+        public String status;
+        public int times;
+
+        public static DiscStatus parseInfoFromJson(String json) {
+            return (DiscStatus) new Gson().fromJson(json, DiscStatus.class);
+        }
+    }
+
+    public static class MediaData {
+        public static final int TYPE_AUX = 20;
+        public static final int TYPE_BT = 21;
+        public static final int TYPE_DISC = 16;
         public static final int TYPE_FM = 1;
         public static final int TYPE_MODE = 64;
+        public static final int TYPE_MP3 = 18;
         public static final int TYPE_USB = 17;
-        public Disc disc;
-        public DVD dvd;
-        public Fm fm;
-        public MODE mode;
+        public boolean ALS;
+        public boolean RAND;
+        public boolean RPT;
+        public boolean SCAN;
+        public boolean ST;
+        public Disc disc = new Disc();
+        public DVD dvd = new DVD();
+        public Fm fm = new Fm();
+        public MODE mode = new MODE();
+        public MP3 mp3 = new MP3();
+        public String status;
+        public int times;
         public int type;
-        public Usb usb;
+        public Usb usb = new Usb();
 
-        public static class DVD {
+        public static class DVD extends BaseMediaInfo {
             public int chapterNumber;
             public int min;
             public int sec;
             public int totalChapter;
         }
 
-        public static class Disc {
+        public static class Disc extends BaseMediaInfo {
             public int min;
             public int number;
             public int sec;
@@ -337,7 +473,7 @@ public class McuStatus {
             public int preFreq;
         }
 
-        public static class MODE {
+        public static class MODE extends BaseMediaInfo {
             public boolean ASL;
             public boolean PAUSE;
             public boolean RAND;
@@ -346,15 +482,75 @@ public class McuStatus {
             public boolean ST;
         }
 
-        public static class Usb {
+        public static class MP3 extends BaseMediaInfo {
             public int fileNumber;
             public int folderNumber;
             public int min;
             public int sec;
         }
 
+        public static class Usb extends BaseMediaInfo {
+            public int fileNumber;
+            public int folderNumber;
+            public int min;
+            public int sec;
+        }
+
+        public BaseMediaInfo getCurrentMediaInfo() {
+            int i;
+            if (!(this.type == 0 || (i = this.type) == 1)) {
+                if (i != 64) {
+                    switch (i) {
+                        case 16:
+                            return this.disc;
+                        case 17:
+                            return this.usb;
+                        case 18:
+                            return this.mp3;
+                        default:
+                            switch (i) {
+                                case 20:
+                                case 21:
+                                    break;
+                            }
+                    }
+                } else {
+                    return this.mode;
+                }
+            }
+            return null;
+        }
+
+        public static class BaseMediaInfo {
+            public String album = "";
+            public String artist = "";
+            public String folderName = "";
+            public String name = "";
+
+            public void reset() {
+                this.name = "";
+                this.artist = "";
+                this.album = "";
+            }
+        }
+
         public static MediaData parseDataFromJson(String json) {
             return (MediaData) new Gson().fromJson(json, MediaData.class);
+        }
+    }
+
+    public static class EqData {
+        public int BAL;
+        public int BAS;
+        public int FAD;
+        public int MID;
+        public int TRE;
+        public String changeVol;
+        public int times;
+        public int volume;
+
+        public static EqData parseDataFromJson(String jsonArg) {
+            return (EqData) new Gson().fromJson(jsonArg, EqData.class);
         }
     }
 

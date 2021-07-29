@@ -3,6 +3,7 @@ package android.filterfw.core;
 import android.annotation.UnsupportedAppUsage;
 import android.app.slice.SliceItem;
 import android.net.wifi.WifiEnterpriseConfig;
+import com.ibm.icu.text.PluralRules;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -388,7 +389,7 @@ public class FrameFormat {
         StringBuffer buffer = new StringBuffer();
         buffer.append("{ ");
         for (Map.Entry<String, Object> entry : metaData.entrySet()) {
-            buffer.append(entry.getKey() + ": " + entry.getValue() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+            buffer.append(entry.getKey() + PluralRules.KEYWORD_RULE_SEPARATOR + entry.getValue() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         }
         buffer.append("}");
         return buffer.toString();

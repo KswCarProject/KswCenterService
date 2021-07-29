@@ -25,6 +25,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.android.internal.content.PackageMonitor;
 import com.android.internal.logging.MetricsLogger;
+import com.ibm.icu.text.ArabicShaping;
+import com.ibm.icu.text.PluralRules;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -135,7 +137,7 @@ public final class SmsApplication {
         SmsApplicationData smsApplicationData4;
         int i = userId;
         PackageManager packageManager2 = context.getPackageManager();
-        List<ResolveInfo> smsReceivers = packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.SMS_DELIVER_ACTION), 786432, i);
+        List<ResolveInfo> smsReceivers = packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.SMS_DELIVER_ACTION), (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL, i);
         HashMap<String, SmsApplicationData> receivers = new HashMap<>();
         for (ResolveInfo resolveInfo : smsReceivers) {
             ActivityInfo activityInfo = resolveInfo.activityInfo;
@@ -150,31 +152,31 @@ public final class SmsApplication {
         }
         Intent intent = new Intent(Telephony.Sms.Intents.WAP_PUSH_DELIVER_ACTION);
         intent.setDataAndType((Uri) null, "application/vnd.wap.mms-message");
-        for (ResolveInfo resolveInfo2 : packageManager2.queryBroadcastReceiversAsUser(intent, 786432, i)) {
+        for (ResolveInfo resolveInfo2 : packageManager2.queryBroadcastReceiversAsUser(intent, (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL, i)) {
             ActivityInfo activityInfo2 = resolveInfo2.activityInfo;
             if (!(activityInfo2 == null || !Manifest.permission.BROADCAST_WAP_PUSH.equals(activityInfo2.permission) || (smsApplicationData4 = receivers.get(activityInfo2.packageName)) == null)) {
                 String unused2 = smsApplicationData4.mMmsReceiverClass = activityInfo2.name;
             }
         }
-        for (ResolveInfo resolveInfo3 : packageManager2.queryIntentServicesAsUser(new Intent(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE, Uri.fromParts(SCHEME_SMSTO, "", (String) null)), 786432, i)) {
+        for (ResolveInfo resolveInfo3 : packageManager2.queryIntentServicesAsUser(new Intent(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE, Uri.fromParts(SCHEME_SMSTO, "", (String) null)), (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL, i)) {
             ServiceInfo serviceInfo = resolveInfo3.serviceInfo;
             if (!(serviceInfo == null || !Manifest.permission.SEND_RESPOND_VIA_MESSAGE.equals(serviceInfo.permission) || (smsApplicationData3 = receivers.get(serviceInfo.packageName)) == null)) {
                 String unused3 = smsApplicationData3.mRespondViaMessageClass = serviceInfo.name;
             }
         }
-        for (ResolveInfo resolveInfo4 : packageManager2.queryIntentActivitiesAsUser(new Intent(Intent.ACTION_SENDTO, Uri.fromParts(SCHEME_SMSTO, "", (String) null)), 786432, i)) {
+        for (ResolveInfo resolveInfo4 : packageManager2.queryIntentActivitiesAsUser(new Intent(Intent.ACTION_SENDTO, Uri.fromParts(SCHEME_SMSTO, "", (String) null)), (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL, i)) {
             ActivityInfo activityInfo3 = resolveInfo4.activityInfo;
             if (!(activityInfo3 == null || (smsApplicationData2 = receivers.get(activityInfo3.packageName)) == null)) {
                 String unused4 = smsApplicationData2.mSendToClass = activityInfo3.name;
             }
         }
-        for (ResolveInfo resolveInfo5 : packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.ACTION_DEFAULT_SMS_PACKAGE_CHANGED), 786432, i)) {
+        for (ResolveInfo resolveInfo5 : packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.ACTION_DEFAULT_SMS_PACKAGE_CHANGED), (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL, i)) {
             ActivityInfo activityInfo4 = resolveInfo5.activityInfo;
             if (!(activityInfo4 == null || (smsApplicationData = receivers.get(activityInfo4.packageName)) == null)) {
                 String unused5 = smsApplicationData.mSmsAppChangedReceiverClass = activityInfo4.name;
             }
         }
-        for (ResolveInfo resolveInfo6 : packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.ACTION_EXTERNAL_PROVIDER_CHANGE), 786432, i)) {
+        for (ResolveInfo resolveInfo6 : packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.ACTION_EXTERNAL_PROVIDER_CHANGE), (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL, i)) {
             ActivityInfo activityInfo5 = resolveInfo6.activityInfo;
             if (activityInfo5 != null) {
                 SmsApplicationData smsApplicationData6 = receivers.get(activityInfo5.packageName);
@@ -183,7 +185,7 @@ public final class SmsApplication {
                 }
             }
         }
-        for (ResolveInfo resolveInfo7 : packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.SIM_FULL_ACTION), 786432, i)) {
+        for (ResolveInfo resolveInfo7 : packageManager2.queryBroadcastReceiversAsUser(new Intent(Telephony.Sms.Intents.SIM_FULL_ACTION), (int) ArabicShaping.TASHKEEL_REPLACE_BY_TATWEEL, i)) {
             ActivityInfo activityInfo6 = resolveInfo7.activityInfo;
             if (activityInfo6 != null) {
                 SmsApplicationData smsApplicationData7 = receivers.get(activityInfo6.packageName);
@@ -278,7 +280,7 @@ public final class SmsApplication {
                 sb.append(applicationData.mPackageName);
                 sb.append(" lost ");
                 sb.append(AppOpsManager.modeToName(appOp));
-                sb.append(": ");
+                sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                 sb.append(updateIfNeeded ? " (fixing)" : " (no permission to fix)");
                 Rlog.e(LOG_TAG, sb.toString());
                 if (!updateIfNeeded) {

@@ -1,6 +1,7 @@
 package android.util;
 
 import android.provider.SettingsStringUtil;
+import com.ibm.icu.text.PluralRules;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Writer;
@@ -31,7 +32,7 @@ public final class JsonWriter implements Closeable {
             return;
         }
         this.indent = indent2;
-        this.separator = ": ";
+        this.separator = PluralRules.KEYWORD_RULE_SEPARATOR;
     }
 
     public void setLenient(boolean lenient2) {

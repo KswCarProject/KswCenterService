@@ -32,6 +32,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public class SmsMessage extends SmsMessageBase {
     private static final byte BEARER_DATA = 8;
@@ -606,7 +607,7 @@ public class SmsMessage extends SmsMessageBase {
             case 15:
                 return 67;
             default:
-                return 32;
+                return HebrewProber.SPACE;
         }
     }
 

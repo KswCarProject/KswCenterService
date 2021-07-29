@@ -24,6 +24,7 @@ import android.text.style.TypefaceSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import com.android.internal.R;
+import com.ibm.icu.text.DateFormat;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -171,7 +172,7 @@ class HtmlToSpannedConverter implements ContentHandler {
                 start(this.mSpannableStringBuilder, new Underline());
             } else if (tag.equalsIgnoreCase("del")) {
                 start(this.mSpannableStringBuilder, new Strikethrough());
-            } else if (tag.equalsIgnoreCase("s")) {
+            } else if (tag.equalsIgnoreCase(DateFormat.SECOND)) {
                 start(this.mSpannableStringBuilder, new Strikethrough());
             } else if (tag.equalsIgnoreCase("strike")) {
                 start(this.mSpannableStringBuilder, new Strikethrough());
@@ -231,7 +232,7 @@ class HtmlToSpannedConverter implements ContentHandler {
             end(this.mSpannableStringBuilder, Underline.class, new UnderlineSpan());
         } else if (tag.equalsIgnoreCase("del")) {
             end(this.mSpannableStringBuilder, Strikethrough.class, new StrikethroughSpan());
-        } else if (tag.equalsIgnoreCase("s")) {
+        } else if (tag.equalsIgnoreCase(DateFormat.SECOND)) {
             end(this.mSpannableStringBuilder, Strikethrough.class, new StrikethroughSpan());
         } else if (tag.equalsIgnoreCase("strike")) {
             end(this.mSpannableStringBuilder, Strikethrough.class, new StrikethroughSpan());

@@ -126,7 +126,7 @@ public final class DngCreator implements AutoCloseable {
             int[] latTag = toExifLatLong(latitude);
             int[] longTag = toExifLatLong(longitude);
             String latRef = latitude >= 0.0d ? GPS_LAT_REF_NORTH : GPS_LAT_REF_SOUTH;
-            String longRef = longitude >= 0.0d ? GPS_LONG_REF_EAST : GPS_LONG_REF_WEST;
+            String longRef = longitude >= 0.0d ? "E" : GPS_LONG_REF_WEST;
             String dateTag = sExifGPSDateStamp.format(Long.valueOf(time));
             this.mGPSTimeStampCalendar.setTimeInMillis(time);
             nativeSetGpsTags(latTag, latRef, longTag, longRef, dateTag, new int[]{this.mGPSTimeStampCalendar.get(11), 1, this.mGPSTimeStampCalendar.get(12), 1, this.mGPSTimeStampCalendar.get(13), 1});

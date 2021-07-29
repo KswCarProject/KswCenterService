@@ -246,10 +246,10 @@ public class Location implements Parcelable {
         double U2 = Math.atan((1.0d - f) * Math.tan(cosSigma));
         double cosU1 = Math.cos(U1);
         double cosU2 = Math.cos(U2);
-        double sinU1 = Math.sin(U1);
+        double a = Math.sin(U1);
         double sinU2 = Math.sin(U2);
         double cosU1cosU2 = cosU1 * cosU2;
-        double sinU1sinU2 = sinU1 * sinU2;
+        double sinU1sinU2 = a * sinU2;
         double sigma = 0.0d;
         double deltaSigma = 0.0d;
         double sinSigma2 = 0.0d;
@@ -270,17 +270,17 @@ public class Location implements Parcelable {
             cosLambda = Math.cos(lambda);
             sinLambda = Math.sin(lambda);
             double t1 = cosU2 * sinLambda;
-            double t2 = (cosU1 * sinU2) - ((sinU1 * cosU2) * cosLambda);
+            double t2 = (cosU1 * sinU2) - ((a * cosU2) * cosLambda);
             lon12 = sinSigma;
             double lon14 = Math.sqrt((t1 * t1) + (t2 * t2));
             lat22 = cosSigma;
-            double lat23 = sinU1sinU2 + (cosU1cosU2 * cosLambda);
-            sigma = Math.atan2(lon14, lat23);
+            double cosSigma2 = sinU1sinU2 + (cosU1cosU2 * cosLambda);
+            sigma = Math.atan2(lon14, cosSigma2);
             double d = 0.0d;
             double sinAlpha = lon14 == 0.0d ? 0.0d : (cosU1cosU2 * sinLambda) / lon14;
             double cosSqAlpha = 1.0d - (sinAlpha * sinAlpha);
             if (cosSqAlpha != 0.0d) {
-                d = lat23 - ((sinU1sinU2 * 2.0d) / cosSqAlpha);
+                d = cosSigma2 - ((sinU1sinU2 * 2.0d) / cosSqAlpha);
             }
             double cos2SM = d;
             double uSquared = cosSqAlpha * aSqMinusBSqOverBSq;
@@ -288,14 +288,14 @@ public class Location implements Parcelable {
             double B = (uSquared / 1024.0d) * (((((74.0d - (47.0d * uSquared)) * uSquared) - 0.03125d) * uSquared) + 256.0d);
             double C = (f / 16.0d) * cosSqAlpha * (((4.0d - (3.0d * cosSqAlpha)) * f) + 4.0d);
             double cos2SMSq = cos2SM * cos2SM;
-            deltaSigma = B * lon14 * (cos2SM + ((B / 4.0d) * ((((cos2SMSq * 2.0d) - 4.0d) * lat23) - ((((B / 6.0d) * cos2SM) * (((lon14 * 4.0d) * lon14) - 1.5d)) * ((4.0d * cos2SMSq) - 1.5d)))));
-            lambda = L + ((1.0d - C) * f * sinAlpha * (sigma + (C * lon14 * (cos2SM + (C * lat23 * (((2.0d * cos2SM) * cos2SM) - 4.0d))))));
+            deltaSigma = B * lon14 * (cos2SM + ((B / 4.0d) * ((((cos2SMSq * 2.0d) - 4.0d) * cosSigma2) - ((((B / 6.0d) * cos2SM) * (((lon14 * 4.0d) * lon14) - 1.5d)) * ((4.0d * cos2SMSq) - 1.5d)))));
+            lambda = L + ((1.0d - C) * f * sinAlpha * (sigma + (C * lon14 * (cos2SM + (C * cosSigma2 * (((2.0d * cos2SM) * cos2SM) - 4.0d))))));
             if (Math.abs((lambda - lambdaOrig) / lambda) < 1.0E-12d) {
-                double uSquared2 = lat23;
+                double uSquared2 = cosSigma2;
                 break;
             }
             iter = iter2 + 1;
-            double d2 = lat23;
+            double d2 = cosSigma2;
             sinSigma2 = lon14;
             lon23 = lon22;
             sinSigma = lon12;
@@ -304,9 +304,9 @@ public class Location implements Parcelable {
         float distance = (float) (6356752.3142d * A * (sigma - deltaSigma));
         float unused = bearingDistanceCache.mDistance = distance;
         float f2 = distance;
-        float initialBearing = (float) (((double) ((float) Math.atan2(cosU2 * sinLambda, (cosU1 * sinU2) - ((sinU1 * cosU2) * cosLambda)))) * 57.29577951308232d);
+        float initialBearing = (float) (((double) ((float) Math.atan2(cosU2 * sinLambda, (cosU1 * sinU2) - ((a * cosU2) * cosLambda)))) * 57.29577951308232d);
         float unused2 = bearingDistanceCache.mInitialBearing = initialBearing;
-        float finalBearing = (float) (((double) ((float) Math.atan2(cosU1 * sinLambda, ((-sinU1) * cosU2) + (cosU1 * sinU2 * cosLambda)))) * 57.29577951308232d);
+        float finalBearing = (float) (((double) ((float) Math.atan2(cosU1 * sinLambda, ((-a) * cosU2) + (cosU1 * sinU2 * cosLambda)))) * 57.29577951308232d);
         float unused3 = bearingDistanceCache.mFinalBearing = finalBearing;
         double unused4 = bearingDistanceCache.mLat1 = lat12;
         double unused5 = bearingDistanceCache.mLat2 = lat22;

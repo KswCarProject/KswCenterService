@@ -61,6 +61,7 @@ import com.android.internal.app.DumpHeapActivity;
 import com.android.internal.os.ClassLoaderFactory;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.XmlUtils;
+import com.ibm.icu.text.PluralRules;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -3326,7 +3327,7 @@ public class PackageParser {
             if (nameError == null || "system".equals(proc)) {
                 return proc;
             }
-            outError[0] = "Invalid " + type + " name " + proc + " in package " + pkg + ": " + nameError;
+            outError[0] = "Invalid " + type + " name " + proc + " in package " + pkg + PluralRules.KEYWORD_RULE_SEPARATOR + nameError;
             return null;
         } else if (proc.length() < 2) {
             outError[0] = "Bad " + type + " name " + proc + " in package " + pkg + ": must be at least two characters";
@@ -3334,7 +3335,7 @@ public class PackageParser {
         } else {
             String nameError2 = validateName(proc.substring(1), false, false);
             if (nameError2 != null) {
-                outError[0] = "Invalid " + type + " name " + proc + " in package " + pkg + ": " + nameError2;
+                outError[0] = "Invalid " + type + " name " + proc + " in package " + pkg + PluralRules.KEYWORD_RULE_SEPARATOR + nameError2;
                 return null;
             }
             return pkg + proc;
@@ -5523,11 +5524,11 @@ public class PackageParser {
                     activityAspectRatio = maxAspectRatio;
                 }
                 Log.d("debugWindow", "PackageParser  setMaxAspectRatio(owner)  activityAspectRatio = " + activityAspectRatio);
-                if (pkgName.contains("com.android") || pkgName.contains("com.google") || pkgName.contains("com.wits") || pkgName.contains("com.qcom") || activityAspectRatio >= DEFAULT_PRE_O_MAX_ASPECT_RATIO) {
+                if (pkgName.contains("com.android") || pkgName.contains("com.google") || pkgName.contains("com.wits") || pkgName.contains("com.qcom") || activityAspectRatio >= 3.0f) {
                     activity.setMaxAspectRatio(activityAspectRatio);
                 } else {
                     Log.d("debugWindow", "PackageParser  setMaxAspectRatio(owner)  force setMaxAspectRatio(DEFAULT_PRE_O_MAX_ASPECT_RATIO)");
-                    activity.setMaxAspectRatio(DEFAULT_PRE_O_MAX_ASPECT_RATIO);
+                    activity.setMaxAspectRatio(3.0f);
                 }
             }
         }
@@ -6253,7 +6254,7 @@ public class PackageParser {
                         return false;
                     }
                 } else {
-                    Slog.w(TAG, "Unknown element under " + tag + ": " + parser.getName() + " at " + this.mArchiveSourcePath + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + parser.getPositionDescription());
+                    Slog.w(TAG, "Unknown element under " + tag + PluralRules.KEYWORD_RULE_SEPARATOR + parser.getName() + " at " + this.mArchiveSourcePath + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + parser.getPositionDescription());
                     XmlUtils.skipCurrentTag(parser);
                 }
             }
@@ -6367,7 +6368,7 @@ public class PackageParser {
     }
 
     /* JADX WARNING: type inference failed for: r5v0 */
-    /* JADX WARNING: type inference failed for: r5v1, types: [boolean, int] */
+    /* JADX WARNING: type inference failed for: r5v1, types: [int, boolean] */
     /* JADX WARNING: type inference failed for: r5v3 */
     /* JADX WARNING: Code restructure failed: missing block: B:35:0x00ab, code lost:
         return r5;

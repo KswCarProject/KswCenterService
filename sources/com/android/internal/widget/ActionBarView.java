@@ -1320,9 +1320,9 @@ public class ActionBarView extends AbsActionBarView implements DecorToolbar {
                     int i5 = x2;
                     ypos = ((((this.mBottom - this.mTop) - getPaddingBottom()) - getPaddingTop()) - customView.getMeasuredHeight()) / 2;
                 }
-                int paddedBottom = customView.getMeasuredWidth();
-                customView.layout(xpos, ypos, xpos + paddedBottom, customView.getMeasuredHeight() + ypos);
-                int x10 = next(topMargin, paddedBottom, isLayoutRtl);
+                int customWidth = customView.getMeasuredWidth();
+                customView.layout(xpos, ypos, xpos + customWidth, customView.getMeasuredHeight() + ypos);
+                int x10 = next(topMargin, customWidth, isLayoutRtl);
             }
             if (this.mProgressView != null) {
                 this.mProgressView.bringToFront();

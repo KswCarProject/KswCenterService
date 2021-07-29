@@ -19,6 +19,24 @@
     <string name="abc_shareactionprovider_share_with">Κοινή χρήση με</string>
     <string name="abc_shareactionprovider_share_with_application">Κοινή χρήση με %s</string>
     <string name="abc_toolbar_collapse_description">Σύμπτυξη</string>
+    <string name="app_name">CarService</string>
+    <string name="auto_update_mcu">Το MCU επισκευάζεται!</string>
+    <string name="auto_update_mcu_success">Η MCU επιδιορθώθηκε με επιτυχία!</string>
+    <string name="bootanimation_success">Το Boot Animation έχει τροποποιηθεί</string>
+    <string name="copy_file">Έτοιμος για αναβάθμιση</string>
+    <string name="disable_open">Απενεργοποιήθηκε!</string>
+    <string name="import_config_success">Εισαγωγή επιτυχίας διαμόρφωσης!</string>
+    <string name="install_app">Η εφαρμογή Εγκαθίσταται!</string>
+    <string name="install_app_done">Η εγκατάσταση ολοκληρώθηκε!</string>
+    <string name="no_update">ΟΧΙ</string>
+    <string name="ota_update">ΕΝΗΜΕΡΩΣΗ OTA</string>
+    <string name="ota_update_message">Εντοπίστηκε αρχείο αναβάθμισης. \10Θέλετε να κάνετε αναβάθμιση τώρα;</string>
     <string name="search_menu_title">Αναζήτηση</string>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="tp_update_fail">Η ενημέρωση TP απέτυχε!</string>
+    <string name="tp_update_success">Επιτυχία ενημέρωσης TP!</string>
+    <string name="update_mcu">Το MCU ενημερώνεται!</string>
+    <string name="update_mcu_success">Η MCU ενημερώθηκε με επιτυχία!</string>
+    <string name="update_success">Επιτυχία ενημέρωσης!</string>
+    <string name="yes_update">ΝΑΙ</string>
 </resources>

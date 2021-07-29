@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 import com.android.internal.telephony.IApnSourceService;
+import com.ibm.icu.text.PluralRules;
 import java.util.List;
 
 @SystemApi
@@ -18,7 +19,7 @@ public abstract class ApnService extends Service {
                 List<ContentValues> apns = ApnService.this.onRestoreApns(subId);
                 return (ContentValues[]) apns.toArray(new ContentValues[apns.size()]);
             } catch (Exception e) {
-                Log.e(ApnService.LOG_TAG, "Error in getApns for subId=" + subId + ": " + e.getMessage(), e);
+                Log.e(ApnService.LOG_TAG, "Error in getApns for subId=" + subId + PluralRules.KEYWORD_RULE_SEPARATOR + e.getMessage(), e);
                 return null;
             }
         }

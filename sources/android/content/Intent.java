@@ -26,6 +26,7 @@ import android.util.Log;
 import android.util.proto.ProtoOutputStream;
 import com.android.internal.R;
 import com.android.internal.util.XmlUtils;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -3063,7 +3064,7 @@ public class Intent implements Parcelable, Cloneable {
                 if (comp == null) {
                     comp = foundComp;
                 } else {
-                    throw new IllegalStateException("Multiple system services handle " + this + ": " + comp + ", " + foundComp);
+                    throw new IllegalStateException("Multiple system services handle " + this + PluralRules.KEYWORD_RULE_SEPARATOR + comp + ", " + foundComp);
                 }
             }
         }

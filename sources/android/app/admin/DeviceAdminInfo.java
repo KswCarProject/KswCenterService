@@ -18,6 +18,7 @@ import android.util.Printer;
 import android.util.SparseArray;
 import android.util.Xml;
 import com.android.internal.R;
+import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,7 +181,7 @@ public final class DeviceAdminInfo implements Parcelable {
                                                 res2 = res3;
                                                 sb.append("Unknown tag under uses-policies of ");
                                                 sb.append(getComponent());
-                                                sb.append(": ");
+                                                sb.append(PluralRules.KEYWORD_RULE_SEPARATOR);
                                                 sb.append(policyName);
                                                 Log.w(TAG, sb.toString());
                                             }

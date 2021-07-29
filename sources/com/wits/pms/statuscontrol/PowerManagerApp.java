@@ -112,8 +112,11 @@ public class PowerManagerApp {
         getManager().addBooleanStatus(key, value);
     }
 
-    public static void setStatusString(String key, String value) throws RemoteException {
-        getManager().addStringStatus(key, value);
+    public static void setStatusString(String key, String value) {
+        try {
+            getManager().addStringStatus(key, value);
+        } catch (RemoteException e) {
+        }
     }
 
     public static void setStatusInt(String key, int value) throws RemoteException {

@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.android.internal.R;
 import com.android.internal.util.FastPrintWriter;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -354,7 +355,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(i);
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(f);
                 if (f != null) {
                     f.dump(innerPrefix, fd, writer, args);
@@ -369,7 +370,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(i2);
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(this.mAdded.get(i2).toString());
             }
         }
@@ -380,7 +381,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(i3);
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(this.mCreatedMenus.get(i3).toString());
             }
         }
@@ -392,7 +393,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(i4);
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(bs.toString());
                 bs.dump(innerPrefix, fd, writer, args);
             }
@@ -405,7 +406,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                     writer.print(prefix);
                     writer.print("  #");
                     writer.print(i5);
-                    writer.print(": ");
+                    writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                     writer.println(this.mBackStackIndices.get(i5));
                 }
             }
@@ -422,7 +423,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                 writer.print(prefix);
                 writer.print("  #");
                 writer.print(i6);
-                writer.print(": ");
+                writer.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                 writer.println(this.mPendingActions.get(i6));
             }
         }
@@ -2422,7 +2423,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                     }
                 }
                 if (DEBUG) {
-                    Log.v(TAG, "Saved state of " + f + ": " + fs.mSavedFragmentState);
+                    Log.v(TAG, "Saved state of " + f + PluralRules.KEYWORD_RULE_SEPARATOR + fs.mSavedFragmentState);
                 }
             }
         }
@@ -2443,7 +2444,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                     throwException(new IllegalStateException("Failure saving state: active " + this.mAdded.get(i2) + " has cleared index: " + added[i2]));
                 }
                 if (DEBUG) {
-                    Log.v(TAG, "saveAllState: adding fragment #" + i2 + ": " + this.mAdded.get(i2));
+                    Log.v(TAG, "saveAllState: adding fragment #" + i2 + PluralRules.KEYWORD_RULE_SEPARATOR + this.mAdded.get(i2));
                 }
             }
         }
@@ -2452,7 +2453,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
             for (int i3 = 0; i3 < N; i3++) {
                 backStack[i3] = new BackStackState(this, this.mBackStack.get(i3));
                 if (DEBUG) {
-                    Log.v(TAG, "saveAllState: adding back stack #" + i3 + ": " + this.mBackStack.get(i3));
+                    Log.v(TAG, "saveAllState: adding back stack #" + i3 + PluralRules.KEYWORD_RULE_SEPARATOR + this.mBackStack.get(i3));
                 }
             }
         }
@@ -2514,7 +2515,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                         }
                         Fragment f2 = fs2.instantiate(this.mHost, this.mContainer, this.mParent, childNonConfig);
                         if (DEBUG) {
-                            Log.v(TAG, "restoreAllState: active #" + i2 + ": " + f2);
+                            Log.v(TAG, "restoreAllState: active #" + i2 + PluralRules.KEYWORD_RULE_SEPARATOR + f2);
                         }
                         this.mActive.put(f2.mIndex, f2);
                         fs2.mInstance = null;
@@ -2544,7 +2545,7 @@ final class FragmentManagerImpl extends FragmentManager implements LayoutInflate
                         }
                         f4.mAdded = true;
                         if (DEBUG) {
-                            Log.v(TAG, "restoreAllState: added #" + i4 + ": " + f4);
+                            Log.v(TAG, "restoreAllState: added #" + i4 + PluralRules.KEYWORD_RULE_SEPARATOR + f4);
                         }
                         if (!this.mAdded.contains(f4)) {
                             synchronized (this.mAdded) {

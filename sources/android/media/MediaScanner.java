@@ -676,19 +676,19 @@ public class MediaScanner implements AutoCloseable {
                 return defaultValue;
             }
             int start2 = start + 1;
-            char ch = s.charAt(start);
-            if (ch < '0' || ch > '9') {
+            int start3 = s.charAt(start);
+            if (start3 < 48 || start3 > 57) {
                 return defaultValue;
             }
-            int result = ch - '0';
+            int result = start3 - 48;
             while (start2 < length) {
-                int start3 = start2 + 1;
-                char ch2 = s.charAt(start2);
-                if (ch2 < '0' || ch2 > '9') {
+                int start4 = start2 + 1;
+                char ch = s.charAt(start2);
+                if (ch < '0' || ch > '9') {
                     return result;
                 }
-                result = (result * 10) + (ch2 - '0');
-                start2 = start3;
+                result = (result * 10) + (ch - '0');
+                start2 = start4;
             }
             return result;
         }

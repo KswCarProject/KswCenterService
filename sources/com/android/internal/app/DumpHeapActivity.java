@@ -13,6 +13,7 @@ import android.os.Parcelable;
 import android.util.DebugUtils;
 import android.util.Slog;
 import com.android.internal.R;
+import com.ibm.icu.text.PluralRules;
 
 public class DumpHeapActivity extends Activity {
     public static final String ACTION_DELETE_DUMPHEAP = "com.android.server.am.DELETE_DUMPHEAP";
@@ -52,7 +53,7 @@ public class DumpHeapActivity extends Activity {
                 finish();
                 return;
             } catch (ActivityNotFoundException e) {
-                Slog.i("DumpHeapActivity", "Unable to direct launch to " + directLaunch + ": " + e.getMessage());
+                Slog.i("DumpHeapActivity", "Unable to direct launch to " + directLaunch + PluralRules.KEYWORD_RULE_SEPARATOR + e.getMessage());
             }
         }
         if (isUserInitiated) {

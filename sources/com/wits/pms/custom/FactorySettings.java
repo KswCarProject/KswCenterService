@@ -44,6 +44,7 @@ public class FactorySettings {
     public int HandsetAutomaticSelect;
     public int Map_key;
     public int Mode_key;
+    public int Screen_cast;
     public int Support_FM_Transmit;
     public int Support_TXZ;
     public int Support_TXZ_Voice_Wakeup;
@@ -63,9 +64,18 @@ public class FactorySettings {
     public int touch_continuous_send;
     public String ver = "";
     public int zlink_auto_start;
+    public int zlink_hicar;
 
     public FactorySettings() {
         LogI(TAG, "create a new factory settings");
+    }
+
+    public int getScreen_cast() {
+        return this.Screen_cast;
+    }
+
+    public void setScreen_cast(int screen_cast) {
+        this.Screen_cast = screen_cast;
     }
 
     public int getDirtTravelSelection() {
@@ -450,6 +460,14 @@ public class FactorySettings {
 
     public void setE_car(int e_car2) {
         this.e_car = e_car2;
+    }
+
+    public int getZlink_hicar() {
+        return this.zlink_hicar;
+    }
+
+    public void setZlink_hicar(int zlink_hicar2) {
+        this.zlink_hicar = zlink_hicar2;
     }
 
     public static FactorySettings getFactorySettings() {

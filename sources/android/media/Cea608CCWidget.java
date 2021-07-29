@@ -98,10 +98,10 @@ class Cea608CCWidget extends ClosedCaptionWidget implements Cea608CCParser.Displ
 
         /* access modifiers changed from: protected */
         public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            float fontSize = ((float) View.MeasureSpec.getSize(heightMeasureSpec)) * FONT_PADDING_RATIO;
+            float fontSize = ((float) View.MeasureSpec.getSize(heightMeasureSpec)) * 0.75f;
             setTextSize(0, fontSize);
             this.mOutlineWidth = (EDGE_OUTLINE_RATIO * fontSize) + 1.0f;
-            this.mShadowRadius = (EDGE_SHADOW_RATIO * fontSize) + 1.0f;
+            this.mShadowRadius = (0.05f * fontSize) + 1.0f;
             this.mShadowOffset = this.mShadowRadius;
             setScaleX(1.0f);
             getPaint().getTextBounds(Cea608CCWidget.mDummyText, 0, Cea608CCWidget.mDummyText.length(), Cea608CCWidget.mTextBounds);
@@ -225,9 +225,8 @@ class Cea608CCWidget extends ClosedCaptionWidget implements Cea608CCParser.Displ
             } else {
                 safeHeight = (safeWidth * 3) / 4;
             }
-            int safeWidth2 = (int) (((float) safeWidth) * SAFE_AREA_RATIO);
-            int lineHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(((int) (((float) safeHeight) * SAFE_AREA_RATIO)) / 15, 1073741824);
-            int lineWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec(safeWidth2, 1073741824);
+            int lineHeightMeasureSpec = View.MeasureSpec.makeMeasureSpec(((int) (((float) safeHeight) * 0.9f)) / 15, 1073741824);
+            int lineWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec((int) (((float) safeWidth) * 0.9f), 1073741824);
             for (int i = 0; i < 15; i++) {
                 this.mLineBoxes[i].measure(lineWidthMeasureSpec, lineHeightMeasureSpec);
             }
@@ -246,8 +245,8 @@ class Cea608CCWidget extends ClosedCaptionWidget implements Cea608CCParser.Displ
                 safeWidth = viewPortWidth;
                 safeHeight = (viewPortWidth * 3) / 4;
             }
-            int safeWidth2 = (int) (((float) safeWidth) * SAFE_AREA_RATIO);
-            int safeHeight2 = (int) (((float) safeHeight) * SAFE_AREA_RATIO);
+            int safeWidth2 = (int) (((float) safeWidth) * 0.9f);
+            int safeHeight2 = (int) (((float) safeHeight) * 0.9f);
             int left = (viewPortWidth - safeWidth2) / 2;
             int top = (viewPortHeight - safeHeight2) / 2;
             for (int i = 0; i < 15; i++) {

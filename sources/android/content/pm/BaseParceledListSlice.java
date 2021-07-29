@@ -7,6 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.util.Log;
+import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
                 }
                 this.mList.add(parcelable);
                 if (DEBUG) {
-                    Log.d(TAG, "Read inline #" + i2 + ": " + this.mList.get(this.mList.size() - 1));
+                    Log.d(TAG, "Read inline #" + i2 + PluralRules.KEYWORD_RULE_SEPARATOR + this.mList.get(this.mList.size() - 1));
                 }
                 i2++;
             }
@@ -77,7 +78,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
                             verifySameType(listElementClass, parcelable2.getClass());
                             this.mList.add(parcelable2);
                             if (DEBUG) {
-                                Log.d(TAG, "Read extra #" + i3 + ": " + this.mList.get(this.mList.size() - 1));
+                                Log.d(TAG, "Read extra #" + i3 + PluralRules.KEYWORD_RULE_SEPARATOR + this.mList.get(this.mList.size() - 1));
                             }
                             i3++;
                         }
@@ -142,7 +143,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
                 verifySameType(listElementClass, parcelable.getClass());
                 writeElement(parcelable, dest, callFlags);
                 if (DEBUG) {
-                    Log.d(TAG, "Wrote inline #" + i + ": " + this.mList.get(i));
+                    Log.d(TAG, "Wrote inline #" + i + PluralRules.KEYWORD_RULE_SEPARATOR + this.mList.get(i));
                 }
                 i++;
             }
@@ -166,7 +167,7 @@ abstract class BaseParceledListSlice<T> implements Parcelable {
                             BaseParceledListSlice.this.writeElement(parcelable, reply, callFlags);
                             if (BaseParceledListSlice.DEBUG) {
                                 String access$1002 = BaseParceledListSlice.TAG;
-                                Log.d(access$1002, "Wrote extra #" + i + ": " + BaseParceledListSlice.this.mList.get(i));
+                                Log.d(access$1002, "Wrote extra #" + i + PluralRules.KEYWORD_RULE_SEPARATOR + BaseParceledListSlice.this.mList.get(i));
                             }
                             i++;
                         }

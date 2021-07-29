@@ -808,7 +808,7 @@ public class RemoteViews implements Parcelable, LayoutInflater.Filter {
             	at jadx.core.dex.nodes.ClassNode.load(ClassNode.java:286)
             	at jadx.core.dex.nodes.ClassNode.load(ClassNode.java:292)
             	at jadx.core.ProcessClass.process(ProcessClass.java:36)
-            	at java.util.ArrayList.forEach(ArrayList.java:1257)
+            	at java.util.ArrayList.forEach(ArrayList.java:1259)
             	at jadx.core.ProcessClass.generateCode(ProcessClass.java:59)
             	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
             Caused by: jadx.core.utils.exceptions.DecodeException: Unknown instruction: 'invoke-polymorphic'
@@ -971,7 +971,7 @@ public class RemoteViews implements Parcelable, LayoutInflater.Filter {
             	at jadx.core.dex.nodes.ClassNode.load(ClassNode.java:286)
             	at jadx.core.dex.nodes.ClassNode.load(ClassNode.java:292)
             	at jadx.core.ProcessClass.process(ProcessClass.java:36)
-            	at java.util.ArrayList.forEach(ArrayList.java:1257)
+            	at java.util.ArrayList.forEach(ArrayList.java:1259)
             	at jadx.core.ProcessClass.generateCode(ProcessClass.java:59)
             	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
             Caused by: jadx.core.utils.exceptions.DecodeException: Unknown instruction: 'invoke-polymorphic'
@@ -993,7 +993,7 @@ public class RemoteViews implements Parcelable, LayoutInflater.Filter {
             	at jadx.core.dex.nodes.ClassNode.load(ClassNode.java:286)
             	at jadx.core.dex.nodes.ClassNode.load(ClassNode.java:292)
             	at jadx.core.ProcessClass.process(ProcessClass.java:36)
-            	at java.util.ArrayList.forEach(ArrayList.java:1257)
+            	at java.util.ArrayList.forEach(ArrayList.java:1259)
             	at jadx.core.ProcessClass.generateCode(ProcessClass.java:59)
             	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
             Caused by: jadx.core.utils.exceptions.DecodeException: Unknown instruction: 'invoke-polymorphic'

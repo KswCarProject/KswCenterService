@@ -113,7 +113,7 @@ public final class BrightnessCorrection implements Parcelable {
             if (Float.isNaN(scale) || Float.isNaN(translate)) {
                 throw new IllegalArgumentException("scale and translate must be numbers");
             }
-            this.mScale = MathUtils.constrain(scale, (float) MIN_SCALE, (float) MAX_SCALE);
+            this.mScale = MathUtils.constrain(scale, 0.5f, (float) MAX_SCALE);
             this.mTranslate = MathUtils.constrain(translate, (float) MIN_TRANSLATE, (float) MAX_TRANSLATE);
         }
 

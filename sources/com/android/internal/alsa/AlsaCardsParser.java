@@ -2,6 +2,7 @@ package com.android.internal.alsa;
 
 import android.net.wifi.WifiEnterpriseConfig;
 import android.util.Slog;
+import com.ibm.icu.text.PluralRules;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -68,7 +69,7 @@ public class AlsaCardsParser {
                     this.mField1 = line.substring(tokenIndex3, delimIndex2);
                     this.mCardName = line.substring(AlsaCardsParser.mTokenizer.nextToken(line, delimIndex2));
                 } catch (NumberFormatException e) {
-                    Slog.e(TAG, "Failed to parse line " + lineIndex + " of " + AlsaCardsParser.kCardsFilePath + ": " + line.substring(tokenIndex2, delimIndex));
+                    Slog.e(TAG, "Failed to parse line " + lineIndex + " of " + AlsaCardsParser.kCardsFilePath + PluralRules.KEYWORD_RULE_SEPARATOR + line.substring(tokenIndex2, delimIndex));
                     return false;
                 }
             } else if (lineIndex == 1 && (tokenIndex = AlsaCardsParser.mTokenizer.nextToken(line, 0)) != -1) {

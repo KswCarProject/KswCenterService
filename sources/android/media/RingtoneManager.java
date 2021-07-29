@@ -23,6 +23,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import com.android.internal.database.SortCursor;
+import com.ibm.icu.text.PluralRules;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -291,7 +292,7 @@ public class RingtoneManager {
             r.setUri(ringtoneUri, volumeShaperConfig);
             return r;
         } catch (Exception ex) {
-            Log.e(TAG, "Failed to open ringtone " + ringtoneUri + ": " + ex);
+            Log.e(TAG, "Failed to open ringtone " + ringtoneUri + PluralRules.KEYWORD_RULE_SEPARATOR + ex);
             return null;
         }
     }

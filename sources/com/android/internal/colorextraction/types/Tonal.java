@@ -13,6 +13,7 @@ import com.android.internal.R;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.graphics.ColorUtils;
+import com.ibm.icu.text.DateFormat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -355,7 +356,7 @@ public class Tonal implements ExtractionType {
         private ColorRange readRange(XmlPullParser parser) throws XmlPullParserException, IOException {
             parser.require(2, (String) null, Slice.SUBTYPE_RANGE);
             float[] h = readFloatArray(parser.getAttributeValue((String) null, "h"));
-            float[] s = readFloatArray(parser.getAttributeValue((String) null, "s"));
+            float[] s = readFloatArray(parser.getAttributeValue((String) null, DateFormat.SECOND));
             float[] l = readFloatArray(parser.getAttributeValue((String) null, "l"));
             if (h != null && s != null && l != null) {
                 return new ColorRange(new Range(Float.valueOf(h[0]), Float.valueOf(h[1])), new Range(Float.valueOf(s[0]), Float.valueOf(s[1])), new Range(Float.valueOf(l[0]), Float.valueOf(l[1])));
@@ -381,7 +382,7 @@ public class Tonal implements ExtractionType {
         private TonalPalette readPalette(XmlPullParser parser) throws XmlPullParserException, IOException {
             parser.require(2, (String) null, "palette");
             float[] h = readFloatArray(parser.getAttributeValue((String) null, "h"));
-            float[] s = readFloatArray(parser.getAttributeValue((String) null, "s"));
+            float[] s = readFloatArray(parser.getAttributeValue((String) null, DateFormat.SECOND));
             float[] l = readFloatArray(parser.getAttributeValue((String) null, "l"));
             if (h != null && s != null && l != null) {
                 return new TonalPalette(h, s, l);

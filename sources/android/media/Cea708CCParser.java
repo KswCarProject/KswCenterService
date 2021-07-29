@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 /* compiled from: Cea708CaptionRenderer */
 class Cea708CCParser {
@@ -205,7 +206,7 @@ class Cea708CCParser {
                     case 158:
                     case 159:
                         CaptionWindow captionWindow = r12;
-                        CaptionWindow captionWindow2 = new CaptionWindow(this.mCommand - 152, (data[pos] & 32) != 0, (data[pos] & WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) != 0, (data[pos] & 8) != 0, data[pos] & 7, (data[pos + 1] & 128) != 0, data[pos + 1] & 127, data[pos + 2] & 255, (data[pos + 3] & 240) >> 4, 15 & data[pos + 3], data[pos + 4] & 63, 7 & data[pos + 5], (data[pos + 5] & 56) >> 3);
+                        CaptionWindow captionWindow2 = new CaptionWindow(this.mCommand - 152, (data[pos] & HebrewProber.SPACE) != 0, (data[pos] & WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) != 0, (data[pos] & 8) != 0, data[pos] & 7, (data[pos + 1] & 128) != 0, data[pos + 1] & 127, data[pos + 2] & 255, (data[pos + 3] & 240) >> 4, 15 & data[pos + 3], data[pos + 4] & 63, 7 & data[pos + 5], (data[pos + 5] & 56) >> 3);
                         emitCaptionEvent(new CaptionEvent(16, captionWindow2));
                         return pos + 6;
                 }

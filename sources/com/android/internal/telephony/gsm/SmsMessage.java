@@ -20,6 +20,7 @@ import com.android.internal.telephony.uicc.IccUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public class SmsMessage extends SmsMessageBase {
     private static final int INVALID_VALIDITY_PERIOD = -1;
@@ -304,7 +305,7 @@ public class SmsMessage extends SmsMessageBase {
             ret.encodedScAddress = PhoneNumberUtils.networkPortionToCalledPartyBCDWithLength(scAddress);
         }
         if (statusReportRequested) {
-            mtiByte = (byte) (mtiByte | 32);
+            mtiByte = (byte) (mtiByte | HebrewProber.SPACE);
         }
         bo.write(mtiByte);
         bo.write(0);

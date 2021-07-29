@@ -13,12 +13,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.Attributes;
 import libcore.io.Streams;
+import org.mozilla.universalchardet.prober.HebrewProber;
 
 public class StrictJarManifest implements Cloneable {
     static final Attributes.Name ATTRIBUTE_NAME_NAME = new Attributes.Name("Name");
     static final int LINE_LENGTH_LIMIT = 72;
     private static final byte[] LINE_SEPARATOR = {13, 10};
-    private static final byte[] VALUE_SEPARATOR = {58, 32};
+    private static final byte[] VALUE_SEPARATOR = {58, HebrewProber.SPACE};
     private HashMap<String, Chunk> chunks;
     private final HashMap<String, Attributes> entries;
     private final Attributes mainAttributes;

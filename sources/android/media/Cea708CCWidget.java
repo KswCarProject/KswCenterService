@@ -639,7 +639,7 @@ class Cea708CCWidget extends ClosedCaptionWidget implements Cea708CCParser.Displ
             }
             int i = penAttr.penSize;
             if (i == 0) {
-                this.mCharacterStyles.add(new RelativeSizeSpan((float) PROPORTION_PEN_SIZE_SMALL));
+                this.mCharacterStyles.add(new RelativeSizeSpan(0.75f));
             } else if (i == 2) {
                 this.mCharacterStyles.add(new RelativeSizeSpan((float) PROPORTION_PEN_SIZE_LARGE));
             }

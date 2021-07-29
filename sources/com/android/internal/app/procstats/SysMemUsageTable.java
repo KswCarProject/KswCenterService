@@ -2,6 +2,7 @@ package com.android.internal.app.procstats;
 
 import android.util.DebugUtils;
 import com.android.internal.app.procstats.SparseMappingTable;
+import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 
 public class SysMemUsageTable extends SparseMappingTable.Table {
@@ -101,7 +102,7 @@ public class SysMemUsageTable extends SparseMappingTable.Table {
                             printedMem = imem;
                         }
                         int printedMem3 = printedMem;
-                        printWriter.print(": ");
+                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
                         printWriter.print(count);
                         printWriter.println(" samples:");
                         PrintWriter printWriter2 = pw;
@@ -129,7 +130,7 @@ public class SysMemUsageTable extends SparseMappingTable.Table {
     private void dumpCategory(PrintWriter pw, String prefix, String label, int bucket, int index) {
         pw.print(prefix);
         pw.print(label);
-        pw.print(": ");
+        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
         DebugUtils.printSizeValue(pw, getValueForId((byte) bucket, index) * 1024);
         pw.print(" min, ");
         DebugUtils.printSizeValue(pw, getValueForId((byte) bucket, index + 1) * 1024);

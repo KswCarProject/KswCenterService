@@ -2,6 +2,7 @@ package com.android.framework.protobuf;
 
 import android.net.wifi.WifiScanner;
 import com.android.framework.protobuf.MessageLite;
+import com.ibm.icu.text.Bidi;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -734,7 +735,7 @@ public final class CodedInputStream {
         long result = 0;
         for (int shift = 0; shift < 64; shift += 7) {
             byte b = readRawByte();
-            result |= ((long) (b & Byte.MAX_VALUE)) << shift;
+            result |= ((long) (b & Bidi.LEVEL_DEFAULT_RTL)) << shift;
             if ((b & 128) == 0) {
                 return result;
             }
