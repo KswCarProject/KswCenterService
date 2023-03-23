@@ -644,10 +644,10 @@ public final class UiAutomation {
                 long currentTimeMillis = SystemClock.uptimeMillis();
                 if (j2 - (currentTimeMillis - startTimeMillis) > j3) {
                     long startTimeMillis2 = startTimeMillis;
-                    long remainingIdleTimeMillis = j - (currentTimeMillis - this.mLastEventTimeMillis);
-                    if (remainingIdleTimeMillis > 0) {
+                    long startTimeMillis3 = j - (currentTimeMillis - this.mLastEventTimeMillis);
+                    if (startTimeMillis3 > 0) {
                         try {
-                            this.mLock.wait(remainingIdleTimeMillis);
+                            this.mLock.wait(startTimeMillis3);
                         } catch (InterruptedException e) {
                         }
                         j3 = 0;

@@ -3,6 +3,7 @@ package com.wits.pms.receiver;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.util.TimedRemoteCaller;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.TempControllerService;
+import com.wits.pms.mcu.custom.utils.WlanFirmwareUpdate;
 import com.wits.pms.statuscontrol.PowerManagerApp;
 import com.wits.pms.utils.AmsUtil;
 
@@ -23,14 +25,21 @@ public class BootReceiver extends BroadcastReceiver {
         Context context2 = context;
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             Log.d("centerService", "started");
-            if (context.getPackageManager().getLaunchIntentForPackage("com.txznet.adapter") != null) {
+            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+                WlanFirmwareUpdate.checkUpdata(context);
+            }
+            Intent txz = context.getPackageManager().getLaunchIntentForPackage("com.txznet.adapter");
+            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage("com.txznet.smartadapter");
+            if (txz != null) {
                 try {
                     int txzStatus = PowerManagerApp.getSettingsInt("Support_TXZ");
                     Log.d("centerService", "boot start txz != null  set Support_TXZ " + txzStatus);
-                    PowerManagerApp.setSettingsInt("Support_TXZ", txzStatus);
+                    CenterControlImpl.getImpl().setTxzSwitch(txzStatus == 1);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+            } else {
+                Log.d("centerService", "NOT boot start txz == null");
             }
             Intent accIntent = new Intent("com.wits.ksw.ACC_ON");
             accIntent.addFlags(16777216);
@@ -44,6 +53,10 @@ public class BootReceiver extends BroadcastReceiver {
             if (zlink_hicar == 1 || zlink_auto_start == 1) {
                 CenterControlImpl.getImpl().enterZlink();
             }
+            Log.i("BootReceiver", "start com.txznet.ota/.service.TXZService");
+            Intent otaintent = new Intent();
+            otaintent.setComponent(new ComponentName("com.txznet.ota", "com.txznet.ota.service.TXZService"));
+            context2.startService(otaintent);
         }
         "com.wits.boot.Start".equals(intent.getAction());
         if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {

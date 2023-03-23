@@ -161,16 +161,16 @@ public class PhoneNumberUtils {
         return !isDialable(ch) && ('a' > ch || ch > 'z') && ('A' > ch || ch > 'Z');
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:24:0x006a, code lost:
-        if (r12 != null) goto L_0x006c;
+    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0069, code lost:
+        if (r12 != null) goto L_0x006b;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:25:0x006c, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:25:0x006b, code lost:
         r12.close();
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:31:0x007a, code lost:
-        if (r12 == null) goto L_0x007d;
+    /* JADX WARNING: Code restructure failed: missing block: B:31:0x0079, code lost:
+        if (r12 == null) goto L_0x007c;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:32:0x007d, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:32:0x007c, code lost:
         return r0;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -185,11 +185,11 @@ public class PhoneNumberUtils {
             java.lang.String r8 = r7.getScheme()
             java.lang.String r2 = "tel"
             boolean r2 = r8.equals(r2)
-            if (r2 != 0) goto L_0x0084
+            if (r2 != 0) goto L_0x0083
             java.lang.String r2 = "sip"
             boolean r2 = r8.equals(r2)
             if (r2 == 0) goto L_0x0021
-            goto L_0x0084
+            goto L_0x0083
         L_0x0021:
             if (r14 != 0) goto L_0x0024
             return r1
@@ -199,59 +199,59 @@ public class PhoneNumberUtils {
             java.lang.String r10 = r7.getAuthority()
             java.lang.String r3 = "contacts"
             boolean r3 = r3.equals(r10)
-            if (r3 == 0) goto L_0x003a
+            if (r3 == 0) goto L_0x0039
             java.lang.String r2 = "number"
-        L_0x0038:
+        L_0x0037:
             r11 = r2
-            goto L_0x0045
-        L_0x003a:
+            goto L_0x0044
+        L_0x0039:
             java.lang.String r3 = "com.android.contacts"
             boolean r3 = r3.equals(r10)
-            if (r3 == 0) goto L_0x0038
+            if (r3 == 0) goto L_0x0037
             java.lang.String r2 = "data1"
-            goto L_0x0038
-        L_0x0045:
+            goto L_0x0037
+        L_0x0044:
             r12 = r1
-            android.content.ContentResolver r1 = r14.getContentResolver()     // Catch:{ RuntimeException -> 0x0072 }
+            android.content.ContentResolver r1 = r14.getContentResolver()     // Catch:{ RuntimeException -> 0x0071 }
             r2 = 1
-            java.lang.String[] r3 = new java.lang.String[r2]     // Catch:{ RuntimeException -> 0x0072 }
+            java.lang.String[] r3 = new java.lang.String[r2]     // Catch:{ RuntimeException -> 0x0071 }
             r2 = 0
-            r3[r2] = r11     // Catch:{ RuntimeException -> 0x0072 }
+            r3[r2] = r11     // Catch:{ RuntimeException -> 0x0071 }
             r4 = 0
             r5 = 0
             r6 = 0
             r2 = r7
-            android.database.Cursor r1 = r1.query(r2, r3, r4, r5, r6)     // Catch:{ RuntimeException -> 0x0072 }
+            android.database.Cursor r1 = r1.query(r2, r3, r4, r5, r6)     // Catch:{ RuntimeException -> 0x0071 }
             r12 = r1
-            if (r12 == 0) goto L_0x006a
-            boolean r1 = r12.moveToFirst()     // Catch:{ RuntimeException -> 0x0072 }
-            if (r1 == 0) goto L_0x006a
-            int r1 = r12.getColumnIndex(r11)     // Catch:{ RuntimeException -> 0x0072 }
-            java.lang.String r1 = r12.getString(r1)     // Catch:{ RuntimeException -> 0x0072 }
+            if (r12 == 0) goto L_0x0069
+            boolean r1 = r12.moveToFirst()     // Catch:{ RuntimeException -> 0x0071 }
+            if (r1 == 0) goto L_0x0069
+            int r1 = r12.getColumnIndex(r11)     // Catch:{ RuntimeException -> 0x0071 }
+            java.lang.String r1 = r12.getString(r1)     // Catch:{ RuntimeException -> 0x0071 }
             r0 = r1
-        L_0x006a:
-            if (r12 == 0) goto L_0x007d
-        L_0x006c:
+        L_0x0069:
+            if (r12 == 0) goto L_0x007c
+        L_0x006b:
             r12.close()
-            goto L_0x007d
-        L_0x0070:
+            goto L_0x007c
+        L_0x006f:
             r1 = move-exception
-            goto L_0x007e
-        L_0x0072:
+            goto L_0x007d
+        L_0x0071:
             r1 = move-exception
             java.lang.String r2 = "PhoneNumberUtils"
             java.lang.String r3 = "Error getting phone number."
-            android.telephony.Rlog.e(r2, r3, r1)     // Catch:{ all -> 0x0070 }
-            if (r12 == 0) goto L_0x007d
-            goto L_0x006c
-        L_0x007d:
+            android.telephony.Rlog.e(r2, r3, r1)     // Catch:{ all -> 0x006f }
+            if (r12 == 0) goto L_0x007c
+            goto L_0x006b
+        L_0x007c:
             return r0
-        L_0x007e:
-            if (r12 == 0) goto L_0x0083
+        L_0x007d:
+            if (r12 == 0) goto L_0x0082
             r12.close()
-        L_0x0083:
+        L_0x0082:
             throw r1
-        L_0x0084:
+        L_0x0083:
             java.lang.String r1 = r7.getSchemeSpecificPart()
             return r1
         */

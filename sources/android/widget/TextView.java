@@ -10083,14 +10083,14 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                     right = primary;
                 }
                 float f = primary;
-                float localLeft = left + viewportToContentHorizontalOffset;
+                float primary2 = left + viewportToContentHorizontalOffset;
                 float f2 = secondary;
-                float secondary2 = right + viewportToContentHorizontalOffset;
+                float localRight = right + viewportToContentHorizontalOffset;
                 float localTop = top + viewportToContentVerticalOffset;
                 int lineStart2 = lineStart;
                 float localBottom = bottom + viewportToContentVerticalOffset;
-                boolean isTopLeftVisible = isPositionVisible(localLeft, localTop);
-                boolean isBottomRightVisible = isPositionVisible(secondary2, localBottom);
+                boolean isTopLeftVisible = isPositionVisible(primary2, localTop);
+                boolean isBottomRightVisible = isPositionVisible(localRight, localBottom);
                 int characterBoundsFlags = 0;
                 if (isTopLeftVisible || isBottomRightVisible) {
                     characterBoundsFlags = 0 | 1;
@@ -10101,7 +10101,7 @@ public class TextView extends View implements ViewTreeObserver.OnPreDrawListener
                 if (isRtl) {
                     characterBoundsFlags |= 4;
                 }
-                builder.addCharacterBounds(offset2, localLeft, localTop, secondary2, localBottom, characterBoundsFlags);
+                builder.addCharacterBounds(offset2, primary2, localTop, localRight, localBottom, characterBoundsFlags);
                 offset = offset2 + 1;
                 minLine = minLine2;
                 maxLine = maxLine2;

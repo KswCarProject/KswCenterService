@@ -829,17 +829,17 @@ public final class ProcessStats implements Parcelable {
                     int iproc2 = 0;
                     while (true) {
                         NUID = iproc;
-                        int iproc3 = iproc2;
-                        if (iproc3 >= NPROCS) {
+                        int NUID3 = iproc2;
+                        if (NUID3 >= NPROCS) {
                             break;
                         }
                         int NPROCS2 = NPROCS;
-                        ProcessState proc = pkgState.mProcesses.valueAt(iproc3);
+                        ProcessState proc = pkgState.mProcesses.valueAt(NUID3);
                         LongSparseArray<PackageState> vpkgs2 = vpkgs;
                         if (proc.getCommonProcess() != proc) {
                             proc.commitStateTime(j);
                         }
-                        iproc2 = iproc3 + 1;
+                        iproc2 = NUID3 + 1;
                         iproc = NUID;
                         NPROCS = NPROCS2;
                         vpkgs = vpkgs2;
@@ -895,9 +895,9 @@ public final class ProcessStats implements Parcelable {
         for (int ip3 = 0; ip3 < NPROC; ip3++) {
             writeCommonString(parcel, procMap.keyAt(ip3));
             SparseArray<ProcessState> uids4 = procMap.valueAt(ip3);
-            int NUID3 = uids4.size();
-            parcel.writeInt(NUID3);
-            for (int iu3 = 0; iu3 < NUID3; iu3++) {
+            int NUID4 = uids4.size();
+            parcel.writeInt(NUID4);
+            for (int iu3 = 0; iu3 < NUID4; iu3++) {
                 parcel.writeInt(uids4.keyAt(iu3));
                 ProcessState proc2 = uids4.valueAt(iu3);
                 writeCommonString(parcel, proc2.getPackage());
@@ -909,9 +909,9 @@ public final class ProcessStats implements Parcelable {
         for (int ip4 = 0; ip4 < NPKG; ip4++) {
             writeCommonString(parcel, pkgMap.keyAt(ip4));
             SparseArray<LongSparseArray<PackageState>> uids5 = pkgMap.valueAt(ip4);
-            int NUID4 = uids5.size();
-            parcel.writeInt(NUID4);
-            for (int iu4 = 0; iu4 < NUID4; iu4++) {
+            int NUID5 = uids5.size();
+            parcel.writeInt(NUID5);
+            for (int iu4 = 0; iu4 < NUID5; iu4++) {
                 parcel.writeInt(uids5.keyAt(iu4));
                 LongSparseArray<PackageState> vpkgs4 = uids5.valueAt(iu4);
                 int NVERS2 = vpkgs4.size();
@@ -924,11 +924,11 @@ public final class ProcessStats implements Parcelable {
                     PackageState pkgState2 = vpkgs4.valueAt(iv2);
                     int NPROCS3 = pkgState2.mProcesses.size();
                     parcel.writeInt(NPROCS3);
-                    int iproc4 = 0;
-                    while (iproc4 < NPROCS3) {
+                    int iproc3 = 0;
+                    while (iproc3 < NPROCS3) {
                         int NPROCS4 = NPROCS3;
-                        writeCommonString(parcel, pkgState2.mProcesses.keyAt(iproc4));
-                        ProcessState proc3 = pkgState2.mProcesses.valueAt(iproc4);
+                        writeCommonString(parcel, pkgState2.mProcesses.keyAt(iproc3));
+                        ProcessState proc3 = pkgState2.mProcesses.valueAt(iproc3);
                         ArrayMap<String, SparseArray<LongSparseArray<PackageState>>> pkgMap2 = pkgMap;
                         if (proc3.getCommonProcess() == proc3) {
                             parcel.writeInt(0);
@@ -936,7 +936,7 @@ public final class ProcessStats implements Parcelable {
                             parcel.writeInt(1);
                             proc3.writeToParcel(parcel, j);
                         }
-                        iproc4++;
+                        iproc3++;
                         NPROCS3 = NPROCS4;
                         pkgMap = pkgMap2;
                     }

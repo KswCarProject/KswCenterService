@@ -585,10 +585,18 @@ public class McuStatus {
     public static class CarData {
         public static final int AHEAD_COVER = 8;
         public static final int BACK_COVER = 4;
+        public static final int GEAR_D = 4;
+        public static final int GEAR_N = 2;
+        public static final int GEAR_P = 0;
+        public static final int GEAR_R = 6;
         public static final int LEFT_AHEAD = 16;
         public static final int LEFT_BACK = 64;
+        public static final int LLIGHT_OFF = 0;
+        public static final int LLIGHT_ON = 8;
         public static final int RIGHT_AHEAD = 32;
         public static final int RIGHT_BACK = 128;
+        public static final int RLIGHT_OFF = 0;
+        public static final int RLIGHT_ON = 16;
         public float airTemperature;
         public float averSpeed;
         public int carDoor;

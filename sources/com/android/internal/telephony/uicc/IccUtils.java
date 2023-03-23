@@ -324,25 +324,25 @@ public class IccUtils {
     public static Bitmap parseToRGB(byte[] data, int length, boolean transparency) {
         int[] resultArray;
         int valueIndex = 0 + 1;
-        int width = data[0] & 255;
-        int valueIndex2 = valueIndex + 1;
-        int height = data[valueIndex] & 255;
-        int valueIndex3 = valueIndex2 + 1;
-        int bits = data[valueIndex2] & 255;
-        int valueIndex4 = valueIndex3 + 1;
-        int valueIndex5 = data[valueIndex3] & 255;
-        int valueIndex6 = valueIndex4 + 1;
-        int valueIndex7 = valueIndex6 + 1;
-        int[] colorIndexArray = getCLUT(data, ((data[valueIndex4] & 255) << 8) | (data[valueIndex6] & 255), valueIndex5);
+        int valueIndex2 = data[0] & 255;
+        int valueIndex3 = valueIndex + 1;
+        int valueIndex4 = data[valueIndex] & 255;
+        int valueIndex5 = valueIndex3 + 1;
+        int valueIndex6 = data[valueIndex3] & 255;
+        int valueIndex7 = valueIndex5 + 1;
+        int colorNumber = data[valueIndex5] & 255;
+        int valueIndex8 = valueIndex7 + 1;
+        int valueIndex9 = valueIndex8 + 1;
+        int[] colorIndexArray = getCLUT(data, ((data[valueIndex7] & 255) << 8) | (data[valueIndex8] & 255), colorNumber);
         if (true == transparency) {
-            colorIndexArray[valueIndex5 - 1] = 0;
+            colorIndexArray[colorNumber - 1] = 0;
         }
-        if (8 % bits == 0) {
-            resultArray = mapTo2OrderBitColor(data, valueIndex7, width * height, colorIndexArray, bits);
+        if (8 % valueIndex6 == 0) {
+            resultArray = mapTo2OrderBitColor(data, valueIndex9, valueIndex2 * valueIndex4, colorIndexArray, valueIndex6);
         } else {
-            resultArray = mapToNon2OrderBitColor(data, valueIndex7, width * height, colorIndexArray, bits);
+            resultArray = mapToNon2OrderBitColor(data, valueIndex9, valueIndex2 * valueIndex4, colorIndexArray, valueIndex6);
         }
-        return Bitmap.createBitmap(resultArray, width, height, Bitmap.Config.RGB_565);
+        return Bitmap.createBitmap(resultArray, valueIndex2, valueIndex4, Bitmap.Config.RGB_565);
     }
 
     private static int[] mapTo2OrderBitColor(byte[] data, int valueIndex, int length, int[] colorArray, int bits) {

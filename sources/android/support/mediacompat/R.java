@@ -149,7 +149,7 @@ public final class R {
     }
 
     public static final class string {
-        public static final int status_bar_notification_info_overflow = 2131427419;
+        public static final int status_bar_notification_info_overflow = 2131427421;
 
         private string() {
         }

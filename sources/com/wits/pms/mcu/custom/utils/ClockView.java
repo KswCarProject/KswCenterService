@@ -14,6 +14,7 @@ import com.wits.pms.R;
 import java.util.Calendar;
 
 public class ClockView extends View {
+    private static String TAG = ClockView.class.getSimpleName();
     private Bitmap mClockBitmap;
     private int mClockBitmapHeight;
     private int mClockBitmapWidth;
@@ -59,7 +60,7 @@ public class ClockView extends View {
             this.mSecond = this.mCalendar.get(13);
             this.mSecondDegree = this.mSecond * 6;
             this.mMinuteDegree = this.mMinute * 6;
-            this.mHourDegree = (this.mHour % 12) * 30;
+            this.mHourDegree = ((this.mHour % 12) * 30) + ((this.mMinute * 30) / 60);
         }
     }
 

@@ -784,26 +784,30 @@
     <public type="string" name="abc_shareactionprovider_share_with_application" id="2131427357" />
     <public type="string" name="abc_toolbar_collapse_description" id="2131427358" />
     <public type="string" name="app_name" id="2131427360" />
-    <public type="string" name="auto_update_mcu" id="2131427362" />
-    <public type="string" name="auto_update_mcu_success" id="2131427363" />
-    <public type="string" name="bootanimation_success" id="2131427364" />
-    <public type="string" name="copy_file" id="2131427407" />
-    <public type="string" name="disable_open" id="2131427411" />
-    <public type="string" name="import_config_success" id="2131427412" />
-    <public type="string" name="install_app" id="2131427413" />
-    <public type="string" name="install_app_done" id="2131427414" />
-    <public type="string" name="no_update" id="2131427415" />
-    <public type="string" name="ota_update" id="2131427416" />
-    <public type="string" name="ota_update_message" id="2131427417" />
-    <public type="string" name="search_menu_title" id="2131427418" />
-    <public type="string" name="status_bar_notification_info_overflow" id="2131427419" />
-    <public type="string" name="tp_update_fail" id="2131427420" />
-    <public type="string" name="tp_update_success" id="2131427421" />
-    <public type="string" name="update_fail" id="2131427422" />
-    <public type="string" name="update_mcu" id="2131427423" />
-    <public type="string" name="update_mcu_success" id="2131427424" />
-    <public type="string" name="update_success" id="2131427425" />
-    <public type="string" name="yes_update" id="2131427426" />
+    <public type="string" name="app_update" id="2131427362" />
+    <public type="string" name="app_update_complete" id="2131427363" />
+    <public type="string" name="auto_update_mcu" id="2131427364" />
+    <public type="string" name="auto_update_mcu_success" id="2131427365" />
+    <public type="string" name="bootanimation_success" id="2131427366" />
+    <public type="string" name="copy_file" id="2131427409" />
+    <public type="string" name="disable_open" id="2131427413" />
+    <public type="string" name="import_config_success" id="2131427414" />
+    <public type="string" name="install_app" id="2131427415" />
+    <public type="string" name="install_app_done" id="2131427416" />
+    <public type="string" name="no_update" id="2131427417" />
+    <public type="string" name="ota_update" id="2131427418" />
+    <public type="string" name="ota_update_message" id="2131427419" />
+    <public type="string" name="search_menu_title" id="2131427420" />
+    <public type="string" name="status_bar_notification_info_overflow" id="2131427421" />
+    <public type="string" name="tp_update_fail" id="2131427422" />
+    <public type="string" name="tp_update_success" id="2131427423" />
+    <public type="string" name="update_fail" id="2131427424" />
+    <public type="string" name="update_mcu" id="2131427425" />
+    <public type="string" name="update_mcu_success" id="2131427426" />
+    <public type="string" name="update_success" id="2131427427" />
+    <public type="string" name="wifi_firmware_update" id="2131427428" />
+    <public type="string" name="wifi_firmware_update_message" id="2131427429" />
+    <public type="string" name="yes_update" id="2131427430" />
     <public type="style" name="AlertDialog.AppCompat" id="2131492864" />
     <public type="style" name="AlertDialog.AppCompat.Light" id="2131492865" />
     <public type="style" name="AlertDialogCustom" id="2131492866" />

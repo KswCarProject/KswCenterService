@@ -9,6 +9,8 @@ public class WitsCommand {
     public static final int HICAR_TYPE = 7;
     public static final int MCU_TYPE = 5;
     public static final int MEDIA_TYPE = 2;
+    public static final int OTA_TYPE = 9;
+    public static final int PIP_TYPE = 20;
     public static final int SYSTEM_TYPE = 1;
     private int command;
     private String jsonArg;
@@ -29,6 +31,7 @@ public class WitsCommand {
         public static final int PHONE_ACCEPT = 112;
         public static final int PHONE_CALL = 108;
         public static final int PHONE_HANDUP = 109;
+        public static final int TXZ_DISABLED = 115;
         public static final int VOICE_TO_PHONE = 110;
         public static final int VOICE_TO_SYSTEM = 111;
     }
@@ -45,6 +48,22 @@ public class WitsCommand {
         public static final int CLOSE_MUSIC = 106;
         public static final int CLOSE_PIP = 118;
         public static final int CLOSE_VIDEO = 112;
+    }
+
+    public static final class OtaSubCommand {
+        public static final int OTA_DOWNLOAD_COMPLETED = 100;
+        public static final int OTA_FILE_ERROR = 102;
+        public static final int OTA_READY_TO_UPGRADE = 101;
+        public static final int OTA_REBOOT_DEVICE = 108;
+        public static final int OTA_START_UPGRADE = 103;
+        public static final int OTA_UPDATE_FAIL = 106;
+        public static final int OTA_UPDATE_RETRY = 107;
+        public static final int OTA_UPDATE_SUCCESS = 105;
+        public static final int OTA_UPGRADING = 104;
+    }
+
+    public static final class PIP_Command {
+        public static final int WINDOWS_MODE = 100;
     }
 
     public static final class SystemCommand {
@@ -89,6 +108,7 @@ public class WitsCommand {
         public static final int SCREEN_OFF = 113;
         public static final int SCREEN_ON = 112;
         public static final int SHOW_INSTALL_APP_DIALOG = 126;
+        public static final int SHUTDOWN = 201;
         public static final int SOURCE_CHANGE = 107;
         public static final int UPDATE_CONFIG = 200;
         public static final int USB_HOST = 122;

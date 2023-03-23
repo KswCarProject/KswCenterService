@@ -310,21 +310,21 @@ public class NetworkStatsHistory implements Parcelable {
                     break;
                 }
                 long operations2 = fracTxBytes;
-                long operations3 = this.bucketStart[i2];
+                long curStart = this.bucketStart[i2];
                 int i3 = i2;
-                long curEnd = this.bucketDuration + operations3;
+                long curEnd = this.bucketDuration + curStart;
                 if (curEnd < j) {
                     long j5 = txPackets3;
                     break;
                 }
-                if (operations3 <= j2) {
-                    long overlap = Math.min(curEnd, j2) - Math.max(operations3, j);
+                if (curStart <= j2) {
+                    long overlap = Math.min(curEnd, j2) - Math.max(curStart, j);
                     if (overlap > 0) {
                         long fracRxBytes = (rxBytes3 * overlap) / duration;
                         long j6 = curEnd;
                         long fracRxPackets = (rxPackets2 * overlap) / duration;
-                        long j7 = operations3;
-                        long curStart = (txBytes2 * overlap) / duration;
+                        long j7 = curStart;
+                        long fracTxBytes2 = (txBytes2 * overlap) / duration;
                         long txPackets4 = txPackets3;
                         long fracTxPackets = (txPackets3 * overlap) / duration;
                         i = i3;
@@ -333,17 +333,17 @@ public class NetworkStatsHistory implements Parcelable {
                         rxBytes3 -= fracRxBytes;
                         addLong(this.rxPackets, i, fracRxPackets);
                         rxPackets2 -= fracRxPackets;
-                        addLong(this.txBytes, i, curStart);
-                        txBytes2 -= curStart;
+                        addLong(this.txBytes, i, fracTxBytes2);
+                        txBytes2 -= fracTxBytes2;
                         long j8 = fracRxBytes;
                         long fracTxPackets2 = fracTxPackets;
                         addLong(this.txPackets, i, fracTxPackets2);
                         txPackets2 = txPackets4 - fracTxPackets2;
                         long j9 = fracTxPackets2;
-                        long fracOperations = (operations2 * overlap) / duration;
-                        addLong(this.operations, i, fracOperations);
+                        long fracTxPackets3 = (operations2 * overlap) / duration;
+                        addLong(this.operations, i, fracTxPackets3);
                         duration -= overlap;
-                        fracTxBytes = operations2 - fracOperations;
+                        fracTxBytes = operations2 - fracTxPackets3;
                         i2 = i - 1;
                         txPackets3 = txPackets2;
                         j = start;

@@ -2891,23 +2891,23 @@ public final class ActivityThread extends ClientTransactionHandler {
             int otherSharedClean2 = otherSharedClean;
             int otherPrivateClean2 = otherPrivateClean;
             while (true) {
-                int otherPrivateClean3 = myPss;
-                if (otherPrivateClean3 >= 17) {
+                int i2 = myPss;
+                if (i2 >= 17) {
                     break;
                 }
-                int myPss2 = memoryInfo6.getOtherPss(otherPrivateClean3);
-                int mySwappablePss = memoryInfo6.getOtherSwappablePss(otherPrivateClean3);
-                int mySharedDirty = memoryInfo6.getOtherSharedDirty(otherPrivateClean3);
-                int myPrivateDirty = memoryInfo6.getOtherPrivateDirty(otherPrivateClean3);
-                int mySharedClean = memoryInfo6.getOtherSharedClean(otherPrivateClean3);
-                int myPrivateClean = memoryInfo6.getOtherPrivateClean(otherPrivateClean3);
-                int mySwappedOut = memoryInfo6.getOtherSwappedOut(otherPrivateClean3);
-                int mySwappedOutPss = memoryInfo6.getOtherSwappedOutPss(otherPrivateClean3);
+                int myPss2 = memoryInfo6.getOtherPss(i2);
+                int mySwappablePss = memoryInfo6.getOtherSwappablePss(i2);
+                int mySharedDirty = memoryInfo6.getOtherSharedDirty(i2);
+                int myPrivateDirty = memoryInfo6.getOtherPrivateDirty(i2);
+                int mySharedClean = memoryInfo6.getOtherSharedClean(i2);
+                int myPrivateClean = memoryInfo6.getOtherPrivateClean(i2);
+                int mySwappedOut = memoryInfo6.getOtherSwappedOut(i2);
+                int mySwappedOutPss = memoryInfo6.getOtherSwappedOutPss(i2);
                 if (myPss2 == 0 && mySharedDirty == 0 && myPrivateDirty == 0 && mySharedClean == 0 && myPrivateClean == 0) {
                     if ((memoryInfo6.hasSwappedOutPss ? mySwappedOutPss : mySwappedOut) == 0) {
                         j3 = j16;
                         j2 = j15;
-                        i = otherPrivateClean3;
+                        i = i2;
                         j = j14;
                         dvToken = dvToken2;
                         memoryInfo2 = memoryInfo6;
@@ -2923,9 +2923,9 @@ public final class ActivityThread extends ClientTransactionHandler {
                 memoryInfo2 = memoryInfo6;
                 j3 = j16;
                 j2 = j15;
-                i = otherPrivateClean3;
+                i = i2;
                 j = j14;
-                dumpMemoryInfo(proto, 2246267895813L, Debug.MemoryInfo.getOtherLabel(otherPrivateClean3), myPss2, mySwappablePss, mySharedDirty, myPrivateDirty, mySharedClean, myPrivateClean, memoryInfo6.hasSwappedOutPss, mySwappedOut, mySwappedOutPss);
+                dumpMemoryInfo(proto, 2246267895813L, Debug.MemoryInfo.getOtherLabel(i2), myPss2, mySwappablePss, mySharedDirty, myPrivateDirty, mySharedClean, myPrivateClean, memoryInfo6.hasSwappedOutPss, mySwappedOut, mySwappedOutPss);
                 otherPss2 -= myPss2;
                 otherSwappablePss2 -= mySwappablePss;
                 otherSharedDirty2 -= mySharedDirty;
@@ -2944,7 +2944,7 @@ public final class ActivityThread extends ClientTransactionHandler {
             long j17 = j14;
             long dvToken3 = dvToken2;
             memoryInfo = memoryInfo6;
-            int i2 = 17;
+            int i3 = 17;
             dumpMemoryInfo(proto, 1146756268038L, "Unknown", otherPss2, otherSwappablePss2, otherSharedDirty2, otherPrivateDirty2, otherSharedClean2, otherPrivateClean2, memoryInfo.hasSwappedOutPss, otherSwappedOut, otherSwappedOutPss);
             long tToken2 = protoOutputStream.start(1146756268039L);
             dumpMemoryInfo(proto, 1146756268033L, "TOTAL", memInfo.getTotalPss(), memInfo.getTotalSwappablePss(), memInfo.getTotalSharedDirty(), memInfo.getTotalPrivateDirty(), memInfo.getTotalSharedClean(), memInfo.getTotalPrivateClean(), memoryInfo.hasSwappedOutPss, memInfo.getTotalSwappedOut(), memInfo.getTotalSwappedOutPss());
@@ -2955,25 +2955,25 @@ public final class ActivityThread extends ClientTransactionHandler {
             long tToken3 = tToken2;
             protoOutputStream.end(tToken3);
             if (dumpDalvik) {
-                while (i2 < 31) {
-                    int myPss3 = memoryInfo.getOtherPss(i2);
-                    int mySwappablePss2 = memoryInfo.getOtherSwappablePss(i2);
-                    int mySharedDirty2 = memoryInfo.getOtherSharedDirty(i2);
-                    int myPrivateDirty2 = memoryInfo.getOtherPrivateDirty(i2);
-                    int mySharedClean2 = memoryInfo.getOtherSharedClean(i2);
-                    int myPrivateClean2 = memoryInfo.getOtherPrivateClean(i2);
-                    int mySwappedOut2 = memoryInfo.getOtherSwappedOut(i2);
-                    int mySwappedOutPss2 = memoryInfo.getOtherSwappedOutPss(i2);
+                while (i3 < 31) {
+                    int myPss3 = memoryInfo.getOtherPss(i3);
+                    int mySwappablePss2 = memoryInfo.getOtherSwappablePss(i3);
+                    int mySharedDirty2 = memoryInfo.getOtherSharedDirty(i3);
+                    int myPrivateDirty2 = memoryInfo.getOtherPrivateDirty(i3);
+                    int mySharedClean2 = memoryInfo.getOtherSharedClean(i3);
+                    int myPrivateClean2 = memoryInfo.getOtherPrivateClean(i3);
+                    int mySwappedOut2 = memoryInfo.getOtherSwappedOut(i3);
+                    int mySwappedOutPss2 = memoryInfo.getOtherSwappedOutPss(i3);
                     if (myPss3 == 0 && mySharedDirty2 == 0 && myPrivateDirty2 == 0 && mySharedClean2 == 0 && myPrivateClean2 == 0) {
                         if ((memoryInfo.hasSwappedOutPss ? mySwappedOutPss2 : mySwappedOut2) == 0) {
                             tToken = tToken3;
-                            i2++;
+                            i3++;
                             tToken3 = tToken;
                         }
                     }
                     tToken = tToken3;
-                    dumpMemoryInfo(proto, 2246267895816L, Debug.MemoryInfo.getOtherLabel(i2), myPss3, mySwappablePss2, mySharedDirty2, myPrivateDirty2, mySharedClean2, myPrivateClean2, memoryInfo.hasSwappedOutPss, mySwappedOut2, mySwappedOutPss2);
-                    i2++;
+                    dumpMemoryInfo(proto, 2246267895816L, Debug.MemoryInfo.getOtherLabel(i3), myPss3, mySwappablePss2, mySharedDirty2, myPrivateDirty2, mySharedClean2, myPrivateClean2, memoryInfo.hasSwappedOutPss, mySwappedOut2, mySwappedOutPss2);
+                    i3++;
                     tToken3 = tToken;
                 }
             }

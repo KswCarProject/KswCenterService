@@ -5,6 +5,7 @@ import android.util.Log;
 import com.wits.pms.ksw.IMcuUpdate;
 import com.wits.pms.ksw.OnMcuUpdateProgressListener;
 import com.wits.pms.mcu.custom.utils.UpdateHelper;
+import com.wits.pms.statuscontrol.WitsCommand;
 import java.io.File;
 
 public class McuUpdateService extends IMcuUpdate.Stub {
@@ -20,6 +21,8 @@ public class McuUpdateService extends IMcuUpdate.Stub {
         UpdateHelper.getInstance().setListener(new UpdateHelper.McuUpdateListener() {
             public void success() {
                 try {
+                    Log.d("McuUpdateService", "mcuUpdate  success");
+                    WitsCommand.sendCommand(1, 201, "");
                     listener.success();
                 } catch (RemoteException e) {
                 }

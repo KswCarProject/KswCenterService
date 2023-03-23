@@ -293,19 +293,19 @@ final class Utf8 {
                         return Utf8.incompleteStateFor(buffer, byte1, index3, limit - index3);
                     }
                     int index5 = index3 + 1;
-                    int index6 = buffer.get(index3);
-                    if (index6 > -65 || ((byte1 == -32 && index6 < -96) || ((byte1 == -19 && index6 >= -96) || buffer.get(index5) > -65))) {
+                    byte byte2 = buffer.get(index3);
+                    if (byte2 > -65 || ((byte1 == -32 && byte2 < -96) || ((byte1 == -19 && byte2 >= -96) || buffer.get(index5) > -65))) {
                         return -1;
                     }
                     index2 = index5 + 1;
                 } else if (index3 >= limit - 2) {
                     return Utf8.incompleteStateFor(buffer, byte1, index3, limit - index3);
                 } else {
-                    int index7 = index3 + 1;
-                    int byte2 = buffer.get(index3);
-                    if (byte2 <= -65 && (((byte1 << 28) + (byte2 + 112)) >> 30) == 0) {
-                        int index8 = index7 + 1;
-                        if (buffer.get(index7) <= -65) {
+                    int index6 = index3 + 1;
+                    int index7 = buffer.get(index3);
+                    if (index7 <= -65 && (((byte1 << 28) + (index7 + 112)) >> 30) == 0) {
+                        int index8 = index6 + 1;
+                        if (buffer.get(index6) <= -65) {
                             index2 = index8 + 1;
                             if (buffer.get(index8) > -65) {
                             }

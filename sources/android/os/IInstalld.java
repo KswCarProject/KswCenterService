@@ -1773,10 +1773,10 @@ public interface IInstalld extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1819,10 +1819,10 @@ public interface IInstalld extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1846,10 +1846,10 @@ public interface IInstalld extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1873,10 +1873,10 @@ public interface IInstalld extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1939,10 +1939,10 @@ public interface IInstalld extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -2307,10 +2307,10 @@ public interface IInstalld extends IInterface {
                                     if (_reply.readInt() != 0) {
                                         z = true;
                                     }
-                                    boolean _result = z;
+                                    boolean _status = z;
                                     _reply.recycle();
                                     _data.recycle();
-                                    return _result;
+                                    return _status;
                                 }
                                 boolean reconcileSecondaryDexFile = Stub.getDefaultImpl().reconcileSecondaryDexFile(dexPath, pkgName, uid, isas, volume_uuid, storage_flag);
                                 _reply.recycle();
@@ -2410,10 +2410,10 @@ public interface IInstalld extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -2470,10 +2470,10 @@ public interface IInstalld extends IInterface {
                                     if (_reply.readInt() != 0) {
                                         z = true;
                                     }
-                                    boolean _result = z;
+                                    boolean _status = z;
                                     _reply.recycle();
                                     _data.recycle();
-                                    return _result;
+                                    return _status;
                                 }
                                 boolean prepareAppProfile = Stub.getDefaultImpl().prepareAppProfile(packageName, userId, appId, profileName, codePath, dexMetadata);
                                 _reply.recycle();

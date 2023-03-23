@@ -2707,15 +2707,15 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
                     this.mNumTouchMoveEvent = 0;
                     break;
                 case 5:
-                    int x = ev.getActionIndex();
-                    int id = ev.getPointerId(x);
-                    int x2 = (int) ev.getX(x);
-                    int y = (int) ev.getY(x);
+                    int index = ev.getActionIndex();
+                    int id = ev.getPointerId(index);
+                    int x = (int) ev.getX(index);
+                    int y = (int) ev.getY(index);
                     this.mMotionCorrection = 0;
                     this.mActivePointerId = id;
-                    this.mMotionX = x2;
+                    this.mMotionX = x;
                     this.mMotionY = y;
-                    int motionPosition = pointToPosition(x2, y);
+                    int motionPosition = pointToPosition(x, y);
                     if (motionPosition >= 0) {
                         this.mMotionViewOriginalTop = getChildAt(motionPosition - this.mFirstPosition).getTop();
                         this.mMotionPosition = motionPosition;
@@ -2725,9 +2725,9 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
                     break;
                 case 6:
                     onSecondaryPointerUp(ev);
-                    int x3 = this.mMotionX;
+                    int x2 = this.mMotionX;
                     int y2 = this.mMotionY;
-                    int motionPosition2 = pointToPosition(x3, y2);
+                    int motionPosition2 = pointToPosition(x2, y2);
                     if (motionPosition2 >= 0) {
                         this.mMotionViewOriginalTop = getChildAt(motionPosition2 - this.mFirstPosition).getTop();
                         this.mMotionPosition = motionPosition2;

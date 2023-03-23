@@ -15,6 +15,7 @@ public class ZlinkMessage {
     public static final String DISABLE_FOREGROUND_AUDIOFOCUS = "rw.zlink.foreground.donotreqaf";
     public static final String DISABLE_ZLINK_BACKGROUNG_CONNECT = "persist.sys.zlink.bgconn.disa";
     public static final String ZLINK_AIRPLAY_CONNECT = "vendor.wits.airplay.connected";
+    public static final String ZLINK_AIRPLAY_WIRED_CONNECT = "vendor.wits.airplay.wired.connected";
     public static final String ZLINK_ANDROID_AUTO_CONNECT = "vendor.wits.androidAuto.connected";
     public static final String ZLINK_ANDROID_MIRROR_CONNECT = "vendor.wits.androidMirror.connected";
     public static final String ZLINK_APPLE_MAPS_VOL = "persist.sys.zlink.au.alt.v";
@@ -27,6 +28,7 @@ public class ZlinkMessage {
     public static final String ZLINK_CALL_OFF = "0";
     public static final String ZLINK_CALL_ON = "1";
     public static final String ZLINK_CAN_START = "persist.sys.zlink.canstart";
+    public static final String ZLINK_CARPLAY_WRIED_CONNECT = "vendor.wits.carplayWried.connected";
     public static final String ZLINK_CONNECT = "vendor.wits.zlink.connected";
     public static final String ZLINK_ENTER_CARPLAY = "persist.sys.zlink.autod.disa";
     public static final String ZLINK_MIC_VOL = "persist.sys.zlink..mic.vol";

@@ -420,25 +420,25 @@ public class SmsMessage extends SmsMessageBase {
             int bufferLen;
             int offset = this.mCur;
             int offset2 = offset + 1;
-            int userDataLength = this.mPdu[offset] & 255;
+            int offset3 = this.mPdu[offset] & 255;
             int headerSeptets = 0;
             int userDataHeaderLength = 0;
             if (hasUserDataHeader) {
-                int offset3 = offset2 + 1;
+                int offset4 = offset2 + 1;
                 userDataHeaderLength = this.mPdu[offset2] & 255;
                 byte[] udh = new byte[userDataHeaderLength];
-                System.arraycopy(this.mPdu, offset3, udh, 0, userDataHeaderLength);
+                System.arraycopy(this.mPdu, offset4, udh, 0, userDataHeaderLength);
                 this.mUserDataHeader = SmsHeader.fromByteArray(udh);
-                int offset4 = offset3 + userDataHeaderLength;
+                int offset5 = offset4 + userDataHeaderLength;
                 int headerBits = (userDataHeaderLength + 1) * 8;
                 headerSeptets = (headerBits / 7) + (headerBits % 7 > 0 ? 1 : 0);
                 this.mUserDataSeptetPadding = (headerSeptets * 7) - headerBits;
-                offset2 = offset4;
+                offset2 = offset5;
             }
             if (dataInSeptets) {
                 bufferLen = this.mPdu.length - offset2;
             } else {
-                bufferLen = userDataLength - (hasUserDataHeader ? userDataHeaderLength + 1 : 0);
+                bufferLen = offset3 - (hasUserDataHeader ? userDataHeaderLength + 1 : 0);
                 if (bufferLen < 0) {
                     bufferLen = 0;
                 }
@@ -449,7 +449,7 @@ public class SmsMessage extends SmsMessageBase {
             if (!dataInSeptets) {
                 return this.mUserData.length;
             }
-            int count = userDataLength - headerSeptets;
+            int count = offset3 - headerSeptets;
             if (count < 0) {
                 return 0;
             }

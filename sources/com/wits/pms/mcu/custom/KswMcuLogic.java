@@ -3,6 +3,7 @@ package com.wits.pms.mcu.custom;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.ContentObserver;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
@@ -10,9 +11,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import com.wits.pms.bean.ZlinkMessage;
+import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.SystemStatusControl;
+import com.wits.pms.custom.CallBackServiceImpl;
 import com.wits.pms.mcu.McuService;
-import com.wits.pms.utils.SystemProperties;
+import com.wits.pms.mirror.SystemProperties;
 
 public class KswMcuLogic {
     private static final byte ANDROID_MODE = 1;
@@ -90,6 +94,15 @@ public class KswMcuLogic {
                 boolean unused = KswMcuLogic.callingStopHeartBeat = z;
             }
         });
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("isZlinkCalling"), true, new ContentObserver(this.mHandler) {
+            public void onChange(boolean selfChange) {
+                boolean z = true;
+                if (Settings.System.getInt(KswMcuLogic.this.mContext.getContentResolver(), "isZlinkCalling", 0) != 1) {
+                    z = false;
+                }
+                boolean unused = KswMcuLogic.callingStopHeartBeat = z;
+            }
+        });
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("touch_continuous_send"), true, new ContentObserver(this.mHandler) {
             public void onChange(boolean selfChange) {
                 boolean z = true;
@@ -156,18 +169,20 @@ public class KswMcuLogic {
     private void updateInterceptView() {
         if (this.isReversing) {
             opInterceptView(true, false);
-            return;
-        }
-        switch (this.mCurrentStatus) {
-            case 1:
-                opInterceptView(false, false);
-                return;
-            case 2:
-                opInterceptView(true, false);
-                return;
-            default:
-                opInterceptView(false, false);
-                return;
+        } else if (!SystemStatusControl.getStatus().topApp.equals("com.wits.ksw") || !SystemStatusControl.getStatus().topClass.equals("com.wits.ksw.launcher.view.lexus.OEMFMActivity")) {
+            switch (this.mCurrentStatus) {
+                case 1:
+                    opInterceptView(false, false);
+                    return;
+                case 2:
+                    opInterceptView(true, false);
+                    return;
+                default:
+                    opInterceptView(false, false);
+                    return;
+            }
+        } else {
+            opInterceptView(false, false);
         }
     }
 
@@ -194,6 +209,7 @@ public class KswMcuLogic {
         if (!intercept) {
             if (kswMcuLogic2.mInterceptView != null && kswMcuLogic2.wasAdded) {
                 try {
+                    Log.e(TAG, "-- Bug#11240/11693 -- removeViewImmediate --1--");
                     kswMcuLogic2.mWindowManager.removeViewImmediate(kswMcuLogic2.mInterceptView);
                     kswMcuLogic2.wasAdded = false;
                     kswMcuLogic2.mLongPressDownTime = 0;
@@ -228,13 +244,15 @@ public class KswMcuLogic {
             });
             try {
                 if (kswMcuLogic2.wasAdded) {
+                    Log.e(TAG, "-- Bug#11240/11693 -- removeViewImmediate --3--");
                     kswMcuLogic2.mWindowManager.removeViewImmediate(kswMcuLogic2.mInterceptView);
                 }
+                kswMcuLogic2.wasAdded = true;
+                Log.e(TAG, "-- Bug#11240/11693 -- addView ");
+                kswMcuLogic2.mWindowManager.addView(kswMcuLogic2.mInterceptView, lp);
             } catch (Exception e2) {
                 Log.w(TAG, "remove interceptView failed.");
             }
-            kswMcuLogic2.wasAdded = true;
-            kswMcuLogic2.mWindowManager.addView(kswMcuLogic2.mInterceptView, lp);
         }
     }
 
@@ -242,6 +260,7 @@ public class KswMcuLogic {
         if (kswMcuLogic2.mCloseScreen) {
             kswMcuLogic2.wasAdded = false;
             try {
+                Log.e(TAG, "-- Bug#11240/11693 -- removeViewImmediate --2--");
                 kswMcuLogic2.mWindowManager.removeViewImmediate(kswMcuLogic2.mInterceptView);
             } catch (Exception e) {
                 Log.w(TAG, "remove interceptView failed.");
@@ -252,6 +271,11 @@ public class KswMcuLogic {
         } else {
             kswMcuLogic2.mCurrentTouchX = (int) event.getX();
             kswMcuLogic2.mCurrentTouchY = kswMcuLogic2.getTouchY((int) event.getY());
+            if (kswMcuLogic2.mCurrentTouchX < -5 || kswMcuLogic2.mCurrentTouchX > 4000 || kswMcuLogic2.mCurrentTouchY < -5 || kswMcuLogic2.mCurrentTouchY > 2000) {
+                Log.e(TAG, "-- Bug#10725 -- INVALID TOUCH -- touchEvent is " + event);
+                return false;
+            }
+            Log.e(TAG, "-- Bug#10725 -- touchEvent is " + event);
             if (isNewPro) {
                 kswMcuLogic2.sendTouchDataA(event);
             } else {
@@ -291,7 +315,14 @@ public class KswMcuLogic {
     }
 
     private int getTouchY(int currentY) {
-        return (SystemProperties.get("app.carMode.control").equals("0") ? 62 : 0) + currentY;
+        boolean needAdd = SystemProperties.get("app.carMode.control").equals("0");
+        int i = 0;
+        boolean versionIsOld = Build.VERSION.RELEASE.equals("10") || Build.VERSION.RELEASE.equals("11");
+        Log.i(TAG, "versionIsOld" + versionIsOld);
+        if (needAdd && versionIsOld) {
+            i = 62;
+        }
+        return i + currentY;
     }
 
     private void sendTouchDataA(MotionEvent event) {
@@ -344,7 +375,13 @@ public class KswMcuLogic {
     }
 
     private boolean needSendTouchData() {
-        return this.isReversing || this.mCurrentStatus == 2;
+        if (SystemProperties.get(ZlinkMessage.ZLINK_CALL).equals("1") && this.mCurrentStatus == 2) {
+            return false;
+        }
+        if (this.isReversing || this.mCurrentStatus == 2) {
+            return true;
+        }
+        return false;
     }
 
     private void handleUpdateMessage(KswMessage message) {
@@ -405,12 +442,12 @@ public class KswMcuLogic {
                 }
             }
             if (msg.getCmdType() == 99) {
-                if (data == 1 && msg.getData()[1] > 0) {
+                if ((data == 1 && msg.getData()[1] > 0) || (data == 0 && msg.getData()[1] > 0)) {
                     updateStatus((byte) 1);
                 }
             }
             if (msg.getCmdType() == 103) {
-                if (data == 0 || data == 8 || data == 12 || data == 5 || data == 6 || data == 11) {
+                if (data == 0 || data == 8 || data == 12 || data == 5 || data == 6 || data == 11 || data == 9) {
                     updateStatus((byte) 2);
                 } else {
                     updateStatus((byte) 1);
@@ -446,18 +483,21 @@ public class KswMcuLogic {
                 switch (cmdType) {
                     case 16:
                     case 18:
-                    case 19:
                     case 20:
                     case 22:
                     case 23:
                         return;
                     case 17:
-                        if (message.getData()[0] <= 3) {
+                        if (message.getData()[0] == 1) {
                             if (message.getData()[1] == 1) {
                                 z = true;
                             }
                             this.isReversing = z;
                             updateInterceptView();
+                            return;
+                        } else if (message.getData()[0] == 2) {
+                            SystemStatusControl.getStatus().setCcd(message.getData()[1]);
+                            CallBackServiceImpl.getCallBackServiceImpl().handleReverse();
                             return;
                         } else if (message.getData()[0] == 4) {
                             if (message.getData()[1] == 1) {
@@ -468,6 +508,11 @@ public class KswMcuLogic {
                         } else {
                             return;
                         }
+                    case 19:
+                        Log.d(TAG, "clock input handleMessage CMD_CAR_SYSTEM_SETTINGS");
+                        CenterControlImpl.getImpl().initBenzClockSort(message.getData()[9]);
+                        CenterControlImpl.getImpl().saveForwardCamMirror(message.getData()[10]);
+                        return;
                     case 21:
                         this.mCurrentStatus = message.getData()[0];
                         updateStatus(this.mCurrentStatus);

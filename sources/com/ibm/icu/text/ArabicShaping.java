@@ -574,7 +574,7 @@ public final class ArabicShaping {
                 i2++;
             }
         } else {
-            int e2 = i + length2;
+            int i3 = i + length2;
             int wL = countSpaceSub(cArr, length2, 65535);
             int wT = countSpaceSub(cArr, length2, TASHKEEL_SPACE_SUB);
             if (lenOptionsLamAlef == 2) {
@@ -584,14 +584,14 @@ public final class ArabicShaping {
                 tashkeelOn = true;
             }
             if (lamAlefOn && lenOptionsLamAlef == 2) {
-                shiftArray(cArr, i, e2, 65535);
+                shiftArray(cArr, i, i3, 65535);
                 while (wL > i) {
                     wL--;
                     cArr[wL] = SPACE_CHAR;
                 }
             }
             if (tashkeelOn && lenOptionsTashkeel == 393216) {
-                shiftArray(cArr, i, e2, TASHKEEL_SPACE_SUB);
+                shiftArray(cArr, i, i3, TASHKEEL_SPACE_SUB);
                 while (wT > i) {
                     wT--;
                     cArr[wT] = SPACE_CHAR;
@@ -606,13 +606,13 @@ public final class ArabicShaping {
                 tashkeelOn2 = true;
             }
             if (lamAlefOn2 && lenOptionsLamAlef == 0) {
-                shiftArray(cArr, i, e2, 65535);
-                wL = flipArray(cArr, i, e2, wL);
+                shiftArray(cArr, i, i3, 65535);
+                wL = flipArray(cArr, i, i3, wL);
                 length2 = wL - i;
             }
             if (tashkeelOn2 && lenOptionsTashkeel == 524288) {
-                shiftArray(cArr, i, e2, TASHKEEL_SPACE_SUB);
-                wT = flipArray(cArr, i, e2, wT);
+                shiftArray(cArr, i, i3, TASHKEEL_SPACE_SUB);
+                wT = flipArray(cArr, i, i3, wT);
                 length2 = wT - i;
             }
             boolean lamAlefOn3 = false;
@@ -624,19 +624,19 @@ public final class ArabicShaping {
                 tashkeelOn3 = true;
             }
             if (lamAlefOn3 && (lenOptionsLamAlef == 3 || lenOptionsLamAlef == 65536)) {
-                shiftArray(cArr, i, e2, 65535);
-                int flipArray = flipArray(cArr, i, e2, wL);
+                shiftArray(cArr, i, i3, 65535);
+                int flipArray = flipArray(cArr, i, i3, wL);
                 while (true) {
                     int wL2 = flipArray;
-                    if (wL2 < e2) {
+                    if (wL2 < i3) {
                         flipArray = wL2 + 1;
                         cArr[wL2] = SPACE_CHAR;
                     }
                 }
             }
             if (tashkeelOn3 && lenOptionsTashkeel == 262144) {
-                shiftArray(cArr, i, e2, TASHKEEL_SPACE_SUB);
-                for (int wT2 = flipArray(cArr, i, e2, wT); wT2 < e2; wT2++) {
+                shiftArray(cArr, i, i3, TASHKEEL_SPACE_SUB);
+                for (int wT2 = flipArray(cArr, i, i3, wT); wT2 < i3; wT2++) {
                     cArr[wT2] = SPACE_CHAR;
                 }
             }

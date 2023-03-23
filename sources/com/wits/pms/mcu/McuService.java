@@ -11,7 +11,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import com.wits.pms.custom.McuUpdateService;
 import com.wits.pms.mcu.custom.KswMcuSender;
-import com.wits.pms.utils.ServiceManager;
+import com.wits.pms.mirror.ServiceManager;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +46,7 @@ public class McuService extends Service implements McuSender {
     public void onCreate() {
         String serial;
         try {
-            if (Build.VERSION.RELEASE.contains("11")) {
+            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
                 serial = "/dev/ttyHS1";
             } else if (version.contains("8937")) {
                 serial = "/dev/ttyHSL1";
@@ -119,8 +119,12 @@ public class McuService extends Service implements McuSender {
     }
 
     public void send(McuMessage msg) {
-        if (mReadThread != null && msg != null) {
+        if (mReadThread == null) {
+            Log.d(TAG, "mReadThread is null");
+        } else if (msg != null) {
             mReadThread.write(msg.outData);
+        } else {
+            Log.d(TAG, "msg is null");
         }
     }
 

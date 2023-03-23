@@ -4721,17 +4721,17 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 return false;
             }
         }
-        int parentImportance2 = getImportantForAutofill();
-        if (parentImportance2 == 4 || parentImportance2 == 1) {
+        int importance = getImportantForAutofill();
+        if (importance == 4 || importance == 1) {
             return true;
         }
-        if (parentImportance2 == 8 || parentImportance2 == 2) {
+        if (importance == 8 || importance == 2) {
             if (Log.isLoggable(AUTOFILL_LOG_TAG, 2)) {
-                Log.v(AUTOFILL_LOG_TAG, "View (" + this + ") is not important for autofill because its importance is " + parentImportance2);
+                Log.v(AUTOFILL_LOG_TAG, "View (" + this + ") is not important for autofill because its importance is " + importance);
             }
             return false;
-        } else if (parentImportance2 != 0) {
-            Log.w(AUTOFILL_LOG_TAG, "invalid autofill importance (" + parentImportance2 + " on view " + this);
+        } else if (importance != 0) {
+            Log.w(AUTOFILL_LOG_TAG, "invalid autofill importance (" + importance + " on view " + this);
             return false;
         } else {
             int id = this.mID;
@@ -11180,21 +11180,21 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 drawRight = rightFadeStrength * fadeHeight2 > 1.0f;
                 drawLeft = drawLeft2;
             }
-            int topSaveCount3 = canvas.getSaveCount();
-            int topSaveCount4 = -1;
+            int saveCount2 = canvas.getSaveCount();
+            int topSaveCount3 = -1;
             int bottomSaveCount3 = -1;
             int leftSaveCount3 = -1;
             int rightSaveCount3 = -1;
             int solidColor2 = getSolidColor();
             if (solidColor2 == 0) {
                 if (drawTop) {
-                    topSaveCount4 = canvas2.saveUnclippedLayer(left2, top, right4, top + length4);
+                    topSaveCount3 = canvas2.saveUnclippedLayer(left2, top, right4, top + length4);
                 }
                 if (drawBottom) {
-                    topSaveCount2 = topSaveCount4;
+                    topSaveCount2 = topSaveCount3;
                     bottomSaveCount3 = canvas2.saveUnclippedLayer(left2, bottom4 - length4, right4, bottom4);
                 } else {
-                    topSaveCount2 = topSaveCount4;
+                    topSaveCount2 = topSaveCount3;
                 }
                 if (drawLeft) {
                     leftSaveCount3 = canvas2.saveUnclippedLayer(left2, top, left2 + length4, bottom4);
@@ -11202,14 +11202,14 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 if (drawRight) {
                     rightSaveCount3 = canvas2.saveUnclippedLayer(right4 - length4, top, right4, bottom4);
                 }
-                saveCount = topSaveCount3;
+                saveCount = saveCount2;
                 bottomSaveCount = bottomSaveCount3;
                 leftSaveCount = leftSaveCount3;
                 rightSaveCount = rightSaveCount3;
                 topSaveCount = topSaveCount2;
             } else {
                 scrollabilityCache.setFadeColor(solidColor2);
-                saveCount = topSaveCount3;
+                saveCount = saveCount2;
                 bottomSaveCount = -1;
                 leftSaveCount = -1;
                 rightSaveCount = -1;
@@ -11217,7 +11217,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
             }
             onDraw(canvas);
             dispatchDraw(canvas);
-            int topSaveCount5 = topSaveCount;
+            int topSaveCount4 = topSaveCount;
             Paint p = scrollabilityCache.paint;
             int bottomSaveCount4 = bottomSaveCount;
             Matrix matrix = scrollabilityCache.matrix;
@@ -11323,7 +11323,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback, Accessibility
                 fade.setLocalMatrix(matrix);
                 p.setShader(fade);
                 if (solidColor == 0) {
-                    canvas2.restoreUnclippedLayer(topSaveCount5, p);
+                    canvas2.restoreUnclippedLayer(topSaveCount4, p);
                 } else {
                     canvas.drawRect((float) left, (float) rightSaveCount2, (float) leftSaveCount2, (float) (rightSaveCount2 + length), p);
                 }

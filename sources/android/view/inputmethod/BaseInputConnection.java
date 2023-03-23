@@ -439,18 +439,18 @@ public class BaseInputConnection implements InputConnection {
             a = b;
             b = tmp;
         }
-        int length = content.length();
+        int tmp2 = content.length();
         if (a < 0) {
             a = 0;
         }
         if (b < 0) {
             b = 0;
         }
-        if (a > length) {
-            a = length;
+        if (a > tmp2) {
+            a = tmp2;
         }
-        if (b > length) {
-            b = length;
+        if (b > tmp2) {
+            b = tmp2;
         }
         ensureDefaultComposingSpans();
         if (this.mDefaultComposingSpans != null) {

@@ -1676,9 +1676,9 @@ public class Editor {
                     min = Math.min(min, layout2.getLineLeft(line));
                     max = Math.max(max, layout2.getLineRight(line));
                 }
-                int left2 = (int) min;
+                int line2 = (int) min;
                 right = (int) (0.5f + max);
-                left = left2;
+                left = line2;
             } else {
                 left = 0;
                 right = right2;
@@ -6205,9 +6205,9 @@ public class Editor {
             loadSupportedActivities();
             for (ResolveInfo resolveInfo : this.mSupportedActivities) {
                 int i2 = i + 1;
-                int actionId = i + 268435712;
-                this.mAccessibilityActions.put(actionId, new AccessibilityNodeInfo.AccessibilityAction(actionId, getLabel(resolveInfo)));
-                this.mAccessibilityIntents.put(actionId, createProcessTextIntentForResolveInfo(resolveInfo));
+                int i3 = i + 268435712;
+                this.mAccessibilityActions.put(i3, new AccessibilityNodeInfo.AccessibilityAction(i3, getLabel(resolveInfo)));
+                this.mAccessibilityIntents.put(i3, createProcessTextIntentForResolveInfo(resolveInfo));
                 i = i2;
             }
         }

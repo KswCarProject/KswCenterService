@@ -142,9 +142,9 @@ public class Tonal implements ExtractionType {
                 primaryIndex2 = 2;
             }
         }
-        int primaryIndex4 = getColorInt(primaryIndex2, h, s, l);
-        gradientColors3.setMainColor(primaryIndex4);
-        gradientColors3.setSecondaryColor(primaryIndex4);
+        int mainColor3 = getColorInt(primaryIndex2, h, s, l);
+        gradientColors3.setMainColor(mainColor3);
+        gradientColors3.setSecondaryColor(mainColor3);
         gradientColors3.setColorPalette(colorPalette);
         gradientColors.setSupportsDarkText(supportsDarkText);
         gradientColors2.setSupportsDarkText(supportsDarkText);

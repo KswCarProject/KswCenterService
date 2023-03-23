@@ -14,10 +14,13 @@ import com.wits.pms.R;
 import com.wits.pms.ksw.IMcuUpdate;
 import com.wits.pms.ksw.OnMcuUpdateProgressListener;
 import com.wits.pms.mcu.custom.utils.UpdateHelper;
+import com.wits.pms.mirror.ServiceManager;
+import com.wits.pms.statuscontrol.WitsCommand;
 import java.io.File;
 
 public class McuUpdater {
-    private static final String TAG = McuUpdater.class.getSimpleName();
+    /* access modifiers changed from: private */
+    public static final String TAG = McuUpdater.class.getSimpleName();
 
     private static IMcuUpdate getMcuUpdater() {
         return IMcuUpdate.Stub.asInterface(ServiceManager.getService("mcu_update"));
@@ -73,8 +76,8 @@ public class McuUpdater {
         alertDialog.show();
         UpdateHelper.getInstance().setListener(new UpdateHelper.McuUpdateListener() {
             public void success() {
-                alertDialog.setTitle((int) R.string.update_mcu_success);
-                alertDialog.show();
+                Log.d(McuUpdater.TAG, "success , to SHUTDOWN ");
+                WitsCommand.sendCommand(1, 201, "");
             }
 
             public void failed(int errorCode) {

@@ -1,5 +1,6 @@
 package com.wits.pms.mcu.custom.utils;
 
+import android.net.wifi.WifiScanner;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.SmsManager;
@@ -86,52 +87,57 @@ public class UpdateHelper {
         }
     }
 
+    public static String byteToArray(byte[] data) {
+        StringBuilder stringBuffer = new StringBuilder();
+        for (byte b : data) {
+            stringBuffer.append(Integer.toHexString(b & 255).toUpperCase());
+        }
+        return stringBuffer.toString();
+    }
+
     private boolean sendUpdateRequestMsg() {
-        boolean z;
+        boolean result;
         try {
             Log.i(TAG, "sendUpdateRequestMsg");
             FileInputStream fis = new FileInputStream(this.mMcuUpdatePatch);
-            fis.skip(this.mMcuUpdatePatch.length() - 24);
+            long length = this.mMcuUpdatePatch.length();
+            int calc_sum = 0;
+            byte[] buf = new byte[((int) (length - 24))];
+            int len = fis.read(buf, 0, buf.length);
             byte[] b = new byte[24];
             fis.read(b);
+            Log.w(TAG, "sendUpdateRequestMsg: length " + length);
+            Log.w(TAG, "sendUpdateRequestMsg: string buf.length " + buf.length);
+            String s = byteToArray(buf);
+            Log.w(TAG, "sendUpdateRequestMsg: string buf :" + s);
+            Log.w(TAG, "sendUpdateRequestMsg: string buf length : " + s.length());
+            Log.w(TAG, "sendUpdateRequestMsg: string b " + byteToArray(b));
             byte[] checkCode = new byte[10];
             System.arraycopy(b, 14, checkCode, 0, 10);
-            byte[] newTypeData = new byte[14];
-            System.arraycopy(b, 0, newTypeData, 0, 14);
-            int length = checkCode.length;
-            for (int i = 0; i < length; i++) {
-                this.mNewFileSum += checkCode[i] & 255;
-            }
-            int sum = 0;
-            String dataHead = "";
-            int i2 = 0;
-            while (true) {
-                z = true;
-                if (i2 >= newTypeData.length) {
-                    break;
-                }
-                int data = newTypeData[i2] & 255;
-                if (i2 < newTypeData.length - 4) {
-                    dataHead = dataHead + Integer.toHexString(data);
-                } else {
-                    sum += data << (((newTypeData.length - 1) - i2) * 8);
-                }
-                this.mNewFileSum += data;
-                i2++;
-            }
-            this.mNewFileSum += sum;
-            String dataHead2 = dataHead.toUpperCase();
-            Log.i(TAG, "sendUpdateRequestMsg dataHead = " + dataHead2);
-            this.isNewTypeFile = newTypeFileDataHead.equals(dataHead2);
-            if (this.isNewTypeFile) {
+            System.arraycopy(b, 0, new byte[14], 0, 14);
+            if ((b[0] & 255) == 255 && (b[1] & 255) == 255 && (b[2] & 255) == 255 && (b[3] & 255) == 255 && (b[4] & 255) == 170 && (b[5] & 255) == 240 && (b[6] & 255) == 85 && (b[7] & 255) == 165 && (b[8] & 255) == 0 && (b[9] & 255) == 170) {
+                this.isNewTypeFile = true;
                 Log.i(TAG, "check new Type Mcu File");
-            }
-            if (this.isNewTypeFile) {
-                if (!sendUpdateFileCheck(true)) {
-                    z = false;
+                int file_sum = ((b[10] & 255) << 24) + ((b[11] & 255) << WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) + ((b[12] & 255) << 8) + (b[13] & 255);
+                Log.i(TAG, "get file_sum = " + Integer.toHexString(file_sum));
+                if (len != -1) {
+                    for (int i = 0; i < len; i++) {
+                        calc_sum += buf[i] & 255;
+                    }
+                    Log.i(TAG, "calc sum = " + Integer.toHexString(calc_sum));
+                } else {
+                    Log.e(TAG, " -- file error ");
                 }
+                if (calc_sum != file_sum) {
+                    result = false;
+                    callUpdateFailed(242);
+                } else {
+                    result = true;
+                }
+            } else {
+                this.isNewTypeFile = false;
+                result = true;
             }
-            boolean result = z;
             if (result) {
                 send(242, 160, 232, checkCode);
             }
@@ -154,35 +160,26 @@ public class UpdateHelper {
             datas[2] = (byte) ((int) (length >> 8));
             datas[3] = (byte) ((int) length);
             FileInputStream fis = new FileInputStream(this.mMcuUpdatePatch);
-            int i = 0;
-            byte[] buf = new byte[128];
-            while (true) {
-                int read = fis.read(buf, 0, buf.length);
-                int len = read;
-                if (read == -1) {
-                    break;
+            byte[] fileBuf = new byte[((int) length)];
+            int sum = 0;
+            int len = fis.read(fileBuf, 0, fileBuf.length);
+            if (len != -1) {
+                int sum2 = 0;
+                for (int i = 0; i < len; i++) {
+                    sum2 += fileBuf[i] & 255;
                 }
-                int sum = i;
-                for (int i2 = 0; i2 < len; i2++) {
-                    sum += buf[i2] & 255;
-                }
-                i = sum;
+                Log.i(TAG, "full file sum = " + Integer.toHexString(sum2));
+                sum = sum2;
             }
-            Log.i(TAG, "sendUpdateRequestMsg isNewTypeFile=" + this.isNewTypeFile + " sum:" + Integer.toHexString(i) + " - fileSum" + Integer.toHexString(this.mNewFileSum));
-            if (!this.isNewTypeFile || i == this.mNewFileSum) {
-                datas[4] = (byte) (i >> 24);
-                datas[5] = (byte) (i >> 16);
-                datas[6] = (byte) (i >> 8);
-                datas[7] = (byte) i;
-                if (!onlyCheck) {
-                    send(242, 160, 233, datas);
-                }
-                fis.close();
-                return true;
+            datas[4] = (byte) (sum >> 24);
+            datas[5] = (byte) (sum >> 16);
+            datas[6] = (byte) (sum >> 8);
+            datas[7] = (byte) sum;
+            if (onlyCheck) {
+                send(242, 160, 233, datas);
             }
-            Log.e(TAG, "update failed cause checkSum error sum:" + Integer.toHexString(i) + " - fileSum" + Integer.toHexString(this.mNewFileSum));
-            callUpdateFailed(242);
-            return false;
+            fis.close();
+            return true;
         } catch (IOException e) {
             Log.e(TAG, "sendUpdateFileCheck error ", e);
             return false;
@@ -249,6 +246,7 @@ public class UpdateHelper {
         this.iapUpdateReady = false;
         this.mMcuUpdatePatch = null;
         if (this.updateListener != null) {
+            Log.d(TAG, "updateListener  success " + this.updateListener);
             this.updateListener.success();
         }
     }
@@ -272,7 +270,7 @@ public class UpdateHelper {
                 this.iapUpdateReady = true;
                 new Thread() {
                     public void run() {
-                        boolean unused = UpdateHelper.this.sendUpdateFileCheck(false);
+                        boolean unused = UpdateHelper.this.sendUpdateFileCheck(true);
                     }
                 }.start();
             } else if (message.getData()[0] != 4 && (message.getData()[0] & 255) >= 241) {

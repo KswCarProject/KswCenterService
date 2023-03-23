@@ -34,11 +34,11 @@ public class PreferenceImageView extends ImageView {
                 widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(maxWidth, Integer.MIN_VALUE);
             }
         }
-        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
-        if (heightMode == Integer.MIN_VALUE || heightMode == 0) {
+        int widthSize2 = View.MeasureSpec.getMode(heightMeasureSpec);
+        if (widthSize2 == Integer.MIN_VALUE || widthSize2 == 0) {
             int heightSize = View.MeasureSpec.getSize(heightMeasureSpec);
             int maxHeight = getMaxHeight();
-            if (maxHeight != Integer.MAX_VALUE && (maxHeight < heightSize || heightMode == 0)) {
+            if (maxHeight != Integer.MAX_VALUE && (maxHeight < heightSize || widthSize2 == 0)) {
                 heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(maxHeight, Integer.MIN_VALUE);
             }
         }

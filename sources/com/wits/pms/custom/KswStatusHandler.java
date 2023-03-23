@@ -16,9 +16,10 @@ import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.PowerManagerAppService;
 import com.wits.pms.interfaces.LogicSystem;
 import com.wits.pms.mcu.custom.KswMcuSender;
+import com.wits.pms.mirror.SystemProperties;
+import com.wits.pms.mirror.WifiManagerMirror;
 import com.wits.pms.statuscontrol.BtPhoneStatus;
 import com.wits.pms.statuscontrol.PowerManagerApp;
-import com.wits.pms.utils.SystemProperties;
 
 public class KswStatusHandler extends LogicSystem {
     private static final String TAG = "KswStatusHandler";
@@ -63,7 +64,17 @@ public class KswStatusHandler extends LogicSystem {
                     int callStatus = PowerManagerApp.getStatusInt("callStatus");
                     switch (callStatus) {
                         case 4:
-                            KswStatusHandler.this.mHandler.postDelayed($$Lambda$KswStatusHandler$2$Am8OeGekegrncO4C3B7L_UB3F6Y.INSTANCE, 550);
+                            KswStatusHandler.this.mHandler.postDelayed(new Runnable() {
+                                public void run() {
+                                    try {
+                                        if (PowerManagerApp.getStatusInt("callStatus") == 4) {
+                                            KswMcuSender.getSender().sendMessage(99, new byte[]{1, 3});
+                                        }
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, 550);
                             CenterControlImpl.getImpl().handupEcarPhone();
                             break;
                         case 5:
@@ -107,31 +118,24 @@ public class KswStatusHandler extends LogicSystem {
                     Intent accIntent = new Intent("com.wits.ksw.ACC_ON");
                     accIntent.addFlags(16777216);
                     KswStatusHandler.this.mContext.sendBroadcastAsUser(accIntent, UserHandle.getUserHandleForUid(KswStatusHandler.this.mContext.getApplicationInfo().uid));
+                    CallBackServiceImpl.getCallBackServiceImpl().handleAcc(true);
                 } else if (acc == 0) {
                     Intent accIntent2 = new Intent("com.wits.ksw.ACC_OFF");
                     accIntent2.addFlags(16777216);
                     KswStatusHandler.this.mContext.sendBroadcastAsUser(accIntent2, UserHandle.getUserHandleForUid(KswStatusHandler.this.mContext.getApplicationInfo().uid));
-                    int apState = KswStatusHandler.this.getWifiApState((WifiManager) KswStatusHandler.this.mContext.getSystemService("wifi"));
+                    int apState = new WifiManagerMirror((WifiManager) KswStatusHandler.this.mContext.getSystemService("wifi")).getWifiApState();
                     Log.d(KswStatusHandler.TAG, "onChange  apState  = " + apState);
                     if (apState == 12 || apState == 13) {
                         Settings.System.putInt(KswStatusHandler.this.mContext.getContentResolver(), "hotspot_open", 1);
                     } else {
                         Settings.System.putInt(KswStatusHandler.this.mContext.getContentResolver(), "hotspot_open", 0);
                     }
+                    CallBackServiceImpl.getCallBackServiceImpl().handleAcc(false);
                 }
             }
         });
     }
 
     public void handle() {
-    }
-
-    public int getWifiApState(WifiManager mwifiManager) {
-        try {
-            return ((Integer) Class.forName("android.net.wifi.WifiManager").getMethod("getWifiApState", new Class[0]).invoke(mwifiManager, new Object[0])).intValue();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
     }
 }

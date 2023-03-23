@@ -180,6 +180,11 @@ public class KswSettings {
         Log.i(TAG, "setInt key:" + key + " - value:" + value);
     }
 
+    public void setIntWithoutMCU(String key, int value) {
+        Settings.System.putInt(this.mContext.getContentResolver(), key, value);
+        Log.i(TAG, "setIntWithoutMCU setInt key:" + key + " - value:" + value);
+    }
+
     public void setString(String key, String value) {
         Settings.System.putString(this.mContext.getContentResolver(), key, value);
         handleConfig(key, value);
@@ -271,7 +276,7 @@ public class KswSettings {
         Set<String> stringKeys2 = getStringKeysFromSp();
         if (intKeys2.size() != 0 && stringKeys2.size() != 0) {
             for (String key : intKeys2) {
-                if (!key.equals("USB_HOST") && !key.equals("Language") && !key.equals("Support_TXZ") && !key.equals("BenzPanelEnable") && !key.equals("benz_aux_switch")) {
+                if (!key.equals("USB_HOST") && !key.equals("Language") && !key.equals("Support_TXZ") && !key.equals("BenzPanelEnable") && !key.equals("benz_aux_switch") && !key.equals("benzClockSort")) {
                     try {
                         int value = getSettingsInt(key);
                         handleConfig(key, value);
@@ -302,141 +307,198 @@ public class KswSettings {
         KswMcuSender.getSender().sendMessage(cmdType, data);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:22:0x0049  */
-    /* JADX WARNING: Removed duplicated region for block: B:45:0x00b3  */
-    /* JADX WARNING: Removed duplicated region for block: B:49:0x00d1  */
-    /* JADX WARNING: Removed duplicated region for block: B:53:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:27:0x0059  */
+    /* JADX WARNING: Removed duplicated region for block: B:39:0x00b0  */
+    /* JADX WARNING: Removed duplicated region for block: B:63:0x011b  */
+    /* JADX WARNING: Removed duplicated region for block: B:67:0x0139  */
+    /* JADX WARNING: Removed duplicated region for block: B:73:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void handleConfig(java.lang.String r7, java.lang.String r8) {
+    private void handleConfig(java.lang.String r11, java.lang.String r12) {
         /*
-            r6 = this;
-            int r0 = r7.hashCode()
+            r10 = this;
+            int r0 = r11.hashCode()
             r1 = -1548945544(0xffffffffa3acf778, float:-1.8753084E-17)
             r2 = 2
-            r3 = 1
+            r3 = 3
             r4 = 0
-            if (r0 == r1) goto L_0x0039
+            r5 = 1
+            if (r0 == r1) goto L_0x0049
             r1 = -533217944(0xffffffffe037bd68, float:-5.295941E19)
-            if (r0 == r1) goto L_0x002f
+            if (r0 == r1) goto L_0x003f
             r1 = 2708(0xa94, float:3.795E-42)
-            if (r0 == r1) goto L_0x0025
+            if (r0 == r1) goto L_0x0035
+            r1 = 91785770(0x5788a2a, float:1.1686281E-35)
+            if (r0 == r1) goto L_0x002b
             r1 = 309639685(0x1274ba05, float:7.722211E-28)
-            if (r0 == r1) goto L_0x001b
-            goto L_0x0043
-        L_0x001b:
+            if (r0 == r1) goto L_0x0021
+            goto L_0x0053
+        L_0x0021:
             java.lang.String r0 = "UI_type"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0043
-            r0 = 3
-            goto L_0x0044
-        L_0x0025:
+            boolean r0 = r11.equals(r0)
+            if (r0 == 0) goto L_0x0053
+            r0 = r3
+            goto L_0x0054
+        L_0x002b:
+            java.lang.String r0 = "Reverse_time"
+            boolean r0 = r11.equals(r0)
+            if (r0 == 0) goto L_0x0053
+            r0 = 4
+            goto L_0x0054
+        L_0x0035:
             java.lang.String r0 = "UI"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0043
+            boolean r0 = r11.equals(r0)
+            if (r0 == 0) goto L_0x0053
             r0 = r2
-            goto L_0x0044
-        L_0x002f:
+            goto L_0x0054
+        L_0x003f:
             java.lang.String r0 = "TXZ_Wakeup"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0043
+            boolean r0 = r11.equals(r0)
+            if (r0 == 0) goto L_0x0053
             r0 = r4
-            goto L_0x0044
-        L_0x0039:
-            java.lang.String r0 = "Language"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0043
-            r0 = r3
-            goto L_0x0044
-        L_0x0043:
-            r0 = -1
-        L_0x0044:
-            switch(r0) {
-                case 0: goto L_0x00d1;
-                case 1: goto L_0x00b3;
-                case 2: goto L_0x0049;
-                case 3: goto L_0x0049;
-                default: goto L_0x0047;
-            }
-        L_0x0047:
-            goto L_0x00dd
+            goto L_0x0054
         L_0x0049:
-            java.lang.String r0 = "UI"
-            boolean r0 = r7.equals(r0)
-            if (r0 == 0) goto L_0x0062
-            java.lang.String r0 = ""
-            java.util.List r0 = r6.getDataListFromJsonKey(r0)
-            int r1 = java.lang.Integer.parseInt(r8)
-            java.lang.Object r0 = r0.get(r1)
-            r8 = r0
-            java.lang.String r8 = (java.lang.String) r8
-        L_0x0062:
-            java.lang.String r0 = "initKswConfig"
-            int r0 = r6.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x006d }
-            if (r0 != 0) goto L_0x006b
-            goto L_0x006c
+            java.lang.String r0 = "Language"
+            boolean r0 = r11.equals(r0)
+            if (r0 == 0) goto L_0x0053
+            r0 = r5
+            goto L_0x0054
+        L_0x0053:
+            r0 = -1
+        L_0x0054:
+            switch(r0) {
+                case 0: goto L_0x0139;
+                case 1: goto L_0x011b;
+                case 2: goto L_0x00b0;
+                case 3: goto L_0x00b0;
+                case 4: goto L_0x0059;
+                default: goto L_0x0057;
+            }
+        L_0x0057:
+            goto L_0x0145
+        L_0x0059:
+            boolean r0 = android.text.TextUtils.isEmpty(r12)
+            r1 = 112(0x70, float:1.57E-43)
+            if (r0 == 0) goto L_0x006b
+            byte[] r0 = new byte[r3]
+            r0 = {30, 0, 0} // fill-array
+            r10.sendMcu(r1, r0)
+            goto L_0x0145
         L_0x006b:
-            r3 = r4
-        L_0x006c:
-            goto L_0x006f
-        L_0x006d:
-            r0 = move-exception
-        L_0x006f:
-            r0 = r3
-            if (r0 == 0) goto L_0x0090
-            boolean r1 = r6.checkUi()
-            if (r1 != 0) goto L_0x007e
-            java.lang.String r1 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            com.wits.pms.utils.SysConfigUtil.writeArg(r8, r1)
-            goto L_0x0084
-        L_0x007e:
-            java.lang.String r1 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            java.lang.String r8 = com.wits.pms.utils.SysConfigUtil.getArg(r1)
-        L_0x0084:
-            android.content.Context r1 = r6.mContext
-            android.content.ContentResolver r1 = r1.getContentResolver()
-            java.lang.String r2 = "UiName"
-            android.provider.Settings.System.putString(r1, r2, r8)
-            goto L_0x00dd
-        L_0x0090:
-            android.content.Context r1 = r6.mContext
-            android.content.ContentResolver r1 = r1.getContentResolver()
-            java.lang.String r2 = "UiName"
-            android.provider.Settings.System.putString(r1, r2, r8)
-            java.io.File r1 = new java.io.File     // Catch:{ IOException -> 0x00b1 }
-            java.lang.String r2 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            r1.<init>(r2)     // Catch:{ IOException -> 0x00b1 }
-            boolean r2 = r1.exists()     // Catch:{ IOException -> 0x00b1 }
-            if (r2 != 0) goto L_0x00ab
-            r1.createNewFile()     // Catch:{ IOException -> 0x00b1 }
-        L_0x00ab:
-            java.lang.String r2 = "/mnt/vendor/persist/OEM/uiSave.ui"
-            com.wits.pms.utils.SysConfigUtil.writeArg(r8, r2)     // Catch:{ IOException -> 0x00b1 }
-            goto L_0x00dd
-        L_0x00b1:
-            r1 = move-exception
-            goto L_0x00dd
-        L_0x00b3:
             java.lang.String r0 = "-"
-            java.lang.String[] r0 = r8.split(r0)
+            java.lang.String[] r0 = r12.split(r0)     // Catch:{ Exception -> 0x009b }
+            r6 = r0[r4]     // Catch:{ Exception -> 0x009b }
+            int r6 = java.lang.Integer.parseInt(r6)     // Catch:{ Exception -> 0x009b }
+            switch(r6) {
+                case 0: goto L_0x0090;
+                case 1: goto L_0x007b;
+                default: goto L_0x007a;
+            }     // Catch:{ Exception -> 0x009b }
+        L_0x007a:
+            goto L_0x0099
+        L_0x007b:
+            r7 = r0[r5]     // Catch:{ Exception -> 0x009b }
+            int r7 = java.lang.Integer.parseInt(r7)     // Catch:{ Exception -> 0x009b }
+            byte[] r8 = new byte[r3]     // Catch:{ Exception -> 0x009b }
+            r9 = 30
+            r8[r4] = r9     // Catch:{ Exception -> 0x009b }
+            r8[r5] = r5     // Catch:{ Exception -> 0x009b }
+            byte r4 = (byte) r7     // Catch:{ Exception -> 0x009b }
+            r8[r2] = r4     // Catch:{ Exception -> 0x009b }
+            r10.sendMcu(r1, r8)     // Catch:{ Exception -> 0x009b }
+            goto L_0x0099
+        L_0x0090:
+            byte[] r2 = new byte[r3]     // Catch:{ Exception -> 0x009b }
+            r2 = {30, 0, 0} // fill-array     // Catch:{ Exception -> 0x009b }
+            r10.sendMcu(r1, r2)     // Catch:{ Exception -> 0x009b }
+        L_0x0099:
+            goto L_0x0145
+        L_0x009b:
+            r0 = move-exception
+            r0.printStackTrace()
+            java.lang.String r2 = "KswSettings"
+            java.lang.String r4 = "handleConfig: set Reverse_time error set 0"
+            android.util.Log.e(r2, r4)
+            byte[] r2 = new byte[r3]
+            r2 = {30, 0, 0} // fill-array
+            r10.sendMcu(r1, r2)
+            goto L_0x0145
+        L_0x00b0:
+            java.lang.String r0 = "UI"
+            boolean r0 = r11.equals(r0)
+            if (r0 == 0) goto L_0x00c9
+            java.lang.String r0 = ""
+            java.util.List r0 = r10.getDataListFromJsonKey(r0)
+            int r1 = java.lang.Integer.parseInt(r12)
+            java.lang.Object r0 = r0.get(r1)
+            r12 = r0
+            java.lang.String r12 = (java.lang.String) r12
+        L_0x00c9:
+            java.lang.String r0 = "initKswConfig"
+            int r0 = r10.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x00d5 }
+            if (r0 != 0) goto L_0x00d3
+            r4 = r5
+        L_0x00d3:
+            r5 = r4
+            goto L_0x00d7
+        L_0x00d5:
+            r0 = move-exception
+        L_0x00d7:
+            r0 = r5
+            if (r0 == 0) goto L_0x00f8
+            boolean r1 = r10.checkUi()
+            if (r1 != 0) goto L_0x00e6
+            java.lang.String r1 = "/mnt/vendor/persist/OEM/uiSave.ui"
+            com.wits.pms.utils.SysConfigUtil.writeArg(r12, r1)
+            goto L_0x00ec
+        L_0x00e6:
+            java.lang.String r1 = "/mnt/vendor/persist/OEM/uiSave.ui"
+            java.lang.String r12 = com.wits.pms.utils.SysConfigUtil.getArg(r1)
+        L_0x00ec:
+            android.content.Context r1 = r10.mContext
+            android.content.ContentResolver r1 = r1.getContentResolver()
+            java.lang.String r2 = "UiName"
+            android.provider.Settings.System.putString(r1, r2, r12)
+            goto L_0x0145
+        L_0x00f8:
+            android.content.Context r1 = r10.mContext
+            android.content.ContentResolver r1 = r1.getContentResolver()
+            java.lang.String r2 = "UiName"
+            android.provider.Settings.System.putString(r1, r2, r12)
+            java.io.File r1 = new java.io.File     // Catch:{ IOException -> 0x0119 }
+            java.lang.String r2 = "/mnt/vendor/persist/OEM/uiSave.ui"
+            r1.<init>(r2)     // Catch:{ IOException -> 0x0119 }
+            boolean r2 = r1.exists()     // Catch:{ IOException -> 0x0119 }
+            if (r2 != 0) goto L_0x0113
+            r1.createNewFile()     // Catch:{ IOException -> 0x0119 }
+        L_0x0113:
+            java.lang.String r2 = "/mnt/vendor/persist/OEM/uiSave.ui"
+            com.wits.pms.utils.SysConfigUtil.writeArg(r12, r2)     // Catch:{ IOException -> 0x0119 }
+            goto L_0x0145
+        L_0x0119:
+            r1 = move-exception
+            goto L_0x0145
+        L_0x011b:
+            java.lang.String r0 = "-"
+            java.lang.String[] r0 = r12.split(r0)
             java.util.Locale r1 = new java.util.Locale
-            r5 = r0[r4]
-            r1.<init>(r5)
-            int r5 = r0.length
-            if (r5 != r2) goto L_0x00cd
+            r3 = r0[r4]
+            r1.<init>(r3)
+            int r3 = r0.length
+            if (r3 != r2) goto L_0x0135
             java.util.Locale r2 = new java.util.Locale
-            r4 = r0[r4]
-            r3 = r0[r3]
-            r2.<init>(r4, r3)
+            r3 = r0[r4]
+            r4 = r0[r5]
+            r2.<init>(r3, r4)
             r1 = r2
-        L_0x00cd:
+        L_0x0135:
             com.wits.pms.utils.LanguageUtil.changeSystemLanguage(r1)
-            goto L_0x00dd
-        L_0x00d1:
-            android.content.Context r0 = r6.mContext
+            goto L_0x0145
+        L_0x0139:
+            android.content.Context r0 = r10.mContext
             android.content.ContentResolver r0 = r0.getContentResolver()
             java.lang.String r1 = "ksw_wakeup_keywords"
-            android.provider.Settings.System.putString(r0, r1, r8)
-        L_0x00dd:
+            android.provider.Settings.System.putString(r0, r1, r12)
+        L_0x0145:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.custom.KswSettings.handleConfig(java.lang.String, java.lang.String):void");
@@ -463,623 +525,852 @@ public class KswSettings {
             r14 = 0
             r15 = 1
             switch(r0) {
-                case -2113780075: goto L_0x024a;
-                case -1997186328: goto L_0x023f;
-                case -1885010620: goto L_0x0234;
-                case -1793262372: goto L_0x0229;
-                case -1653340047: goto L_0x021e;
-                case -1548945544: goto L_0x0213;
-                case -1528907729: goto L_0x0208;
-                case -1528907728: goto L_0x01fd;
-                case -1257575528: goto L_0x01f3;
-                case -1181891355: goto L_0x01e8;
-                case -1103831850: goto L_0x01dc;
-                case -952414302: goto L_0x01d0;
-                case -924519752: goto L_0x01c4;
-                case -899948362: goto L_0x01b9;
-                case -801026034: goto L_0x01ad;
-                case -776702634: goto L_0x01a2;
-                case -738352606: goto L_0x0196;
-                case -682449643: goto L_0x018a;
-                case -677297959: goto L_0x017e;
-                case -660995341: goto L_0x0172;
-                case -602992886: goto L_0x0167;
-                case -554769949: goto L_0x015b;
-                case -519600940: goto L_0x0150;
-                case -294129095: goto L_0x0144;
-                case -220630678: goto L_0x0139;
-                case -183099962: goto L_0x012d;
-                case -114997240: goto L_0x0121;
-                case 88063465: goto L_0x0116;
-                case 90414126: goto L_0x010b;
-                case 106858821: goto L_0x0100;
-                case 214368532: goto L_0x00f4;
-                case 241352631: goto L_0x00e8;
-                case 252039837: goto L_0x00dc;
-                case 340057703: goto L_0x00d1;
-                case 400825784: goto L_0x00c5;
-                case 442866595: goto L_0x00b9;
-                case 642405998: goto L_0x00ad;
-                case 940906279: goto L_0x00a1;
-                case 985261490: goto L_0x0095;
-                case 1010516114: goto L_0x0089;
-                case 1031815915: goto L_0x007d;
-                case 1060762673: goto L_0x0071;
-                case 1071490530: goto L_0x0065;
-                case 1195313274: goto L_0x0059;
-                case 1374371814: goto L_0x004d;
-                case 1533443583: goto L_0x0041;
-                case 1598142665: goto L_0x0036;
-                case 1857618170: goto L_0x002a;
+                case -2113780075: goto L_0x02da;
+                case -1997186328: goto L_0x02cf;
+                case -1885010620: goto L_0x02c5;
+                case -1793262372: goto L_0x02ba;
+                case -1669187502: goto L_0x02af;
+                case -1653340047: goto L_0x02a4;
+                case -1548945544: goto L_0x0299;
+                case -1528907729: goto L_0x028e;
+                case -1528907728: goto L_0x0283;
+                case -1282124803: goto L_0x0277;
+                case -1257575528: goto L_0x026b;
+                case -1181891355: goto L_0x025f;
+                case -1103831850: goto L_0x0253;
+                case -1091766978: goto L_0x0247;
+                case -1028676594: goto L_0x023b;
+                case -952414302: goto L_0x022f;
+                case -924519752: goto L_0x0223;
+                case -899948362: goto L_0x0217;
+                case -872647543: goto L_0x020b;
+                case -816518904: goto L_0x01ff;
+                case -801026034: goto L_0x01f3;
+                case -776702634: goto L_0x01e8;
+                case -738352606: goto L_0x01dc;
+                case -682449643: goto L_0x01d0;
+                case -677297959: goto L_0x01c4;
+                case -660995341: goto L_0x01b8;
+                case -602992886: goto L_0x01ad;
+                case -554769949: goto L_0x01a1;
+                case -519600940: goto L_0x0196;
+                case -294129095: goto L_0x018a;
+                case -220630678: goto L_0x017f;
+                case -183099962: goto L_0x0173;
+                case -114997240: goto L_0x0167;
+                case -63299011: goto L_0x015c;
+                case 88063465: goto L_0x0151;
+                case 90414126: goto L_0x0146;
+                case 106858821: goto L_0x013a;
+                case 214368532: goto L_0x012e;
+                case 241352631: goto L_0x0122;
+                case 252039837: goto L_0x0116;
+                case 340057703: goto L_0x010a;
+                case 400825784: goto L_0x00fe;
+                case 442866595: goto L_0x00f2;
+                case 642405998: goto L_0x00e6;
+                case 677993257: goto L_0x00db;
+                case 940906279: goto L_0x00cf;
+                case 985261490: goto L_0x00c3;
+                case 1010516114: goto L_0x00b8;
+                case 1031815915: goto L_0x00ac;
+                case 1060762673: goto L_0x00a0;
+                case 1071490530: goto L_0x0095;
+                case 1195313274: goto L_0x0089;
+                case 1374371814: goto L_0x007d;
+                case 1533443583: goto L_0x0071;
+                case 1598142665: goto L_0x0066;
+                case 1669187709: goto L_0x005a;
+                case 1757663793: goto L_0x004e;
+                case 1757664753: goto L_0x0042;
+                case 1857618170: goto L_0x0036;
+                case 2053143566: goto L_0x002a;
                 case 2103778808: goto L_0x001e;
                 default: goto L_0x001c;
             }
         L_0x001c:
-            goto L_0x0255
+            goto L_0x02e5
         L_0x001e:
             java.lang.String r0 = "DashBoardUnit"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 25
-            goto L_0x0256
+            if (r0 == 0) goto L_0x02e5
+            r0 = 27
+            goto L_0x02e6
         L_0x002a:
+            java.lang.String r0 = "EQ_app"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 60
+            goto L_0x02e6
+        L_0x0036:
             java.lang.String r0 = "cam360_video"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 38
-            goto L_0x0256
-        L_0x0036:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 40
+            goto L_0x02e6
+        L_0x0042:
+            java.lang.String r0 = "mic_gain_m600"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 56
+            goto L_0x02e6
+        L_0x004e:
+            java.lang.String r0 = "mic_gain_m501"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 55
+            goto L_0x02e6
+        L_0x005a:
+            java.lang.String r0 = "Front_left"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 58
+            goto L_0x02e6
+        L_0x0066:
             java.lang.String r0 = "Front_view_camera"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r9
-            goto L_0x0256
-        L_0x0041:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 7
+            goto L_0x02e6
+        L_0x0071:
             java.lang.String r0 = "benz_aux_switch"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 47
-            goto L_0x0256
-        L_0x004d:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 49
+            goto L_0x02e6
+        L_0x007d:
             java.lang.String r0 = "Treble_value"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 20
-            goto L_0x0256
-        L_0x0059:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 22
+            goto L_0x02e6
+        L_0x0089:
             java.lang.String r0 = "FuelUnit"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 8
-            goto L_0x0256
-        L_0x0065:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 10
+            goto L_0x02e6
+        L_0x0095:
             java.lang.String r0 = "TimeSyncSoucrce"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 14
-            goto L_0x0256
-        L_0x0071:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r10
+            goto L_0x02e6
+        L_0x00a0:
             java.lang.String r0 = "Bass_value"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 18
-            goto L_0x0256
-        L_0x007d:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 20
+            goto L_0x02e6
+        L_0x00ac:
             java.lang.String r0 = "DirtTravelSelection"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 23
-            goto L_0x0256
-        L_0x0089:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 25
+            goto L_0x02e6
+        L_0x00b8:
             java.lang.String r0 = "Android_phone_vol"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 11
-            goto L_0x0256
-        L_0x0095:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r7
+            goto L_0x02e6
+        L_0x00c3:
             java.lang.String r0 = "Voice_key"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 35
-            goto L_0x0256
-        L_0x00a1:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 37
+            goto L_0x02e6
+        L_0x00cf:
             java.lang.String r0 = "BT_Type"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 28
-            goto L_0x0256
-        L_0x00ad:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 30
+            goto L_0x02e6
+        L_0x00db:
+            java.lang.String r0 = "forwardCamMirror"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = r15
+            goto L_0x02e6
+        L_0x00e6:
             java.lang.String r0 = "CarDisplay"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 32
-            goto L_0x0256
-        L_0x00b9:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 34
+            goto L_0x02e6
+        L_0x00f2:
             java.lang.String r0 = "USB_HOST"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 45
-            goto L_0x0256
-        L_0x00c5:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 47
+            goto L_0x02e6
+        L_0x00fe:
             java.lang.String r0 = "touch_continuous_send"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 48
-            goto L_0x0256
-        L_0x00d1:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 50
+            goto L_0x02e6
+        L_0x010a:
             java.lang.String r0 = "Middle_value"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r5
-            goto L_0x0256
-        L_0x00dc:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 21
+            goto L_0x02e6
+        L_0x0116:
             java.lang.String r0 = "CCC_IDrive"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 33
-            goto L_0x0256
-        L_0x00e8:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 35
+            goto L_0x02e6
+        L_0x0122:
             java.lang.String r0 = "Car_phone_vol"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 12
-            goto L_0x0256
-        L_0x00f4:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 14
+            goto L_0x02e6
+        L_0x012e:
             java.lang.String r0 = "HandsetAutomaticSelect"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 34
-            goto L_0x0256
-        L_0x0100:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 36
+            goto L_0x02e6
+        L_0x013a:
             java.lang.String r0 = "RearCamType"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 6
-            goto L_0x0256
-        L_0x010b:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 8
+            goto L_0x02e6
+        L_0x0146:
             java.lang.String r0 = "ShowTrack"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r15
-            goto L_0x0256
-        L_0x0116:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r12
+            goto L_0x02e6
+        L_0x0151:
             java.lang.String r0 = "ShowRadar"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r13
-            goto L_0x0256
-        L_0x0121:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r11
+            goto L_0x02e6
+        L_0x015c:
+            java.lang.String r0 = "benzClockSort"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = r14
+            goto L_0x02e6
+        L_0x0167:
             java.lang.String r0 = "Android_media_vol"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 10
-            goto L_0x0256
-        L_0x012d:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 12
+            goto L_0x02e6
+        L_0x0173:
             java.lang.String r0 = "Support_TXZ"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 46
-            goto L_0x0256
-        L_0x0139:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 48
+            goto L_0x02e6
+        L_0x017f:
             java.lang.String r0 = "DoNotPlayVideosWhileDriving"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r12
-            goto L_0x0256
-        L_0x0144:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r9
+            goto L_0x02e6
+        L_0x018a:
             java.lang.String r0 = "DVR_Type"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 29
-            goto L_0x0256
-        L_0x0150:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 31
+            goto L_0x02e6
+        L_0x0196:
             java.lang.String r0 = "ReversingMuteSelect"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r11
-            goto L_0x0256
-        L_0x015b:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 6
+            goto L_0x02e6
+        L_0x01a1:
             java.lang.String r0 = "Mode_key"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 37
-            goto L_0x0256
-        L_0x0167:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 39
+            goto L_0x02e6
+        L_0x01ad:
             java.lang.String r0 = "RearCamMirror"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r14
-            goto L_0x0256
-        L_0x0172:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r13
+            goto L_0x02e6
+        L_0x01b8:
             java.lang.String r0 = "OLDBMWX"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 44
-            goto L_0x0256
-        L_0x017e:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 46
+            goto L_0x02e6
+        L_0x01c4:
             java.lang.String r0 = "Default_PowerBoot"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 42
-            goto L_0x0256
-        L_0x018a:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 44
+            goto L_0x02e6
+        L_0x01d0:
             java.lang.String r0 = "AMP_Type"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 30
-            goto L_0x0256
-        L_0x0196:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 32
+            goto L_0x02e6
+        L_0x01dc:
             java.lang.String r0 = "CarAux_auto_method"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 26
-            goto L_0x0256
-        L_0x01a2:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 28
+            goto L_0x02e6
+        L_0x01e8:
             java.lang.String r0 = "EQ_mode"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r6
-            goto L_0x0256
-        L_0x01ad:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r5
+            goto L_0x02e6
+        L_0x01f3:
             java.lang.String r0 = "AHD_cam_Select"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 43
-            goto L_0x0256
-        L_0x01b9:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 45
+            goto L_0x02e6
+        L_0x01ff:
+            java.lang.String r0 = "GoogleAPP"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 57
+            goto L_0x02e6
+        L_0x020b:
+            java.lang.String r0 = "txz_oil"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 52
+            goto L_0x02e6
+        L_0x0217:
             java.lang.String r0 = "NaviMix"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r10
-            goto L_0x0256
-        L_0x01c4:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 18
+            goto L_0x02e6
+        L_0x0223:
             java.lang.String r0 = "Protocol"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 22
-            goto L_0x0256
-        L_0x01d0:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 24
+            goto L_0x02e6
+        L_0x022f:
             java.lang.String r0 = "Backlight_auto_set"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 39
-            goto L_0x0256
-        L_0x01dc:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 41
+            goto L_0x02e6
+        L_0x023b:
+            java.lang.String r0 = "phone_key"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 51
+            goto L_0x02e6
+        L_0x0247:
+            java.lang.String r0 = "txz_speed"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 53
+            goto L_0x02e6
+        L_0x0253:
             java.lang.String r0 = "CarVideoDisplayStyle"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 24
-            goto L_0x0256
-        L_0x01e8:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 26
+            goto L_0x02e6
+        L_0x025f:
             java.lang.String r0 = "Car_navi_vol"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = r7
-            goto L_0x0256
-        L_0x01f3:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 15
+            goto L_0x02e6
+        L_0x026b:
             java.lang.String r0 = "TempUnit"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 7
-            goto L_0x0256
-        L_0x01fd:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 9
+            goto L_0x02e6
+        L_0x0277:
+            java.lang.String r0 = "txz_temp"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 54
+            goto L_0x02e6
+        L_0x0283:
             java.lang.String r0 = "CarAuxIndex2"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 41
-            goto L_0x0256
-        L_0x0208:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 43
+            goto L_0x02e6
+        L_0x028e:
             java.lang.String r0 = "CarAuxIndex1"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 40
-            goto L_0x0256
-        L_0x0213:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 42
+            goto L_0x02e6
+        L_0x0299:
             java.lang.String r0 = "Language"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 21
-            goto L_0x0256
-        L_0x021e:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 23
+            goto L_0x02e6
+        L_0x02a4:
             java.lang.String r0 = "Brightness"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 9
-            goto L_0x0256
-        L_0x0229:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 11
+            goto L_0x02e6
+        L_0x02af:
+            java.lang.String r0 = "Speed_type"
+            boolean r0 = r2.equals(r0)
+            if (r0 == 0) goto L_0x02e5
+            r0 = 59
+            goto L_0x02e6
+        L_0x02ba:
             java.lang.String r0 = "Map_key"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 36
-            goto L_0x0256
-        L_0x0234:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 38
+            goto L_0x02e6
+        L_0x02c5:
             java.lang.String r0 = "TimeFormat"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 15
-            goto L_0x0256
-        L_0x023f:
+            if (r0 == 0) goto L_0x02e5
+            r0 = r6
+            goto L_0x02e6
+        L_0x02cf:
             java.lang.String r0 = "Front_view_camer1a"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 31
-            goto L_0x0256
-        L_0x024a:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 33
+            goto L_0x02e6
+        L_0x02da:
             java.lang.String r0 = "CarAux_Operate"
             boolean r0 = r2.equals(r0)
-            if (r0 == 0) goto L_0x0255
-            r0 = 27
-            goto L_0x0256
-        L_0x0255:
+            if (r0 == 0) goto L_0x02e5
+            r0 = 29
+            goto L_0x02e6
+        L_0x02e5:
             r0 = -1
-        L_0x0256:
+        L_0x02e6:
             r8 = 112(0x70, float:1.57E-43)
             switch(r0) {
-                case 0: goto L_0x05fc;
-                case 1: goto L_0x05ee;
-                case 2: goto L_0x05e0;
-                case 3: goto L_0x05d2;
-                case 4: goto L_0x05c6;
-                case 5: goto L_0x05b8;
-                case 6: goto L_0x05aa;
-                case 7: goto L_0x059c;
-                case 8: goto L_0x058e;
-                case 9: goto L_0x056a;
-                case 10: goto L_0x0554;
-                case 11: goto L_0x053e;
-                case 12: goto L_0x0528;
-                case 13: goto L_0x0512;
-                case 14: goto L_0x04f6;
-                case 15: goto L_0x04b1;
-                case 16: goto L_0x049e;
-                case 17: goto L_0x0418;
-                case 18: goto L_0x0418;
-                case 19: goto L_0x0418;
-                case 20: goto L_0x0418;
-                case 21: goto L_0x03cc;
-                case 22: goto L_0x03a7;
-                case 23: goto L_0x039a;
-                case 24: goto L_0x037a;
-                case 25: goto L_0x036d;
-                case 26: goto L_0x0360;
-                case 27: goto L_0x0355;
-                case 28: goto L_0x034a;
-                case 29: goto L_0x033f;
-                case 30: goto L_0x0334;
-                case 31: goto L_0x0329;
-                case 32: goto L_0x031c;
-                case 33: goto L_0x0310;
-                case 34: goto L_0x0303;
-                case 35: goto L_0x02f8;
-                case 36: goto L_0x02eb;
-                case 37: goto L_0x02de;
-                case 38: goto L_0x02d1;
-                case 39: goto L_0x02c6;
-                case 40: goto L_0x02b9;
-                case 41: goto L_0x02ac;
-                case 42: goto L_0x029f;
-                case 43: goto L_0x0292;
-                case 44: goto L_0x0287;
-                case 45: goto L_0x0282;
-                case 46: goto L_0x0275;
-                case 47: goto L_0x026a;
-                case 48: goto L_0x025d;
-                default: goto L_0x025b;
+                case 0: goto L_0x07e5;
+                case 1: goto L_0x07d7;
+                case 2: goto L_0x07cb;
+                case 3: goto L_0x07bd;
+                case 4: goto L_0x07af;
+                case 5: goto L_0x07a1;
+                case 6: goto L_0x0795;
+                case 7: goto L_0x0786;
+                case 8: goto L_0x0777;
+                case 9: goto L_0x0768;
+                case 10: goto L_0x0759;
+                case 11: goto L_0x0735;
+                case 12: goto L_0x071f;
+                case 13: goto L_0x0709;
+                case 14: goto L_0x06f3;
+                case 15: goto L_0x06dd;
+                case 16: goto L_0x06c1;
+                case 17: goto L_0x066a;
+                case 18: goto L_0x0657;
+                case 19: goto L_0x05d1;
+                case 20: goto L_0x05d1;
+                case 21: goto L_0x05d1;
+                case 22: goto L_0x05d1;
+                case 23: goto L_0x0585;
+                case 24: goto L_0x0560;
+                case 25: goto L_0x0553;
+                case 26: goto L_0x0533;
+                case 27: goto L_0x0526;
+                case 28: goto L_0x0519;
+                case 29: goto L_0x050e;
+                case 30: goto L_0x0503;
+                case 31: goto L_0x04f8;
+                case 32: goto L_0x04ed;
+                case 33: goto L_0x04e2;
+                case 34: goto L_0x04d5;
+                case 35: goto L_0x04c9;
+                case 36: goto L_0x04bc;
+                case 37: goto L_0x04b1;
+                case 38: goto L_0x04a4;
+                case 39: goto L_0x0497;
+                case 40: goto L_0x048a;
+                case 41: goto L_0x047f;
+                case 42: goto L_0x0472;
+                case 43: goto L_0x0465;
+                case 44: goto L_0x0458;
+                case 45: goto L_0x044b;
+                case 46: goto L_0x0440;
+                case 47: goto L_0x043b;
+                case 48: goto L_0x042e;
+                case 49: goto L_0x0423;
+                case 50: goto L_0x0416;
+                case 51: goto L_0x0409;
+                case 52: goto L_0x03fc;
+                case 53: goto L_0x03ef;
+                case 54: goto L_0x03e2;
+                case 55: goto L_0x0395;
+                case 56: goto L_0x033e;
+                case 57: goto L_0x0314;
+                case 58: goto L_0x0307;
+                case 59: goto L_0x02fa;
+                case 60: goto L_0x02ed;
+                default: goto L_0x02eb;
             }
-        L_0x025b:
-            goto L_0x0608
-        L_0x025d:
+        L_0x02eb:
+            goto L_0x080b
+        L_0x02ed:
+            android.content.Context r0 = r1.mContext
+            android.content.ContentResolver r0 = r0.getContentResolver()
+            java.lang.String r5 = "EQ_app"
+            android.provider.Settings.System.putInt(r0, r5, r3)
+            goto L_0x080b
+        L_0x02fa:
+            byte[] r0 = new byte[r13]
+            r5 = 35
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x080b
+        L_0x0307:
+            byte[] r0 = new byte[r13]
+            r5 = 34
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x080b
+        L_0x0314:
+            java.lang.String r0 = "KswSettings"
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder
+            r5.<init>()
+            java.lang.String r6 = "handleConfig:  GoogleAPP intValue = "
+            r5.append(r6)
+            r5.append(r3)
+            java.lang.String r5 = r5.toString()
+            android.util.Log.d(r0, r5)
+            if (r3 != 0) goto L_0x0335
+            java.lang.String r0 = "persist.install.type"
+            java.lang.String r5 = "chinese"
+            android.os.SystemProperties.set(r0, r5)
+            goto L_0x080b
+        L_0x0335:
+            java.lang.String r0 = "persist.install.type"
+            java.lang.String r5 = "foreign"
+            android.os.SystemProperties.set(r0, r5)
+            goto L_0x080b
+        L_0x033e:
+            java.lang.String r0 = "KswSettings"
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder
+            r5.<init>()
+            java.lang.String r6 = "handleConfig mic_gain_m600  intValue = "
+            r5.append(r6)
+            r5.append(r3)
+            java.lang.String r5 = r5.toString()
+            android.util.Log.d(r0, r5)
+            java.lang.String r0 = android.os.Build.VERSION.RELEASE
+            int r0 = java.lang.Integer.parseInt(r0)
+            r5 = 10
+            if (r0 <= r5) goto L_0x080b
+            java.lang.String r0 = android.os.Build.DISPLAY
+            java.lang.String r5 = "M600"
+            boolean r0 = r0.contains(r5)
+            if (r0 == 0) goto L_0x080b
+            java.lang.String r0 = "KswSettings"
+            java.lang.String r5 = "handleConfig mic_gain_m600 set"
+            android.util.Log.d(r0, r5)
+            java.lang.String r0 = "persist.mic.gain"
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder
+            r5.<init>()
+            r5.append(r3)
+            java.lang.String r6 = ""
+            r5.append(r6)
+            java.lang.String r5 = r5.toString()
+            com.wits.pms.mirror.SystemProperties.set(r0, r5)
+            java.lang.String r0 = "persist.micgain.change"
+            java.lang.String r5 = "0"
+            com.wits.pms.mirror.SystemProperties.set(r0, r5)
+            java.lang.String r0 = "persist.micgain.change"
+            java.lang.String r5 = "1"
+            com.wits.pms.mirror.SystemProperties.set(r0, r5)
+            goto L_0x080b
+        L_0x0395:
+            java.lang.String r0 = "KswSettings"
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder
+            r5.<init>()
+            java.lang.String r6 = "handleConfig mic_gain_m501  intValue = "
+            r5.append(r6)
+            r5.append(r3)
+            java.lang.String r5 = r5.toString()
+            android.util.Log.d(r0, r5)
+            java.lang.String r0 = android.os.Build.VERSION.RELEASE
+            java.lang.String r5 = "10"
+            boolean r0 = r0.contains(r5)
+            if (r0 == 0) goto L_0x080b
+            java.lang.String r0 = "KswSettings"
+            java.lang.String r5 = "handleConfig mic_gain_m501 set"
+            android.util.Log.d(r0, r5)
+            java.lang.String r0 = "persist.mic.gain"
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder
+            r5.<init>()
+            r5.append(r3)
+            java.lang.String r6 = ""
+            r5.append(r6)
+            java.lang.String r5 = r5.toString()
+            com.wits.pms.mirror.SystemProperties.set(r0, r5)
+            java.lang.String r0 = "persist.micgain.change"
+            java.lang.String r5 = "0"
+            com.wits.pms.mirror.SystemProperties.set(r0, r5)
+            java.lang.String r0 = "persist.micgain.change"
+            java.lang.String r5 = "1"
+            com.wits.pms.mirror.SystemProperties.set(r0, r5)
+            goto L_0x080b
+        L_0x03e2:
+            byte[] r0 = new byte[r13]
+            r5 = 33
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x080b
+        L_0x03ef:
+            byte[] r0 = new byte[r13]
+            r5 = 32
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x080b
+        L_0x03fc:
+            byte[] r0 = new byte[r13]
+            r5 = 31
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x080b
+        L_0x0409:
+            byte[] r0 = new byte[r13]
+            r5 = 29
+            r0[r14] = r5
+            r0[r15] = r4
+            r1.sendMcu(r8, r0)
+            goto L_0x080b
+        L_0x0416:
             byte[] r0 = new byte[r13]
             r5 = 28
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x026a:
+            goto L_0x080b
+        L_0x0423:
             byte[] r0 = new byte[r13]
             r0[r14] = r10
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x0275:
+            goto L_0x080b
+        L_0x042e:
             com.wits.pms.core.CenterControlImpl r0 = com.wits.pms.core.CenterControlImpl.getImpl()
-            if (r4 != r15) goto L_0x027d
+            if (r4 != r15) goto L_0x0436
             r14 = r15
-        L_0x027d:
+        L_0x0436:
             r0.setTxzSwitch(r14)
-            goto L_0x0608
-        L_0x0282:
+            goto L_0x080b
+        L_0x043b:
             com.wits.pms.utils.UsbUtil.updateUsbMode((int) r4)
-            goto L_0x0608
-        L_0x0287:
+            goto L_0x080b
+        L_0x0440:
             java.lang.String r0 = "CarDisplay"
-            if (r4 != r15) goto L_0x028c
-            goto L_0x028d
-        L_0x028c:
+            if (r4 != r15) goto L_0x0445
+            goto L_0x0446
+        L_0x0445:
             r14 = r15
-        L_0x028d:
+        L_0x0446:
             r1.handleConfig((java.lang.String) r0, (int) r14)
-            goto L_0x0608
-        L_0x0292:
+            goto L_0x080b
+        L_0x044b:
             byte[] r0 = new byte[r13]
             r5 = 20
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x029f:
+            goto L_0x080b
+        L_0x0458:
             byte[] r0 = new byte[r13]
             r5 = 25
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x02ac:
+            goto L_0x080b
+        L_0x0465:
             byte[] r0 = new byte[r13]
             r5 = 24
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x02b9:
+            goto L_0x080b
+        L_0x0472:
             byte[] r0 = new byte[r13]
             r5 = 23
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x02c6:
+            goto L_0x080b
+        L_0x047f:
             byte[] r0 = new byte[r13]
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x02d1:
+            goto L_0x080b
+        L_0x048a:
             byte[] r0 = new byte[r13]
             r5 = 18
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x02de:
+            goto L_0x080b
+        L_0x0497:
             byte[] r0 = new byte[r13]
             r5 = 22
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x02eb:
+            goto L_0x080b
+        L_0x04a4:
             byte[] r0 = new byte[r13]
             r5 = 21
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x02f8:
+            goto L_0x080b
+        L_0x04b1:
             byte[] r0 = new byte[r13]
             r0[r14] = r6
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x0303:
+            goto L_0x080b
+        L_0x04bc:
             byte[] r0 = new byte[r13]
             r5 = 9
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x0310:
+            goto L_0x080b
+        L_0x04c9:
             byte[] r0 = new byte[r13]
             r5 = 6
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x031c:
+            goto L_0x080b
+        L_0x04d5:
             byte[] r0 = new byte[r13]
             r5 = 14
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x0329:
+            goto L_0x080b
+        L_0x04e2:
             byte[] r0 = new byte[r13]
             r0[r14] = r7
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x0334:
+            goto L_0x080b
+        L_0x04ed:
             byte[] r0 = new byte[r13]
             r0[r14] = r13
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x033f:
+            goto L_0x080b
+        L_0x04f8:
             byte[] r0 = new byte[r13]
             r0[r14] = r11
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x034a:
+            goto L_0x080b
+        L_0x0503:
             byte[] r0 = new byte[r13]
             r0[r14] = r9
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x0355:
+            goto L_0x080b
+        L_0x050e:
             byte[] r0 = new byte[r13]
             r0[r14] = r12
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x0360:
+            goto L_0x080b
+        L_0x0519:
             byte[] r0 = new byte[r13]
             r5 = 12
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x036d:
+            goto L_0x080b
+        L_0x0526:
             byte[] r0 = new byte[r13]
             r5 = 26
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x037a:
+            goto L_0x080b
+        L_0x0533:
             java.lang.String r0 = "CarDisplayParamID"
-            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x0397 }
-            if (r0 == 0) goto L_0x0395
-            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x0397 }
-            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x0397 }
-            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x0397 }
-            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x0397 }
-            r7[r14] = r15     // Catch:{ Exception -> 0x0397 }
-            r7[r15] = r6     // Catch:{ Exception -> 0x0397 }
-            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x0397 }
-        L_0x0395:
-            goto L_0x0608
-        L_0x0397:
+            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x0550 }
+            if (r0 == 0) goto L_0x054e
+            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x0550 }
+            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x0550 }
+            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x0550 }
+            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x0550 }
+            r7[r14] = r15     // Catch:{ Exception -> 0x0550 }
+            r7[r15] = r6     // Catch:{ Exception -> 0x0550 }
+            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x0550 }
+        L_0x054e:
+            goto L_0x080b
+        L_0x0550:
             r0 = move-exception
-            goto L_0x0608
-        L_0x039a:
+            goto L_0x080b
+        L_0x0553:
             byte[] r0 = new byte[r13]
             r5 = 27
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x03a7:
+            goto L_0x080b
+        L_0x0560:
             r0 = -1
-            if (r4 != r0) goto L_0x03ab
+            if (r4 != r0) goto L_0x0564
             r4 = 0
-        L_0x03ab:
+        L_0x0564:
             java.lang.String r0 = "CANBusProtocolID"
-            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x03c9 }
-            if (r0 == 0) goto L_0x03c7
-            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x03c9 }
-            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x03c9 }
-            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x03c9 }
-            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x03c9 }
+            java.util.List r0 = r1.getDataListFromJsonKey(r0)     // Catch:{ Exception -> 0x0582 }
+            if (r0 == 0) goto L_0x0580
+            java.lang.Object r5 = r0.get(r4)     // Catch:{ Exception -> 0x0582 }
+            java.lang.String r5 = (java.lang.String) r5     // Catch:{ Exception -> 0x0582 }
+            byte r6 = java.lang.Byte.parseByte(r5)     // Catch:{ Exception -> 0x0582 }
+            byte[] r7 = new byte[r13]     // Catch:{ Exception -> 0x0582 }
             r9 = 7
-            r7[r14] = r9     // Catch:{ Exception -> 0x03c9 }
-            r7[r15] = r6     // Catch:{ Exception -> 0x03c9 }
-            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x03c9 }
-        L_0x03c7:
-            goto L_0x0608
-        L_0x03c9:
+            r7[r14] = r9     // Catch:{ Exception -> 0x0582 }
+            r7[r15] = r6     // Catch:{ Exception -> 0x0582 }
+            r1.sendMcu(r8, r7)     // Catch:{ Exception -> 0x0582 }
+        L_0x0580:
+            goto L_0x080b
+        L_0x0582:
             r0 = move-exception
-            goto L_0x0608
-        L_0x03cc:
+            goto L_0x080b
+        L_0x0585:
             java.lang.String r0 = "languageID"
             java.util.List r0 = r1.getDataListFromJsonKey(r0)
             java.lang.Object r0 = r0.get(r3)
             java.lang.String r0 = (java.lang.String) r0
             int r0 = java.lang.Integer.parseInt(r0)
-            if (r0 >= 0) goto L_0x03e0
+            if (r0 >= 0) goto L_0x0599
             r5 = -1
             return r5
-        L_0x03e0:
+        L_0x0599:
             com.wits.pms.custom.KswSettings$3 r5 = new com.wits.pms.custom.KswSettings$3
             r5.<init>()
             java.lang.String r6 = "KswSettings"
@@ -1099,90 +1390,90 @@ public class KswSettings {
             java.lang.Object r6 = r5.get(r0)
             java.util.Locale r6 = (java.util.Locale) r6
             com.wits.pms.utils.LanguageUtil.changeSystemLanguage(r6)
-            goto L_0x0608
-        L_0x0418:
+            goto L_0x080b
+        L_0x05d1:
             java.lang.String r0 = "EQ_mode"
-            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x049b }
-            byte r0 = (byte) r0     // Catch:{ SettingNotFoundException -> 0x049b }
+            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            byte r0 = (byte) r0     // Catch:{ SettingNotFoundException -> 0x0654 }
             r8 = 115(0x73, float:1.61E-43)
             switch(r0) {
-                case 0: goto L_0x0476;
-                case 1: goto L_0x0466;
-                case 2: goto L_0x0456;
-                case 3: goto L_0x0444;
-                case 4: goto L_0x0436;
-                case 5: goto L_0x0426;
-                default: goto L_0x0424;
-            }     // Catch:{ SettingNotFoundException -> 0x049b }
-        L_0x0424:
-            goto L_0x0499
-        L_0x0426:
-            byte[] r7 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x049b }
-            r7[r14] = r6     // Catch:{ SettingNotFoundException -> 0x049b }
+                case 0: goto L_0x062f;
+                case 1: goto L_0x061f;
+                case 2: goto L_0x060f;
+                case 3: goto L_0x05fd;
+                case 4: goto L_0x05ef;
+                case 5: goto L_0x05df;
+                default: goto L_0x05dd;
+            }     // Catch:{ SettingNotFoundException -> 0x0654 }
+        L_0x05dd:
+            goto L_0x0652
+        L_0x05df:
+            byte[] r7 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r7[r14] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
             r6 = 11
-            r7[r15] = r6     // Catch:{ SettingNotFoundException -> 0x049b }
-            r7[r13] = r5     // Catch:{ SettingNotFoundException -> 0x049b }
-            r7[r12] = r0     // Catch:{ SettingNotFoundException -> 0x049b }
-            r1.sendMcu(r8, r7)     // Catch:{ SettingNotFoundException -> 0x049b }
-            goto L_0x0499
-        L_0x0436:
-            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r15] = r10     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x049b }
-            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x049b }
-            goto L_0x0499
-        L_0x0444:
-            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x049b }
+            r7[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r7[r13] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r7[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r1.sendMcu(r8, r7)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            goto L_0x0652
+        L_0x05ef:
+            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r15] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            goto L_0x0652
+        L_0x05fd:
+            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
             r7 = 15
-            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x049b }
+            r5[r14] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
             r7 = 11
-            r5[r15] = r7     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r13] = r6     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x049b }
-            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x049b }
-            goto L_0x0499
-        L_0x0456:
-            byte[] r6 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x049b }
-            r6[r14] = r5     // Catch:{ SettingNotFoundException -> 0x049b }
-            r6[r15] = r7     // Catch:{ SettingNotFoundException -> 0x049b }
+            r5[r15] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r13] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            goto L_0x0652
+        L_0x060f:
+            byte[] r6 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r6[r14] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r6[r15] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
             r5 = 15
-            r6[r13] = r5     // Catch:{ SettingNotFoundException -> 0x049b }
-            r6[r12] = r0     // Catch:{ SettingNotFoundException -> 0x049b }
-            r1.sendMcu(r8, r6)     // Catch:{ SettingNotFoundException -> 0x049b }
-            goto L_0x0499
-        L_0x0466:
-            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r14] = r10     // Catch:{ SettingNotFoundException -> 0x049b }
+            r6[r13] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r6[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r1.sendMcu(r8, r6)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            goto L_0x0652
+        L_0x061f:
+            byte[] r5 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r14] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
             r6 = 9
-            r5[r15] = r6     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x049b }
-            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x049b }
-            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x049b }
-            goto L_0x0499
-        L_0x0476:
+            r5[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r13] = r10     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r5[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r1.sendMcu(r8, r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            goto L_0x0652
+        L_0x062f:
             java.lang.String r5 = "Bass_value"
-            int r5 = r1.getSettingsInt(r5)     // Catch:{ SettingNotFoundException -> 0x049b }
-            byte r5 = (byte) r5     // Catch:{ SettingNotFoundException -> 0x049b }
+            int r5 = r1.getSettingsInt(r5)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            byte r5 = (byte) r5     // Catch:{ SettingNotFoundException -> 0x0654 }
             java.lang.String r6 = "Middle_value"
-            int r6 = r1.getSettingsInt(r6)     // Catch:{ SettingNotFoundException -> 0x049b }
-            byte r6 = (byte) r6     // Catch:{ SettingNotFoundException -> 0x049b }
+            int r6 = r1.getSettingsInt(r6)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            byte r6 = (byte) r6     // Catch:{ SettingNotFoundException -> 0x0654 }
             java.lang.String r7 = "Treble_value"
-            int r7 = r1.getSettingsInt(r7)     // Catch:{ SettingNotFoundException -> 0x049b }
-            byte r7 = (byte) r7     // Catch:{ SettingNotFoundException -> 0x049b }
-            byte[] r9 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x049b }
-            r9[r14] = r5     // Catch:{ SettingNotFoundException -> 0x049b }
-            r9[r15] = r6     // Catch:{ SettingNotFoundException -> 0x049b }
-            r9[r13] = r7     // Catch:{ SettingNotFoundException -> 0x049b }
-            r9[r12] = r0     // Catch:{ SettingNotFoundException -> 0x049b }
-            r1.sendMcu(r8, r9)     // Catch:{ SettingNotFoundException -> 0x049b }
-        L_0x0499:
-            goto L_0x0608
-        L_0x049b:
+            int r7 = r1.getSettingsInt(r7)     // Catch:{ SettingNotFoundException -> 0x0654 }
+            byte r7 = (byte) r7     // Catch:{ SettingNotFoundException -> 0x0654 }
+            byte[] r9 = new byte[r11]     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r9[r14] = r5     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r9[r15] = r6     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r9[r13] = r7     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r9[r12] = r0     // Catch:{ SettingNotFoundException -> 0x0654 }
+            r1.sendMcu(r8, r9)     // Catch:{ SettingNotFoundException -> 0x0654 }
+        L_0x0652:
+            goto L_0x080b
+        L_0x0654:
             r0 = move-exception
-            goto L_0x0608
-        L_0x049e:
+            goto L_0x080b
+        L_0x0657:
             int r0 = r3 + 1
             float r0 = (float) r0
             r5 = 1092616192(0x41200000, float:10.0)
@@ -1191,44 +1482,54 @@ public class KswSettings {
             android.content.ContentResolver r5 = r5.getContentResolver()
             java.lang.String r6 = "NaviMix"
             android.provider.Settings.System.putFloat(r5, r6, r0)
-            goto L_0x0608
-        L_0x04b1:
+            goto L_0x080b
+        L_0x066a:
             java.lang.String r0 = "TimeSyncSoucrce"
-            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            if (r0 != 0) goto L_0x04e4
-            android.content.Context r0 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            android.content.ContentResolver r0 = r0.getContentResolver()     // Catch:{ SettingNotFoundException -> 0x04f3 }
+            int r0 = r1.getSettingsInt(r0)     // Catch:{ SettingNotFoundException -> 0x06be }
+            if (r0 != 0) goto L_0x069d
+            android.content.Context r0 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
+            android.content.ContentResolver r0 = r0.getContentResolver()     // Catch:{ SettingNotFoundException -> 0x06be }
             java.lang.String r5 = "time_12_24"
-            if (r3 != r15) goto L_0x04c6
+            if (r3 != r15) goto L_0x067f
             java.lang.String r6 = "12"
-            goto L_0x04c8
-        L_0x04c6:
+            goto L_0x0681
+        L_0x067f:
             java.lang.String r6 = "24"
-        L_0x04c8:
-            android.provider.Settings.System.putString(r0, r5, r6)     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            android.content.Intent r0 = new android.content.Intent     // Catch:{ SettingNotFoundException -> 0x04f3 }
+        L_0x0681:
+            android.provider.Settings.System.putString(r0, r5, r6)     // Catch:{ SettingNotFoundException -> 0x06be }
+            android.content.Intent r0 = new android.content.Intent     // Catch:{ SettingNotFoundException -> 0x06be }
             java.lang.String r5 = "android.intent.action.TIME_SET"
-            r0.<init>((java.lang.String) r5)     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            android.content.Context r5 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            android.content.Context r6 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            android.content.pm.ApplicationInfo r6 = r6.getApplicationInfo()     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            int r6 = r6.uid     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            android.os.UserHandle r6 = android.os.UserHandle.getUserHandleForUid(r6)     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            r5.sendBroadcastAsUser(r0, r6)     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            goto L_0x04f1
-        L_0x04e4:
-            byte[] r0 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x04f3 }
+            r0.<init>((java.lang.String) r5)     // Catch:{ SettingNotFoundException -> 0x06be }
+            android.content.Context r5 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
+            android.content.Context r6 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
+            android.content.pm.ApplicationInfo r6 = r6.getApplicationInfo()     // Catch:{ SettingNotFoundException -> 0x06be }
+            int r6 = r6.uid     // Catch:{ SettingNotFoundException -> 0x06be }
+            android.os.UserHandle r6 = android.os.UserHandle.getUserHandleForUid(r6)     // Catch:{ SettingNotFoundException -> 0x06be }
+            r5.sendBroadcastAsUser(r0, r6)     // Catch:{ SettingNotFoundException -> 0x06be }
+            goto L_0x06bc
+        L_0x069d:
+            android.content.Context r0 = r1.mContext     // Catch:{ SettingNotFoundException -> 0x06be }
+            android.content.ContentResolver r0 = r0.getContentResolver()     // Catch:{ SettingNotFoundException -> 0x06be }
+            java.lang.String r5 = "time_12_24"
+            if (r3 != r15) goto L_0x06aa
+            java.lang.String r6 = "12"
+            goto L_0x06ac
+        L_0x06aa:
+            java.lang.String r6 = "24"
+        L_0x06ac:
+            android.provider.Settings.System.putString(r0, r5, r6)     // Catch:{ SettingNotFoundException -> 0x06be }
+            byte[] r0 = new byte[r13]     // Catch:{ SettingNotFoundException -> 0x06be }
             r5 = 15
-            r0[r14] = r5     // Catch:{ SettingNotFoundException -> 0x04f3 }
-            r0[r15] = r4     // Catch:{ SettingNotFoundException -> 0x04f3 }
+            r0[r14] = r5     // Catch:{ SettingNotFoundException -> 0x06be }
+            r0[r15] = r4     // Catch:{ SettingNotFoundException -> 0x06be }
             r5 = 106(0x6a, float:1.49E-43)
-            r1.sendMcu(r5, r0)     // Catch:{ SettingNotFoundException -> 0x04f3 }
-        L_0x04f1:
-            goto L_0x0608
-        L_0x04f3:
+            r1.sendMcu(r5, r0)     // Catch:{ SettingNotFoundException -> 0x06be }
+        L_0x06bc:
+            goto L_0x080b
+        L_0x06be:
             r0 = move-exception
-            goto L_0x0608
-        L_0x04f6:
+            goto L_0x080b
+        L_0x06c1:
             byte[] r0 = new byte[r13]
             r0[r14] = r10
             r0[r15] = r4
@@ -1237,14 +1538,14 @@ public class KswSettings {
             android.content.Context r0 = r1.mContext
             android.content.ContentResolver r0 = r0.getContentResolver()
             java.lang.String r5 = "auto_time"
-            if (r4 != r15) goto L_0x050c
-            goto L_0x050d
-        L_0x050c:
+            if (r4 != r15) goto L_0x06d7
+            goto L_0x06d8
+        L_0x06d7:
             r14 = r15
-        L_0x050d:
+        L_0x06d8:
             android.provider.Settings.Global.putInt(r0, r5, r14)
-            goto L_0x0608
-        L_0x0512:
+            goto L_0x080b
+        L_0x06dd:
             byte[] r0 = new byte[r9]
             r0[r14] = r14
             r0[r15] = r13
@@ -1255,8 +1556,8 @@ public class KswSettings {
             r0[r11] = r5
             r5 = 98
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x0528:
+            goto L_0x080b
+        L_0x06f3:
             byte[] r0 = new byte[r9]
             r0[r14] = r14
             r0[r15] = r13
@@ -1267,8 +1568,8 @@ public class KswSettings {
             r0[r11] = r5
             r5 = 98
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x053e:
+            goto L_0x080b
+        L_0x0709:
             byte[] r0 = new byte[r9]
             r0[r14] = r14
             r0[r15] = r15
@@ -1279,8 +1580,8 @@ public class KswSettings {
             r0[r11] = r5
             r5 = 98
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x0554:
+            goto L_0x080b
+        L_0x071f:
             byte[] r0 = new byte[r9]
             r0[r14] = r14
             r0[r15] = r15
@@ -1291,8 +1592,8 @@ public class KswSettings {
             r0[r11] = r5
             r5 = 98
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x056a:
+            goto L_0x080b
+        L_0x0735:
             int r0 = r3 * 1023
             int r0 = r0 / 100
             r5 = 10
@@ -1303,80 +1604,103 @@ public class KswSettings {
             java.lang.String r6 = "screen_brightness"
             android.provider.Settings.System.putInt(r5, r6, r0)
             boolean r5 = r1.isSyncStatus
-            if (r5 == 0) goto L_0x0608
+            if (r5 == 0) goto L_0x080b
             com.wits.pms.core.CenterControlImpl r5 = com.wits.pms.core.CenterControlImpl.getImpl()
             r5.setBrightness(r3)
-            goto L_0x0608
-        L_0x058e:
+            goto L_0x080b
+        L_0x0759:
             byte[] r0 = new byte[r13]
             r5 = 26
             r0[r14] = r5
             r0[r15] = r4
             r5 = 106(0x6a, float:1.49E-43)
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x059c:
+            goto L_0x080b
+        L_0x0768:
             r5 = 106(0x6a, float:1.49E-43)
             byte[] r0 = new byte[r13]
             r6 = 24
             r0[r14] = r6
             r0[r15] = r4
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x05aa:
+            goto L_0x080b
+        L_0x0777:
             r5 = 106(0x6a, float:1.49E-43)
             byte[] r0 = new byte[r13]
             r6 = 11
             r0[r14] = r6
             r0[r15] = r4
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x05b8:
+            goto L_0x080b
+        L_0x0786:
             r5 = 106(0x6a, float:1.49E-43)
             byte[] r0 = new byte[r13]
             r6 = 20
             r0[r14] = r6
             r0[r15] = r4
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x05c6:
+            goto L_0x080b
+        L_0x0795:
             byte[] r0 = new byte[r13]
             r5 = 8
             r0[r14] = r5
             r0[r15] = r4
             r1.sendMcu(r8, r0)
-            goto L_0x0608
-        L_0x05d2:
+            goto L_0x080b
+        L_0x07a1:
             byte[] r0 = new byte[r13]
             r5 = 14
             r0[r14] = r5
             r0[r15] = r4
             r5 = 106(0x6a, float:1.49E-43)
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x05e0:
+            goto L_0x080b
+        L_0x07af:
             r5 = 106(0x6a, float:1.49E-43)
             byte[] r0 = new byte[r13]
             r6 = 23
             r0[r14] = r6
             r0[r15] = r4
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x05ee:
+            goto L_0x080b
+        L_0x07bd:
             r5 = 106(0x6a, float:1.49E-43)
             byte[] r0 = new byte[r13]
             r6 = 22
             r0[r14] = r6
             r0[r15] = r4
             r1.sendMcu(r5, r0)
-            goto L_0x0608
-        L_0x05fc:
+            goto L_0x080b
+        L_0x07cb:
             r5 = 106(0x6a, float:1.49E-43)
             byte[] r0 = new byte[r13]
             r0[r14] = r15
             r0[r15] = r4
             r1.sendMcu(r5, r0)
-        L_0x0608:
+            goto L_0x080b
+        L_0x07d7:
+            r5 = 106(0x6a, float:1.49E-43)
+            byte[] r0 = new byte[r13]
+            r6 = 27
+            r0[r14] = r6
+            r0[r15] = r4
+            r1.sendMcu(r5, r0)
+            goto L_0x080b
+        L_0x07e5:
+            java.lang.String r0 = "KswSettings"
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder
+            r5.<init>()
+            java.lang.String r6 = "clock input handleConfig benzClockSort, key : "
+            r5.append(r6)
+            r5.append(r2)
+            java.lang.String r6 = ", value : "
+            r5.append(r6)
+            r5.append(r3)
+            java.lang.String r5 = r5.toString()
+            android.util.Log.d(r0, r5)
+            com.wits.pms.core.CenterControlImpl r0 = com.wits.pms.core.CenterControlImpl.getImpl()
+            r0.configDialByUser(r3)
+        L_0x080b:
             return r3
         */
         throw new UnsupportedOperationException("Method not decompiled: com.wits.pms.custom.KswSettings.handleConfig(java.lang.String, int):int");
@@ -2004,7 +2328,7 @@ public class KswSettings {
             switch (key.hashCode()) {
                 case -1548945544:
                     if (key.equals("Language")) {
-                        c = 7;
+                        c = 8;
                         break;
                     }
                     break;
@@ -2029,6 +2353,12 @@ public class KswSettings {
                 case 116643:
                     if (key.equals("ver")) {
                         c = 1;
+                        break;
+                    }
+                    break;
+                case 91785770:
+                    if (key.equals("Reverse_time")) {
+                        c = 7;
                         break;
                     }
                     break;
@@ -2059,9 +2389,10 @@ public class KswSettings {
                 case 4:
                 case 5:
                 case 6:
+                case 7:
                     setString(key, value);
                     return;
-                case 7:
+                case 8:
                     try {
                         setInt(key, Integer.parseInt(value));
                         return;

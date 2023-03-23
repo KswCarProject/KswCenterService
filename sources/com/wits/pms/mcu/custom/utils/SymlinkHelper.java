@@ -1,7 +1,7 @@
 package com.wits.pms.mcu.custom.utils;
 
 import android.util.Log;
-import com.wits.pms.utils.SystemProperties;
+import com.wits.pms.mirror.SystemProperties;
 
 public class SymlinkHelper {
     public static void setUp(String path) {

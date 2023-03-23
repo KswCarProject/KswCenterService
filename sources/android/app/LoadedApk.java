@@ -1125,7 +1125,7 @@ public final class LoadedApk {
                       (wrap: android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA : 0x0002: CONSTRUCTOR  (r0v0 android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA) = 
                       (r1v0 'this' android.app.LoadedApk$ReceiverDispatcher$Args A[THIS])
                      call: android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA.<init>(android.app.LoadedApk$ReceiverDispatcher$Args):void type: CONSTRUCTOR)
-                     in method: android.app.LoadedApk.ReceiverDispatcher.Args.getRunnable():java.lang.Runnable, dex: classes2.dex
+                     in method: android.app.LoadedApk.ReceiverDispatcher.Args.getRunnable():java.lang.Runnable, dex: classes.dex
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                     	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -1188,7 +1188,7 @@ public final class LoadedApk {
                     	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
                     Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0002: CONSTRUCTOR  (r0v0 android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA) = 
                       (r1v0 'this' android.app.LoadedApk$ReceiverDispatcher$Args A[THIS])
-                     call: android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA.<init>(android.app.LoadedApk$ReceiverDispatcher$Args):void type: CONSTRUCTOR in method: android.app.LoadedApk.ReceiverDispatcher.Args.getRunnable():java.lang.Runnable, dex: classes2.dex
+                     call: android.app.-$$Lambda$LoadedApk$ReceiverDispatcher$Args$_BumDX2UKsnxLVrE6UJsJZkotuA.<init>(android.app.LoadedApk$ReceiverDispatcher$Args):void type: CONSTRUCTOR in method: android.app.LoadedApk.ReceiverDispatcher.Args.getRunnable():java.lang.Runnable, dex: classes.dex
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                     	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                     	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)

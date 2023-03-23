@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.wits.pms.R;
-import com.wits.pms.utils.SystemProperties;
+import com.wits.pms.mirror.SystemProperties;
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
@@ -129,6 +129,7 @@ public class OTAUpdate {
             } else {
                 realPath = new File("/dev/ota_mnt/" + tempFile2.getName());
             }
+            android.os.SystemProperties.set("persist.wits.ota", "true");
             RecoverySystem.installPackage(context, realPath);
         } catch (IOException e) {
         }

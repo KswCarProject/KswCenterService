@@ -1376,16 +1376,16 @@ public class ViewPager extends ViewGroup {
                         count = count2;
                         width = width2;
                     }
-                    int count3 = child2.getMeasuredWidth();
+                    int childMeasuredWidth = child2.getMeasuredWidth();
                     int startOffset = (int) (((float) childWidth2) * ii.offset);
                     if (isLayoutRtl()) {
-                        childLeft = ((16777216 - paddingRight) - startOffset) - count3;
+                        childLeft = ((16777216 - paddingRight) - startOffset) - childMeasuredWidth;
                     } else {
                         childLeft = paddingLeft2 + startOffset;
                     }
                     childWidth = childWidth2;
-                    int childWidth3 = childLeft + count3;
-                    int i5 = count3;
+                    int childWidth3 = childLeft + childMeasuredWidth;
+                    int i5 = childMeasuredWidth;
                     int i6 = startOffset;
                     int childTop2 = paddingTop2;
                     child2.layout(childLeft, childTop2, childWidth3, childTop2 + child2.getMeasuredHeight());

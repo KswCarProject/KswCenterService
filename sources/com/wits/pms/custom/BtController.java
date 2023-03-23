@@ -13,7 +13,7 @@ import android.provider.Settings;
 import android.util.Log;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.PowerManagerAppService;
-import com.wits.pms.utils.SystemProperties;
+import com.wits.pms.mirror.SystemProperties;
 import java.io.PrintStream;
 
 public class BtController {

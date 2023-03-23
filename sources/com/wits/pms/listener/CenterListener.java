@@ -19,10 +19,12 @@ import com.wits.pms.ICmdListener;
 import com.wits.pms.bean.ZlinkMessage;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.SystemStatusControl;
+import com.wits.pms.custom.CallBackServiceImpl;
 import com.wits.pms.custom.WitsMemoryController;
 import com.wits.pms.interfaces.LogicSystem;
 import com.wits.pms.interfaces.MemoryKiller;
 import com.wits.pms.mcu.custom.KswMcuSender;
+import com.wits.pms.mirror.SystemProperties;
 import com.wits.pms.receiver.AutoKitCallBackImpl;
 import com.wits.pms.statuscontrol.BtPhoneStatus;
 import com.wits.pms.statuscontrol.McuStatus;
@@ -32,7 +34,6 @@ import com.wits.pms.statuscontrol.SystemStatus;
 import com.wits.pms.statuscontrol.VideoStatus;
 import com.wits.pms.statuscontrol.WitsCommand;
 import com.wits.pms.statuscontrol.WitsStatus;
-import com.wits.pms.utils.SystemProperties;
 import com.wits.pms.utils.UsbUtil;
 import java.util.List;
 
@@ -130,6 +131,9 @@ public class CenterListener {
                             CenterControlImpl.getImpl().stopZlinkMusic();
                             AutoKitCallBackImpl.getImpl(CenterListener.this.mContext).musicPause();
                             CenterControlImpl.getImpl().kuWoMusicPause();
+                            if (SystemProperties.get(ZlinkMessage.ZLINK_CALL).equals("1")) {
+                                KswMcuSender.getSender().sendMessage(99, new byte[]{2, 0, 1});
+                            }
                         }
                     }
                     CenterListener.this.mLogicSystem.handle();
@@ -145,6 +149,18 @@ public class CenterListener {
                 }
             }
         });
+        BroadcastReceiver receiver360 = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                String message = intent.getStringExtra("msg");
+                String access$000 = CenterListener.TAG;
+                Log.d(access$000, "onReceive  message = " + message);
+                CallBackServiceImpl.getCallBackServiceImpl().handleReverse();
+                CallBackServiceImpl.getCallBackServiceImpl().handleLRReverse();
+            }
+        };
+        IntentFilter intentFilter360 = new IntentFilter();
+        intentFilter360.addAction("com.baios.avm360.readyok");
+        this.mContext.registerReceiver(receiver360, intentFilter360);
     }
 
     private void checkBootComplete() {
@@ -172,64 +188,67 @@ public class CenterListener {
 
     public void appStarted(String packageName, String className) {
         String str = TAG;
-        Log.d(str, "appStarted  packageName = " + packageName);
-        SystemStatusControl.getStatus().topApp = packageName;
-        SystemStatusControl.getDefault().handleSystemStatus();
-        if (packageName.contains("net.easyconn")) {
-            CenterControlImpl.getImpl().mediaPause();
-            CenterControlImpl.getImpl().openSourceMode(3);
-            CenterControlImpl.getImpl().stopZlinkMusic();
-        }
-        if (packageName.contains("com.wits.ksw.bt") || packageName.contains("com.wits.ksw.media")) {
-            CenterControlImpl.getImpl().stopZlinkMusic();
-        }
-        if (packageName.contains("com.mxtech")) {
-            CenterControlImpl.getImpl().openSourceMode(13);
-        }
-        if (packageName.contains(ZlinkMessage.ZLINK_NORMAL_ACTION) || packageName.contains("com.suding.speedplay")) {
-            CenterControlImpl.getImpl().openSourceMode(3);
-            Bundle bundle = new Bundle();
-            bundle.putString("command", "REQ_SPEC_FUNC_CMD");
-            bundle.putInt("specFuncCode", 126);
-        }
-        if (packageName.contains(AutoKitCallBackImpl.AutoKitPkgName)) {
-            CenterControlImpl.getImpl().openSourceMode(3);
-        }
-        if (packageName.contains("com.txznet.music")) {
-            CenterControlImpl.getImpl().openSourceMode(13);
-            if (className.equals("com.txznet.music.ui.SplashActivity")) {
-                CenterControlImpl.getImpl().txzMusicPlay(true);
-            } else {
-                CenterControlImpl.getImpl().txzMusicPlay(false);
+        Log.d(str, "appStarted  packageName = " + packageName + "  className = " + className);
+        SystemStatusControl.getStatus().topClass = className;
+        if (!SystemStatusControl.getStatus().topApp.equals(packageName)) {
+            SystemStatusControl.getStatus().topApp = packageName;
+            SystemStatusControl.getDefault().handleSystemStatus();
+            if (packageName.contains("net.easyconn")) {
+                CenterControlImpl.getImpl().mediaPause();
+                CenterControlImpl.getImpl().openSourceMode(3);
+                CenterControlImpl.getImpl().stopZlinkMusic();
             }
-        }
-        if (packageName.equals("cn.kuwo.kwmusiccar")) {
-            CenterControlImpl.getImpl().openSourceMode(13);
-            if (className.equals("cn.kuwo.kwmusiccar.WelcomeActivity")) {
-                CenterControlImpl.getImpl().kuWoMusicPlay(true);
-            } else {
-                CenterControlImpl.getImpl().kuWoMusicPlay(false);
+            if (packageName.contains("com.wits.ksw.bt") || packageName.contains("com.wits.ksw.media")) {
+                CenterControlImpl.getImpl().stopZlinkMusic();
             }
-        }
-        if (packageName.equals("com.qiyi.video")) {
-            WitsCommand.sendCommand(2, 118, "");
-        }
-        if (packageName.contains("cloudmusic")) {
-            CenterControlImpl.getImpl().openSourceMode(13);
-        }
-        String musicPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_APP_MUSIC_PKG");
-        String videoPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_APP_VIDEO_PKG");
-        if (!TextUtils.isEmpty(musicPkg) && musicPkg.equals(packageName)) {
-            CenterControlImpl.getImpl().openSourceMode(1);
-        }
-        if (!TextUtils.isEmpty(videoPkg) && videoPkg.equals(packageName)) {
-            CenterControlImpl.getImpl().openSourceMode(2);
+            if (packageName.contains("com.mxtech")) {
+                CenterControlImpl.getImpl().openSourceMode(13);
+            }
+            if (packageName.contains(ZlinkMessage.ZLINK_NORMAL_ACTION) || packageName.contains("com.suding.speedplay")) {
+                Bundle bundle = new Bundle();
+                bundle.putString("command", "REQ_SPEC_FUNC_CMD");
+                bundle.putInt("specFuncCode", 126);
+            }
+            if (packageName.contains(AutoKitCallBackImpl.AutoKitPkgName)) {
+                CenterControlImpl.getImpl().openSourceMode(3);
+            }
+            if (packageName.contains("com.txznet.music")) {
+                CenterControlImpl.getImpl().openSourceMode(13);
+                if (className.equals("com.txznet.music.ui.SplashActivity")) {
+                    CenterControlImpl.getImpl().txzMusicPlay(true);
+                } else {
+                    CenterControlImpl.getImpl().txzMusicPlay(false);
+                }
+            }
+            if (packageName.equals("cn.kuwo.kwmusiccar")) {
+                CenterControlImpl.getImpl().openSourceMode(13);
+                if (className.equals("cn.kuwo.kwmusiccar.WelcomeActivity")) {
+                    CenterControlImpl.getImpl().kuWoMusicPlay(true);
+                } else {
+                    CenterControlImpl.getImpl().kuWoMusicPlay(false);
+                }
+            }
+            if (packageName.equals("com.qiyi.video")) {
+                WitsCommand.sendCommand(2, 118, "");
+            }
+            if (packageName.contains("cloudmusic")) {
+                CenterControlImpl.getImpl().openSourceMode(13);
+            }
+            String musicPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_THIRD_APP_MUSIC_PKG");
+            String videoPkg = Settings.System.getString(this.mContext.getContentResolver(), "KEY_THIRD_APP_VIDEO_PKG");
+            if (!TextUtils.isEmpty(musicPkg) && musicPkg.equals(packageName)) {
+                CenterControlImpl.getImpl().openSourceMode(1);
+            }
+            if (!TextUtils.isEmpty(videoPkg) && videoPkg.equals(packageName)) {
+                CenterControlImpl.getImpl().openSourceMode(2);
+            }
         }
     }
 
     private void observeActivity() {
         final ActivityManager am = (ActivityManager) this.mContext.getSystemService(Context.ACTIVITY_SERVICE);
         new Thread() {
+            private String className;
             private String packageName;
 
             public void run() {
@@ -246,11 +265,15 @@ public class CenterListener {
                     List<ActivityManager.RunningTaskInfo> runningTasks = am.getRunningTasks(1);
                     if (runningTasks.size() > 0) {
                         String packageName2 = runningTasks.get(0).topActivity.getPackageName();
-                        String className = runningTasks.get(0).topActivity.getClassName();
+                        String className2 = runningTasks.get(0).topActivity.getClassName();
                         if (!packageName2.equals(this.packageName)) {
                             this.packageName = packageName2;
-                            CenterListener.this.appStarted(packageName2, className);
+                            CenterListener.this.appStarted(packageName2, className2);
                             Settings.System.putString(CenterListener.this.mContext.getContentResolver(), "currentPkg", packageName2);
+                        }
+                        if (!className2.equals(this.className)) {
+                            this.className = className2;
+                            CenterListener.this.appStarted(packageName2, className2);
                         }
                         try {
                             if (Settings.System.getInt(CenterListener.this.mContext.getContentResolver(), "btSwitch", 1) != 1) {
@@ -259,8 +282,10 @@ public class CenterListener {
                             boolean zlinkConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_CONNECT));
                             boolean hicarConnected = "true".equals(SystemProperties.get("persist.sys.hicar_connect"));
                             boolean airplayConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_AIRPLAY_CONNECT));
-                            Log.d(CenterListener.TAG, "zlinkConnected = " + zlinkConnected + "   hicarConnected = " + hicarConnected + "   airplayConnected = " + airplayConnected + "  btSwitch = " + btSwitch);
-                            if ((zlinkConnected || hicarConnected || airplayConnected) && btSwitch) {
+                            boolean carplayWiredConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT));
+                            boolean airplayWiredConnected = "1".equals(SystemProperties.get(ZlinkMessage.ZLINK_AIRPLAY_WIRED_CONNECT));
+                            Log.d(CenterListener.TAG, "zlinkConnected = " + zlinkConnected + "   hicarConnected = " + hicarConnected + "   airplayConnected = " + airplayConnected + "  carplayWiredConnected = " + carplayWiredConnected + "  btSwitch = " + btSwitch);
+                            if ((zlinkConnected || hicarConnected || airplayConnected || carplayWiredConnected) && btSwitch && !airplayWiredConnected) {
                                 Settings.System.putInt(CenterListener.this.mContext.getContentResolver(), "btSwitch", 0);
                             }
                         } catch (Exception e3) {

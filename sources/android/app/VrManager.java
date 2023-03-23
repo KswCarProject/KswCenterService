@@ -32,7 +32,7 @@ public class VrManager {
                       (r2v0 'this' android.app.VrManager$CallbackEntry$2 A[THIS])
                       (r3v0 'enabled' boolean)
                      call: android.app.-$$Lambda$VrManager$CallbackEntry$2$KvHLIXm3-7igcOqTEl46YdjhHMk.<init>(android.app.VrManager$CallbackEntry$2, boolean):void type: CONSTRUCTOR)
-                     java.util.concurrent.Executor.execute(java.lang.Runnable):void type: INTERFACE in method: android.app.VrManager.CallbackEntry.2.onPersistentVrStateChanged(boolean):void, dex: classes2.dex
+                     java.util.concurrent.Executor.execute(java.lang.Runnable):void type: INTERFACE in method: android.app.VrManager.CallbackEntry.2.onPersistentVrStateChanged(boolean):void, dex: classes.dex
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                     	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -94,7 +94,7 @@ public class VrManager {
                     Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0006: CONSTRUCTOR  (r1v0 android.app.-$$Lambda$VrManager$CallbackEntry$2$KvHLIXm3-7igcOqTEl46YdjhHMk) = 
                       (r2v0 'this' android.app.VrManager$CallbackEntry$2 A[THIS])
                       (r3v0 'enabled' boolean)
-                     call: android.app.-$$Lambda$VrManager$CallbackEntry$2$KvHLIXm3-7igcOqTEl46YdjhHMk.<init>(android.app.VrManager$CallbackEntry$2, boolean):void type: CONSTRUCTOR in method: android.app.VrManager.CallbackEntry.2.onPersistentVrStateChanged(boolean):void, dex: classes2.dex
+                     call: android.app.-$$Lambda$VrManager$CallbackEntry$2$KvHLIXm3-7igcOqTEl46YdjhHMk.<init>(android.app.VrManager$CallbackEntry$2, boolean):void type: CONSTRUCTOR in method: android.app.VrManager.CallbackEntry.2.onPersistentVrStateChanged(boolean):void, dex: classes.dex
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                     	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                     	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
@@ -134,7 +134,7 @@ public class VrManager {
                       (r2v0 'this' android.app.VrManager$CallbackEntry$1 A[THIS])
                       (r3v0 'enabled' boolean)
                      call: android.app.-$$Lambda$VrManager$CallbackEntry$1$rgUBVVG1QhelpvAp8W3UQHDHJdU.<init>(android.app.VrManager$CallbackEntry$1, boolean):void type: CONSTRUCTOR)
-                     java.util.concurrent.Executor.execute(java.lang.Runnable):void type: INTERFACE in method: android.app.VrManager.CallbackEntry.1.onVrStateChanged(boolean):void, dex: classes2.dex
+                     java.util.concurrent.Executor.execute(java.lang.Runnable):void type: INTERFACE in method: android.app.VrManager.CallbackEntry.1.onVrStateChanged(boolean):void, dex: classes.dex
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                     	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -196,7 +196,7 @@ public class VrManager {
                     Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0006: CONSTRUCTOR  (r1v0 android.app.-$$Lambda$VrManager$CallbackEntry$1$rgUBVVG1QhelpvAp8W3UQHDHJdU) = 
                       (r2v0 'this' android.app.VrManager$CallbackEntry$1 A[THIS])
                       (r3v0 'enabled' boolean)
-                     call: android.app.-$$Lambda$VrManager$CallbackEntry$1$rgUBVVG1QhelpvAp8W3UQHDHJdU.<init>(android.app.VrManager$CallbackEntry$1, boolean):void type: CONSTRUCTOR in method: android.app.VrManager.CallbackEntry.1.onVrStateChanged(boolean):void, dex: classes2.dex
+                     call: android.app.-$$Lambda$VrManager$CallbackEntry$1$rgUBVVG1QhelpvAp8W3UQHDHJdU.<init>(android.app.VrManager$CallbackEntry$1, boolean):void type: CONSTRUCTOR in method: android.app.VrManager.CallbackEntry.1.onVrStateChanged(boolean):void, dex: classes.dex
                     	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                     	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                     	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)

@@ -266,7 +266,7 @@ public class ApkSignatureSchemeV2Verifier {
                                     int certificateCount2 = 0;
                                     while (certificates.hasRemaining()) {
                                         int digestAlgorithm = certificateCount;
-                                        int digestAlgorithm2 = certificateCount2 + 1;
+                                        int certificateCount3 = certificateCount2 + 1;
                                         byte[] encodedCert2 = ApkSigningBlockUtils.readLengthPrefixedByteArray(certificates);
                                         try {
                                             ByteBuffer certificates2 = certificates;
@@ -275,7 +275,7 @@ public class ApkSignatureSchemeV2Verifier {
                                                 int bestSigAlgorithm2 = bestSigAlgorithm;
                                                 try {
                                                     certs.add(new VerbatimX509Certificate((X509Certificate) certFactory.generateCertificate(new ByteArrayInputStream(encodedCert)), encodedCert));
-                                                    certificateCount2 = digestAlgorithm2;
+                                                    certificateCount2 = certificateCount3;
                                                     certificateCount = digestAlgorithm;
                                                     certificates = certificates2;
                                                     bestSigAlgorithm = bestSigAlgorithm2;
@@ -285,7 +285,7 @@ public class ApkSignatureSchemeV2Verifier {
                                                     StringBuilder sb3 = new StringBuilder();
                                                     ArrayList arrayList3 = arrayList;
                                                     sb3.append("Failed to decode certificate #");
-                                                    sb3.append(digestAlgorithm2);
+                                                    sb3.append(certificateCount3);
                                                     throw new SecurityException(sb3.toString(), e);
                                                 }
                                             } catch (CertificateException e7) {
@@ -295,7 +295,7 @@ public class ApkSignatureSchemeV2Verifier {
                                                 StringBuilder sb32 = new StringBuilder();
                                                 ArrayList arrayList32 = arrayList;
                                                 sb32.append("Failed to decode certificate #");
-                                                sb32.append(digestAlgorithm2);
+                                                sb32.append(certificateCount3);
                                                 throw new SecurityException(sb32.toString(), e);
                                             }
                                         } catch (CertificateException e8) {
@@ -307,11 +307,11 @@ public class ApkSignatureSchemeV2Verifier {
                                             StringBuilder sb322 = new StringBuilder();
                                             ArrayList arrayList322 = arrayList;
                                             sb322.append("Failed to decode certificate #");
-                                            sb322.append(digestAlgorithm2);
+                                            sb322.append(certificateCount3);
                                             throw new SecurityException(sb322.toString(), e);
                                         }
                                     }
-                                    int digestAlgorithm3 = certificateCount;
+                                    int digestAlgorithm2 = certificateCount;
                                     ByteBuffer byteBuffer3 = certificates;
                                     int i7 = bestSigAlgorithm;
                                     ArrayList arrayList4 = arrayList;

@@ -51,6 +51,7 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
     /* access modifiers changed from: private */
     public HashMap<String, List<IContentObserver>> mObserverMap = new HashMap<>();
     private SystemStatus mSystemStatus = new SystemStatus();
+    private VideoStatus mVideoStatus;
     /* access modifiers changed from: private */
     public final Object obsLock = new Object();
     private final Object sendCmdLock = new Object();
@@ -270,10 +271,19 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
             saveSystem(SystemStatus.getStatusFormJson(witsStatus.getJsonArg()));
         } else if (i == 3) {
             saveBt(BtPhoneStatus.getStatusForJson(witsStatus.getJsonArg()));
-        } else if (i == 5) {
+        } else if (i != 5) {
+            switch (i) {
+                case 21:
+                    saveMusic(MusicStatus.getStatusFromJson(witsStatus.getJsonArg()));
+                    return;
+                case 22:
+                    saveVideo(VideoStatus.getStatusFromJson(witsStatus.getJsonArg()));
+                    return;
+                default:
+                    return;
+            }
+        } else {
             saveMcu(McuStatus.getStatusFromJson(witsStatus.getJsonArg()));
-        } else if (i == 21) {
-            saveMusic(MusicStatus.getStatusFromJson(witsStatus.getJsonArg()));
         }
     }
 
@@ -319,7 +329,12 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
         this.mFieldMap.put(BrowserContract.Bookmarks.POSITION, Integer.valueOf(musicStatus.position));
     }
 
-    private void saveVideo(VideoStatus musicStatus) {
+    private void saveVideo(VideoStatus videoStatus) {
+        this.mFieldMap.put("videoMode", videoStatus.getMode());
+        this.mFieldMap.put("videoPath", videoStatus.getPath());
+        this.mFieldMap.put("videoPlay", Boolean.valueOf(videoStatus.isPlay()));
+        this.mFieldMap.put("videoPosition", Integer.valueOf(videoStatus.getPosition()));
+        this.mFieldMap.put("videoMask", Boolean.valueOf(videoStatus.isMask()));
     }
 
     private int handlerStatus(WitsStatus witsStatus) {
@@ -343,7 +358,38 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
                 }
             }
             this.mBtPhoneStatus = btPhoneStatus;
-        } else if (i == 5) {
+        } else if (i != 5) {
+            switch (i) {
+                case 21:
+                    MusicStatus musicStatus = MusicStatus.getStatusFromJson(witsStatus.getJsonArg());
+                    if (this.mMusicStatus != null) {
+                        compares.addAll(this.mMusicStatus.compare(musicStatus));
+                        if (compares.size() > 0) {
+                            Log.i(TAG, "mMusicStatus has change status - " + compares.size());
+                        }
+                    }
+                    this.mMusicStatus = musicStatus;
+                    break;
+                case 22:
+                    VideoStatus videoStatus = VideoStatus.getStatusFromJson(witsStatus.getJsonArg());
+                    if (this.mVideoStatus != null) {
+                        compares.addAll(this.mVideoStatus.compare(videoStatus));
+                        if (compares.size() > 0) {
+                            Log.i(TAG, "mVideoStatus has change status - " + compares.size());
+                        }
+                    } else {
+                        List<String> keys = new ArrayList<>();
+                        keys.add("path");
+                        keys.add("mode");
+                        keys.add("play");
+                        keys.add(BrowserContract.Bookmarks.POSITION);
+                        keys.add("mask");
+                        compares.addAll(keys);
+                    }
+                    this.mVideoStatus = videoStatus;
+                    break;
+            }
+        } else {
             McuStatus mcuStatus = McuStatus.getStatusFromJson(witsStatus.getJsonArg());
             if (this.mMcuStatus != null) {
                 compares.addAll(this.mMcuStatus.compare(mcuStatus));
@@ -352,15 +398,6 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
                 }
             }
             this.mMcuStatus = mcuStatus;
-        } else if (i == 21) {
-            MusicStatus musicStatus = MusicStatus.getStatusFromJson(witsStatus.getJsonArg());
-            if (this.mMusicStatus != null) {
-                compares.addAll(this.mMusicStatus.compare(musicStatus));
-                if (compares.size() > 0) {
-                    Log.i(TAG, "mMusicStatus has change status - " + compares.size());
-                }
-            }
-            this.mMusicStatus = musicStatus;
         }
         save(witsStatus);
         this.mHandler.post(new Runnable(compares) {

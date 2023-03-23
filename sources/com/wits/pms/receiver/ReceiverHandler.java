@@ -11,6 +11,7 @@ import com.wits.pms.bean.TxzMessage;
 import com.wits.pms.bean.ZlinkMessage;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.mcu.custom.KswMcuSender;
+import com.wits.pms.mirror.SystemProperties;
 
 public class ReceiverHandler {
     public static void init(Context context) {
@@ -21,9 +22,11 @@ public class ReceiverHandler {
             public void onReceive(Context context, Intent intent) {
                 if (TxzReceiver.TXZ_SHOW_ACTION.equals(intent.getAction())) {
                     KswMcuSender.getSender().sendMessage(105, new byte[]{19, 1, 2});
+                    SystemProperties.set(TxzMessage.TXZ_SHOW_STATUS, "1");
                 }
                 if (TxzReceiver.TXZ_DIMISS_ACTION.equals(intent.getAction())) {
                     KswMcuSender.getSender().sendMessage(105, new byte[]{19, 0, 2});
+                    SystemProperties.set(TxzMessage.TXZ_SHOW_STATUS, "0");
                 }
             }
         }, intentFilter);

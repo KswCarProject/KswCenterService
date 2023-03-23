@@ -32,6 +32,8 @@
     <string name="abc_shareactionprovider_share_with_application">Share with %s</string>
     <string name="abc_toolbar_collapse_description">Collapse</string>
     <string name="app_name">CarService</string>
+    <string name="app_update">App is updating</string>
+    <string name="app_update_complete">App update complete!</string>
     <string name="auto_update_mcu">MCU being repaired!</string>
     <string name="auto_update_mcu_success">MCU repaired success!</string>
     <string name="bootanimation_success">Boot Animation has modified</string>
@@ -51,5 +53,7 @@
     <string name="update_mcu">MCU being updated!</string>
     <string name="update_mcu_success">MCU updated success!</string>
     <string name="update_success">Update Success!</string>
+    <string name="wifi_firmware_update">Wifi Firmware UPDATE</string>
+    <string name="wifi_firmware_update_message">Wifi Firmware updated.Do you want to reboot now for take effect?</string>
     <string name="yes_update">YES</string>
 </resources>

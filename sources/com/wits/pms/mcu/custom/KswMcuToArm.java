@@ -22,6 +22,7 @@ public class KswMcuToArm {
     public static final int CMD_PHONE_STRING_INFO = 37;
     public static final int CMD_POWER_STATUS = 16;
     public static final int CMD_TOUCH_SYSTEM_SWITCH = 26;
+    public static final int CMD_TXZ_DATA = 39;
     public static final int CMD_UPDATE = 224;
     public static final int CMD_VIDEO_STATUS = 28;
     public static final int CMD_VOLUME_UI = 35;

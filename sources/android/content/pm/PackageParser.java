@@ -6370,10 +6370,10 @@ public class PackageParser {
     /* JADX WARNING: type inference failed for: r5v0 */
     /* JADX WARNING: type inference failed for: r5v1, types: [int, boolean] */
     /* JADX WARNING: type inference failed for: r5v3 */
-    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00ab, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00aa, code lost:
         return r5;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:44:0x00cf, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:44:0x00cd, code lost:
         return r5;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -6432,7 +6432,7 @@ public class PackageParser {
         L_0x0065:
             int r11 = r20.next()
             r15 = r11
-            if (r11 == r12) goto L_0x01cb
+            if (r11 == r12) goto L_0x01c9
             r11 = r15
             if (r11 != r7) goto L_0x007a
             int r12 = r20.getDepth()
@@ -6440,63 +6440,63 @@ public class PackageParser {
             goto L_0x007a
         L_0x0076:
             r5 = r18
-            goto L_0x01ce
+            goto L_0x01cc
         L_0x007a:
-            if (r11 == r7) goto L_0x01c0
+            if (r11 == r7) goto L_0x01be
             if (r11 != r13) goto L_0x0080
-            goto L_0x01c0
+            goto L_0x01be
         L_0x0080:
             java.lang.String r12 = r20.getName()
             java.lang.String r13 = "action"
             boolean r13 = r12.equals(r13)
-            if (r13 == 0) goto L_0x00ac
+            if (r13 == 0) goto L_0x00ab
             java.lang.String r13 = "http://schemas.android.com/apk/res/android"
             java.lang.String r7 = "name"
             java.lang.String r7 = r2.getAttributeValue(r13, r7)
-            if (r7 == 0) goto L_0x00a7
+            if (r7 == 0) goto L_0x00a6
             java.lang.String r13 = ""
-            if (r7 != r13) goto L_0x009c
-            goto L_0x00a7
-        L_0x009c:
+            if (r7 != r13) goto L_0x009b
+            goto L_0x00a6
+        L_0x009b:
             com.android.internal.util.XmlUtils.skipCurrentTag(r20)
             r3.addAction(r7)
-        L_0x00a3:
+        L_0x00a2:
             r5 = r18
-            goto L_0x01bf
-        L_0x00a7:
+            goto L_0x01bd
+        L_0x00a6:
             java.lang.String r13 = "No value supplied for <android:name>"
             r24[r5] = r13
             return r5
-        L_0x00ac:
+        L_0x00ab:
             java.lang.String r7 = "category"
             boolean r7 = r12.equals(r7)
-            if (r7 == 0) goto L_0x00d0
+            if (r7 == 0) goto L_0x00ce
             java.lang.String r7 = "http://schemas.android.com/apk/res/android"
             java.lang.String r13 = "name"
             java.lang.String r7 = r2.getAttributeValue(r7, r13)
-            if (r7 == 0) goto L_0x00cb
+            if (r7 == 0) goto L_0x00c9
             java.lang.String r13 = ""
-            if (r7 != r13) goto L_0x00c4
-            goto L_0x00cb
-        L_0x00c4:
+            if (r7 != r13) goto L_0x00c2
+            goto L_0x00c9
+        L_0x00c2:
             com.android.internal.util.XmlUtils.skipCurrentTag(r20)
             r3.addCategory(r7)
-            goto L_0x00a3
-        L_0x00cb:
+            goto L_0x00a2
+        L_0x00c9:
             java.lang.String r13 = "No value supplied for <android:name>"
             r24[r5] = r13
             return r5
-        L_0x00d0:
+        L_0x00ce:
             java.lang.String r7 = "data"
             boolean r7 = r12.equals(r7)
-            if (r7 == 0) goto L_0x0188
+            if (r7 == 0) goto L_0x0186
             int[] r7 = com.android.internal.R.styleable.AndroidManifestData
             android.content.res.TypedArray r7 = r1.obtainAttributes(r2, r7)
             java.lang.String r13 = r7.getNonConfigurationString(r5, r5)
-            if (r13 == 0) goto L_0x00f5
-            r3.addDataType(r13)     // Catch:{ MalformedMimeTypeException -> 0x00e8 }
-            goto L_0x00f5
-        L_0x00e8:
+            if (r13 == 0) goto L_0x00f3
+            r3.addDataType(r13)     // Catch:{ MalformedMimeTypeException -> 0x00e6 }
+            goto L_0x00f3
+        L_0x00e6:
             r0 = move-exception
             r14 = r0
             r0 = r14
@@ -6504,90 +6504,90 @@ public class PackageParser {
             r24[r5] = r14
             r7.recycle()
             return r5
-        L_0x00f5:
+        L_0x00f3:
             r0 = 1
             java.lang.String r13 = r7.getNonConfigurationString(r0, r5)
-            if (r13 == 0) goto L_0x00ff
+            if (r13 == 0) goto L_0x00fd
             r3.addDataScheme(r13)
-        L_0x00ff:
+        L_0x00fd:
             r0 = 7
             java.lang.String r13 = r7.getNonConfigurationString(r0, r5)
-            if (r13 == 0) goto L_0x0109
+            if (r13 == 0) goto L_0x0107
             r3.addDataSchemeSpecificPart(r13, r5)
-        L_0x0109:
+        L_0x0107:
             r0 = 8
             java.lang.String r0 = r7.getNonConfigurationString(r0, r5)
-            if (r0 == 0) goto L_0x0115
+            if (r0 == 0) goto L_0x0113
             r13 = 1
             r3.addDataSchemeSpecificPart(r0, r13)
-        L_0x0115:
+        L_0x0113:
             r13 = 9
             java.lang.String r0 = r7.getNonConfigurationString(r13, r5)
-            if (r0 == 0) goto L_0x012a
-            if (r21 != 0) goto L_0x0125
+            if (r0 == 0) goto L_0x0128
+            if (r21 != 0) goto L_0x0123
             java.lang.String r13 = "sspPattern not allowed here; ssp must be literal"
             r24[r5] = r13
             return r5
-        L_0x0125:
+        L_0x0123:
             r13 = 2
             r3.addDataSchemeSpecificPart(r0, r13)
-            goto L_0x012b
-        L_0x012a:
+            goto L_0x0129
+        L_0x0128:
             r13 = 2
-        L_0x012b:
+        L_0x0129:
             r16 = r0
             java.lang.String r0 = r7.getNonConfigurationString(r13, r5)
             r13 = 3
             java.lang.String r1 = r7.getNonConfigurationString(r13, r5)
-            if (r0 == 0) goto L_0x013b
+            if (r0 == 0) goto L_0x0139
             r3.addDataAuthority(r0, r1)
-        L_0x013b:
+        L_0x0139:
             r17 = r0
             r13 = 4
             java.lang.String r0 = r7.getNonConfigurationString(r13, r5)
-            if (r0 == 0) goto L_0x0147
+            if (r0 == 0) goto L_0x0145
             r3.addDataPath(r0, r5)
-        L_0x0147:
+        L_0x0145:
             r13 = 5
             java.lang.String r0 = r7.getNonConfigurationString(r13, r5)
-            if (r0 == 0) goto L_0x0152
+            if (r0 == 0) goto L_0x0150
             r13 = 1
             r3.addDataPath(r0, r13)
-        L_0x0152:
+        L_0x0150:
             r13 = 6
             java.lang.String r0 = r7.getNonConfigurationString(r13, r5)
-            if (r0 == 0) goto L_0x0166
-            if (r21 != 0) goto L_0x0161
+            if (r0 == 0) goto L_0x0164
+            if (r21 != 0) goto L_0x015f
             java.lang.String r13 = "pathPattern not allowed here; path must be literal"
             r24[r5] = r13
             return r5
-        L_0x0161:
+        L_0x015f:
             r13 = 2
             r3.addDataPath(r0, r13)
-            goto L_0x0167
-        L_0x0166:
+            goto L_0x0165
+        L_0x0164:
             r13 = 2
-        L_0x0167:
+        L_0x0165:
             r13 = 10
             java.lang.String r0 = r7.getNonConfigurationString(r13, r5)
-            if (r0 == 0) goto L_0x017c
-            if (r21 != 0) goto L_0x0177
+            if (r0 == 0) goto L_0x017a
+            if (r21 != 0) goto L_0x0175
             java.lang.String r13 = "pathAdvancedPattern not allowed here; path must be literal"
             r24[r5] = r13
             return r5
-        L_0x0177:
+        L_0x0175:
             r13 = 3
             r3.addDataPath(r0, r13)
-            goto L_0x017d
-        L_0x017c:
+            goto L_0x017b
+        L_0x017a:
             r13 = 3
-        L_0x017d:
+        L_0x017b:
             r7.recycle()
             com.android.internal.util.XmlUtils.skipCurrentTag(r20)
             r5 = r18
             r0 = r7
-            goto L_0x01bf
-        L_0x0188:
+            goto L_0x01bd
+        L_0x0186:
             r1 = 7
             r13 = 3
             java.lang.String r7 = "PackageParser"
@@ -6609,11 +6609,11 @@ public class PackageParser {
             java.lang.String r1 = r1.toString()
             android.util.Slog.w((java.lang.String) r7, (java.lang.String) r1)
             com.android.internal.util.XmlUtils.skipCurrentTag(r20)
-        L_0x01bf:
-            goto L_0x01c2
-        L_0x01c0:
+        L_0x01bd:
+            goto L_0x01c0
+        L_0x01be:
             r5 = r18
-        L_0x01c2:
+        L_0x01c0:
             r1 = r19
             r5 = 0
             r7 = 3
@@ -6621,10 +6621,10 @@ public class PackageParser {
             r12 = 1
             r13 = 4
             goto L_0x0065
-        L_0x01cb:
+        L_0x01c9:
             r5 = r18
             r11 = r15
-        L_0x01ce:
+        L_0x01cc:
             java.lang.String r1 = "android.intent.category.DEFAULT"
             boolean r1 = r3.hasCategory(r1)
             r3.hasDefault = r1

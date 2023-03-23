@@ -5,7 +5,7 @@ import android.util.Log;
 import android.util.TimedRemoteCaller;
 import android.widget.Toast;
 import com.wits.pms.R;
-import com.wits.pms.utils.SystemProperties;
+import com.wits.pms.mirror.SystemProperties;
 import java.io.File;
 
 public class TpUpdate {

@@ -2,7 +2,7 @@ package com.wits.pms.mcu.custom.utils;
 
 import android.content.Context;
 import android.util.Log;
-import com.wits.pms.utils.SystemProperties;
+import com.wits.pms.mirror.SystemProperties;
 import java.io.File;
 
 public class WitsAutoLog {

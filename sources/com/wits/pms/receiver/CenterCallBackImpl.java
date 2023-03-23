@@ -2,19 +2,23 @@ package com.wits.pms.receiver;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.provider.Telephony;
 import android.text.TextUtils;
 import android.util.Log;
 import com.wits.pms.IContentObserver;
 import com.wits.pms.bean.TxzMessage;
 import com.wits.pms.statuscontrol.PowerManagerApp;
+import com.wits.pms.utils.Utils;
 
 public class CenterCallBackImpl {
     static final String TAG = "CenterCallBack";
     private static CenterCallBackImpl centerCall;
-    private static Context mContext;
+    /* access modifiers changed from: private */
+    public static Context mContext;
     /* access modifiers changed from: private */
     public static String mPreMediaPkgName = null;
 
@@ -53,11 +57,25 @@ public class CenterCallBackImpl {
                 if ("com.txznet.music".equals(pkgName)) {
                     CenterCallBackImpl.this.musicType(1);
                 }
+                if ("com.wits.ksw.media".equals(pkgName)) {
+                    CenterCallBackImpl.this.musicType(2);
+                }
                 if (pkgName.contains("cn.kuwo.kwmusiccar") || pkgName.contains("com.ximalaya.ting.android.car")) {
                     CenterCallBackImpl.this.appFocus(CenterCallBackImpl.mPreMediaPkgName, pkgName);
                     if (!TextUtils.equals(pkgName, CenterCallBackImpl.mPreMediaPkgName)) {
                         String unused = CenterCallBackImpl.mPreMediaPkgName = pkgName;
                     }
+                } else if (pkgName.equals("com.google.android.apps.maps") || pkgName.equals("com.sygic.aura")) {
+                    if (Build.DISPLAY.contains("M600") && Integer.parseInt(Build.VERSION.RELEASE) > 10) {
+                        try {
+                            Utils.updateLocationEnabled(CenterCallBackImpl.mContext, false, UserHandle.myUserId(), 1);
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Utils.updateLocationEnabled(CenterCallBackImpl.mContext, true, UserHandle.myUserId(), 1);
+                    }
+                    Log.d(CenterCallBackImpl.TAG, "onChange: top is google map");
                 }
             }
         });

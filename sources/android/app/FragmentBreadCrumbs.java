@@ -221,21 +221,21 @@ public class FragmentBreadCrumbs extends ViewGroup implements FragmentManager.On
                 text.setOnClickListener(this.mOnClickListener);
             }
         }
-        int viewI = numEntries + numPreEntries;
+        int i2 = numEntries + numPreEntries;
         int numViews2 = this.mContainer.getChildCount();
-        while (numViews2 > viewI) {
+        while (numViews2 > i2) {
             this.mContainer.removeViewAt(numViews2 - 1);
             numViews2--;
         }
-        int i2 = 0;
-        while (i2 < numViews2) {
-            View child = this.mContainer.getChildAt(i2);
-            child.findViewById(16908310).setEnabled(i2 < numViews2 + -1);
+        int i3 = 0;
+        while (i3 < numViews2) {
+            View child = this.mContainer.getChildAt(i3);
+            child.findViewById(16908310).setEnabled(i3 < numViews2 + -1);
             if (this.mMaxVisible > 0) {
-                child.setVisibility(i2 < numViews2 - this.mMaxVisible ? 8 : 0);
-                child.findViewById(R.id.left_icon).setVisibility((i2 <= numViews2 - this.mMaxVisible || i2 == 0) ? 8 : 0);
+                child.setVisibility(i3 < numViews2 - this.mMaxVisible ? 8 : 0);
+                child.findViewById(R.id.left_icon).setVisibility((i3 <= numViews2 - this.mMaxVisible || i3 == 0) ? 8 : 0);
             }
-            i2++;
+            i3++;
         }
     }
 }

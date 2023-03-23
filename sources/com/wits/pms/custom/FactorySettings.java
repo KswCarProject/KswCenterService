@@ -39,11 +39,14 @@ public class FactorySettings {
     public int Dashboard_Select;
     public int Default_PowerBoot;
     public int DirtTravelSelection;
+    public int EQ_app;
     public int Front_view_camera;
     public int GoogleAPP;
     public int HandsetAutomaticSelect;
     public int Map_key;
+    public int Mic_gain;
     public int Mode_key;
+    public String Reverse_time = "";
     public int Screen_cast;
     public int Support_FM_Transmit;
     public int Support_TXZ;
@@ -60,14 +63,58 @@ public class FactorySettings {
     public String client = "";
     public int e_car;
     public String password = "";
+    public int phone_key;
     public int speed_play_switch = 1;
     public int touch_continuous_send;
+    public int txz_oil = 1;
+    public int txz_speed = 120;
+    public int txz_temp;
     public String ver = "";
     public int zlink_auto_start;
     public int zlink_hicar;
 
     public FactorySettings() {
         LogI(TAG, "create a new factory settings");
+    }
+
+    public int getTxz_oil() {
+        return this.txz_oil;
+    }
+
+    public void setTxz_oil(int txz_oil2) {
+        this.txz_oil = txz_oil2;
+    }
+
+    public int getTxz_speed() {
+        return this.txz_speed;
+    }
+
+    public void setTxz_speed(int txz_speed2) {
+        this.txz_speed = txz_speed2;
+    }
+
+    public int getTxz_temp() {
+        return this.txz_temp;
+    }
+
+    public void setTxz_temp(int txz_temp2) {
+        this.txz_temp = txz_temp2;
+    }
+
+    public void setReverse_time(String reverse_time) {
+        this.Reverse_time = reverse_time;
+    }
+
+    public String getReverse_time() {
+        return this.Reverse_time;
+    }
+
+    public int getMic_gain() {
+        return this.Mic_gain;
+    }
+
+    public void setMic_gain(int mic_gain) {
+        this.Mic_gain = mic_gain;
     }
 
     public int getScreen_cast() {
@@ -342,6 +389,14 @@ public class FactorySettings {
         this.Support_TXZ = support_TXZ;
     }
 
+    public int getEQ_app() {
+        return this.EQ_app;
+    }
+
+    public void setEQ_app(int eq_app) {
+        this.EQ_app = eq_app;
+    }
+
     public int getSupport_TXZ_Voice_Wakeup() {
         return this.Support_TXZ_Voice_Wakeup;
     }
@@ -396,6 +451,14 @@ public class FactorySettings {
 
     public void setVoice_key(int voice_key) {
         this.Voice_key = voice_key;
+    }
+
+    public int getPhone_key() {
+        return this.phone_key;
+    }
+
+    public void setPhone_key(int phone_key2) {
+        this.phone_key = phone_key2;
     }
 
     public int getMap_key() {

@@ -17,6 +17,7 @@ public class SystemStatus {
     public int rlight;
     public int screenSwitch;
     public String topApp;
+    public String topClass;
 
     public static final class ACC {
         public static final int NORMAL = 2;
@@ -60,6 +61,7 @@ public class SystemStatus {
 
     public SystemStatus() {
         this.topApp = "";
+        this.topClass = "";
         this.acc = 2;
         this.screenSwitch = 2;
         this.topApp = "";

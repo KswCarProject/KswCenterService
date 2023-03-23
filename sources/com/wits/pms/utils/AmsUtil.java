@@ -5,17 +5,15 @@ import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
+import com.wits.pms.mirror.ActivityManagerMirror;
+import com.wits.pms.mirror.AppOpsManagerMirror;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class AmsUtil {
     public static void forceStopPackage(Context context, String pkgName) {
-        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        try {
-            Class.forName("android.app.ActivityManager").getMethod("forceStopPackage", new Class[]{String.class}).invoke(am, new Object[]{pkgName});
-        } catch (Exception e) {
-        }
+        new ActivityManagerMirror((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE)).forceStopPackage(pkgName);
     }
 
     public static int getPid(String psName) {
@@ -81,11 +79,7 @@ public class AmsUtil {
             } catch (PackageManager.NameNotFoundException e) {
             }
         }
-        AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        try {
-            Class.forName("android.app.AppOpsManager").getMethod("setMode", new Class[]{Integer.TYPE, Integer.TYPE, String.class, Integer.TYPE}).invoke(appOpsManager, new Object[]{70, Integer.valueOf(uid), packageName, Integer.valueOf(mode)});
-            Log.v("AmsUtil", "setForceAppStandby - package: " + packageName);
-        } catch (Exception e2) {
-        }
+        new AppOpsManagerMirror((AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE)).setMode(70, uid, packageName, mode);
+        Log.v("AmsUtil", "setForceAppStandby - package: " + packageName);
     }
 }

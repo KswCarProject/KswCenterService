@@ -284,7 +284,7 @@ public class SubscriptionManager {
                           (wrap: android.telephony.-$$Lambda$SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1$3LINuEtkXs3dEn49nQkzD0NIY3E : 0x000c: CONSTRUCTOR  (r3v0 android.telephony.-$$Lambda$SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1$3LINuEtkXs3dEn49nQkzD0NIY3E) = 
                           (r4v0 'this' android.telephony.SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1 A[THIS])
                          call: android.telephony.-$$Lambda$SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1$3LINuEtkXs3dEn49nQkzD0NIY3E.<init>(android.telephony.SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1):void type: CONSTRUCTOR)
-                         java.util.concurrent.Executor.execute(java.lang.Runnable):void type: INTERFACE in method: android.telephony.SubscriptionManager.OnOpportunisticSubscriptionsChangedListener.1.onSubscriptionsChanged():void, dex: classes2.dex
+                         java.util.concurrent.Executor.execute(java.lang.Runnable):void type: INTERFACE in method: android.telephony.SubscriptionManager.OnOpportunisticSubscriptionsChangedListener.1.onSubscriptionsChanged():void, dex: classes.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                         	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -350,7 +350,7 @@ public class SubscriptionManager {
                         	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
                         Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000c: CONSTRUCTOR  (r3v0 android.telephony.-$$Lambda$SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1$3LINuEtkXs3dEn49nQkzD0NIY3E) = 
                           (r4v0 'this' android.telephony.SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1 A[THIS])
-                         call: android.telephony.-$$Lambda$SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1$3LINuEtkXs3dEn49nQkzD0NIY3E.<init>(android.telephony.SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1):void type: CONSTRUCTOR in method: android.telephony.SubscriptionManager.OnOpportunisticSubscriptionsChangedListener.1.onSubscriptionsChanged():void, dex: classes2.dex
+                         call: android.telephony.-$$Lambda$SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1$3LINuEtkXs3dEn49nQkzD0NIY3E.<init>(android.telephony.SubscriptionManager$OnOpportunisticSubscriptionsChangedListener$1):void type: CONSTRUCTOR in method: android.telephony.SubscriptionManager.OnOpportunisticSubscriptionsChangedListener.1.onSubscriptionsChanged():void, dex: classes.dex
                         	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                         	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                         	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
@@ -1275,7 +1275,7 @@ public class SubscriptionManager {
                   (r4v0 'subId' int)
                  call: android.telephony.-$$Lambda$SubscriptionManager$NazcIP1h3U0cfnY--L174e3u4tk.<init>(android.telephony.SubscriptionManager, boolean, int):void type: CONSTRUCTOR)
                  android.telephony.SubscriptionManager.setSubscriptionPropertyHelper(int, java.lang.String, android.telephony.SubscriptionManager$CallISubMethodHelper):int type: DIRECT) == (1 int)) ? true : false)
-                 in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes2.dex
+                 in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes.dex
                 	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                 	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
                 	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
@@ -1315,7 +1315,7 @@ public class SubscriptionManager {
                   (r3v0 'opportunistic' boolean)
                   (r4v0 'subId' int)
                  call: android.telephony.-$$Lambda$SubscriptionManager$NazcIP1h3U0cfnY--L174e3u4tk.<init>(android.telephony.SubscriptionManager, boolean, int):void type: CONSTRUCTOR)
-                 android.telephony.SubscriptionManager.setSubscriptionPropertyHelper(int, java.lang.String, android.telephony.SubscriptionManager$CallISubMethodHelper):int type: DIRECT) == (1 int)) ? true : false in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes2.dex
+                 android.telephony.SubscriptionManager.setSubscriptionPropertyHelper(int, java.lang.String, android.telephony.SubscriptionManager$CallISubMethodHelper):int type: DIRECT) == (1 int)) ? true : false in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes.dex
                 	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                 	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                 	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
@@ -1331,7 +1331,7 @@ public class SubscriptionManager {
                   (r3v0 'opportunistic' boolean)
                   (r4v0 'subId' int)
                  call: android.telephony.-$$Lambda$SubscriptionManager$NazcIP1h3U0cfnY--L174e3u4tk.<init>(android.telephony.SubscriptionManager, boolean, int):void type: CONSTRUCTOR)
-                 android.telephony.SubscriptionManager.setSubscriptionPropertyHelper(int, java.lang.String, android.telephony.SubscriptionManager$CallISubMethodHelper):int type: DIRECT in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes2.dex
+                 android.telephony.SubscriptionManager.setSubscriptionPropertyHelper(int, java.lang.String, android.telephony.SubscriptionManager$CallISubMethodHelper):int type: DIRECT in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes.dex
                 	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                 	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                 	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
@@ -1346,7 +1346,7 @@ public class SubscriptionManager {
                   (r2v0 'this' android.telephony.SubscriptionManager A[THIS])
                   (r3v0 'opportunistic' boolean)
                   (r4v0 'subId' int)
-                 call: android.telephony.-$$Lambda$SubscriptionManager$NazcIP1h3U0cfnY--L174e3u4tk.<init>(android.telephony.SubscriptionManager, boolean, int):void type: CONSTRUCTOR in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes2.dex
+                 call: android.telephony.-$$Lambda$SubscriptionManager$NazcIP1h3U0cfnY--L174e3u4tk.<init>(android.telephony.SubscriptionManager, boolean, int):void type: CONSTRUCTOR in method: android.telephony.SubscriptionManager.setOpportunistic(boolean, int):boolean, dex: classes.dex
                 	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
                 	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
                 	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)

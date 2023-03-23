@@ -2061,7 +2061,20 @@ public abstract class BatteryStats implements Parcelable {
             sb2.append(")");
             printWriter.println(sb.toString());
             long j = scanTimeMs;
-            long sleepTimeMs = totalControllerActivityTimeMs - ((idleTimeMs + rxTimeMs) + totalTxTimeMs);
+            long scanTimeMs2 = totalControllerActivityTimeMs - ((idleTimeMs + rxTimeMs) + totalTxTimeMs);
+            sb2.setLength(0);
+            sb.append(prefix);
+            sb2.append("     ");
+            sb2.append(str);
+            sb2.append(" Sleep time:  ");
+            formatTimeMs(sb2, scanTimeMs2);
+            sb2.append("(");
+            sb2.append(formatRatioLocked(scanTimeMs2, totalControllerActivityTimeMs));
+            sb2.append(")");
+            printWriter.println(sb.toString());
+        }
+        if (str.equals(CELLULAR_CONTROLLER_NAME)) {
+            long sleepTimeMs = counter.getSleepTimeCounter().getCountLocked(i);
             sb2.setLength(0);
             sb.append(prefix);
             sb2.append("     ");
@@ -2070,19 +2083,6 @@ public abstract class BatteryStats implements Parcelable {
             formatTimeMs(sb2, sleepTimeMs);
             sb2.append("(");
             sb2.append(formatRatioLocked(sleepTimeMs, totalControllerActivityTimeMs));
-            sb2.append(")");
-            printWriter.println(sb.toString());
-        }
-        if (str.equals(CELLULAR_CONTROLLER_NAME)) {
-            long sleepTimeMs2 = counter.getSleepTimeCounter().getCountLocked(i);
-            sb2.setLength(0);
-            sb.append(prefix);
-            sb2.append("     ");
-            sb2.append(str);
-            sb2.append(" Sleep time:  ");
-            formatTimeMs(sb2, sleepTimeMs2);
-            sb2.append("(");
-            sb2.append(formatRatioLocked(sleepTimeMs2, totalControllerActivityTimeMs));
             sb2.append(")");
             printWriter.println(sb.toString());
         }

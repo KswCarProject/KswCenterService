@@ -217,10 +217,10 @@ public interface IActivityController extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -273,10 +273,10 @@ public interface IActivityController extends IInterface {
                                 if (_reply.readInt() != 0) {
                                     z = true;
                                 }
-                                boolean _result = z;
+                                boolean _status = z;
                                 _reply.recycle();
                                 _data.recycle();
-                                return _result;
+                                return _status;
                             }
                             boolean appCrashed = Stub.getDefaultImpl().appCrashed(processName, pid, shortMsg, longMsg, timeMillis, stackTrace);
                             _reply.recycle();

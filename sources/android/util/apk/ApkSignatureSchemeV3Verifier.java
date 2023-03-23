@@ -220,7 +220,7 @@ public class ApkSignatureSchemeV3Verifier {
                     int digestCount = 0;
                     while (digests.hasRemaining()) {
                         int signatureCount2 = signatureCount;
-                        int signatureCount3 = digestCount + 1;
+                        int digestCount2 = digestCount + 1;
                         try {
                             ByteBuffer digest = ApkSigningBlockUtils.getLengthPrefixedSlice(digests);
                             byte[] bestSigAlgorithmSignatureBytes2 = bestSigAlgorithmSignatureBytes;
@@ -234,7 +234,7 @@ public class ApkSignatureSchemeV3Verifier {
                                         if (sigAlgorithm2 == bestSigAlgorithm) {
                                             contentDigest = ApkSigningBlockUtils.readLengthPrefixedByteArray(digest);
                                         }
-                                        digestCount = signatureCount3;
+                                        digestCount = digestCount2;
                                         digestsSigAlgorithms = digestsSigAlgorithms2;
                                         signatureCount = signatureCount2;
                                         bestSigAlgorithmSignatureBytes = bestSigAlgorithmSignatureBytes2;
@@ -245,7 +245,7 @@ public class ApkSignatureSchemeV3Verifier {
                                         StringBuilder sb = new StringBuilder();
                                         Pair<String, ? extends AlgorithmParameterSpec> pair2 = signatureAlgorithmParams;
                                         sb.append("Failed to parse digest record #");
-                                        sb.append(signatureCount3);
+                                        sb.append(digestCount2);
                                         throw new IOException(sb.toString(), e);
                                     }
                                 } catch (IOException | BufferUnderflowException e4) {
@@ -256,7 +256,7 @@ public class ApkSignatureSchemeV3Verifier {
                                     StringBuilder sb2 = new StringBuilder();
                                     Pair<String, ? extends AlgorithmParameterSpec> pair22 = signatureAlgorithmParams;
                                     sb2.append("Failed to parse digest record #");
-                                    sb2.append(signatureCount3);
+                                    sb2.append(digestCount2);
                                     throw new IOException(sb2.toString(), e);
                                 }
                             } else {
@@ -272,7 +272,7 @@ public class ApkSignatureSchemeV3Verifier {
                             StringBuilder sb22 = new StringBuilder();
                             Pair<String, ? extends AlgorithmParameterSpec> pair222 = signatureAlgorithmParams;
                             sb22.append("Failed to parse digest record #");
-                            sb22.append(signatureCount3);
+                            sb22.append(digestCount2);
                             throw new IOException(sb22.toString(), e);
                         }
                     }
@@ -298,14 +298,14 @@ public class ApkSignatureSchemeV3Verifier {
                         int certificateCount2 = 0;
                         while (certificates.hasRemaining()) {
                             int digestAlgorithm = certificateCount;
-                            int digestAlgorithm2 = certificateCount2 + 1;
+                            int certificateCount3 = certificateCount2 + 1;
                             byte[] encodedCert2 = ApkSigningBlockUtils.readLengthPrefixedByteArray(certificates);
                             try {
                                 ByteBuffer certificates2 = certificates;
                                 encodedCert = encodedCert2;
                                 try {
                                     certs.add(new VerbatimX509Certificate((X509Certificate) certificateFactory.generateCertificate(new ByteArrayInputStream(encodedCert)), encodedCert));
-                                    certificateCount2 = digestAlgorithm2;
+                                    certificateCount2 = certificateCount3;
                                     certificateCount = digestAlgorithm;
                                     certificates = certificates2;
                                     bestSigAlgorithm = bestSigAlgorithm;
@@ -316,7 +316,7 @@ public class ApkSignatureSchemeV3Verifier {
                                     StringBuilder sb4 = new StringBuilder();
                                     ArrayList arrayList3 = arrayList;
                                     sb4.append("Failed to decode certificate #");
-                                    sb4.append(digestAlgorithm2);
+                                    sb4.append(certificateCount3);
                                     throw new SecurityException(sb4.toString(), e);
                                 }
                             } catch (CertificateException e7) {
@@ -328,7 +328,7 @@ public class ApkSignatureSchemeV3Verifier {
                                 StringBuilder sb42 = new StringBuilder();
                                 ArrayList arrayList32 = arrayList;
                                 sb42.append("Failed to decode certificate #");
-                                sb42.append(digestAlgorithm2);
+                                sb42.append(certificateCount3);
                                 throw new SecurityException(sb42.toString(), e);
                             }
                         }

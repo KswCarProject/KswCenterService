@@ -289,11 +289,11 @@ public final class GestureUtils {
             } else {
                 i = 1;
                 float lstPointX2 = currentPointX;
-                float lstPointY2 = currentPointY;
+                float lstPointX3 = currentPointY;
                 distanceSoFar += distance;
                 currentPointY = Float.MIN_VALUE;
                 currentPointX = Float.MIN_VALUE;
-                lstPointY = lstPointY2;
+                lstPointY = lstPointX3;
                 lstPointX = lstPointX2;
             }
             i2 = i;

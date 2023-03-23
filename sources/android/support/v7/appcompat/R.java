@@ -805,8 +805,8 @@ public final class R {
         public static final int abc_shareactionprovider_share_with = 2131427356;
         public static final int abc_shareactionprovider_share_with_application = 2131427357;
         public static final int abc_toolbar_collapse_description = 2131427358;
-        public static final int search_menu_title = 2131427418;
-        public static final int status_bar_notification_info_overflow = 2131427419;
+        public static final int search_menu_title = 2131427420;
+        public static final int status_bar_notification_info_overflow = 2131427421;
 
         private string() {
         }

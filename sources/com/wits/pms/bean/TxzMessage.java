@@ -9,6 +9,9 @@ import android.util.Log;
 import com.android.internal.content.NativeLibraryHelper;
 
 public class TxzMessage {
+    public static final String TXZ_DISMISS = "0";
+    public static final String TXZ_SHOW = "1";
+    public static final String TXZ_SHOW_STATUS = "vendor.wits.txz.status";
     public String action;
     public Bundle bundle;
     public int keyType;

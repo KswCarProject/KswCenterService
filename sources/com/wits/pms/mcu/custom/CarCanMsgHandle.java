@@ -2,17 +2,24 @@ package com.wits.pms.mcu.custom;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
+import com.wits.pms.bean.ZlinkMessage;
 import com.wits.pms.core.CenterControlImpl;
 import com.wits.pms.core.SystemStatusControl;
 import com.wits.pms.custom.KswSettings;
+import com.wits.pms.mirror.SystemProperties;
 import com.wits.pms.receiver.AutoKitCallBackImpl;
 import com.wits.pms.statuscontrol.WitsCommand;
 import com.wits.pms.utils.KeyUtils;
-import com.wits.pms.utils.SystemProperties;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 public class CarCanMsgHandle {
+    private static final boolean DBG = false;
+    public static final int MSG_HANDLER_KEY = 1;
+    private static final String TAG = "CarCanMsgHandle";
     public final HashMap<Integer, Integer> keyEventMap = new HashMap<Integer, Integer>() {
         {
             put(1, 691);
@@ -44,6 +51,7 @@ public class CarCanMsgHandle {
         }
     };
     private Instrumentation mInstrumentation = new Instrumentation();
+    private Mhandler mhandler = new Mhandler(this);
 
     public static final class CanMsg {
         public static final int CMD_BRIGHTNESS = 17;
@@ -85,51 +93,197 @@ public class CarCanMsgHandle {
 
     public void handleCanMsg(byte[] datas) {
         byte opType;
+        int currentVol;
         byte subCmd = datas[0];
-        if (subCmd != 17 && subCmd == 23 && datas[2] == 1 && (opType = datas[1]) != 11) {
-            if (opType == 14) {
-                CenterControlImpl.getImpl().openNavi();
-                return;
-            }
-            if (opType == 21 || opType == 22) {
-                try {
-                    int currentVol = KswSettings.getSettings().getSettingsInt("Android_media_vol");
-                    if (KswSettings.getSettings().getSettingsInt("AMP_Type", 0) == 1 && currentVol >= 0 && currentVol <= 40) {
-                        if (currentVol < 40 && opType == 21 && currentVol >= 0) {
-                            currentVol++;
+        boolean fIDriveSndBroadcastMsg = false;
+        if (subCmd != 17 && subCmd == 23) {
+            if (SystemStatusControl.getStatus().topApp.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
+                if (datas[2] != 0) {
+                    if (datas[2] == 1) {
+                        fIDriveSndBroadcastMsg = true;
+                        byte b = datas[1];
+                        if (!(b == 12 || b == 14 || b == 17)) {
+                            switch (b) {
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                case 5:
+                                    break;
+                                case 6:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(1502);
+                                    break;
+                                case 7:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(1501);
+                                    break;
+                                default:
+                                    switch (b) {
+                                        case 23:
+                                        case 24:
+                                        case 25:
+                                            break;
+                                        default:
+                                            switch (b) {
+                                                case 30:
+                                                case 31:
+                                                    break;
+                                                default:
+                                                    fIDriveSndBroadcastMsg = false;
+                                                    break;
+                                            }
+                                    }
+                            }
                         }
-                        if (currentVol > 0 && opType == 22 && currentVol <= 40) {
-                            currentVol--;
-                        }
-                        KswSettings.getSettings().setInt("Android_media_vol", currentVol);
-                        return;
                     }
-                    return;
-                } catch (Exception e) {
+                } else {
+                    fIDriveSndBroadcastMsg = true;
+                    byte b2 = datas[1];
+                    if (b2 == 12) {
+                        CenterControlImpl.getImpl().iDriveZlinkMsg(4);
+                    } else if (b2 != 14) {
+                        if (b2 == 17) {
+                            switch (CenterControlImpl.getImpl().getCpCallStatus()) {
+                                case 1:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(5);
+                                    break;
+                                case 2:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(6);
+                                    break;
+                            }
+                        } else {
+                            switch (b2) {
+                                case 1:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(19);
+                                    break;
+                                case 2:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(20);
+                                    break;
+                                case 3:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(1);
+                                    break;
+                                case 4:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(2);
+                                    break;
+                                case 5:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(66);
+                                    break;
+                                case 6:
+                                case 7:
+                                    break;
+                                default:
+                                    switch (b2) {
+                                        case 23:
+                                            CenterControlImpl.getImpl().iDriveZlinkMsg(88);
+                                            break;
+                                        case 24:
+                                            CenterControlImpl.getImpl().iDriveZlinkMsg(87);
+                                            break;
+                                        case 25:
+                                            CenterControlImpl.getImpl().iDriveZlinkMsg(85);
+                                            break;
+                                        default:
+                                            switch (b2) {
+                                                case 30:
+                                                    CenterControlImpl.getImpl().iDriveZlinkMsg(5);
+                                                    break;
+                                                case 31:
+                                                    CenterControlImpl.getImpl().iDriveZlinkMsg(6);
+                                                    break;
+                                                default:
+                                                    fIDriveSndBroadcastMsg = false;
+                                                    break;
+                                            }
+                                    }
+                            }
+                        }
+                    } else {
+                        CenterControlImpl.getImpl().iDriveZlinkMsg(1504);
+                    }
                 }
             }
-            if (opType <= 7 && opType >= 1 && (SystemStatusControl.getStatus().topApp.contains(AutoKitCallBackImpl.AutoKitPkgName) || SystemStatusControl.getStatus().topApp.contains("com.autonavi.amapauto"))) {
-                return;
-            }
-            if (opType == 32) {
-                WitsCommand.sendCommand(7, 101, "");
-            } else if (opType == 33) {
-                WitsCommand.sendCommand(7, 102, "");
-            } else if (opType != 17 || !"true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
-                if (opType == 17) {
+            if (!fIDriveSndBroadcastMsg && datas[2] == 1 && (opType = datas[1]) != 11) {
+                if (opType == 14) {
+                    CenterControlImpl.getImpl().openNavi();
+                    return;
+                }
+                if (opType == 21 || opType == 22) {
                     try {
-                        if (KswSettings.getSettings().getSettingsInt("BT_Type") == 1) {
-                            CenterControlImpl.getImpl().openCarBt();
+                        if (CenterControlImpl.getImpl().isBTCallingorTalking()) {
+                            currentVol = KswSettings.getSettings().getSettingsInt("Android_phone_vol");
+                        } else {
+                            currentVol = KswSettings.getSettings().getSettingsInt("Android_media_vol");
+                        }
+                        if (KswSettings.getSettings().getSettingsInt("AMP_Type", 0) == 1 && currentVol >= 0 && currentVol <= 40) {
+                            if (currentVol < 40 && opType == 21 && currentVol >= 0) {
+                                currentVol++;
+                            }
+                            if (currentVol > 0 && opType == 22 && currentVol <= 40) {
+                                currentVol--;
+                            }
+                            if (CenterControlImpl.getImpl().isBTCallingorTalking()) {
+                                KswSettings.getSettings().setInt("Android_phone_vol", currentVol);
+                                return;
+                            } else {
+                                KswSettings.getSettings().setInt("Android_media_vol", currentVol);
+                                return;
+                            }
+                        } else {
                             return;
                         }
-                    } catch (Settings.SettingNotFoundException e2) {
+                    } catch (Exception e) {
                     }
                 }
-                if (this.keyEventMap.get(Integer.valueOf(opType)) != null) {
-                    KeyUtils.pressKey(this.keyEventMap.get(Integer.valueOf(opType)).intValue());
+                if (opType <= 7 && opType >= 1 && (SystemStatusControl.getStatus().topApp.contains(AutoKitCallBackImpl.AutoKitPkgName) || SystemStatusControl.getStatus().topApp.contains("com.autonavi.amapauto"))) {
+                    return;
                 }
-            } else {
-                WitsCommand.sendCommand(7, 113, "");
+                if (opType == 32) {
+                    WitsCommand.sendCommand(7, 101, "");
+                } else if (opType == 33) {
+                    WitsCommand.sendCommand(7, 102, "");
+                } else if (opType != 17 || !"true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
+                    if (opType == 17) {
+                        try {
+                            if (KswSettings.getSettings().getSettingsInt("BT_Type") == 1) {
+                                CenterControlImpl.getImpl().openCarBt();
+                                return;
+                            }
+                        } catch (Settings.SettingNotFoundException e2) {
+                            e2.printStackTrace();
+                        }
+                    }
+                    if (this.mhandler != null && !this.mhandler.hasMessages(1)) {
+                        Message message = this.mhandler.obtainMessage();
+                        message.what = 1;
+                        message.arg1 = opType;
+                        this.mhandler.sendMessageDelayed(message, 150);
+                    }
+                } else {
+                    WitsCommand.sendCommand(7, 113, "");
+                }
+            }
+        }
+    }
+
+    private static class Mhandler extends Handler {
+        private final WeakReference<CarCanMsgHandle> weakReference;
+
+        public Mhandler(CarCanMsgHandle carCanMsgHandle) {
+            this.weakReference = new WeakReference<>(carCanMsgHandle);
+        }
+
+        public void handleMessage(Message msg) {
+            CarCanMsgHandle handle = (CarCanMsgHandle) this.weakReference.get();
+            if (handle != null) {
+                handle.handlerKeyMsg(msg);
+            }
+        }
+    }
+
+    public void handlerKeyMsg(Message msg) {
+        if (msg.what == 1) {
+            int opType = msg.arg1;
+            if (this.keyEventMap.get(Integer.valueOf(opType)) != null) {
+                KeyUtils.pressKey(this.keyEventMap.get(Integer.valueOf(opType)).intValue());
             }
         }
     }

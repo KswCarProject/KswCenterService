@@ -150,39 +150,39 @@ class TransliterationRule {
         if (this.anteContext != null && this.anteContext.matches(text, intRef, anteLimit, false) != 2) {
             return 0;
         }
-        int oText = intRef[0];
-        int minOText = posAfter(text, oText);
-        if ((this.flags & 1) != 0 && oText != anteLimit) {
+        int match2 = intRef[0];
+        int minOText = posAfter(text, match2);
+        if ((this.flags & 1) != 0 && match2 != anteLimit) {
             return 0;
         }
         intRef[0] = pos.start;
         if (this.key != null && (match = this.key.matches(text, intRef, pos.limit, incremental)) != 2) {
             return match;
         }
-        int match2 = intRef[0];
+        int match3 = intRef[0];
         if (this.postContext != null) {
-            if (incremental && match2 == pos.limit) {
+            if (incremental && match3 == pos.limit) {
                 return 1;
             }
-            int match3 = this.postContext.matches(text, intRef, pos.contextLimit, incremental);
-            if (match3 != 2) {
-                return match3;
+            int match4 = this.postContext.matches(text, intRef, pos.contextLimit, incremental);
+            if (match4 != 2) {
+                return match4;
             }
         }
-        int oText2 = intRef[0];
+        int oText = intRef[0];
         if ((this.flags & 2) != 0) {
-            if (oText2 != pos.contextLimit) {
+            if (oText != pos.contextLimit) {
                 return 0;
             }
             if (incremental) {
                 return 1;
             }
         }
-        int lenDelta = this.output.replace(text, pos.start, match2, intRef) - (match2 - pos.start);
+        int lenDelta = this.output.replace(text, pos.start, match3, intRef) - (match3 - pos.start);
         int newStart = intRef[0];
         pos.limit += lenDelta;
         pos.contextLimit += lenDelta;
-        pos.start = Math.max(minOText, Math.min(Math.min(oText2 + lenDelta, pos.limit), newStart));
+        pos.start = Math.max(minOText, Math.min(Math.min(oText + lenDelta, pos.limit), newStart));
         return 2;
     }
 

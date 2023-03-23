@@ -20,6 +20,8 @@
     <string name="abc_shareactionprovider_share_with_application">通过%s分享</string>
     <string name="abc_toolbar_collapse_description">收起</string>
     <string name="app_name">核心服务</string>
+    <string name="app_update">应用更新中</string>
+    <string name="app_update_complete">应用更新完成!</string>
     <string name="auto_update_mcu">MCU 正在修复!</string>
     <string name="auto_update_mcu_success">MCU 修复成功!</string>
     <string name="bootanimation_success">开机动画已修改!</string>
@@ -37,5 +39,7 @@
     <string name="update_mcu">MCU 正在升级!</string>
     <string name="update_mcu_success">MCU 升级成功!</string>
     <string name="update_success">升级成功!</string>
+    <string name="wifi_firmware_update">Wifi Firmware 升级</string>
+    <string name="wifi_firmware_update_message">WIFI固件更新，重启后生效?</string>
     <string name="yes_update">是</string>
 </resources>

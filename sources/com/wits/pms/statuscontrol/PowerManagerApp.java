@@ -1,10 +1,8 @@
 package com.wits.pms.statuscontrol;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.provider.Settings;
 import android.util.Log;
@@ -13,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wits.pms.ICmdListener;
 import com.wits.pms.IContentObserver;
 import com.wits.pms.IPowerManagerAppService;
+import com.wits.pms.mirror.ServiceManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +39,7 @@ public class PowerManagerApp {
     }
 
     public static IPowerManagerAppService getManager() {
-        return IPowerManagerAppService.Stub.asInterface(getService("wits_pms"));
+        return IPowerManagerAppService.Stub.asInterface(ServiceManager.getService("wits_pms"));
     }
 
     public static void registerICmdListener(ICmdListener listener) {
@@ -70,18 +69,6 @@ public class PowerManagerApp {
                 getManager().unregisterObserver(contentObserver);
             }
         } catch (RemoteException e) {
-        }
-    }
-
-    @SuppressLint({"PrivateApi"})
-    public static IBinder getService(String serviceName) {
-        try {
-            Class<?> serviceManager = Class.forName("android.os.ServiceManager");
-            return (IBinder) serviceManager.getMethod("getService", new Class[]{String.class}).invoke(serviceManager, new Object[]{serviceName});
-        } catch (Exception e) {
-            String name = PowerManagerApp.class.getName();
-            Log.e(name, "error service init - " + serviceName, e);
-            return null;
         }
     }
 

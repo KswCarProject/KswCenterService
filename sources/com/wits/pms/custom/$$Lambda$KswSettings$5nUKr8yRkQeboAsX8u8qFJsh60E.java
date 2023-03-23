@@ -1,6 +1,6 @@
 package com.wits.pms.custom;
 
-import com.wits.pms.utils.SystemProperties;
+import com.wits.pms.mirror.SystemProperties;
 
 /* renamed from: com.wits.pms.custom.-$$Lambda$KswSettings$5nUKr8yRkQeboAsX8u8qFJsh60E  reason: invalid class name */
 /* compiled from: lambda */

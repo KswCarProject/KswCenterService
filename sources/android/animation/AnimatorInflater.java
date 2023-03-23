@@ -512,7 +512,7 @@ public class AnimatorInflater {
         return createAnimatorFromXml(res, theme, parser, Xml.asAttributeSet(parser), (AnimatorSet) null, 0, pixelSize);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:37:0x00c6  */
+    /* JADX WARNING: Removed duplicated region for block: B:37:0x00c5  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private static android.animation.Animator createAnimatorFromXml(android.content.res.Resources r20, android.content.res.Resources.Theme r21, org.xmlpull.v1.XmlPullParser r22, android.util.AttributeSet r23, android.animation.AnimatorSet r24, int r25, float r26) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
         /*
@@ -536,7 +536,7 @@ public class AnimatorInflater {
             goto L_0x0025
         L_0x0021:
             r2 = r22
-            goto L_0x00ee
+            goto L_0x00ed
         L_0x0025:
             r1 = 1
             if (r14 == r1) goto L_0x0021
@@ -550,34 +550,34 @@ public class AnimatorInflater {
             r16 = 0
             java.lang.String r1 = "objectAnimator"
             boolean r1 = r15.equals(r1)
-            if (r1 == 0) goto L_0x0045
+            if (r1 == 0) goto L_0x0044
             android.animation.ObjectAnimator r0 = loadObjectAnimator(r7, r8, r9, r11)
-        L_0x0041:
+        L_0x0040:
             r2 = r22
-            goto L_0x00c0
-        L_0x0045:
+            goto L_0x00bf
+        L_0x0044:
             java.lang.String r1 = "animator"
             boolean r1 = r15.equals(r1)
-            if (r1 == 0) goto L_0x0053
+            if (r1 == 0) goto L_0x0052
             r1 = 0
             android.animation.ValueAnimator r0 = loadAnimator(r7, r8, r9, r1, r11)
-            goto L_0x0041
-        L_0x0053:
+            goto L_0x0040
+        L_0x0052:
             java.lang.String r1 = "set"
             boolean r1 = r15.equals(r1)
-            if (r1 == 0) goto L_0x009b
+            if (r1 == 0) goto L_0x009a
             android.animation.AnimatorSet r1 = new android.animation.AnimatorSet
             r1.<init>()
             r6 = r1
             r0 = 0
-            if (r8 == 0) goto L_0x006c
+            if (r8 == 0) goto L_0x006b
             int[] r1 = com.android.internal.R.styleable.AnimatorSet
             android.content.res.TypedArray r1 = r8.obtainStyledAttributes(r9, r1, r0, r0)
-            goto L_0x0072
-        L_0x006c:
+            goto L_0x0071
+        L_0x006b:
             int[] r1 = com.android.internal.R.styleable.AnimatorSet
             android.content.res.TypedArray r1 = r7.obtainAttributes(r9, r1)
-        L_0x0072:
+        L_0x0071:
             r5 = r1
             int r1 = r5.getChangingConfigurations()
             r6.appendChangingConfigurations(r1)
@@ -595,35 +595,35 @@ public class AnimatorInflater {
             createAnimatorFromXml(r0, r1, r2, r3, r4, r5, r6)
             r18.recycle()
             r0 = r19
-            goto L_0x00c0
-        L_0x009b:
+            goto L_0x00bf
+        L_0x009a:
             java.lang.String r1 = "propertyValuesHolder"
             boolean r1 = r15.equals(r1)
-            if (r1 == 0) goto L_0x00d1
+            if (r1 == 0) goto L_0x00d0
             android.util.AttributeSet r1 = android.util.Xml.asAttributeSet(r22)
             r2 = r22
             android.animation.PropertyValuesHolder[] r1 = loadValues(r7, r8, r2, r1)
-            if (r1 == 0) goto L_0x00bd
-            if (r0 == 0) goto L_0x00bd
+            if (r1 == 0) goto L_0x00bc
+            if (r0 == 0) goto L_0x00bc
             boolean r3 = r0 instanceof android.animation.ValueAnimator
-            if (r3 == 0) goto L_0x00bd
+            if (r3 == 0) goto L_0x00bc
             r3 = r0
             android.animation.ValueAnimator r3 = (android.animation.ValueAnimator) r3
             r3.setValues(r1)
-        L_0x00bd:
+        L_0x00bc:
             r16 = 1
-        L_0x00c0:
-            if (r10 == 0) goto L_0x00cf
-            if (r16 != 0) goto L_0x00cf
-            if (r12 != 0) goto L_0x00cc
+        L_0x00bf:
+            if (r10 == 0) goto L_0x00ce
+            if (r16 != 0) goto L_0x00ce
+            if (r12 != 0) goto L_0x00cb
             java.util.ArrayList r1 = new java.util.ArrayList
             r1.<init>()
             r12 = r1
-        L_0x00cc:
+        L_0x00cb:
             r12.add(r0)
-        L_0x00cf:
+        L_0x00ce:
             goto L_0x002c
-        L_0x00d1:
+        L_0x00d0:
             r2 = r22
             java.lang.RuntimeException r1 = new java.lang.RuntimeException
             java.lang.StringBuilder r3 = new java.lang.StringBuilder
@@ -635,29 +635,29 @@ public class AnimatorInflater {
             java.lang.String r3 = r3.toString()
             r1.<init>(r3)
             throw r1
-        L_0x00ee:
-            if (r10 == 0) goto L_0x0119
-            if (r12 == 0) goto L_0x0119
+        L_0x00ed:
+            if (r10 == 0) goto L_0x0118
+            if (r12 == 0) goto L_0x0118
             int r1 = r12.size()
             android.animation.Animator[] r1 = new android.animation.Animator[r1]
             r3 = 0
             java.util.Iterator r4 = r12.iterator()
-        L_0x00fd:
+        L_0x00fc:
             boolean r5 = r4.hasNext()
-            if (r5 == 0) goto L_0x0110
+            if (r5 == 0) goto L_0x010f
             java.lang.Object r5 = r4.next()
             android.animation.Animator r5 = (android.animation.Animator) r5
             int r6 = r3 + 1
             r1[r3] = r5
             r3 = r6
-            goto L_0x00fd
-        L_0x0110:
-            if (r25 != 0) goto L_0x0116
+            goto L_0x00fc
+        L_0x010f:
+            if (r25 != 0) goto L_0x0115
             r10.playTogether((android.animation.Animator[]) r1)
-            goto L_0x0119
-        L_0x0116:
+            goto L_0x0118
+        L_0x0115:
             r10.playSequentially((android.animation.Animator[]) r1)
-        L_0x0119:
+        L_0x0118:
             return r0
         */
         throw new UnsupportedOperationException("Method not decompiled: android.animation.AnimatorInflater.createAnimatorFromXml(android.content.res.Resources, android.content.res.Resources$Theme, org.xmlpull.v1.XmlPullParser, android.util.AttributeSet, android.animation.AnimatorSet, int, float):android.animation.Animator");

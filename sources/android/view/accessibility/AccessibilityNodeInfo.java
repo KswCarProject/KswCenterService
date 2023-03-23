@@ -1569,105 +1569,105 @@ public class AccessibilityNodeInfo implements Parcelable {
                 }
             }
         }
-        int childrenSize2 = fieldIndex10 + 1;
+        int fieldIndex11 = fieldIndex10 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex10) != 0) {
             this.mBoundsInParent.top = parcel.readInt();
             this.mBoundsInParent.bottom = parcel.readInt();
             this.mBoundsInParent.left = parcel.readInt();
             this.mBoundsInParent.right = parcel.readInt();
         }
-        int fieldIndex11 = childrenSize2 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, childrenSize2) != 0) {
+        int fieldIndex12 = fieldIndex11 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex11) != 0) {
             this.mBoundsInScreen.top = parcel.readInt();
             this.mBoundsInScreen.bottom = parcel.readInt();
             this.mBoundsInScreen.left = parcel.readInt();
             this.mBoundsInScreen.right = parcel.readInt();
         }
-        int fieldIndex12 = fieldIndex11 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex11) != 0) {
+        int fieldIndex13 = fieldIndex12 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex12) != 0) {
             addStandardActions(parcel.readLong());
             int nonStandardActionCount = parcel.readInt();
             for (int i2 = 0; i2 < nonStandardActionCount; i2++) {
                 addActionUnchecked(new AccessibilityAction(parcel.readInt(), parcel.readCharSequence()));
             }
         }
-        int nonStandardActionCount2 = fieldIndex12 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex12) != 0) {
+        int nonStandardActionCount2 = fieldIndex13 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex13) != 0) {
             this.mMaxTextLength = parcel.readInt();
         }
-        int fieldIndex13 = nonStandardActionCount2 + 1;
+        int fieldIndex14 = nonStandardActionCount2 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, nonStandardActionCount2) != 0) {
             this.mMovementGranularities = parcel.readInt();
         }
-        int fieldIndex14 = fieldIndex13 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex13) != 0) {
-            this.mBooleanProperties = parcel.readInt();
-        }
         int fieldIndex15 = fieldIndex14 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex14) != 0) {
-            this.mPackageName = parcel.readCharSequence();
+            this.mBooleanProperties = parcel.readInt();
         }
         int fieldIndex16 = fieldIndex15 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex15) != 0) {
-            this.mClassName = parcel.readCharSequence();
+            this.mPackageName = parcel.readCharSequence();
         }
         int fieldIndex17 = fieldIndex16 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex16) != 0) {
-            this.mText = parcel.readCharSequence();
+            this.mClassName = parcel.readCharSequence();
         }
         int fieldIndex18 = fieldIndex17 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex17) != 0) {
-            this.mHintText = parcel.readCharSequence();
+            this.mText = parcel.readCharSequence();
         }
         int fieldIndex19 = fieldIndex18 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex18) != 0) {
-            this.mError = parcel.readCharSequence();
+            this.mHintText = parcel.readCharSequence();
         }
         int fieldIndex20 = fieldIndex19 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex19) != 0) {
-            this.mContentDescription = parcel.readCharSequence();
+            this.mError = parcel.readCharSequence();
         }
         int fieldIndex21 = fieldIndex20 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex20) != 0) {
-            this.mPaneTitle = parcel.readCharSequence();
+            this.mContentDescription = parcel.readCharSequence();
         }
         int fieldIndex22 = fieldIndex21 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex21) != 0) {
-            this.mTooltipText = parcel.readCharSequence();
+            this.mPaneTitle = parcel.readCharSequence();
         }
         int fieldIndex23 = fieldIndex22 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex22) != 0) {
-            this.mViewIdResourceName = parcel.readString();
+            this.mTooltipText = parcel.readCharSequence();
         }
         int fieldIndex24 = fieldIndex23 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex23) != 0) {
-            this.mTextSelectionStart = parcel.readInt();
+            this.mViewIdResourceName = parcel.readString();
         }
         int fieldIndex25 = fieldIndex24 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex24) != 0) {
-            this.mTextSelectionEnd = parcel.readInt();
+            this.mTextSelectionStart = parcel.readInt();
         }
         int fieldIndex26 = fieldIndex25 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex25) != 0) {
-            this.mInputType = parcel.readInt();
+            this.mTextSelectionEnd = parcel.readInt();
         }
         int fieldIndex27 = fieldIndex26 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex26) != 0) {
-            this.mLiveRegion = parcel.readInt();
+            this.mInputType = parcel.readInt();
         }
         int fieldIndex28 = fieldIndex27 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex27) != 0) {
-            this.mDrawingOrderInParent = parcel.readInt();
+            this.mLiveRegion = parcel.readInt();
         }
         int fieldIndex29 = fieldIndex28 + 1;
         if (BitUtils.isBitSet(nonDefaultFields, fieldIndex28) != 0) {
+            this.mDrawingOrderInParent = parcel.readInt();
+        }
+        int fieldIndex30 = fieldIndex29 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex29) != 0) {
             arrayList = parcel.createStringArrayList();
         } else {
             arrayList = null;
         }
         this.mExtraDataKeys = arrayList;
-        int fieldIndex30 = fieldIndex29 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex29) != 0) {
+        int fieldIndex31 = fieldIndex30 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex30) != 0) {
             bundle = parcel.readBundle();
         } else {
             bundle = null;
@@ -1676,8 +1676,8 @@ public class AccessibilityNodeInfo implements Parcelable {
         if (this.mRangeInfo != null) {
             this.mRangeInfo.recycle();
         }
-        int fieldIndex31 = fieldIndex30 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex30) != 0) {
+        int fieldIndex32 = fieldIndex31 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex31) != 0) {
             rangeInfo = RangeInfo.obtain(parcel.readInt(), parcel.readFloat(), parcel.readFloat(), parcel.readFloat());
         } else {
             rangeInfo = null;
@@ -1686,8 +1686,8 @@ public class AccessibilityNodeInfo implements Parcelable {
         if (this.mCollectionInfo != null) {
             this.mCollectionInfo.recycle();
         }
-        int fieldIndex32 = fieldIndex31 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex31) != 0) {
+        int fieldIndex33 = fieldIndex32 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex32) != 0) {
             collectionInfo = CollectionInfo.obtain(parcel.readInt(), parcel.readInt(), parcel.readInt() == 1, parcel.readInt());
         } else {
             collectionInfo = null;
@@ -1696,13 +1696,13 @@ public class AccessibilityNodeInfo implements Parcelable {
         if (this.mCollectionItemInfo != null) {
             this.mCollectionItemInfo.recycle();
         }
-        int fieldIndex33 = fieldIndex32 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex32) != 0) {
+        int fieldIndex34 = fieldIndex33 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex33) != 0) {
             collectionItemInfo = CollectionItemInfo.obtain(parcel.readInt(), parcel.readInt(), parcel.readInt(), parcel.readInt(), parcel.readInt() == 1, parcel.readInt() == 1);
         }
         this.mCollectionItemInfo = collectionItemInfo;
-        int i3 = fieldIndex33 + 1;
-        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex33) != 0) {
+        int i3 = fieldIndex34 + 1;
+        if (BitUtils.isBitSet(nonDefaultFields, fieldIndex34) != 0) {
             this.mTouchDelegateInfo = TouchDelegateInfo.CREATOR.createFromParcel(parcel);
         }
         this.mSealed = sealed;

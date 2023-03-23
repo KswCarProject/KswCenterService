@@ -150,7 +150,7 @@ public class TouchControl {
         if (this.mDownTime == 0) {
             return false;
         }
-        return this.mInputManager.injectInputEvent(getMotionEvent(this.mDownTime, SystemClock.uptimeMillis(), 2, (float) x, (float) y), 2);
+        return this.mInputManager.injectInputEvent(getMotionEvent(this.mDownTime, SystemClock.uptimeMillis(), 2, (float) x, (float) y), 0);
     }
 
     private static MotionEvent getMotionEvent(long downTime, long eventTime, int action, float x, float y) {
@@ -210,21 +210,17 @@ public class TouchControl {
                     });
                 }
             }
-            try {
-                new Handler(Looper.getMainLooper()).post(new Runnable(lp) {
-                    private final /* synthetic */ WindowManager.LayoutParams f$1;
+            new Handler(Looper.getMainLooper()).post(new Runnable(lp) {
+                private final /* synthetic */ WindowManager.LayoutParams f$1;
 
-                    {
-                        this.f$1 = r2;
-                    }
+                {
+                    this.f$1 = r2;
+                }
 
-                    public final void run() {
-                        TouchControl.lambda$opInterceptView$1(WindowManager.this, this.f$1);
-                    }
-                });
-            } catch (Exception e) {
-                Log.w(TAG, "addObserverListener interceptView failed.", e);
-            }
+                public final void run() {
+                    TouchControl.lambda$opInterceptView$1(WindowManager.this, this.f$1);
+                }
+            });
         } else if (mInterceptView != null && wasAdded) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 public final void run() {
@@ -244,10 +240,14 @@ public class TouchControl {
     }
 
     static /* synthetic */ void lambda$opInterceptView$1(WindowManager windowManager, WindowManager.LayoutParams lp) {
-        if (wasAdded) {
-            windowManager.removeViewImmediate(mInterceptView);
+        try {
+            if (wasAdded) {
+                windowManager.removeViewImmediate(mInterceptView);
+            }
+            wasAdded = true;
+            windowManager.addView(mInterceptView, lp);
+        } catch (Exception e) {
+            Log.w(TAG, "addObserverListener interceptView failed.", e);
         }
-        wasAdded = true;
-        windowManager.addView(mInterceptView, lp);
     }
 }

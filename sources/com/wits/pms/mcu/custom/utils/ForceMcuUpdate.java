@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.wits.pms.R;
 import com.wits.pms.mcu.custom.utils.UpdateHelper;
+import com.wits.pms.statuscontrol.WitsCommand;
 import java.io.File;
 
 public class ForceMcuUpdate {
@@ -61,8 +62,7 @@ public class ForceMcuUpdate {
         alertDialog.show();
         UpdateHelper.getInstance().setListener(new UpdateHelper.McuUpdateListener() {
             public void success() {
-                alertDialog.setTitle((int) R.string.auto_update_mcu_success);
-                alertDialog.show();
+                WitsCommand.sendCommand(1, 201, "");
             }
 
             public void failed(int errorCode) {

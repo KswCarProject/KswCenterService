@@ -415,9 +415,9 @@ class SimpleMonthView extends View {
                 int day = (findClosestColumn(previouslyFocusedRect) - offset) + (((this.mDaysInMonth + offset) / 7) * 7) + 1;
                 this.mHighlightedDay = day > this.mDaysInMonth ? day - 7 : day;
             } else if (direction == 66) {
-                int row = findClosestRow(previouslyFocusedRect);
-                if (row != 0) {
-                    i = 1 + ((row * 7) - offset);
+                int col = findClosestRow(previouslyFocusedRect);
+                if (col != 0) {
+                    i = 1 + ((col * 7) - offset);
                 }
                 this.mHighlightedDay = i;
             } else if (direction == 130) {

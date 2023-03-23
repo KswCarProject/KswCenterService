@@ -272,12 +272,12 @@ public class Location implements Parcelable {
             double t1 = cosU2 * sinLambda;
             double t2 = (cosU1 * sinU2) - ((a * cosU2) * cosLambda);
             lon12 = sinSigma;
-            double lon14 = Math.sqrt((t1 * t1) + (t2 * t2));
+            double sinSigma3 = Math.sqrt((t1 * t1) + (t2 * t2));
             lat22 = cosSigma;
             double cosSigma2 = sinU1sinU2 + (cosU1cosU2 * cosLambda);
-            sigma = Math.atan2(lon14, cosSigma2);
+            sigma = Math.atan2(sinSigma3, cosSigma2);
             double d = 0.0d;
-            double sinAlpha = lon14 == 0.0d ? 0.0d : (cosU1cosU2 * sinLambda) / lon14;
+            double sinAlpha = sinSigma3 == 0.0d ? 0.0d : (cosU1cosU2 * sinLambda) / sinSigma3;
             double cosSqAlpha = 1.0d - (sinAlpha * sinAlpha);
             if (cosSqAlpha != 0.0d) {
                 d = cosSigma2 - ((sinU1sinU2 * 2.0d) / cosSqAlpha);
@@ -288,15 +288,15 @@ public class Location implements Parcelable {
             double B = (uSquared / 1024.0d) * (((((74.0d - (47.0d * uSquared)) * uSquared) - 0.03125d) * uSquared) + 256.0d);
             double C = (f / 16.0d) * cosSqAlpha * (((4.0d - (3.0d * cosSqAlpha)) * f) + 4.0d);
             double cos2SMSq = cos2SM * cos2SM;
-            deltaSigma = B * lon14 * (cos2SM + ((B / 4.0d) * ((((cos2SMSq * 2.0d) - 4.0d) * cosSigma2) - ((((B / 6.0d) * cos2SM) * (((lon14 * 4.0d) * lon14) - 1.5d)) * ((4.0d * cos2SMSq) - 1.5d)))));
-            lambda = L + ((1.0d - C) * f * sinAlpha * (sigma + (C * lon14 * (cos2SM + (C * cosSigma2 * (((2.0d * cos2SM) * cos2SM) - 4.0d))))));
+            deltaSigma = B * sinSigma3 * (cos2SM + ((B / 4.0d) * ((((cos2SMSq * 2.0d) - 4.0d) * cosSigma2) - ((((B / 6.0d) * cos2SM) * (((sinSigma3 * 4.0d) * sinSigma3) - 1.5d)) * ((4.0d * cos2SMSq) - 1.5d)))));
+            lambda = L + ((1.0d - C) * f * sinAlpha * (sigma + (C * sinSigma3 * (cos2SM + (C * cosSigma2 * (((2.0d * cos2SM) * cos2SM) - 4.0d))))));
             if (Math.abs((lambda - lambdaOrig) / lambda) < 1.0E-12d) {
                 double uSquared2 = cosSigma2;
                 break;
             }
             iter = iter2 + 1;
             double d2 = cosSigma2;
-            sinSigma2 = lon14;
+            sinSigma2 = sinSigma3;
             lon23 = lon22;
             sinSigma = lon12;
             cosSigma = lat22;
@@ -312,9 +312,9 @@ public class Location implements Parcelable {
         double unused5 = bearingDistanceCache.mLat2 = lat22;
         float f3 = initialBearing;
         float f4 = finalBearing;
-        double lon15 = lon12;
-        double unused6 = bearingDistanceCache.mLon1 = lon15;
-        double d3 = lon15;
+        double lon14 = lon12;
+        double unused6 = bearingDistanceCache.mLon1 = lon14;
+        double d3 = lon14;
         double unused7 = bearingDistanceCache.mLon2 = lon22;
     }
 

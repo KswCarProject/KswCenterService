@@ -74,13 +74,13 @@ public class Extension<M extends ExtendableMessageNano<M>, T> {
                 readDataInto(data, resultList);
             }
         }
-        int resultSize = resultList.size();
-        if (resultSize == 0) {
+        int i2 = resultList.size();
+        if (i2 == 0) {
             return null;
         }
-        T result = this.clazz.cast(Array.newInstance(this.clazz.getComponentType(), resultSize));
-        for (int i2 = 0; i2 < resultSize; i2++) {
-            Array.set(result, i2, resultList.get(i2));
+        T result = this.clazz.cast(Array.newInstance(this.clazz.getComponentType(), i2));
+        for (int i3 = 0; i3 < i2; i3++) {
+            Array.set(result, i3, resultList.get(i3));
         }
         return result;
     }

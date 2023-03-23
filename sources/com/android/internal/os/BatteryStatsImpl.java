@@ -11964,33 +11964,33 @@ public class BatteryStatsImpl extends BatteryStats {
         int i2 = 0;
         while (true) {
             int which = i;
-            int i3 = i2;
-            if (i3 >= timeInRatMs.length) {
+            int which2 = i2;
+            if (which2 >= timeInRatMs.length) {
                 break;
             }
-            timeInRatMs[i3] = getPhoneDataConnectionTime(i3, rawRealTime, 0) / 1000;
-            i2 = i3 + 1;
+            timeInRatMs[which2] = getPhoneDataConnectionTime(which2, rawRealTime, 0) / 1000;
+            i2 = which2 + 1;
             i = which;
         }
         long[] timeInRxSignalStrengthLevelMs = new long[5];
-        int i4 = 0;
+        int i3 = 0;
         while (true) {
             monitoredRailChargeConsumedMaMs = monitoredRailChargeConsumedMaMs2;
-            int i5 = i4;
-            if (i5 >= timeInRxSignalStrengthLevelMs.length) {
+            int i4 = i3;
+            if (i4 >= timeInRxSignalStrengthLevelMs.length) {
                 break;
             }
-            timeInRxSignalStrengthLevelMs[i5] = getPhoneSignalStrengthTime(i5, rawRealTime, 0) / 1000;
-            i4 = i5 + 1;
+            timeInRxSignalStrengthLevelMs[i4] = getPhoneSignalStrengthTime(i4, rawRealTime, 0) / 1000;
+            i3 = i4 + 1;
             monitoredRailChargeConsumedMaMs2 = monitoredRailChargeConsumedMaMs;
         }
         long[] txTimeMs = new long[Math.min(5, counter.getTxTimeCounters().length)];
         long totalTxTimeMs = 0;
-        int i6 = 0;
-        while (i6 < txTimeMs.length) {
-            txTimeMs[i6] = counter.getTxTimeCounters()[i6].getCountLocked(0);
-            totalTxTimeMs += txTimeMs[i6];
-            i6++;
+        int i5 = 0;
+        while (i5 < txTimeMs.length) {
+            txTimeMs[i5] = counter.getTxTimeCounters()[i5].getCountLocked(0);
+            totalTxTimeMs += txTimeMs[i5];
+            i5++;
             counter = counter;
         }
         s.setLoggingDurationMs(computeBatteryRealtime(rawRealTime, 0) / 1000);
@@ -12078,13 +12078,13 @@ public class BatteryStatsImpl extends BatteryStats {
                 s.setTxTimeMs(txTimeMs);
                 s.setScanTimeMs(scanTimeMs2);
                 long j3 = idleTimeMs3;
-                long idleTimeMs4 = energyConsumedMaMs2;
-                s.setEnergyConsumedMaMs(idleTimeMs4);
+                long energyConsumedMaMs3 = energyConsumedMaMs2;
+                s.setEnergyConsumedMaMs(energyConsumedMaMs3);
                 s.setNumAppScanRequest(numAppScanRequest);
                 s.setTimeInStateMs(timeInStateMs);
                 s.setTimeInSupplicantStateMs(timeInSupplStateMs2);
                 s.setTimeInRxSignalStrengthLevelMs(timeSignalStrengthTimeMs);
-                long j4 = idleTimeMs4;
+                long j4 = energyConsumedMaMs3;
                 s.setMonitoredRailChargeConsumedMaMs(monitoredRailChargeConsumedMaMs);
                 return s;
             }
@@ -13176,9 +13176,9 @@ public class BatteryStatsImpl extends BatteryStats {
                                         for (int is = 0; is < NS; is++) {
                                             u.readSyncSummaryFromParcelLocked(in.readString(), parcel);
                                         }
-                                        int NJ = in.readInt();
-                                        if (NJ <= MAX_WAKELOCKS_PER_UID + 1) {
-                                            for (int ij = 0; ij < NJ; ij++) {
+                                        int is2 = in.readInt();
+                                        if (is2 <= MAX_WAKELOCKS_PER_UID + 1) {
+                                            for (int ij = 0; ij < is2; ij++) {
                                                 u.readJobSummaryFromParcelLocked(in.readString(), parcel);
                                             }
                                             u.readJobCompletionsFromParcelLocked(parcel);
@@ -13202,10 +13202,10 @@ public class BatteryStatsImpl extends BatteryStats {
                                                 NMS2 = NMS;
                                             }
                                             int NMS3 = NMS2;
-                                            int length4 = in.readInt();
-                                            if (length4 <= 1000) {
-                                                int is2 = 0;
-                                                while (is2 < length4) {
+                                            int NP = in.readInt();
+                                            if (NP <= 1000) {
+                                                int is3 = 0;
+                                                while (is3 < NP) {
                                                     int seNumber = in.readInt();
                                                     if (in.readInt() != 0) {
                                                         uid = uid3;
@@ -13213,13 +13213,13 @@ public class BatteryStatsImpl extends BatteryStats {
                                                     } else {
                                                         uid = uid3;
                                                     }
-                                                    is2++;
+                                                    is3++;
                                                     uid3 = uid;
                                                 }
-                                                int NP = in.readInt();
-                                                if (NP <= 1000) {
+                                                int NP2 = in.readInt();
+                                                if (NP2 <= 1000) {
                                                     int ip = 0;
-                                                    while (ip < NP) {
+                                                    while (ip < NP2) {
                                                         Uid.Proc p = u.getProcessStatsLocked(in.readString());
                                                         p.mUserTime = in.readLong();
                                                         p.mSystemTime = in.readLong();
@@ -13232,10 +13232,10 @@ public class BatteryStatsImpl extends BatteryStats {
                                                         NKW = NKW;
                                                     }
                                                     int NKW2 = NKW;
-                                                    int NP2 = in.readInt();
-                                                    if (NP2 <= 10000) {
+                                                    int NP3 = in.readInt();
+                                                    if (NP3 <= 10000) {
                                                         int ip2 = 0;
-                                                        while (ip2 < NP2) {
+                                                        while (ip2 < NP3) {
                                                             String pkgName = in.readString();
                                                             detachIfNotNull(u.mPackageStats.get(pkgName));
                                                             Uid.Pkg p2 = u.getPackageStatsLocked(pkgName);
@@ -13259,13 +13259,13 @@ public class BatteryStatsImpl extends BatteryStats {
                                                                 int NSORPMS2 = NSORPMS;
                                                                 NS = in.readInt();
                                                                 if (NS <= 10000) {
-                                                                    int is3 = 0;
-                                                                    while (is3 < NS) {
+                                                                    int is4 = 0;
+                                                                    while (is4 < NS) {
                                                                         Uid.Pkg.Serv s = u.getServiceStatsLocked(pkgName, in.readString());
                                                                         s.mStartTime = in.readLong();
                                                                         s.mStarts = in.readInt();
                                                                         s.mLaunches = in.readInt();
-                                                                        is3++;
+                                                                        is4++;
                                                                         Parcel parcel2 = in;
                                                                     }
                                                                     ip2++;
@@ -13296,18 +13296,18 @@ public class BatteryStatsImpl extends BatteryStats {
                                                         z = false;
                                                     } else {
                                                         int i22 = NSORPMS;
-                                                        throw new ParcelFormatException("File corrupt: too many packages " + NP2);
+                                                        throw new ParcelFormatException("File corrupt: too many packages " + NP3);
                                                     }
                                                 } else {
                                                     int i23 = NRPMS;
                                                     int i24 = NSORPMS;
-                                                    throw new ParcelFormatException("File corrupt: too many processes " + NP);
+                                                    throw new ParcelFormatException("File corrupt: too many processes " + NP2);
                                                 }
                                             } else {
                                                 int i25 = NRPMS;
                                                 int i26 = NSORPMS;
                                                 int i27 = uid3;
-                                                throw new ParcelFormatException("File corrupt: too many sensors " + length4);
+                                                throw new ParcelFormatException("File corrupt: too many sensors " + NP);
                                             }
                                         } else {
                                             int i28 = NKW;
@@ -13315,7 +13315,7 @@ public class BatteryStatsImpl extends BatteryStats {
                                             int i30 = NRPMS;
                                             int i31 = NSORPMS;
                                             int i32 = uid3;
-                                            throw new ParcelFormatException("File corrupt: too many job timers " + NJ);
+                                            throw new ParcelFormatException("File corrupt: too many job timers " + is2);
                                         }
                                     } else {
                                         int i33 = NKW;

@@ -1230,10 +1230,10 @@ public interface ITvInputManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1275,10 +1275,10 @@ public interface ITvInputManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1993,10 +1993,10 @@ public interface ITvInputManager extends IInterface {
                     if (_reply.readInt() != 0) {
                         z = true;
                     }
-                    boolean _result = z;
+                    boolean _status = z;
                     _reply.recycle();
                     _data.recycle();
-                    return _result;
+                    return _status;
                 } finally {
                     _reply.recycle();
                     _data.recycle();

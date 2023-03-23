@@ -2967,11 +2967,11 @@ public class ListView extends AbsListView {
                             drawDividers2 = drawDividers;
                         } else if (!drawOverscrollFooter2 || !isLastItem) {
                             listBottom = listBottom2;
-                            int nextIndex = itemIndex + 1;
+                            int listBottom3 = itemIndex + 1;
                             drawDividers = drawDividers2;
                             adapter2 = adapter;
                             if (!adapter2.isEnabled(itemIndex)) {
-                            } else if ((headerDividers || (!isHeader && nextIndex >= headerCount)) && (isLastItem || (adapter2.isEnabled(nextIndex) && (footerDividers2 || (!isFooter && nextIndex < footerLimit))))) {
+                            } else if ((headerDividers || (!isHeader && listBottom3 >= headerCount)) && (isLastItem || (adapter2.isEnabled(listBottom3) && (footerDividers2 || (!isFooter && listBottom3 < footerLimit))))) {
                                 bounds.top = bottom2;
                                 int i4 = itemIndex;
                                 bounds.bottom = bottom2 + dividerHeight;
@@ -3042,7 +3042,7 @@ public class ListView extends AbsListView {
                 Drawable overscrollHeader5 = overscrollHeader2;
                 boolean drawOverscrollHeader3 = drawOverscrollHeader2;
                 boolean drawDividers3 = drawDividers2;
-                int listBottom3 = listBottom2;
+                int listBottom4 = listBottom2;
                 Drawable overscrollFooter5 = overscrollFooter4;
                 int itemCount3 = itemCount;
                 ListAdapter adapter4 = adapter;
@@ -3065,9 +3065,9 @@ public class ListView extends AbsListView {
                         break;
                     }
                     int itemCount4 = itemCount3;
-                    int itemCount5 = first2 + i9;
-                    boolean isHeader2 = itemCount5 < headerCount;
-                    boolean isFooter2 = itemCount5 >= footerLimit;
+                    int itemIndex2 = first2 + i9;
+                    boolean isHeader2 = itemIndex2 < headerCount;
+                    boolean isFooter2 = itemIndex2 >= footerLimit;
                     if ((headerDividers || !isHeader2) && (footerDividers2 || !isFooter2)) {
                         first = first2;
                         int top = getChildAt(i9).getTop();
@@ -3079,10 +3079,10 @@ public class ListView extends AbsListView {
                                 int effectivePaddingTop5 = start2;
                                 boolean isFirstItem = i9 == effectivePaddingTop5;
                                 start = effectivePaddingTop5;
-                                int start3 = itemCount5 - 1;
-                                if (!adapter4.isEnabled(itemCount5)) {
+                                int previousIndex = itemIndex2 - 1;
+                                if (!adapter4.isEnabled(itemIndex2)) {
                                     footerDividers = footerDividers2;
-                                } else if ((headerDividers || (!isHeader2 && start3 >= headerCount)) && (isFirstItem || (adapter4.isEnabled(start3) && (footerDividers2 || (!isFooter2 && start3 < footerLimit))))) {
+                                } else if ((headerDividers || (!isHeader2 && previousIndex >= headerCount)) && (isFirstItem || (adapter4.isEnabled(previousIndex) && (footerDividers2 || (!isFooter2 && previousIndex < footerLimit))))) {
                                     footerDividers = footerDividers2;
                                     bounds.top = top - dividerHeight;
                                     bounds.bottom = top;
@@ -3135,9 +3135,9 @@ public class ListView extends AbsListView {
                     drawOverscrollFooter(canvas2, overscrollFooter6, bounds);
                 } else {
                     if (drawDividers3) {
-                        int listBottom4 = listBottom3;
-                        bounds.top = listBottom4;
-                        bounds.bottom = listBottom4 + dividerHeight;
+                        int listBottom5 = listBottom4;
+                        bounds.top = listBottom5;
+                        bounds.bottom = listBottom5 + dividerHeight;
                         drawDivider(canvas2, bounds, -1);
                     }
                 }
@@ -3468,16 +3468,16 @@ public class ListView extends AbsListView {
                     return false;
                 }
                 int i3 = start;
-                int start2 = i - 1;
-                if (adapter.isEnabled(i) && (headerDividers || (!isHeader && start2 >= headerCount))) {
+                int previousIndex = i - 1;
+                if (adapter.isEnabled(i) && (headerDividers || (!isHeader && previousIndex >= headerCount))) {
                     if (isFirstItem) {
                         return true;
                     }
-                    if (adapter.isEnabled(start2)) {
+                    if (adapter.isEnabled(previousIndex)) {
                         if (footerDividers) {
                             return true;
                         }
-                        if (!isFooter && start2 < footerLimit) {
+                        if (!isFooter && previousIndex < footerLimit) {
                             return true;
                         }
                     }

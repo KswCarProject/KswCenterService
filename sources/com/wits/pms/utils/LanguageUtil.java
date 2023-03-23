@@ -7,6 +7,9 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.LocaleList;
 import android.os.RemoteException;
+import com.wits.pms.mirror.ActivityManagerNative;
+import com.wits.pms.mirror.ConfigurationMirror;
+import com.wits.pms.mirror.IActivityManagerMirror;
 import java.util.Locale;
 
 public class LanguageUtil {
@@ -26,17 +29,11 @@ public class LanguageUtil {
     }
 
     public static void changeSystemLanguageComb(Locale locale) {
-        try {
-            Class iActivityManager = Class.forName("android.app.IActivityManager");
-            Class activityManagerNative = Class.forName("android.app.ActivityManagerNative");
-            Object objIActMag = activityManagerNative.getDeclaredMethod("getDefault", new Class[0]).invoke(activityManagerNative, new Object[0]);
-            Configuration config = (Configuration) iActivityManager.getDeclaredMethod("getConfiguration", new Class[0]).invoke(objIActMag, new Object[0]);
-            config.locale = locale;
-            Class.forName("android.content.res.Configuration").getField("userSetLocale").set(config, true);
-            iActivityManager.getDeclaredMethod("updateConfiguration", new Class[]{Configuration.class}).invoke(objIActMag, new Object[]{config});
-            BackupManager.dataChanged("com.android.providers.settings");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        IActivityManagerMirror activityManagerMirror = new IActivityManagerMirror(ActivityManagerNative.getDefault());
+        Configuration configuration = activityManagerMirror.getConfiguration();
+        configuration.setLocale(locale);
+        new ConfigurationMirror(configuration).setUserSetLocale(true);
+        activityManagerMirror.updateConfiguration(configuration);
+        BackupManager.dataChanged("com.android.providers.settings");
     }
 }

@@ -671,14 +671,14 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             }
             i3 = i4 + 1;
         }
-        int origLen = i2 - i;
+        int i5 = i2 - i;
         int newLen2 = tbend2 - tbstart2;
-        if (origLen == 0 && newLen2 == 0 && !hasNonExclusiveExclusiveSpanAt(tb2, tbstart2)) {
+        if (i5 == 0 && newLen2 == 0 && !hasNonExclusiveExclusiveSpanAt(tb2, tbstart2)) {
             return this;
         }
-        TextWatcher[] textWatchers = (TextWatcher[]) getSpans(i, i + origLen, TextWatcher.class);
-        sendBeforeTextChanged(textWatchers, i, origLen, newLen2);
-        if (!(origLen == 0 || newLen2 == 0)) {
+        TextWatcher[] textWatchers = (TextWatcher[]) getSpans(i, i + i5, TextWatcher.class);
+        sendBeforeTextChanged(textWatchers, i, i5, newLen2);
+        if (!(i5 == 0 || newLen2 == 0)) {
             adjustSelection = true;
         }
         int selectionStart = 0;
@@ -687,13 +687,13 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             selectionStart = Selection.getSelectionStart(this);
             selectionEnd2 = Selection.getSelectionEnd(this);
         }
-        int i5 = filtercount;
-        int selectionEnd3 = selectionEnd2;
+        int i6 = filtercount;
+        int filtercount2 = selectionEnd2;
         CharSequence charSequence = tb2;
         CharSequence charSequence2 = tb2;
         int selectionStart2 = selectionStart;
         int selectionStart3 = tbstart2;
-        int i6 = tbstart2;
+        int i7 = tbstart2;
         TextWatcher[] textWatchers2 = textWatchers;
         change(start, end, charSequence, selectionStart3, tbend2);
         if (adjustSelection) {
@@ -703,32 +703,32 @@ public class SpannableStringBuilder implements CharSequence, GetChars, Spannable
             } else {
                 long diff = (long) (selectionStart2 - i);
                 long j = diff;
-                int selectionStart4 = i + Math.toIntExact((((long) newLen2) * diff) / ((long) origLen));
+                int selectionStart4 = i + Math.toIntExact((((long) newLen2) * diff) / ((long) i5));
                 boolean z = adjustSelection;
                 newLen = newLen2;
                 setSpan(false, Selection.SELECTION_START, selectionStart4, selectionStart4, 34, true);
                 changed = true;
             }
-            if (selectionEnd3 <= i || selectionEnd3 >= i2) {
-                selectionEnd = selectionEnd3;
+            if (filtercount2 <= i || filtercount2 >= i2) {
+                selectionEnd = filtercount2;
             } else {
-                long diff2 = (long) (selectionEnd3 - i);
-                int selectionEnd4 = i + Math.toIntExact((((long) newLen) * diff2) / ((long) origLen));
-                selectionEnd = selectionEnd4;
+                long diff2 = (long) (filtercount2 - i);
+                int selectionEnd3 = i + Math.toIntExact((((long) newLen) * diff2) / ((long) i5));
+                selectionEnd = selectionEnd3;
                 long j2 = diff2;
-                setSpan(false, Selection.SELECTION_END, selectionEnd, selectionEnd4, 34, true);
+                setSpan(false, Selection.SELECTION_END, selectionEnd, selectionEnd3, 34, true);
                 changed = true;
             }
             if (changed) {
                 restoreInvariants();
             }
-            int i7 = selectionEnd;
+            int i8 = selectionEnd;
         } else {
             newLen = newLen2;
         }
-        sendTextChanged(textWatchers2, i, origLen, newLen);
+        sendTextChanged(textWatchers2, i, i5, newLen);
         sendAfterTextChanged(textWatchers2);
-        sendToSpanWatchers(i, i2, newLen - origLen);
+        sendToSpanWatchers(i, i2, newLen - i5);
         return this;
     }
 

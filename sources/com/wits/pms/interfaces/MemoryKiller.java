@@ -6,15 +6,15 @@ import android.app.IActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Debug;
 import android.os.RemoteException;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.TimeUtils;
 import com.wits.pms.IContentObserver;
+import com.wits.pms.mirror.MemoryInfoMirror;
+import com.wits.pms.mirror.ServiceManager;
 import com.wits.pms.statuscontrol.PowerManagerApp;
 import com.wits.pms.utils.AmsUtil;
-import com.wits.pms.utils.ServiceManager;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -94,8 +94,7 @@ public abstract class MemoryKiller {
 
     private void batteryAndMemoryFix() {
         for (ApplicationInfo app : this.mContext.getPackageManager().getInstalledApplications(8192)) {
-            if ((app.flags & 1) <= 0 && !app.packageName.contains("wits")) {
-                AmsUtil.setForceAppStandby(this.mContext, app.packageName, 1);
+            if ((app.flags & 1) > 0 || app.packageName.contains("wits")) {
             }
         }
     }
@@ -170,11 +169,8 @@ public abstract class MemoryKiller {
                 }
             } catch (Exception e) {
             }
-            int memorySize = 0;
-            try {
-                memorySize = ((Integer) Debug.MemoryInfo.class.getMethod("getTotalUss", new Class[0]).invoke(am.getProcessMemoryInfo(new int[]{pid})[0], new Object[0])).intValue();
-            } catch (Exception e2) {
-            }
+            int memorySize = new MemoryInfoMirror(am.getProcessMemoryInfo(new int[]{pid})[0]).getTotalUss();
+            Log.d(TAG, "memorySize=" + memorySize);
             Iterator<AppProcess> it = this.mAppList.iterator();
             while (true) {
                 if (it.hasNext()) {

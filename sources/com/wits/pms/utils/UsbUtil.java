@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import com.wits.pms.R;
 import com.wits.pms.core.PowerManagerAppService;
+import com.wits.pms.mirror.SystemProperties;
 import com.wits.pms.utils.SysConfigUtil;
 
 public class UsbUtil {
@@ -24,7 +25,7 @@ public class UsbUtil {
             return;
         }
         if (!forceSlaveMode || hostMode != 1) {
-            if (Build.VERSION.RELEASE.equals("11")) {
+            if (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M501B")) {
                 if (("" + hostMode).equals(SysConfigUtil.getArg(USB_CHANGE_PATH))) {
                     if (("" + hostMode).equals(SysConfigUtil.getArg(USB_IO_PATH))) {
                         return;
@@ -35,7 +36,7 @@ public class UsbUtil {
                     return;
                 }
             }
-            if (Build.VERSION.RELEASE.equals("11")) {
+            if (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M501B")) {
                 SysConfigUtil.writeArg(hostMode + "", USB_IO_PATH);
             }
             SysConfigUtil.writeArg(hostMode + "", USB_CHANGE_PATH, new SysConfigUtil.WriteListener() {

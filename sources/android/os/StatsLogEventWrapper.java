@@ -163,8 +163,8 @@ public final class StatsLogEventWrapper implements Parcelable {
                 }
             }
         }
-        int numTypes = in.readInt();
-        for (int i2 = 0; i2 < numTypes; i2++) {
+        int i2 = in.readInt();
+        for (int i3 = 0; i3 < i2; i3++) {
             int type = in.readInt();
             this.mTypes.add(Integer.valueOf(type));
             switch (type) {

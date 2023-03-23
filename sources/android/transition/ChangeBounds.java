@@ -292,21 +292,21 @@ public class ChangeBounds extends Transition {
                             int i4 = startWidth;
                             int endHeight3 = startHeight;
                             View view3 = view2;
-                            int endBottom3 = endBottom;
+                            int startWidth2 = endBottom;
                             if (startLeft2 != endLeft2) {
                                 view = view3;
                             } else if (startTop2 != endTop) {
                                 view = view3;
                             } else {
-                                anim = ObjectAnimator.ofObject(view3, BOTTOM_RIGHT_ONLY_PROPERTY, (TypeConverter) null, getPathMotion().getPath((float) startRight, (float) startBottom, (float) endRight, (float) endBottom3));
+                                anim = ObjectAnimator.ofObject(view3, BOTTOM_RIGHT_ONLY_PROPERTY, (TypeConverter) null, getPathMotion().getPath((float) startRight, (float) startBottom, (float) endRight, (float) startWidth2));
                                 int startHeight2 = endHeight3;
                                 int endWidth2 = i2;
-                                int startWidth2 = i4;
+                                int startWidth3 = i4;
                             }
                             anim = ObjectAnimator.ofObject(view, TOP_LEFT_ONLY_PROPERTY, (TypeConverter) null, getPathMotion().getPath((float) startLeft2, (float) startTop2, (float) endLeft2, (float) endTop));
                             int startHeight22 = endHeight3;
                             int endWidth22 = i2;
-                            int startWidth22 = i4;
+                            int startWidth32 = i4;
                         } else if (startWidth == endWidth && startHeight == endHeight2) {
                             int i5 = numChanges;
                             endHeight = endHeight2;
@@ -319,9 +319,9 @@ public class ChangeBounds extends Transition {
                             int i11 = startBottom;
                             int i12 = startWidth;
                             View view4 = view2;
-                            int startWidth3 = endBottom;
+                            int startWidth4 = endBottom;
                             int i13 = startHeight;
-                            int endBottom4 = endTop;
+                            int endBottom3 = endTop;
                         } else {
                             endHeight = endHeight2;
                             int i14 = numChanges;
@@ -352,12 +352,12 @@ public class ChangeBounds extends Transition {
                         int startLeft3 = endHeight2;
                         int i24 = endWidth;
                         int i25 = numChanges;
-                        int startWidth4 = startWidth;
+                        int startWidth5 = startWidth;
                         int i26 = startHeight;
                         View view6 = view2;
-                        int endBottom5 = endBottom;
-                        int startWidth5 = startWidth4;
-                        int maxWidth = Math.max(startWidth5, endWidth);
+                        int startWidth6 = endBottom;
+                        int startWidth7 = startWidth5;
+                        int maxWidth = Math.max(startWidth7, endWidth);
                         int startRight2 = startRight;
                         int endRight2 = endRight;
                         view6.setLeftTopRightBottom(startLeft2, startTop2, startLeft2 + maxWidth, startTop2 + Math.max(startHeight, endHeight2));
@@ -377,7 +377,7 @@ public class ChangeBounds extends Transition {
                         final Rect finalClip = endClip;
                         if (startClip3 == null) {
                             i = 0;
-                            startClip = new Rect(0, 0, startWidth5, startHeight);
+                            startClip = new Rect(0, 0, startWidth7, startHeight);
                         } else {
                             i = 0;
                             startClip = startClip3;
@@ -396,7 +396,7 @@ public class ChangeBounds extends Transition {
                             Rect rect3 = endClip2;
                             Rect rect4 = startClip;
                             final View view7 = view6;
-                            int i29 = startWidth5;
+                            int i29 = startWidth7;
                             AnonymousClass9 r9 = r0;
                             final int i30 = endLeft;
                             int i31 = maxWidth;
@@ -408,7 +408,7 @@ public class ChangeBounds extends Transition {
                             int i35 = endHeight2;
                             final int endHeight4 = endRight2;
                             int i36 = endWidth;
-                            final int endWidth4 = endBottom5;
+                            final int endWidth4 = startWidth6;
                             AnonymousClass9 r0 = new AnimatorListenerAdapter() {
                                 private boolean mIsCanceled;
 
@@ -430,7 +430,7 @@ public class ChangeBounds extends Transition {
                             int i37 = endTop;
                             int i38 = endHeight2;
                             int i39 = endWidth;
-                            int i40 = startWidth5;
+                            int i40 = startWidth7;
                             int i41 = maxWidth;
                             int i42 = startBottom;
                             int i43 = startRight2;

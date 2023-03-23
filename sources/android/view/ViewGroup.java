@@ -1759,11 +1759,11 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
         if (!customOrder) {
             return i;
         }
-        int childIndex1 = getChildDrawingOrder(childrenCount, i);
-        if (childIndex1 < childrenCount) {
-            return childIndex1;
+        int childIndex = getChildDrawingOrder(childrenCount, i);
+        if (childIndex < childrenCount) {
+            return childIndex;
         }
-        throw new IndexOutOfBoundsException("getChildDrawingOrder() returned invalid index " + childIndex1 + " (child count is " + childrenCount + ")");
+        throw new IndexOutOfBoundsException("getChildDrawingOrder() returned invalid index " + childIndex + " (child count is " + childrenCount + ")");
     }
 
     /* access modifiers changed from: protected */
@@ -2926,11 +2926,11 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
         } else {
             throw new IllegalStateException("descendant focusability must be one of FOCUS_BEFORE_DESCENDANTS, FOCUS_AFTER_DESCENDANTS, FOCUS_BLOCK_DESCENDANTS but is " + descendantFocusability);
         }
-        boolean took3 = result;
-        if (took3 && !isLayoutValid() && (this.mPrivateFlags & 1) == 0) {
+        boolean result2 = result;
+        if (result2 && !isLayoutValid() && (this.mPrivateFlags & 1) == 0) {
             this.mPrivateFlags |= 1;
         }
-        return took3;
+        return result2;
     }
 
     /* access modifiers changed from: protected */
